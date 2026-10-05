@@ -7,6 +7,7 @@
 <meta name="description" content="Cast your chart on the high seat: sidereal and tropical positions, the twenty-seven mansions, the sixty-four gates, the Dharma Weave and the armillary. Free.">
 <link rel="stylesheet" href="/static/console.css">
 <link rel="stylesheet" href="/static/site.css">
+<link rel="stylesheet" href="/static/body.css">
 </head>
 <body>
 <header class="seat" id="skyHost">
@@ -47,6 +48,11 @@
     <p class="err" id="buyErr" role="alert"></p>
   </section>
 
+  <section class="blk" id="bodyBlk">
+    <h2>The harmonic body</h2>
+    <div id="bodyHost"></div>
+  </section>
+
   <section class="blk" id="armBlk">
     <h2>The armillary</h2>
     <div id="armHostWrap"></div>
@@ -75,6 +81,7 @@
 <script src="/static/viz.js"></script>
 <button id="musicBtn" class="music" aria-pressed="false" hidden>♪ Music</button>
 <audio id="music" src="/static/music.mp3" loop preload="none"></audio>
+<script src="/static/body.js"></script>
 <script src="/static/transits.js"></script>
 <script src="/static/app.js"></script>
 </body>
