@@ -70,7 +70,7 @@ class Ephemeris:
 
     def _lon(self, t, body):
         lat, lon, _ = self.earth.at(t).observe(self.bodies[body]).apparent().frame_latlon(ecliptic_frame)
-        return lon.degrees % 360
+        return float(lon.degrees % 360)
 
     @lru_cache(maxsize=4096)
     def sun_lon(self, jd_ut):
@@ -83,7 +83,7 @@ class Ephemeris:
         p["Rahu"] = self._mean_node(t.tt)
         p["Ketu"] = norm(p["Rahu"] + 180)
         return p
-
+   
     @staticmethod
     def _mean_node(jd_tt):
         T = (jd_tt - 2451545.0) / 36525.0
