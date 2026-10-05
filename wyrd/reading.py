@@ -1,0 +1,255 @@
+"""
+The paid reading, assembled in story order from Leah's own register.
+Every interpretive sentence comes from corpus.json; this file only chooses
+which passages a chart calls for and lays them out.
+
+  I    The Seat            rising sign and mansion: frame, bearing, features
+  II   The Engine          the Moon's mansion, worked in full
+  III  The Soul-Planet     the Atmakaraka and its cabinet of seven
+  IV   The Work            personality and design Suns and Earths, from the register
+  V    The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
+  VI   The Path of Dharma  Mission, Illuminations, the Diamond
+  VII  The Clock           the periods running now
+  VIII The Questions       every question the chart asked, gathered
+"""
+import html, json, math, os
+from datetime import datetime, timedelta
+
+from . import engine as E
+
+CORPUS = json.load(open(os.path.join(os.path.dirname(__file__), "..", "lib", "corpus.json"), encoding="utf-8"))
+REG, ENG, NAKS, DEEP = CORPUS["REGISTER"], CORPUS["ENGINE"], CORPUS["NAKSHATRA"], CORPUS["NAK_DEEP"]
+FRAME, HOUSES, SPHERES, WALK = CORPUS["SIGN_FRAME"], CORPUS["HOUSES"], CORPUS["SPHERES"], CORPUS["SPHERE_WALK"]
+GATE_NAME, KGLOSS, SEQ = CORPUS["GATE_NAME"], CORPUS["KARAKA_GLOSS"], CORPUS["SEQUENCE"]
+
+GLYPH = {"Sun": "☉", "Moon": "☽", "Mercury": "☿", "Venus": "♀", "Mars": "♂", "Jupiter": "♃",
+         "Saturn": "♄", "Uranus": "♅", "Neptune": "♆", "Pluto": "♇", "Rahu": "☊", "Ketu": "☋", "Earth": "⊕"}
+ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"]
+
+esc = html.escape
+
+FROM_BIRTH = {"Crucible"}      # by decision: the Crucible is open at birth, whatever its lord
+
+def activation(gate, line, chart, dasha, sphere=None):
+    """When a step of the path opens, by this person's own Vimshottari.
+    The sphere's gate and line sit in a mansion (the register's gate -> mansion link);
+    that mansion's Vimshottari lord rules the sphere, and the step opens when that
+    lord's mahadasha arrives in this life."""
+    if sphere in FROM_BIRTH:
+        return {"lord": None, "state": "open", "text": "Open from birth"}
+    m = E.gate_mansion(gate, line)
+    if not m: return None
+    lord = E.DASHA[m["primary"] % 9][0]
+    row = next((r for r in dasha["maha"] if r["lord"] == lord), None)
+    if not row: return None
+    born = row.get("partial") or row["from"] <= chart["jd"]
+    age = 0 if born else int((row["from"] - chart["jd"]) / E.YEAR)
+    when = "from birth" if born else f"at {age} ({jd_date(row['from'])[-4:]})"
+    state = "running now" if row["now"] else ("open" if row["past"] or born else "ahead")
+    maha = f"your {lord} mahadasha"
+    if state == "ahead":
+        text = f"Opens {when} in {maha}"
+    elif born:
+        text = f"Open from birth, in {maha}" + (f", running now until {jd_date(row['to'])[-4:]}" if row["now"] else "")
+    else:
+        text = f"Opened {when} in {maha}" + (f", running now until {jd_date(row['to'])[-4:]}" if row["now"] else "")
+    return {"lord": lord, "state": state, "text": text}
+
+def fmt_lon(l):
+    l = E.norm(l); d = l % 30; m = round((d - math.floor(d)) * 60)
+    dd = math.floor(d)
+    if m == 60: dd, m = dd + 1, 0
+    return f"{E.sign_of(l)} {dd}°{m:02d}′"
+
+def pada(l):
+    return math.floor((E.norm(l) % E.NAK_ARC) / (E.NAK_ARC / 4)) + 1
+
+def jd_date(jd):
+    return (datetime(2000, 1, 1, 12) + timedelta(days=jd - 2451545.0)).strftime("%b %Y")
+
+def section(n, title, sub, body):
+    return f"""<section class="rd-sec"><div class="rd-num">{ROMAN[n]}</div>
+      <h2>{title}</h2><div class="rd-sub">{sub}</div>{body}</section>"""
+
+def pair(k, v):
+    return f'<div class="rd-pair"><em>{k}</em><span>{v}</span></div>'
+
+def register_entry(gate, line, side, label, asks):
+    R = REG.get(str(gate))
+    if not R:
+        return f"<p>Gate {gate}.{line}</p>"
+    m = E.gate_mansion(gate, line)
+    design = side == "design"
+    flags = ""
+    if R.get("janus"):
+        flags += '<span class="rd-flag">⟡ janus — two engines' + (", and this line is the seam" if m and m["seam"] else "") + "</span>"
+    if R.get("gandanta"):
+        flags += '<span class="rd-flag gand">⟁ gandanta — read gently</span>'
+    asks.append((f"{label} · gate {gate}.{line}", R["a"], design))
+    held = ('<div class="rd-held">The question is held — design-side runs unnamed until it is spoken. '
+            'It waits for you at the end.</div>') if design else f'<div class="rd-ask">{R["a"]}</div>'
+    return f"""<div class="rd-entry">
+      <h3>{esc(label)} · {gate}.{line} · {R['t']}
+        <span class="rd-side {'d' if design else 'p'}">{'design · unconscious' if design else 'personality · conscious'}</span></h3>
+      <div class="rd-hdr">{R['h']} {flags}</div>
+      <p>{R['e']}</p>
+      <div class="rd-gifts"><div class="light"><h5>Light gift</h5><p>{R['l']}</p></div>
+        <div class="dark"><h5>Dark gift</h5><p>{R['d']}</p></div></div>
+      <div class="rd-repair"><h5>Distortion &amp; repair</h5><p>{R['r']}</p></div>
+      {held}</div>"""
+
+def build(chart, dasha, who):
+    C = chart
+    asks = []
+    out = []
+
+    # ---------- I · the Seat ----------
+    asc = C["ascS"]; si = math.floor(E.norm(asc) / 30); nk = E.nak_index(asc); D = DEEP[nk]
+    h1 = HOUSES[0]; half = "ingress" if E.deg_in(asc) < 15 else "egress"; rune = h1[half]
+    d9 = math.floor(E.norm(9 * asc) / 30)
+    out.append(section(0, "The Seat", f"{fmt_lon(asc)} rising · {D[0]} pada {pada(asc)}", f"""
+      <p><b>{FRAME[si][0]}</b> rising gives {FRAME[si][1]}</p>
+      <div class="rd-body"><h5>Bearing</h5><p>{D[10]}</p></div>
+      <div class="rd-body"><h5>Features</h5><p>{D[11]}</p></div>
+      {pair("The house of arrival", f'<span class="sw" style="background:{h1["hex"]}"></span>{h1["color"]} · {h1["phase"]}')}
+      {pair("The rune at the gate", f'{rune[0]} {rune[1]} — {rune[2]}')}
+      {pair("Matures toward", f"{E.SIGNS[d9]} — {FRAME[d9][1]}")}
+      <p class="rd-note">Read this as tendencies the chart leans on. Genetics, health, work and era all outweigh it.</p>"""))
+
+    # ---------- II · the Engine of the mind ----------
+    mi = E.nak_index(C["sid"]["Moon"]); e = ENG[mi]; nkm = NAKS[mi]; Dm = DEEP[mi]
+    asks.append((f"The Moon in {e[0]}", e[10], False))
+    out.append(section(1, "The Engine", f"☽ Moon in {e[0]} · {fmt_lon(C['sid']['Moon'])} · pada {pada(C['sid']['Moon'])}", f"""
+      <p class="rd-kenning">A keyword says what a placement is about; an engine says what it does, what its two
+      moving parts are, and therefore exactly where it breaks.</p>
+      {pair("Shakti", f"{e[1]} — {e[2]}")}
+      <div class="rd-triad"><div><span>Above</span><em>{e[3]}</em></div>
+        <div><span>Below</span><em>{e[4]}</em></div><div><span>Result</span><em>{e[5]}</em></div></div>
+      <p>{e[6]}</p>
+      <div class="rd-gifts"><div class="light"><h5>Light wield</h5><p>{e[7]}</p></div>
+        <div class="dark"><h5>Dark wield</h5><p>{e[8]}</p></div></div>
+      <div class="rd-repair"><h5>Distortion</h5><p>{e[9]}</p></div>
+      {pair("Lord · deity · symbol", f"{nkm[1]} · {nkm[2]} · {nkm[3]}")}
+      {pair("Does well", Dm[12])}{pair("Goes wrong", Dm[13])}
+      <div class="rd-ask">{e[10]}</div>"""))
+
+    # ---------- III · the soul-planet ----------
+    K = C["karaka"]; ak = K["Atmakaraka"]; l = C["sid"][ak]
+    stations = [(1, "the body"), (9, "the dharma"), (10, "the public"), (12, "the ancestral"), (60, "the sum of karmas")]
+    naks = [NAKS[E.nak_index(E.norm(n * l))][0] for n, _ in stations]
+    rep = sorted({x for i, x in enumerate(naks) if naks.index(x) != i})
+    rows = "".join(f"<tr{' class=hi' if k == 'Atmakaraka' else ''}><td>{k.replace('karaka', '')}</td>"
+                   f"<td>{GLYPH[b]} {b}</td><td>{E.deg_in(C['sid'][b]):.2f}°</td><td>{KGLOSS[k]}</td></tr>"
+                   for k, b in K.items())
+    out.append(section(2, "The Soul-Planet", f"Atmakaraka {GLYPH[ak]} {ak} · {fmt_lon(l)} · {E.nak_of(l)}", f"""
+      <p>{KGLOSS['Atmakaraka']}</p>
+      <p class="rd-kenning">{CORPUS['KARAKA_METHOD']}</p>
+      <div class="rd-tw"><table><tr><th>Karaka</th><th>Body</th><th>Degree</th><th>Reads</th></tr>{rows}</table></div>
+      {pair(f"{ak} across the divisions", " · ".join(f"D{n} {naks[i]}" for i, (n, _) in enumerate(stations)))}
+      {f'<p class="rd-kenning"><b>{", ".join(rep)}</b> repeats across divisions. A soul-planet that repeats a star, a house, or a rune is repeating the life\'s keynote.</p>' if rep else ''}"""))
+
+    # ---------- IV · the work ----------
+    N = C["natal"]
+    work = "".join([
+        register_entry(N["personality"]["Sun"]["gate"], N["personality"]["Sun"]["line"], "personality", "Personality Sun", asks),
+        register_entry(N["personality"]["Earth"]["gate"], N["personality"]["Earth"]["line"], "personality", "Personality Earth", asks),
+        register_entry(N["design"]["Sun"]["gate"], N["design"]["Sun"]["line"], "design", "Design Sun", asks),
+        register_entry(N["design"]["Earth"]["gate"], N["design"]["Earth"]["line"], "design", "Design Earth", asks)])
+    out.append(section(3, "The Work", f"profile {N['profile']} · the equipment as issued", f"""
+      <p class="rd-kenning">Personality is what you know you carry. Design runs underneath, and a design-side
+      activation stays in distortion until it is named. So the design entries open on the engine and keep their
+      question for the end.</p>{work}"""))
+
+    # ---------- V · the dharma weave ----------
+    Dh = C["dharma"]
+    band = ("6/1 — the magenta point, the Mauve Zone's exact centre" if Dh["mauve"] else
+            "inside the Mauve Zone — a pairing impossible at birth" if Dh["band"] == "Seam" else
+            "an echo — a shape others are born holding, earned here")
+    dps, dds = Dh["personality"]["Sun"], Dh["design"]["Sun"]
+    repeats = [lab for lab, a, b in [("the Sun", dps, N["personality"]["Sun"]), ("the design Sun", dds, N["design"]["Sun"])]
+               if a["gate"] == b["gate"]]
+    out.append(section(4, "The Dharma Weave", f"dharma profile {Dh['profile']} · {Dh['band']}", f"""
+      <p class="rd-kenning">Both Suns pass through the multiply-by-nine of the navamsa, so the 88° between them
+      multiplies too: 792, less two full circles, leaves exactly 72. Every dharma chart ever cast carries its two
+      Suns one fifth of the wheel apart. That is the Pentagram Cross.</p>
+      {pair("Dharma profile", f"{Dh['profile']} · {Dh['band']}")}{pair("Band", band)}
+      {pair("Rave profile", f"{N['profile']} · the equipment as issued")}
+      {pair("The law", f"{Dh['suns']['gap']:.6f}° {'✓' if Dh['suns']['holds'] else '✗'}")}
+      <p class="rd-kenning">The body is written under the messenger's number, the dharma under the lover's.</p>
+      {f'<p class="rd-kenning">The dharma repeats {" and ".join(repeats)} of the birth chart. The repetition is load-bearing — that is a thing the life does not get to outgrow.</p>' if repeats else ''}
+      {register_entry(dps['gate'], dps['line'], 'personality', 'Dharma Sun', asks)}
+      {register_entry(dds['gate'], dds['line'], 'design', 'Dharma design Sun', asks)}"""))
+
+    # ---------- VI · the Path of Dharma ----------
+    def steps(rave):
+        """The incarnate path as a walk: one step per sphere, in order."""
+        out, k = [], 0
+        for seq, names in SEQ.items():
+            out.append(f'<div class="rd-seq"><h3>{seq[0].upper() + seq[1:]}</h3>')
+            for n in names:
+                _, col, body, gloss = next(s for s in SPHERES if s[0] == n)
+                g = rave[col].get(body)
+                if not g: continue
+                k += 1
+                w = WALK.get(n, {}); R = REG.get(str(g["gate"]), {})
+                t = R.get("t", GATE_NAME.get(str(g["gate"]), ""))
+                act = activation(g["gate"], g["line"], C, dasha, n)
+                if col == "design":
+                    q = '<p class="rd-step-q held">This is design-side. Read the gate\'s engine in section IV or V first; its question waits in section VIII.</p>'
+                else:
+                    q = f'<p class="rd-step-q">The question to carry: <em>{R.get("a", "")}</em></p>' if R.get("a") else ""
+                out.append(f"""<div class="rd-step"><div class="rd-sn">Step {k}</div>
+                  <div><h4>{n} <small>{col} {body}</small></h4>
+                  <div class="rd-gate">gate {g['gate']}.{g['line']}, {t}</div>
+                  {f'<div class="rd-opens {act["state"].split()[0]}">{GLYPH.get(act["lord"], "⊕")} {act["text"]}</div>' if act else ''}
+                  <p>{w.get('what', gloss)}</p><p class="rd-how">{w.get('how', '')}</p>{q}</div></div>""")
+            out.append("</div>")
+        return "".join(out)
+    def mature(rave_n, rave_d):
+        rows = []
+        for s_ in SPHERES:
+            n, col, body = s_[0], s_[1], s_[2]
+            a, b = rave_n[col].get(body), rave_d[col].get(body)
+            if not (a and b): continue
+            same = a["gate"] == b["gate"]
+            t = REG.get(str(b["gate"]), {}).get("t", GATE_NAME.get(str(b["gate"]), ""))
+            rows.append(f"<tr{' class=hi' if same else ''}><td>{n}</td><td>{a['gate']}.{a['line']}</td>"
+                        f"<td>{b['gate']}.{b['line']} {t}</td><td>{'holds' if same else 'matures'}</td></tr>")
+        return f'<div class="rd-tw"><table><tr><th>Sphere</th><th>Incarnate</th><th>Mature</th><th></th></tr>{"".join(rows)}</table></div>'
+    shared = [s[0] for s in SPHERES if N[s[1]].get(s[2]) and Dh[s[1]].get(s[2])
+              and N[s[1]][s[2]]["gate"] == Dh[s[1]][s[2]]["gate"]]
+    out.append(section(5, "The Path of Dharma", "Mission · Illuminations · the Diamond", f"""
+      <p>Eleven spheres, in order, and the order is the instruction. The first two are a pair and so are the third
+      and fourth — each is drawn from a Sun or Earth, and Earth is always the exact opposite of its Sun, so you are
+      reading a thing and its ground together.</p>
+      <p>Work down the list in order. The Diamond Self comes last because it is a by-product; read first, it turns the
+      whole path into a fortune. Design-side spheres are marked — those run unnamed until spoken, so read the engine
+      before you ask the question.</p>
+      <h3 class="rd-tier">Walking the path</h3>
+      <p>Each step names when it opens in your life. A sphere's gate sits in one of the twenty-seven mansions, and
+      that mansion's lord rules the sphere; the step opens when that lord's mahadasha arrives. Work the steps in
+      order whatever their ages. A step that opened before you started is still waiting to be walked.</p>{steps(N)}
+      <h3 class="rd-tier">The Path of Dharma · mature</h3>
+      <p>The same eleven positions read on the Dharma Rave. Where a sphere repeats a gate across both paths the
+      repetition is load-bearing. Where they differ, the difference is the maturation: the same spectrum, walked further.</p>{mature(N, Dh)}
+      {pair("Load-bearing", " · ".join(shared) + " repeat across both paths" if shared else "no sphere repeats — every one matures")}"""))
+
+    # ---------- VII · the clock ----------
+    cur, a, p = dasha["cur"], dasha["curA"], dasha["curP"]
+    role = {b: k for k, b in K.items()}
+    def lord(b): return f"{GLYPH.get(b, '')} {b}" + (f" · your {role[b].replace('karaka', '')}karaka" if b in role else "")
+    out.append(section(6, "The Clock", "Vimshottari, from the Moon's mansion", f"""
+      {pair("Mahadasha", f"{lord(cur['lord'])} · {jd_date(cur['from'])} – {jd_date(cur['to'])}")}
+      {pair("Antardasha", f"{lord(a['lord'])} · {jd_date(a['from'])} – {jd_date(a['to'])}")}
+      {pair("Pratyantar", f"{lord(p['lord'])} · {jd_date(p['from'])} – {jd_date(p['to'])}")}
+      <div class="rd-tw"><table><tr><th>Period</th><th>From</th><th>To</th></tr>{''.join(
+        f"<tr{' class=hi' if m['now'] else ''}><td>{GLYPH.get(m['lord'], '')} {m['lord']}</td><td>{jd_date(m['from'])}</td><td>{jd_date(m['to'])}</td></tr>"
+        for m in dasha['maha'])}</table></div>"""))
+
+    # ---------- VIII · the questions ----------
+    qs = "".join(f'<li><div class="rd-ql">{esc(lab)}{" · held, design-side" if d else ""}</div><div>{q}</div></li>'
+                 for lab, q, d in asks)
+    out.append(section(7, "The Questions", "every question your chart asked, in the order it asked them",
+                       f'<ol class="rd-qs">{qs}</ol>'))
+
+    return "".join(out)
