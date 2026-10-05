@@ -42,7 +42,7 @@ def transits(eph, chart, now_jd):
             "gate": g["gate"], "line": g["line"],
             "carried": carried.get(g["gate"], []),
             "on": hits,
-            "retro": b not in ("Sun", "Moon", "Rahu", "Ketu") and motion < 0,
+            "retro": bool(b not in ("Sun", "Moon", "Rahu", "Ketu") and motion < 0),
             "inMoonMansion": E.nak_index(sid[b]) == moon_nak,
         })
     sat_from_moon = (int(E.norm(sid["Saturn"]) // 30) - natal_moon_sign) % 12 + 1
