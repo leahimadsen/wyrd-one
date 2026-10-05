@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: wyrd-console
+    runtime: python
+    plan: starter            # the free plan sleeps between visitors; don't sell on it
+    buildCommand: pip install -r requirements.txt && python scripts/build_places.py && python scripts/warm.py
+    startCommand: gunicorn app:app --workers 2 --bind 0.0.0.0:$PORT --timeout 60
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: BASE_URL
+        sync: false          # e.g. https://chart.webofwyrd.com
+      - key: STRIPE_SECRET_KEY
+        sync: false          # sk_test_... first, then sk_live_...
+      - key: STRIPE_PRICE_ID
+        sync: false          # optional
