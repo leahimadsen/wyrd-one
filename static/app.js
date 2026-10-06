@@ -105,8 +105,6 @@ function render(j){
       <dt>Antardasha</dt><dd>${GLYPH[T.curA.lord]} ${T.curA.lord}</dd>
       <dt>Pratyantar</dt><dd>${GLYPH[T.curP.lord]} ${T.curP.lord}</dd></dl></div>`;
 
-  if (window.WyrdBody) WyrdBody.mount($("bodyHost"), C);
-  if (window.WyrdDasha) WyrdDasha.mount($("dashaHost"));
   $("armHostWrap").innerHTML = Wyrd.armillary();
   $("colourHost").innerHTML = Wyrd.colour();
   setTimeout(() => Wyrd.afterColour(), 0);
