@@ -19,6 +19,8 @@ def _call(secret, method, path, fields=None):
         try: msg = json.load(e)["error"]["message"]
         except Exception: msg = str(e)
         raise StripeError(msg)
+    except (urllib.error.URLError, TimeoutError, ValueError) as e:
+        raise StripeError("Stripe could not be reached.") from e
 
 def create_checkout(secret, *, base_url, price_id, price_cents, product_name, metadata, email=None):
     f = {
@@ -42,7 +44,17 @@ def create_checkout(secret, *, base_url, price_id, price_cents, product_name, me
 
 def paid_session(secret, session_id):
     """The session, if and only if it has been paid for."""
-    if not session_id.startswith("cs_") or len(session_id) > 200:
+    if not isinstance(session_id, str) or not session_id.startswith("cs_") or len(session_id) > 200:
         return None
-    s = _call(secret, "GET", "/checkout/sessions/" + urllib.parse.quote(session_id))
+    s = _call(secret, "GET", "/checkout/sessions/" + urllib.parse.quote(session_id, safe=""))
     return s if s.get("payment_status") in ("paid", "no_payment_required") else None
+
+def save_birth_metadata(secret, session_id, metadata):
+    """Attach birth details to the existing checkout; this never takes payment."""
+    fields = {f"metadata[{k}]": str(v)[:500] for k, v in metadata.items()}
+    return _call(secret, "POST", "/checkout/sessions/" + urllib.parse.quote(session_id, safe=""), fields)
+
+def payment_link(secret, link_id):
+    if not isinstance(link_id, str) or not link_id.startswith("plink_") or len(link_id) > 200:
+        return None
+    return _call(secret, "GET", "/payment_links/" + urllib.parse.quote(link_id, safe=""))
