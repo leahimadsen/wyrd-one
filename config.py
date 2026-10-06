@@ -5,6 +5,14 @@ import os
 BASE_URL        = os.environ.get("BASE_URL", "http://localhost:8000").rstrip("/")
 STRIPE_SECRET   = os.environ.get("STRIPE_SECRET_KEY", "")        # sk_live_... or sk_test_...
 STRIPE_PRICE_ID = os.environ.get("STRIPE_PRICE_ID", "")          # optional: a $44 Price from your dashboard
+# Only these consultation Payment Links may unlock a report after payment.
+# Use Stripe's plink_... IDs, comma-separated; never the public buy.stripe.com URL.
+CONSULTATION_PAYMENT_LINK_IDS = frozenset(
+    value.strip() for value in os.environ.get("CONSULTATION_PAYMENT_LINK_IDS", "").split(",")
+    if value.strip()
+)
+# Alternatively paste the public link you already send customers.
+CONSULTATION_PAYMENT_LINK_URL = os.environ.get("CONSULTATION_PAYMENT_LINK_URL", "").strip()
 PRICE_CENTS     = 4400
 PRODUCT_NAME    = "Your Wyrd Reading"
 # With no Stripe key set, "Buy" opens a free preview so you can proof readings locally.

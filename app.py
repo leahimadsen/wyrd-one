@@ -8,7 +8,8 @@ import html, json, os, re, time
 from collections import defaultdict, deque
 from datetime import datetime, timezone
 
-from flask import Flask, abort, jsonify, request, send_from_directory, Response
+from flask import Flask, abort, jsonify, request, send_from_directory, Response, redirect
+from urllib.parse import urlencode
 
 import config
 from wyrd import engine, reading
@@ -77,6 +78,83 @@ def cast_for(b):
 def home():
     return send_from_directory(app.static_folder, "index.html")
 
+@app.after_request
+def private_reading_headers(response):
+    if request.path in ("/reading", "/consultation", "/api/consultation-reading"):
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["Referrer-Policy"] = "no-referrer"
+        response.headers["X-Robots-Tag"] = "noindex, nofollow"
+    return response
+
+def consultation_session(sid):
+    """Authorize against Stripe, never against a browser's paid flag."""
+    if not config.STRIPE_SECRET or not (config.CONSULTATION_PAYMENT_LINK_IDS or config.CONSULTATION_PAYMENT_LINK_URL):
+        return None, ("Consultation reports are not configured yet. Please contact Leah.", 503)
+    try:
+        session = stripe_api.paid_session(config.STRIPE_SECRET, sid)
+    except stripe_api.StripeError:
+        return None, ("We couldn't verify your payment. Please try again shortly.", 502)
+    if not session:
+        return None, ("Payment has not been confirmed. If you just paid, keep this page and try again shortly.", 403)
+    link = session.get("payment_link")
+    if isinstance(link, dict): link = link.get("id")
+    if session.get("status") != "complete" or session.get("mode") != "payment":
+        return None, ("This checkout does not include a consultation report.", 403)
+    allowed = link in config.CONSULTATION_PAYMENT_LINK_IDS
+    if not allowed and config.CONSULTATION_PAYMENT_LINK_URL:
+        try:
+            details = stripe_api.payment_link(config.STRIPE_SECRET, link)
+        except stripe_api.StripeError:
+            return None, ("We couldn't verify your payment link. Please try again shortly.", 502)
+        allowed = bool(details and details.get("url") == config.CONSULTATION_PAYMENT_LINK_URL)
+    if not allowed:
+        return None, ("This checkout does not include a consultation report.", 403)
+    return session, None
+
+def reading_url(sid):
+    return "/reading?" + urlencode({"session_id": sid})
+
+@app.get("/consultation")
+def consultation():
+    if limited(60): return "Too many requests — wait a minute.", 429
+    sid = request.args.get("session_id", "")
+    session, error = consultation_session(sid)
+    if error: return error
+    if session.get("metadata", {}).get("wyrd_report_ready") == "1":
+        return redirect(reading_url(sid))
+    return send_from_directory(app.static_folder, "index.html")
+
+@app.post("/api/consultation-reading")
+def consultation_reading():
+    if limited(10): return jsonify(error="Too many requests — wait a minute."), 429
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict): return jsonify(error="Please submit your birth details."), 400
+    sid = data.get("session_id", "")
+    session, error = consultation_session(sid)
+    if error: return jsonify(error=error[0]), error[1]
+    # A retry or return visit opens the saved report instead of replacing its birth data.
+    if session.get("metadata", {}).get("wyrd_report_ready") == "1":
+        return jsonify(url=reading_url(sid))
+    try:
+        # Resolve location on the server rather than trusting coordinates from the browser.
+        clean = {k: data.get(k) for k in ("date", "time", "place_id")}
+        birth = birth_from(clean)
+        name = data.get("name") or ""
+        if not isinstance(name, str): raise BadInput("Please enter a name as text.")
+    except (BadInput, ValueError, TypeError, OverflowError) as e:
+        message = str(e) if isinstance(e, BadInput) else "Choose a valid birthplace from the list."
+        return jsonify(error=message), 400
+    place = birth["place"]
+    meta = {"name": name.strip()[:80], "date": clean["date"], "time": clean["time"],
+            "place_id": place["id"], "place_label": place["label"],
+            "lat": place["lat"], "lon": place["lon"], "tz": place["tz"],
+            "wyrd_report_ready": "1"}
+    try:
+        stripe_api.save_birth_metadata(config.STRIPE_SECRET, sid, meta)
+    except stripe_api.StripeError:
+        return jsonify(error="Your payment is confirmed, but your details couldn't be saved. Please try again."), 502
+    return jsonify(url=reading_url(sid))
+
 @app.get("/api/places")
 def places():
     if limited(120): return jsonify([]), 429
@@ -130,6 +208,11 @@ def paid_reading():
         except stripe_api.StripeError:
             s = None
         if not s: abort(404)
+        if s.get("payment_link"):
+            s, error = consultation_session(sid)
+            if error: return error
+            if s.get("metadata", {}).get("wyrd_report_ready") != "1":
+                return redirect("/consultation?" + urlencode({"session_id": sid}))
         meta = s.get("metadata", {})
     try:
         b = birth_from(meta)
