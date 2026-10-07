@@ -1,0 +1,129 @@
+/* ===== the harmonic body ===== */
+.hb{--band:var(--jade)}
+.hb-intro,.hb-hint{font-size:14.5px;line-height:1.62;color:rgba(217,212,196,.72);max-width:62ch}
+.hb-hint{font-size:12.5px;color:rgba(217,212,196,.45);margin:6px 0 14px}
+.hb-ctl{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 8px}
+.hb-btn{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--jade);
+  background:none;border:1px solid var(--jade-dim);padding:10px 14px;cursor:pointer;transition:all 260ms var(--ease)}
+.hb-btn:hover{background:rgba(95,156,134,.12);border-color:var(--jade)}
+.hb-btn.on{background:rgba(95,156,134,.2);color:var(--celadon);border-color:var(--jade)}
+
+.hb-stage{position:relative;width:min(100%,680px);margin:0 auto;aspect-ratio:1/1;perspective:1500px;
+  cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.hb-stage.dragging{cursor:grabbing}
+.hb-deck{position:absolute;inset:0;transform-style:preserve-3d;transform-origin:50% 40%;will-change:transform}
+.hb-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.hb-layer *{vector-effect:non-scaling-stroke}
+/* each layer is scaled back to its true size, so they line up exactly when upright and part only as it turns */
+.hb-zod{transform:translateZ(-70px) scale(1.04667);transition:opacity 900ms var(--ease)}
+.hb-fig{transform:translateZ(0)}
+.hb-top{transform:translateZ(60px) scale(.96)}
+.hb-zod.off{opacity:0}
+.hb-zod .znak,.hb-top .station,.hb-top .g-mark{pointer-events:auto}
+.hb.zod-on .hb-fig .fig{opacity:.6}
+
+/* the rings (the console's own look) */
+.hb-zod .band{fill:transparent;cursor:pointer;transition:fill 420ms var(--ease)}
+.hb-zod .band:hover{fill:rgba(95,156,134,.11)}
+.hb-zod .znak.lit .band{fill:rgba(95,156,134,.24)}
+.hb-zod .znak.dim{opacity:.25}
+.hb-zod .arc{fill:none;stroke-width:.55}
+.hb-zod .arc.trop{stroke:var(--ivory);opacity:.2}
+.hb-zod .arc.sid{stroke:var(--gold);opacity:.34}
+.hb-zod .spoke{stroke-width:.45}
+.hb-zod .spoke.trop{stroke:var(--ivory);opacity:.13}
+.hb-zod .spoke.sid{stroke:var(--gold);opacity:.2}
+.hb-zod .nk-tick{stroke:var(--jade);stroke-width:.5;opacity:.3}
+.hb-zod .pada{stroke:var(--jade);stroke-width:.3;opacity:.14}
+.hb-zod .sg{font-family:var(--mono);font-size:10px;text-anchor:middle}
+.hb-zod .sg.trop{fill:var(--ivory);opacity:.36}
+.hb-zod .sg.sid{fill:var(--gold);opacity:.5}
+.hb-zod .nk-lbl{font-family:var(--mono);font-size:5.8px;letter-spacing:.1em;text-anchor:middle;fill:var(--jade);opacity:.4;pointer-events:none}
+.hb-zod .znak.lit .nk-lbl{opacity:1}
+.hb-zod .znak.lit .arc{stroke:var(--jade);opacity:1!important;stroke-width:1.2}
+.hb-zod .ay-arc{fill:none;stroke:var(--jade);stroke-width:1.1;opacity:.55}
+.hb-zod .ay-lbl{font-family:var(--mono);font-size:7.4px;letter-spacing:.2em;text-anchor:middle;fill:var(--jade);opacity:.8}
+.hb-zod .zp{fill:var(--celadon);font-family:var(--mono);font-size:10px;text-anchor:middle;opacity:.8}
+.hb-zod .zp-stem{stroke:var(--celadon);stroke-width:.4;opacity:.24}
+.hb-zod .ring-name{font-family:var(--mono);font-size:6.6px;letter-spacing:.3em;text-anchor:middle}
+
+/* centres */
+.hb-centres{opacity:0;transition:opacity 900ms var(--ease)}
+.hb-centres.on{opacity:1}
+
+/* planets on the body */
+.hb-top .g-mark{cursor:pointer}
+.hb-top .g-mark .ring{fill:rgba(7,12,11,.7);stroke:var(--celadon);stroke-width:.6;opacity:.6;transition:all 400ms var(--ease)}
+.hb-top .g-mark .gl{fill:var(--celadon);font-family:var(--mono);font-size:10px;text-anchor:middle}
+.hb-top .g-mark .gl.sub{font-size:6.4px;letter-spacing:.14em;opacity:.45}
+.hb-top .g-mark line.thread{stroke:var(--celadon);stroke-width:.5;opacity:.25;stroke-dasharray:2 3}
+.hb-top .g-mark:hover .ring,.hb-top .g-mark.feeding .ring{opacity:1;stroke:var(--gold)}
+.hb-top .g-mark.feeding .ring{animation:hbFeed 900ms var(--ease) infinite alternate}
+@keyframes hbFeed{to{stroke-width:2}}
+
+/* stations: each wakes in its own colour */
+.hb-top .station .tag{font-size:8.6px}
+.hb-top .station.woken .core,.hb-top .station.woken .ring,.hb-top .station.woken .bar{fill:var(--band);stroke:var(--band);opacity:1}
+.hb-top .station.woken .ring{fill:none;stroke-width:1.4}
+.hb-top .station.woken .tag{fill:var(--band);opacity:.9}
+.hb-top .station.woken .halo{fill:var(--band);opacity:.2;animation:pulse 3s var(--ease) infinite}
+.hb-top .station.live .core{fill:var(--band);stroke:var(--band)}
+.hb-top .station.live .ring,.hb-top .station.live .bar{stroke:var(--band)}
+.hb-top .station.live .tag{fill:var(--band);opacity:1}
+.hb-top .station.live .halo{fill:var(--band)}
+.hb-top .stations.dimmed .station.woken{opacity:.85}
+.hb-top .station .bloom{fill:none;stroke:var(--band);stroke-width:1.5;opacity:0;transform-box:fill-box;transform-origin:center}
+.hb-top .station.bloomed .bloom{animation:hbBloom 1600ms var(--out) forwards}
+@keyframes hbBloom{0%{opacity:.95;transform:scale(1)}100%{opacity:0;transform:scale(6)}}
+
+/* the current */
+.hb-current{stroke-width:2.6;stroke-linecap:round;stroke-dasharray:3 9;filter:drop-shadow(0 0 3px currentColor)}
+.hb-current.axis{stroke-width:3.4}
+.hb-head{filter:drop-shadow(0 0 6px #fff)}
+.hb-spine{stroke-width:2.2;stroke-linecap:round;stroke-dasharray:2 7;opacity:.75;animation:hbRun 1.4s linear infinite}
+@keyframes hbRun{to{stroke-dashoffset:-18}}
+
+/* station chips: the easy way to tap on a phone */
+.hb-strip{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:4px 0 16px}
+.hb-chipbtn{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(217,212,196,.8);background:rgba(7,12,11,.6);border:1px solid var(--rule);padding:8px 10px;cursor:pointer}
+.hb-chipbtn i{width:9px;height:9px;border-radius:50%;background:var(--band);box-shadow:0 0 8px var(--band)}
+.hb-chipbtn span{opacity:.5;letter-spacing:.06em}
+.hb-chipbtn:hover{border-color:var(--band)}
+
+/* the readout */
+.hb-read{max-width:640px;margin:0 auto}
+.hb-idle{font-size:13.5px;line-height:1.6;color:rgba(217,212,196,.5);text-align:center}
+.hb-card{border:1px solid var(--rule);border-left:3px solid var(--band);padding:20px 22px;background:rgba(7,12,11,.55)}
+.hb-chip{font-family:var(--mono);font-size:8.6px;letter-spacing:.22em;text-transform:uppercase;color:var(--band)}
+.hb-card h3{font-weight:400;font-size:28px;margin:6px 0 2px;color:var(--ivory)}
+.hb-rom{font-family:var(--mono);font-size:8.6px;letter-spacing:.18em;text-transform:uppercase;color:rgba(217,212,196,.42);margin-bottom:12px}
+.hb-card .kenning{font-style:italic;font-size:15.5px;line-height:1.6;color:rgba(217,212,196,.86);margin:0 0 14px}
+.hb-card dl{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;margin:0 0 14px}
+.hb-card dt{font-family:var(--mono);font-size:8.4px;letter-spacing:.18em;text-transform:uppercase;color:var(--jade);padding-top:3px}
+.hb-card dd{margin:0;font-size:14.5px;line-height:1.5;color:rgba(217,212,196,.86)}
+.hb-card dd small{display:block;font-size:12.5px;color:rgba(217,212,196,.5);margin-top:2px}
+.hb-ask{border-top:1px solid var(--rule);padding-top:12px;margin-bottom:14px}
+.hb-ask b{font-family:var(--mono);font-size:8.4px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:400}
+.hb-ask p{margin:4px 0 0;font-size:15px;color:var(--ivory)}
+.hb-bars h4{font-family:var(--mono);font-size:8.4px;letter-spacing:.18em;text-transform:uppercase;color:rgba(217,212,196,.4);font-weight:400;margin:0 0 8px}
+.hb-barrow{display:flex;align-items:center;gap:10px;margin-bottom:5px}
+.hb-track{flex:1;height:4px;background:rgba(217,212,196,.07)}
+.hb-track i{display:block;height:100%;opacity:.85;transform:scaleX(0);transform-origin:left;transition:transform 700ms var(--out)}
+.hb-barrow.drawn .hb-track i{transform:scaleX(1)}
+.hb-bars span{font-family:var(--mono);font-size:9px;color:rgba(217,212,196,.55);min-width:110px;text-align:right}
+.hb-card .hb-btn{margin-top:10px}
+
+@media (max-width:640px){
+  .hb-top .station .tag,.hb-top .station .lead{display:none}
+  .hb-top .station.live .tag{display:none}
+  .hb-zod .nk-lbl{display:none}
+  .hb-zod .znak.lit .nk-lbl{display:block}
+  .hb-card dl{grid-template-columns:1fr;gap:2px}
+  .hb-card dd{margin-bottom:8px}
+}
+@media (prefers-reduced-motion:reduce){
+  .hb-track i{transition:none}
+  .hb-spine,.hb-top .station.woken .halo,.hb-top .g-mark.feeding .ring{animation:none}
+  .hb-top .station.bloomed .bloom{animation:none}
+}
