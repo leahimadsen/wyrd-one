@@ -4,7 +4,7 @@
     python scripts/build_places.py        # once: world places index
     python app.py                          # http://localhost:8000
 """
-import html, hmac, json, os, re, time
+import html, hmac, json, math, os, re, time
 from collections import defaultdict, deque
 from datetime import datetime, timezone
 
@@ -17,6 +17,8 @@ from wyrd.places import Places
 from wyrd.timefix import to_ut
 from wyrd import stripe_api
 from wyrd.transits import transits
+from wyrd.extras import extras
+from wyrd import calendar as wcal
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, static_folder=os.path.join(HERE, "static"), static_url_path="/static")
@@ -47,6 +49,10 @@ def limited(n=40, per=60):
 
 def jd_now():
     return time.time() / 86400 + 2440587.5
+
+def plain(o):
+    """Skyfield hands back numpy numbers and booleans; JSON wants plain ones."""
+    return json.loads(json.dumps(o, default=lambda value: value.item()))
 
 class BadInput(Exception):
     pass
@@ -172,19 +178,89 @@ def places():
     if limited(120): return jsonify([]), 429
     return jsonify(PLACES.search(request.args.get("q", ""), 10))
 
+def unknown_time(c):
+    """No birth time: the chart is cast for noon and read with solar houses
+    (the Sun's sign as the 1st house). The Moon can be anywhere in a day's
+    travel, so report the mansions it may have stood in."""
+    c["unknownTime"] = True
+    c["ascS"], c["ascT"] = c["sid"]["Sun"], c["trop"]["Sun"]
+    span = []
+    for dt in (-0.5, 0, 0.5):
+        jd = c["jd"] + dt
+        name = engine.nak_of(engine.norm(EPH.positions(jd)["Moon"] - EPH.ayanamsa(jd)))
+        if name not in span: span.append(name)
+    c["moonSpan"] = span
+
 @app.post("/api/chart")
 def chart():
     if limited(): return jsonify(error="Too many requests — wait a minute."), 429
+    d = request.get_json(force=True) or {}
     try:
-        b = birth_from(request.get_json(force=True) or {})
+        b = birth_from(d)
     except BadInput as e:
         return jsonify(error=str(e)), 400
     c = cast_for(b)
+    if d.get("unknown_time"): unknown_time(c)
     now = jd_now()
     c["dashaTree"] = engine.dasha_tree(c, now)
     c["transits"] = transits(EPH, c, now)
+    c["extras"] = extras(EPH, c, b)
+    if c.get("unknownTime"): c["extras"]["placidus"] = None     # house cusps need a birth time
     c.pop("dharma", None)            # the Dharma Weave is part of the paid reading, never the free chart
-    return jsonify(chart=json.loads(json.dumps(c, default=lambda value: value.item())), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME)
+    return jsonify(chart=plain(c), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME)
+
+# ---------------- what's coming, today, and the sample reading ----------------
+_cal_cache, _today_cache = {}, {}
+
+@app.post("/api/calendar")
+def calendar_api():
+    if limited(10): return jsonify(error="Too many requests — wait a minute."), 429
+    d = request.get_json(force=True) or {}
+    try:
+        b = birth_from(d)
+    except BadInput as e:
+        return jsonify(error=str(e)), 400
+    start = math.floor(jd_now() - 0.5) + 0.5             # today, 0h UT
+    key = (b["y"], b["mo"], b["d"], b["hh"], b["mi"], b["place"]["lat"], b["place"]["lon"], bool(d.get("unknown_time")), start)
+    if key not in _cal_cache:
+        c = cast_for(b)
+        if d.get("unknown_time"): unknown_time(c)
+        if len(_cal_cache) > 500: _cal_cache.clear()
+        _cal_cache[key] = plain(wcal.year_for(EPH, c, start))
+    return jsonify(start=start, events=_cal_cache[key])
+
+@app.get("/api/today")
+def today_api():
+    if limited(120): return jsonify(error="Too many requests — wait a minute."), 429
+    slot = int(time.time() // 900)                       # recomputed every 15 minutes
+    if _today_cache.get("slot") != slot:
+        _today_cache.update(slot=slot, data=plain(wcal.today(EPH, jd_now())))
+    return jsonify(_today_cache["data"])
+
+@app.get("/today")
+def today_page():
+    return send_from_directory(app.static_folder, "today.html")
+
+# A public sample reading, so people can see what they would be buying.
+# A made-up birth, not a real person: edit freely.
+SAMPLE = {"name": "A sample chart", "date": "1988-09-23", "time": "06:40",
+          "lat": 64.1466, "lon": -21.9426, "tz": "Atlantic/Reykjavik", "place_label": "Reykjavík, Iceland", "place_id": None}
+_sample_page = {}
+
+@app.get("/sample")
+def sample_reading():
+    if "page" not in _sample_page:
+        b = birth_from(SAMPLE)
+        c = cast_for(b)
+        body = reading.build(c, engine.dasha_tree(c, jd_now()), SAMPLE)
+        born = f"{b['y']:04d}-{b['mo']:02d}-{b['d']:02d} · {b['hh']:02d}:{b['mi']:02d} ({b['ut']['label']}) · {html.escape(b['place']['label'])}"
+        page = open(os.path.join(HERE, "static", "reading.html"), encoding="utf-8").read()
+        _sample_page["page"] = (page.replace("{{TITLE}}", config.SITE_TITLE).replace("{{WHO}}", SAMPLE["name"])
+            .replace("{{BORN}}", born).replace("{{OPENING}}", config.READING_OPENING)
+            .replace("{{CLOSING}}", config.READING_CLOSING).replace("{{AUTHOR}}", config.AUTHOR)
+            .replace("{{PREVIEW}}", "SAMPLE READING — this is a made-up chart, so you can see what a reading looks like. <a href=\"/\" style=\"color:#fff\">Cast yours →</a>")
+            .replace("{{BODY}}", body))
+    return Response(_sample_page["page"], mimetype="text/html")
 
 @app.post("/api/checkout")
 def checkout():

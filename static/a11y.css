@@ -1,0 +1,45 @@
+/* Accessibility floor, loaded last on every page.
+   The console was designed for a dark room and a large screen: much of its
+   secondary text was 7-9px and about 3:1 contrast. On the public site every
+   piece of HTML text is at least 11px and at least 4.5:1 against the void. */
+:root { --ivory-dim: rgba(217,212,196,.66); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.wwheel :focus-visible { outline: none; }
+
+/* the tab bar */
+.tab { font-size: 11.5px; }
+
+/* the harmonic body */
+#bodyHost .hb-btn, #bodyHost .hb-chipbtn, #bodyHost .hb-chipbtn span { font-size: 11px; }
+#bodyHost .hb-chipbtn span { opacity: .85; }
+#bodyHost .hb-hint, #bodyHost .hb-idle { color: rgba(217,212,196,.75); }
+
+/* the clock */
+#dashaHost .vd-decode h3, #dashaHost .vd-yours h3, #dashaHost .vd-h, #dashaHost .vd-order li,
+#dashaHost .vd-row h4, #dashaHost .vd-lord dt { font-size: 11px; }
+#dashaHost .now-card .lvl, #dashaHost .now-card .dt, #dashaHost .now-card .rem { font-size: 11px; color: rgba(217,212,196,.75); }
+#dashaHost .vd-row h4, #dashaHost .vd-tip, #dashaHost .vd-det { color: rgba(217,212,196,.75); }
+#dashaHost .vd-table tr.past td { opacity: .72; }
+
+/* the armillary */
+#armHostWrap .howto h5, #armHostWrap .arm-cue, #armHostWrap .arm-ctl button, #armHostWrap .arm-ctl span,
+#armHostWrap .gloss .sub, #armHostWrap .gr dt { font-size: 11px; }
+#armHostWrap .arm-cue, #armHostWrap .arm-ctl button, #armHostWrap .arm-ctl span, #armHostWrap .gloss .sub, #armHostWrap .gr dt { color: rgba(217,212,196,.75); }
+#armHostWrap .arm-ctl .on { color: var(--gold); }
+
+/* the colour room */
+#colourHost .howto h5, #colourHost .pair span, #colourHost .hue-cell .n, #colourHost .hue-cell .e,
+#colourHost .lab-read .m, #colourHost .lab-label, #colourHost .picker button { font-size: 11px; }
+#colourHost .pair span, #colourHost .lab-read .m, #colourHost .lab-label, #colourHost .picker button { color: rgba(217,212,196,.78); }
+#colourHost .picker button.on { color: var(--gold); }
+
+/* the bench */
+#benchHost .howto h5, #benchHost .side h6, #benchHost .beat-key span, #benchHost .reson .iv, #benchHost .r dt,
+#benchHost .reson .play, #benchHost .scrub-head span, #benchHost .scrub-head b, #benchHost .k, #benchHost button .rd,
+#benchHost .ladder-play { font-size: 11px; }
+#benchHost button .hz { font-size: 9.5px; opacity: .85; }
+#benchHost .side h6, #benchHost .beat-key span, #benchHost .r dt, #benchHost .scrub-head span, #benchHost .k,
+#benchHost button .rd, #benchHost button .hz { color: rgba(217,212,196,.75); }
+
+/* containers that receive focus only so screen readers land in the right place */
+[tabindex="-1"]:focus, [tabindex="-1"]:focus-visible { outline: none; }
