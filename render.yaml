@@ -25,3 +25,17 @@ services:
         generateValue: true  # signs the admin login; Render makes one for you
       - key: GITHUB_TOKEN
         sync: false          # lets Pulse save its anonymous counts to the wyrd-data branch (Contents: read and write, this repo only)
+      - key: SMTP_HOST
+        sync: false          # email for sign-in links and Body Weather; for Gmail: smtp.gmail.com
+      - key: SMTP_USER
+        sync: false          # the sending address, e.g. your Gmail
+      - key: SMTP_PASSWORD
+        sync: false          # for Gmail: an app password (Google account → Security → App passwords)
+      - key: MAIL_FROM
+        sync: false          # optional: e.g. Saga Devi <you@gmail.com>
+      - key: RESEND_API_KEY
+        sync: false          # optional instead of SMTP, once you have your own domain
+      - key: OWNER_EMAIL
+        sync: false          # where your Monday summary goes
+      - key: JOBS_TOKEN
+        generateValue: true  # copy this into the GitHub secret JOBS_TOKEN for the weekly email

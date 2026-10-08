@@ -43,3 +43,17 @@ READING_CLOSING = (
     "A chart is a set of engines, each with a light wield, a dark wield, and a place where it breaks. "
     "Work the questions and the reading does the rest."
 )
+
+# --- subscriptions. Prices are made inside each Stripe checkout, so nothing has
+# to be set up in the Stripe dashboard. Change a number here to change a price
+# for new subscribers; people already subscribed keep what they signed up at. ---
+MEMBER_MONTHLY_CENTS = int(os.environ.get("MEMBER_MONTHLY_CENTS", "1100"))     # $11 a month
+MEMBER_YEARLY_CENTS  = int(os.environ.get("MEMBER_YEARLY_CENTS", "11100"))     # $111 a year
+MEMBER_READING_CENTS = int(os.environ.get("MEMBER_READING_CENTS", "3520"))     # the $44 reading at 20% off for members
+PRO_MONTHLY_CENTS    = int(os.environ.get("PRO_MONTHLY_CENTS", "4400"))        # Professional, a month
+PRO_READINGS_A_MONTH = int(os.environ.get("PRO_READINGS_A_MONTH", "30"))       # client readings included each month
+MEMBER_NAME          = "Wyrd Membership"
+PRO_NAME             = "Wyrd Console Professional"
+# Locks the weekly email job (POST /jobs/weekly) so only your scheduler can run it.
+JOBS_TOKEN           = os.environ.get("JOBS_TOKEN", "")
+OWNER_EMAIL          = os.environ.get("OWNER_EMAIL", "")       # where your Monday summary goes

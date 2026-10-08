@@ -20,6 +20,7 @@ from wyrd.transits import transits
 from wyrd.extras import extras
 from wyrd import calendar as wcal
 from wyrd import pulse
+from wyrd import accounts, billing, mailer, pages, weather
 import atexit
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -27,7 +28,8 @@ app = Flask(__name__, static_folder=os.path.join(HERE, "static"), static_url_pat
 app.secret_key = config.SECRET_KEY or None
 app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Strict",
                   SESSION_COOKIE_SECURE=config.BASE_URL.startswith("https://"),
-                  PERMANENT_SESSION_LIFETIME=12 * 3600)
+                  PERMANENT_SESSION_LIFETIME=30 * 86400)     # members stay signed in a month; the admin, 12 hours (is_admin)
+ADMIN_HOURS = 12
 
 # ---------------- ephemeris ----------------
 def _load_ephemeris():
@@ -125,9 +127,11 @@ def consult_offer(slug):
     link = html.escape(config.CONSULTATION_PAYMENT_LINK_URL or "")
     return Response(page.replace("{{PAY_LINK}}", link).replace("{{AUTHOR}}", config.AUTHOR), mimetype="text/html")
 
+PRIVATE_PATHS = ("/c/", "/admin", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/")
+
 @app.after_request
 def private_reading_headers(response):
-    if request.path in ("/reading", "/consultation", "/api/consultation-reading") or request.path.startswith(("/c/", "/admin")):
+    if request.path in ("/reading", "/consultation", "/api/consultation-reading") or request.path.startswith(PRIVATE_PATHS):
         response.headers["Cache-Control"] = "no-store"
         # the admin's own forms need the browser to say they came from this site
         response.headers["Referrer-Policy"] = "same-origin" if request.path.startswith("/admin") else "no-referrer"
@@ -297,11 +301,16 @@ def checkout():
     if config.DEV_PREVIEW:
         from urllib.parse import urlencode
         return jsonify(url="/reading?" + urlencode({"preview": 1, **meta}))
+    email, member, customer = signed_in(), False, None
     try:
+        if email:
+            st = billing.status(config.STRIPE_SECRET, email)
+            member, customer = st["member"] or st["pro"], st["customer"]
         s = stripe_api.create_checkout(config.STRIPE_SECRET, base_url=config.BASE_URL,
-                                       price_id=config.STRIPE_PRICE_ID, price_cents=config.PRICE_CENTS,
-                                       product_name=config.PRODUCT_NAME, metadata=meta,
-                                       email=(d.get("email") or None))
+                                       price_id=None if member else config.STRIPE_PRICE_ID,
+                                       price_cents=config.MEMBER_READING_CENTS if member else config.PRICE_CENTS,
+                                       product_name=config.PRODUCT_NAME + (" (member price)" if member else ""), metadata=meta,
+                                       email=email or (d.get("email") or None), customer=customer)
     except stripe_api.StripeError as e:
         app.logger.error("stripe: %s", e)
         return jsonify(error="Payment couldn't start. Please try again."), 502
@@ -350,7 +359,7 @@ def admin_on():
     return bool(config.ADMIN_PASSWORD and config.SECRET_KEY)
 
 def is_admin():
-    return admin_on() and session.get("admin") is True
+    return admin_on() and session.get("admin") is True and time.time() - session.get("admin_at", 0) < ADMIN_HOURS * 3600
 
 def same_origin():
     """A form posted from this site, not another one."""
@@ -382,7 +391,7 @@ def admin_login():
     if not same_origin() or not hmac.compare_digest(pw.encode(), config.ADMIN_PASSWORD.encode()):
         q.append(now)
         return admin_page("admin-login.html", ERROR="That password isn't right."), 401
-    session.clear(); session["admin"] = True; session.permanent = True
+    session.clear(); session["admin"] = True; session["admin_at"] = time.time(); session.permanent = True
     return redirect("/admin")
 
 @app.post("/admin/logout")
@@ -434,6 +443,320 @@ def admin_insights_save():
     if not is_admin() or not same_origin(): abort(404)
     pulse.flush()
     return redirect("/admin/insights")
+
+# ---------------- public pages search engines read ----------------
+def page(title, desc, body, ld="", robots="index, follow", script="", status=200):
+    """A server-made page in the console's look, with its own title, description and share preview."""
+    t = open(os.path.join(HERE, "static", "page.html"), encoding="utf-8").read()
+    who = (f'<a href="/account">Your account</a>' if signed_in() else '<a href="/signin">Sign in</a>')
+    fill = {"TITLE": html.escape(title), "DESC": html.escape(desc), "ROBOTS": robots, "LD": ld, "BODY": body,
+            "CANON": html.escape(config.BASE_URL + request.path), "BASE": html.escape(config.BASE_URL), "WHO": who, "SCRIPT": script}
+    for k, v in fill.items(): t = t.replace("{{" + k + "}}", v)
+    return Response(t, status=status, mimetype="text/html")
+
+def private(title, body, script="", status=200):
+    return page(title + " · The Wyrd Console", title, body, robots="noindex, nofollow", script=script, status=status)
+
+@app.get("/robots.txt")
+def robots():
+    lines = ["User-agent: *", "Disallow: /admin", "Disallow: /account", "Disallow: /reading", "Disallow: /consultation",
+             "Disallow: /c/", "Disallow: /pro", "Disallow: /auth/", "Disallow: /api/", f"Sitemap: {config.BASE_URL}/sitemap.xml"]
+    return Response("\n".join(lines) + "\n", mimetype="text/plain")
+
+@app.get("/sitemap.xml")
+def sitemap():
+    return Response(pages.sitemap(config.BASE_URL), mimetype="application/xml")
+
+@app.get("/reports")
+def reports_page():
+    return page(*pages.reports(config.BASE_URL, config.PRICE_CENTS, config.MEMBER_READING_CENTS))
+
+@app.get("/learn")
+def learn_page():
+    return page(*pages.learn_index(config.BASE_URL))
+
+@app.get("/learn/gates/<int:g>")
+def learn_gate(g):
+    p = pages.gate(config.BASE_URL, g)
+    if not p: abort(404)
+    return page(*p)
+
+@app.get("/learn/nakshatras/<s>")
+def learn_nakshatra(s):
+    p = pages.nakshatra(config.BASE_URL, s)
+    if not p: abort(404)
+    return page(*p)
+
+@app.get("/learn/signs/<s>")
+def learn_sign(s):
+    p = pages.sign(config.BASE_URL, s)
+    if not p: abort(404)
+    return page(*p)
+
+# ---------------- accounts: sign in by email link ----------------
+def signed_in():
+    e = session.get("email")
+    return e if isinstance(e, str) and accounts.clean_email(e) else None
+
+def selling():
+    """Subscriptions are on sale once Stripe, the signing key and email are all set."""
+    return bool(config.STRIPE_SECRET and config.SECRET_KEY and mailer.ready())
+
+def account_status(email, fresh=False):
+    try:
+        return billing.status(config.STRIPE_SECRET, email, fresh=fresh) if config.STRIPE_SECRET else billing._empty()
+    except stripe_api.StripeError:
+        return None
+
+def esc(v): return html.escape(str(v))
+
+@app.get("/signin")
+def signin_page():
+    nxt = accounts.safe_next(request.args.get("next", "/account"))
+    if signed_in(): return redirect(nxt)
+    return private("Sign in", f"""<h1>Sign in</h1>
+<p class="lede">No password. Type your email and we'll send you a link that signs you in.</p>
+<form class="pg-form" method="post" action="/signin"><input type="hidden" name="next" value="{esc(nxt)}">
+<label>Email <input name="email" type="email" required autocomplete="email" maxlength="254"></label>
+<button class="btn-cast" type="submit">Email me a sign-in link</button></form>
+<p class="muted">Use the same email you paid with, and your membership is found automatically.</p>""")
+
+@app.post("/signin")
+def signin_send():
+    if limited(6, 600) or not same_origin(): return private("Sign in", "<h1>Wait a few minutes</h1><p>Too many sign-in links were asked for. Try again shortly.</p>", status=429)
+    email = accounts.clean_email(request.form.get("email"))
+    if not email or not config.SECRET_KEY:
+        return private("Sign in", '<h1>Check the address</h1><p>That email address doesn\'t look right. <a href="/signin">Try again</a>.</p>', status=400)
+    token = accounts.make_token(config.SECRET_KEY, email, request.form.get("next", "/account"))
+    link = f"{config.BASE_URL}/auth/{token}"
+    sent = mailer.send(email, "Your sign-in link for the Wyrd Console",
+        f'<p>Here is your link to sign in to the Wyrd Console. It works for {accounts.LINK_MINUTES} minutes.</p><p><a href="{esc(link)}">Sign in</a></p><p>If you didn\'t ask for this, ignore it.</p>',
+        f"Sign in to the Wyrd Console (works for {accounts.LINK_MINUTES} minutes): {link}\n\nIf you didn't ask for this, ignore it.")
+    dev = f'<p class="note-box">Email isn\'t set up on this server, so here is the link: <a href="{esc(link)}">sign in</a></p>' if (not sent and os.environ.get("WYRD_DEV_SHOW_LINKS")) else ""
+    return private("Check your email", f"""<h1>Check your email</h1>
+<p class="lede">We sent a sign-in link to {esc(email)}. It works for {accounts.LINK_MINUTES} minutes.</p>
+<p class="muted">Nothing there? Look in spam, or <a href="/signin">send another</a>.</p>{dev}""")
+
+@app.get("/auth/<token>")
+def auth_page(token):
+    email, nxt = accounts.read_token(config.SECRET_KEY, token) if config.SECRET_KEY else (None, None)
+    if not email:
+        return private("Sign in", '<h1>That link has expired</h1><p>Sign-in links work for twenty minutes. <a href="/signin">Get a new one</a>.</p>', status=410)
+    return private("Sign in", f"""<h1>Sign in as {esc(email)}</h1>
+<form class="pg-form" method="post"><button class="btn-cast" type="submit">Sign in</button></form>""")
+
+@app.post("/auth/<token>")
+def auth_go(token):
+    email, nxt = accounts.read_token(config.SECRET_KEY, token) if config.SECRET_KEY else (None, None)
+    if not email or not same_origin(): return redirect("/signin")
+    admin = {k: session[k] for k in ("admin", "admin_at") if k in session}
+    session.clear(); session.update(admin); session["email"] = email; session.permanent = True
+    return redirect(nxt)
+
+@app.post("/signout")
+def signout():
+    if same_origin(): session.pop("email", None)
+    return redirect("/")
+
+# ---------------- membership and professional plans ----------------
+PLANS = {
+    "member-month": ("member", config.MEMBER_NAME, lambda: config.MEMBER_MONTHLY_CENTS, "month"),
+    "member-year":  ("member", config.MEMBER_NAME + " (yearly)", lambda: config.MEMBER_YEARLY_CENTS, "year"),
+    "pro-month":    ("pro", config.PRO_NAME, lambda: config.PRO_MONTHLY_CENTS, "month"),
+}
+
+def money(c): return f"${c / 100:.0f}" if c % 100 == 0 else f"${c / 100:.2f}"
+
+@app.get("/membership")
+def membership_page():
+    on = selling()
+    def buy(plan, label, lead=False):
+        if not on: return '<p class="muted">Opening soon.</p>'
+        return (f'<form method="post" action="/api/subscribe"><input type="hidden" name="plan" value="{plan}">'
+                f'<button class="{"btn-buy" if lead else "btn-cast"}" type="submit">{label}</button></form>')
+    m, y, pr = config.MEMBER_MONTHLY_CENTS, config.MEMBER_YEARLY_CENTS, config.PRO_MONTHLY_CENTS
+    body = f"""<h1>Wyrd Membership</h1>
+<p class="lede">Your body's weather, every week. How the planets land in the body you were born with and in your Dharma body, written in Saga Devi's words.</p>
+<div class="plans">
+  <section class="plan lead"><h2>Membership</h2><div class="price">{money(m)}<small> a month</small></div>
+    <ul><li><b>Body Weather every Monday:</b> which centres the week's sky switches on in your birth body and your Dharma body, which stay open, and which of your gates it lights</li>
+      <li>The Moon's mansion day by day, the week's stations and sign changes, and your Vimshottari period</li>
+      <li>Your chart kept on your account, on any device</li>
+      <li>The natal astrology reading for {money(config.MEMBER_READING_CENTS)} instead of {money(config.PRICE_CENTS)}</li></ul>
+    {buy("member-month", f"Join for {money(m)} a month", True)}
+    {buy("member-year", f"Or {money(y)} a year") if on else ""}</section>
+  <section class="plan" id="pro"><h2>Professional</h2><div class="price">{money(pr)}<small> a month</small></div>
+    <ul><li>For astrologers, coaches and practitioners working with clients</li>
+      <li>Generate the full Wyrd reading for your clients: {config.PRO_READINGS_A_MONTH} a month included</li>
+      <li>Body Weather for any client, any week</li>
+      <li>Everything in the membership</li></ul>
+    {buy("pro-month", f"Subscribe for {money(pr)} a month")}</section>
+</div>
+<p class="muted">Cancel any time from your account. Payments are handled by Stripe. Prefer one reading? <a href="/reports">The natal reading is {money(config.PRICE_CENTS)}, once.</a></p>"""
+    ld = pages._ld({"@context": "https://schema.org", "@type": "Product", "name": config.MEMBER_NAME,
+                    "description": "Weekly Body Weather astrology report for your birth body and Dharma body.",
+                    "brand": {"@type": "Brand", "name": "The Wyrd Console"},
+                    "offers": {"@type": "Offer", "price": f"{m / 100:.2f}", "priceCurrency": "USD", "url": config.BASE_URL + "/membership"}})
+    return page("Weekly Astrology Membership: Body Weather · The Wyrd Console",
+                f"A weekly astrology report for your own chart: how the week's planets land in your birth body and Dharma body. {money(m)} a month from Saga Devi.",
+                body, ld)
+
+@app.post("/api/subscribe")
+def subscribe():
+    plan = PLANS.get(request.form.get("plan", ""))
+    if not plan or not same_origin(): abort(400)
+    if not selling(): return redirect("/membership")
+    email = signed_in()
+    if not email: return redirect("/signin?" + urlencode({"next": "/membership"}))
+    if limited(10): return private("Wait a minute", "<h1>Wait a minute</h1><p>Too many tries. Try again shortly.</p>", status=429)
+    tier, name, cents, interval = plan
+    try:
+        st = billing.status(config.STRIPE_SECRET, email, fresh=True)
+        if st[tier]: return redirect("/account")                       # already has it
+        cid = billing.customer_for(config.STRIPE_SECRET, email)
+        s = stripe_api.subscription_checkout(config.STRIPE_SECRET, base_url=config.BASE_URL, customer=cid, tier=tier, name=name,
+                                             cents=cents(), interval=interval, success="/account?joined=1", cancel="/membership")
+    except stripe_api.StripeError as e:
+        app.logger.error("stripe: %s", e)
+        return private("Try again", '<h1>Payment couldn\'t start</h1><p>Please <a href="/membership">try again</a>.</p>', status=502)
+    billing.forget(email)
+    return redirect(s["url"], code=303)
+
+@app.post("/billing/portal")
+def billing_portal():
+    email = signed_in()
+    if not email or not same_origin(): return redirect("/signin")
+    st = account_status(email)
+    if not st or not st["customer"]: return redirect("/account")
+    try:
+        p = stripe_api.portal(config.STRIPE_SECRET, st["customer"], config.BASE_URL + "/account")
+    except stripe_api.StripeError as e:
+        app.logger.error("stripe portal: %s", e)
+        return private("Manage plan", '<h1>Couldn\'t open billing</h1><p>Reply to any email from us and we\'ll change it for you.</p>', status=502)
+    billing.forget(email)
+    return redirect(p["url"], code=303)
+
+def chart_line(b):
+    return f'{esc(b.get("name") or "Your chart")} · {esc(b.get("date"))} {esc(b.get("time"))} · {esc((b.get("place_label") or "").split(",")[0])}'
+
+@app.get("/account")
+def account_page():
+    email = signed_in()
+    if not email: return redirect("/signin?next=/account")
+    st = account_status(email, fresh=bool(request.args.get("joined")))
+    if st is None: return private("Your account", "<h1>Your account</h1><p>We couldn't reach the payment system just now. Refresh in a moment.</p>", status=503)
+    rows = []
+    for p in st["plans"]:
+        live = p["status"] in billing.LIVE
+        end = datetime.fromtimestamp(p["periodEnd"], timezone.utc).strftime("%-d %B %Y") if p.get("periodEnd") else ""
+        when = (f" · ends {end}" if p["cancelAtEnd"] else f" · renews {end}") if live and end else ""
+        rows.append(f'<li>{"Professional" if p["tier"] == "pro" else "Membership"} ({p.get("interval") or "month"}ly) '
+                    f'<span class="status {"on" if live else "off"}">{esc(p["status"].replace("_", " "))}</span>{when}</li>')
+    joined = '<p class="note-box">Welcome. Your payment went through.</p>' if request.args.get("joined") else ""
+    plans = f'<ul>{"".join(rows)}</ul><form method="post" action="/billing/portal"><button class="alt" type="submit">Manage or cancel, change card, see receipts</button></form>' if rows else \
+            '<p>You have no membership yet. <a href="/membership">See the membership</a>.</p>'
+    member = st["member"] or st["pro"]
+    chart = ""
+    if member:
+        b = st.get("birth")
+        chart = f"""<h2>Your chart for Body Weather</h2>
+<p>{chart_line(b) if b else "No chart saved yet."}</p>
+<p id="useCurrent" hidden><button class="btn-cast" type="button">Use the chart open in this browser</button></p>
+<p class="muted" id="noCurrent">To change it, <a href="/">cast the chart</a>, then come back here.</p>
+{WEEK_LINK if b else ""}"""
+    pro = f'<h2>Professional</h2><p><a href="/pro">Open your practice desk →</a> {st["proUse"]} of {config.PRO_READINGS_A_MONTH} client readings used this month.</p>' if st["pro"] else ""
+    script = """<script src="/static/common.js"></script><script>
+(() => { const c = WyrdCommon.current(), box = document.getElementById("useCurrent"); if (!c || !box) return;
+  box.hidden = false; document.getElementById("noCurrent").hidden = true;
+  box.querySelector("button").textContent = "Use " + (c.birth.name || "the chart") + " (" + c.birth.date + ") for Body Weather";
+  box.querySelector("button").onclick = async () => {
+    const r = await fetch("/api/account/chart", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(c.birth)});
+    if (r.ok) location.reload(); else box.insertAdjacentHTML("beforeend", '<p class="err">That chart couldn\\'t be saved. Cast it again and retry.</p>');
+  };
+})();</script>"""
+    return private("Your account", f"""<h1>Your account</h1><p class="muted">Signed in as {esc(email)}</p>{joined}
+<h2>Your plan</h2>{plans}{chart}{pro}
+<form method="post" action="/signout" style="margin-top:40px"><button class="alt" type="submit">Sign out</button></form>""", script=script)
+
+WEEK_LINK = '<h2>This week</h2><p><a href="/account/weather">Read this week&#39;s Body Weather →</a></p>'
+BIRTH_KEYS = ("name", "date", "time", "place_id", "lat", "lon", "tz", "place_label")
+
+@app.post("/api/account/chart")
+def account_chart():
+    email = signed_in()
+    if not email or not same_origin(): return jsonify(error="Sign in first."), 401
+    st = account_status(email)
+    if not st or not (st["member"] or st["pro"]): return jsonify(error="For members."), 403
+    d = request.get_json(force=True, silent=True) or {}
+    b = {k: str(d.get(k, ""))[:80] for k in BIRTH_KEYS if d.get(k) not in (None, "")}
+    try: birth_from(b)
+    except (BadInput, ValueError): return jsonify(error="Those birth details don't work."), 400
+    try: billing.save_birth(config.STRIPE_SECRET, email, b)
+    except stripe_api.StripeError: return jsonify(error="Couldn't save just now."), 502
+    return jsonify(ok=True)
+
+def weather_for(b, start=None):
+    c = cast_for(birth_from(b))
+    return weather.render(weather.week(EPH, c, start), (b.get("name") or "").split(" ")[0])
+
+@app.get("/account/weather")
+def account_weather():
+    email = signed_in()
+    if not email: return redirect("/signin?next=/account/weather")
+    st = account_status(email)
+    if not st or not (st["member"] or st["pro"]): return redirect("/membership")
+    if not st.get("birth"): return redirect("/account")
+    return private("Body Weather", f'<p class="crumbs"><a href="/account">Your account</a></p><div class="weather">{weather_for(st["birth"])}</div>')
+
+# ---------------- the professional desk ----------------
+BAD_BIRTH = "Those birth details don't work."
+
+def pro_or_redirect():
+    email = signed_in()
+    if not email: return None, redirect("/signin?next=/pro")
+    st = account_status(email)
+    if not st or not st["pro"]: return None, redirect("/membership#pro")
+    return (email, st), None
+
+@app.get("/pro")
+def pro_desk():
+    who, bounce = pro_or_redirect()
+    if bounce: return bounce
+    left = max(0, config.PRO_READINGS_A_MONTH - who[1]["proUse"])
+    form = open(os.path.join(HERE, "static", "pro-form.html"), encoding="utf-8").read()
+    return private("Practice desk", f"""<h1>Your practice desk</h1>
+<p class="lede">Generate the full Wyrd reading or a week's Body Weather for a client.</p>
+<p class="muted">{left} of {config.PRO_READINGS_A_MONTH} client readings left this month. Body Weather is unlimited.</p>{form}""",
+                   script='<script src="/static/common.js"></script><script src="/static/pro.js"></script>')
+
+@app.post("/pro/reading")
+def pro_reading():
+    who, bounce = pro_or_redirect()
+    if bounce or not same_origin(): return bounce or abort(403)
+    email, st = who
+    meta = {k: request.form.get(k, "") for k in BIRTH_KEYS}
+    if not meta["lat"]: meta.pop("lat"); meta.pop("lon"); meta.pop("tz")
+    kind = request.form.get("kind", "reading")
+    try:
+        birth_from(meta)
+        if kind == "weather":
+            return private("Body Weather", f'<div class="weather">{weather_for(meta)}</div>')
+        if st["proUse"] >= config.PRO_READINGS_A_MONTH:
+            return private("Practice desk", f'<h1>This month\'s readings are used</h1><p>Your plan includes {config.PRO_READINGS_A_MONTH} client readings a month. They renew on the 1st.</p>', status=402)
+        billing.count_pro_reading(config.STRIPE_SECRET, email)
+        return render_reading(meta, "Prepared with The Wyrd Console Professional · written by Saga Devi. Save it as a PDF from your browser's print menu.")
+    except (BadInput, ValueError) as e:
+        return private("Practice desk", f'<h1>Check the details</h1><p>{esc(str(e) or BAD_BIRTH)} <a href="/pro">Back</a></p>', status=400)
+    except stripe_api.StripeError:
+        return private("Practice desk", '<h1>Try again</h1><p>We couldn\'t reach the payment system. <a href="/pro">Back</a></p>', status=502)
+
+# ---------------- the weekly job: Body Weather to every member ----------------
+@app.post("/jobs/weekly")
+def jobs_weekly():
+    tok = request.headers.get("Authorization", "").removeprefix("Bearer ").strip()
+    if not config.JOBS_TOKEN or not hmac.compare_digest(tok.encode(), config.JOBS_TOKEN.encode()): abort(404)
+    from wyrd import jobs
+    return jsonify(jobs.weekly(EPH, cast_for, birth_from, config))
 
 @app.get("/healthz")
 def health():

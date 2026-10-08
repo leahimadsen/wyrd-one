@@ -1,0 +1,21 @@
+# Every Monday morning: send each member their Body Weather, and you your summary.
+# Needs two repository secrets (Settings → Secrets and variables → Actions):
+#   SITE_URL    your site's address, e.g. https://wyrd-console.onrender.com
+#   JOBS_TOKEN  the same long random value as JOBS_TOKEN in Render
+name: Weekly Body Weather
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wake the site and run the weekly job
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+          JOBS_TOKEN: ${{ secrets.JOBS_TOKEN }}
+        run: |
+          if [ -z "$SITE_URL" ] || [ -z "$JOBS_TOKEN" ]; then echo "SITE_URL or JOBS_TOKEN not set; skipping"; exit 0; fi
+          curl -fsS --retry 4 --retry-delay 20 --retry-all-errors -o /dev/null "$SITE_URL/healthz"
+          curl -fsS --max-time 600 -X POST -H "Authorization: Bearer $JOBS_TOKEN" "$SITE_URL/jobs/weekly"
