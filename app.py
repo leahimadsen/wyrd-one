@@ -4,7 +4,7 @@
     python scripts/build_places.py        # once: world places index
     python app.py                          # http://localhost:8000
 """
-import html, json, os, re, time
+import html, hmac, json, os, re, time
 from collections import defaultdict, deque
 from datetime import datetime, timezone
 
@@ -78,9 +78,21 @@ def cast_for(b):
 def home():
     return send_from_directory(app.static_folder, "index.html")
 
+@app.get("/chart")
+def chart_page():
+    return send_from_directory(app.static_folder, "chart.html")
+
+@app.get("/c/<slug>")
+def consult_offer(slug):
+    """The 1:1 consultation offer. Unlisted: only someone given the link finds it."""
+    if not config.CONSULT_PATH or not hmac.compare_digest(slug.encode(), config.CONSULT_PATH.encode()): abort(404)
+    page = open(os.path.join(HERE, "static", "consult.html"), encoding="utf-8").read()
+    link = html.escape(config.CONSULTATION_PAYMENT_LINK_URL or "")
+    return Response(page.replace("{{PAY_LINK}}", link).replace("{{AUTHOR}}", config.AUTHOR), mimetype="text/html")
+
 @app.after_request
 def private_reading_headers(response):
-    if request.path in ("/reading", "/consultation", "/api/consultation-reading"):
+    if request.path in ("/reading", "/consultation", "/api/consultation-reading") or request.path.startswith("/c/"):
         response.headers["Cache-Control"] = "no-store"
         response.headers["Referrer-Policy"] = "no-referrer"
         response.headers["X-Robots-Tag"] = "noindex, nofollow"

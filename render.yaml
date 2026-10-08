@@ -15,3 +15,7 @@ services:
         sync: false          # sk_test_... first, then sk_live_...
       - key: STRIPE_PRICE_ID
         sync: false          # optional
+      - key: CONSULT_PATH
+        sync: false          # the secret part of the 1:1 page address: /c/<this>
+      - key: CONSULTATION_PAYMENT_LINK_URL
+        sync: false          # the buy.stripe.com link for 1:1 consultations

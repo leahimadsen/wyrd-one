@@ -7,17 +7,15 @@
 <meta name="description" content="Cast your chart on the high seat: sidereal and tropical positions, the twenty-seven mansions, the sixty-four gates, the Dharma Weave and the armillary. Free.">
 <link rel="stylesheet" href="/static/console.css">
 <link rel="stylesheet" href="/static/site.css">
-<link rel="stylesheet" href="/static/body.css">
-<link rel="stylesheet" href="/static/dasha.css">
 </head>
 <body>
 <header class="seat" id="skyHost">
   <div class="seat-in">
     <h1>Hliðskjálf</h1>
-    <p class="seat-sub">The high seat, from which all worlds are seen. Give the moment and place of your birth and the console casts it.</p>
+    <p class="seat-sub" id="seatSub">The high seat, from which all worlds are seen. Give the moment and place of your birth and the console casts it.</p>
 
     <form id="castForm" class="cast" autocomplete="off" novalidate>
-      <label class="f-name">Name <span>optional — it goes on your reading</span>
+      <label class="f-name">Name <span id="nameNote">optional — it goes on your reading</span>
         <input name="name" maxlength="80" placeholder="As you'd like it written"></label>
       <label>Date of birth <input name="date" type="date" required min="1850-01-01" max="2149-12-31"></label>
       <label>Time of birth <input name="time" type="time" required></label>
@@ -33,63 +31,14 @@
   </div>
 </header>
 
-<main id="results" hidden>
-  <section class="blk" id="chartBlk">
-    <h2>Your chart</h2>
-    <p class="meta" id="chartMeta"></p>
-    <div class="tw"><table id="posTable"></table></div>
-    <div class="facts" id="facts"></div>
-  </section>
-
-  <section class="blk offer" id="offer">
-    <h2>Your full reading</h2>
-    <p>Everything above, read. Eight movements, written for your placements and nobody else's: the Seat you rise from, the engine of your Moon, your soul-planet and its cabinet, the gates of your work, the Dharma Weave, the Path of Dharma through Mission, Illuminations and the Diamond, the periods running now, and every question your chart asks.</p>
-    <button class="btn-buy" id="buyBtn">Get my reading — $44</button>
-    <p class="fine">Secure checkout by Stripe. Your reading opens the moment payment completes; bookmark the page or save it as a PDF.</p>
-    <p class="err" id="buyErr" role="alert"></p>
-  </section>
-
-  <section class="blk" id="bodyBlk">
-    <h2>The harmonic body</h2>
-    <div id="bodyHost"></div>
-  </section>
-
-  <section class="blk" id="dashaBlk">
-    <h2>The Vimshottari clock</h2>
-    <div id="dashaHost"></div>
-  </section>
-
-  <section class="blk" id="armBlk">
-    <h2>The armillary</h2>
-    <div id="armHostWrap"></div>
-  </section>
-
-  <section class="blk" id="trBlk">
-    <h2>The sky now</h2>
-    <div id="trHost"></div>
-  </section>
-
-  <section class="blk" id="colourBlk">
-    <h2>The colour room</h2>
-    <div id="colourHost"></div>
-  </section>
-
-  <section class="blk" id="benchBlk">
-    <h2>The bench</h2>
-    <div id="benchHost"></div>
-  </section>
-</main>
-
 <footer class="foot">
   <p>The Wyrd Console · by Saga Devi · <a href="https://webofwyrd.substack.com">Web of Wyrd</a></p>
   <p class="fine">Planetary positions from NASA JPL DE440. Places from <a href="https://www.geonames.org/">GeoNames</a> (CC BY 4.0). For reflection and self-study; not medical, legal or financial advice.</p>
 </footer>
-<script src="/static/viz.js"></script>
 <button id="musicBtn" class="music" aria-pressed="false" hidden>♪ Music</button>
 <audio id="music" src="/static/music.mp3" loop preload="none"></audio>
-<script src="/static/body.js"></script>
-<script src="/static/dasha.js"></script>
-<script src="/static/transits.js"></script>
+<script src="/static/viz.js"></script>
+<script src="/static/music.js"></script>
 <script src="/static/app.js"></script>
 </body>
 </html>

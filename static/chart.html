@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your chart · The Wyrd Console</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/static/console.css">
+<link rel="stylesheet" href="/static/site.css">
+<link rel="stylesheet" href="/static/map.css">
+<link rel="stylesheet" href="/static/body.css">
+<link rel="stylesheet" href="/static/dasha.css">
+</head>
+<body>
+<!-- The map: the chart is the hub, and every land is one way into it.
+     Each land opens on its own tab; the map is always one tap away. -->
+<header class="hub" id="skyHost">
+  <div class="hub-in">
+    <p class="hub-crumb"><a href="/">← Cast another chart</a></p>
+    <h1 id="who">Your chart</h1>
+    <p class="meta" id="chartMeta"></p>
+    <nav class="map" id="map" aria-label="The lands of your chart"></nav>
+    <p class="map-hint">Every land is a different way into the same chart. Start anywhere.</p>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs" aria-label="Sections" hidden><div class="tabs-in" id="tabsIn"></div></nav>
+
+<main id="lands">
+  <section class="land-panel" id="p-chart" hidden>
+    <h2>Your chart</h2>
+    <p class="lede">Where everything stood: both zodiacs, the mansion, the house and the gate for every body.</p>
+    <div class="tw"><table id="posTable"></table></div>
+    <div class="facts" id="facts"></div>
+  </section>
+
+  <section class="land-panel" id="p-body" hidden>
+    <h2>The harmonic body</h2>
+    <div id="bodyHost"></div>
+  </section>
+
+  <section class="land-panel" id="p-clock" hidden>
+    <h2>The Vimshottari clock</h2>
+    <div id="dashaHost"></div>
+  </section>
+
+  <section class="land-panel" id="p-armillary" hidden>
+    <h2>The armillary</h2>
+    <div id="armHostWrap"></div>
+  </section>
+
+  <section class="land-panel" id="p-sky" hidden>
+    <h2>The sky now</h2>
+    <div id="trHost"></div>
+  </section>
+
+  <section class="land-panel" id="p-colour" hidden>
+    <h2>The colour room</h2>
+    <div id="colourHost"></div>
+  </section>
+
+  <section class="land-panel" id="p-bench" hidden>
+    <h2>The bench</h2>
+    <div id="benchHost"></div>
+  </section>
+
+  <section class="land-panel" id="p-reading" hidden>
+    <div class="offer">
+      <h2>Your full reading</h2>
+      <p>Everything on the map, read. Eight movements, written for your placements and nobody else's: the Seat you rise from, the engine of your Moon, your soul-planet and its cabinet, the gates of your work, the Dharma Weave, the Path of Dharma through Mission, Illuminations and the Diamond, the periods running now, and every question your chart asks.</p>
+      <button class="btn-buy" id="buyBtn">Get my reading — $44</button>
+      <p class="fine">Secure checkout by Stripe. Your reading opens the moment payment completes; bookmark the page or save it as a PDF.</p>
+      <p class="err" id="buyErr" role="alert"></p>
+    </div>
+  </section>
+
+  <nav class="land-nav" id="landNav" hidden aria-label="Between lands"></nav>
+</main>
+
+<footer class="foot">
+  <p>The Wyrd Console · by Saga Devi · <a href="https://webofwyrd.substack.com">Web of Wyrd</a></p>
+  <p class="fine">Planetary positions from NASA JPL DE440. Places from <a href="https://www.geonames.org/">GeoNames</a> (CC BY 4.0). For reflection and self-study; not medical, legal or financial advice.</p>
+</footer>
+<button id="musicBtn" class="music" aria-pressed="false" hidden>♪ Music</button>
+<audio id="music" src="/static/music.mp3" loop preload="none"></audio>
+<script src="/static/viz.js"></script>
+<script src="/static/body.js"></script>
+<script src="/static/dasha.js"></script>
+<script src="/static/transits.js"></script>
+<script src="/static/music.js"></script>
+<script src="/static/chart.js"></script>
+</body>
+</html>

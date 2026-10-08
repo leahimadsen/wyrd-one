@@ -67,8 +67,8 @@ main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
 .fine { font-size: 13.5px; color: var(--ivory-dim); }
 
 /* the console's panels were sized for a fixed room; let them breathe on a page */
-#armBlk svg { max-width: 100%; height: auto; }
-#colourBlk svg { max-width: min(100%, 560px); height: auto; display: block; margin: 0 auto; }
+#p-armillary svg { max-width: 100%; height: auto; }
+#p-colour svg { max-width: min(100%, 560px); height: auto; display: block; margin: 0 auto; }
 .arm-wrap { max-width: 100%; }
 
 /* ---- the sky now ---- */

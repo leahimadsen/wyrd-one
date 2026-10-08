@@ -11,7 +11,11 @@ Web of Wyrd register, unlocked by Stripe Checkout.
 - `wyrd/ephemeris.py` — NASA JPL DE440 via Skyfield; Lahiri ayanamsa
 - `wyrd/reading.py` — the paid reading (eight sections, all text from `lib/corpus.json`)
 - `wyrd/places.py`, `scripts/build_places.py` — worldwide place search (GeoNames)
-- `static/` — the free page; `static/viz.js` is extracted from the console
+- `static/index.html` + `app.js` — the landing page: the high seat and the birth form
+- `static/chart.html` + `chart.js` + `map.css` — the chart page (`/chart`): the map with the
+  chart as its hub, and each land (section) on its own tab
+- `static/consult.html` — the unlisted 1:1 consultation page (see below)
+- `static/viz.js` is extracted from the console
 - `lib/corpus.json` — your register. Server-side only; never sent to the browser.
 - `tests/` — `verify_engine.py` (port = console), `selfcheck.py` (ephemeris wired right)
 
@@ -39,6 +43,17 @@ readings. Setting a Stripe key switches previews off.
 
 Discount codes made in Stripe (Products → Coupons → Promotion codes) work at
 checkout, so you can give your Substack readers a code.
+
+## The unlisted 1:1 consultation page
+1. In Stripe, make a Payment Link for the consultation. Under **After payment**, choose
+   "Don't show confirmation page" and redirect to
+   `https://YOUR-SITE/consultation?session_id={CHECKOUT_SESSION_ID}`
+2. In Render, set `CONSULTATION_PAYMENT_LINK_URL` to that link (the `buy.stripe.com/...` address),
+   and `CONSULT_PATH` to a word nobody would guess, e.g. `inner-room-7k2q`.
+3. The page is now at `https://YOUR-SITE/c/inner-room-7k2q`. It isn't linked anywhere and search
+   engines are told to skip it, so only people you send it to will find it. Change `CONSULT_PATH`
+   to retire an old link; leave it empty to switch the page off.
+4. After paying, the client gives their birth details and their reading opens.
 
 ## Where readings live
 A reading is rebuilt from its Stripe session each time it's opened; the link in
