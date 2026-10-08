@@ -1,6 +1,6 @@
 # The Wyrd Console — public site
 
-Free chart (positions, mansions, gates, Dharma Weave, karakas, dasha) with the
+Free chart (positions, mansions, gates, runes, karakas, dasha; the Dharma Weave is kept for the paid reading) with the
 armillary, the colour room and the bench; a $44 reading assembled from the
 Web of Wyrd register, unlocked by Stripe Checkout.
 

@@ -49,7 +49,7 @@ function fmt(l){
 }
 function chartTable(){
   const pada = l => Math.floor((norm(l) % (360/27)) / (360/108)) + 1;
-  const NP = C.natal.personality, ND = C.natal.design, DP = C.dharma.personality, DD = C.dharma.design;
+  const NP = C.natal.personality, ND = C.natal.design;
   const gl = g => g ? `${g.gate}.${g.line}` : "—";
   $("chartWheel").innerHTML = WyrdWheel.svg(C, { name: birth.name || "Your chart", place: J.place.label.split(",")[0],
     when: `${birth.date} ${birth.time}` });
@@ -71,9 +71,8 @@ function chartTable(){
     ${angRow("Ascendant", C.ascS, `${NAKSHATRA[nakIndex(C.ascS)][0]} ${pada(C.ascS)}`)}
     ${angRow("Midheaven", C.mcS, NAKSHATRA[nakIndex(C.mcS)][0])}`;
 
-  const rv = WyrdWheel.rave(C), D = C.dharma;
+  const rv = WyrdWheel.rave(C);
   const kar = Object.entries(C.karaka).map(([k, b]) => `<li><span>${k.replace("karaka", "")}</span>${GLYPH[b]} ${b}</li>`).join("");
-  const weave = WyrdWheel.RAVE_BODIES.map(b => `<tr><th scope="row">${GLYPH[b] || "⊕"} ${b}</th><td>${gl(DP[b])}</td><td class="des">${gl(DD[b])}</td></tr>`).join("");
   const bodies = ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Rahu","Ketu","Uranus","Neptune","Pluto"], asp = [];
   for (let i = 0; i < bodies.length; i++) for (let k = i + 1; k < bodies.length; k++){
     const [a, b] = [bodies[i], bodies[k]];
@@ -87,10 +86,6 @@ function chartTable(){
       <dt>Definition</dt><dd>${rv.definition}</dd><dt>Profile</dt><dd>${rv.profile}</dd><dt>Cross gates</dt><dd>${rv.cross}</dd>
       <dt>Defined</dt><dd>${rv.centres.join(", ") || "—"}</dd><dt>Open</dt><dd>${rv.open.join(", ") || "—"}</dd>
       <dt>Channels</dt><dd>${rv.channels.join(", ") || "—"}</dd></dl></div>
-    <div class="fact"><h3>The Dharma Weave</h3>
-      <dl><dt>Dharma profile</dt><dd>${D.profile} · ${D.band}${D.mauve ? " · the magenta point" : ""}</dd>
-      <dt>Pentagram Cross</dt><dd>${D.suns.gap.toFixed(4)}° ${D.suns.holds ? "✓ holds" : "✗"}</dd></dl>
-      <table class="mini"><tr><th scope="col">Body</th><th scope="col">Personality</th><th scope="col">Design</th></tr>${weave}</table></div>
     <div class="fact"><h3>The seven karakas</h3><ul class="kar">${kar}</ul>
       <h3 class="fact-h2">Aspects</h3><ul class="kar asp">${asp.join("") || "<li>None within orb</li>"}</ul></div>`;
 }

@@ -5,7 +5,8 @@
      tropical signs · sidereal signs · the 24 runes (two to a house)
      · the 64 gates (personality and design lit) · the 27 mansions
      · the twelve houses in their colours · the bodies
-   and at the centre the Pentagram Cross of the two Dharma Suns.
+   and at the centre the aspects between the bodies. (The Dharma
+   Weave is not drawn here: it belongs to the paid reading.)
    Oriented like every wheel in the console: house 1 opens at one
    o'clock and the houses run clockwise (HOUSE_ONE_ANGLE, viz.js).
    Also works out the rave summary (type, authority, definition)
@@ -157,16 +158,16 @@ function svg(chart, opt = {}){
     if (full) o += `<text x="${f(lx)}" y="${f(ly - 7)}" class="wh-angn">${n}</text><text x="${f(lx)}" y="${f(ly + 9)}" class="wh-tiny">${dm(l)} ${ABBR[Math.floor(norm(l) / 30)]}</text>`;
   }
 
-  /* the Pentagram Cross: five spikes from the two Dharma Suns */
+  /* the aspects: a chord between every pair of bodies in aspect, in the aspect's colour */
   if (full){
-    const D = C.dharma, a0 = aTrop(D.suns.p);
-    for (let k = 0; k < 5; k++){
-      const a = a0 + k * 72, [tx, ty] = P(R.core + 60, a), [b1x, b1y] = P(R.core + 2, a - 13), [b2x, b2y] = P(R.core + 2, a + 13);
-      o += `<path d="M${f(tx)},${f(ty)} L${f(b1x)},${f(b1y)} L${f(b2x)},${f(b2y)} Z" class="wh-star"/>`;
-    }
-    for (const [k, l, g] of [["P", D.suns.p, D.personality.Sun], ["D", D.suns.d, D.design.Sun]]){
-      const [x, y] = P(R.core + 60, aTrop(l)), [lx, ly] = P(R.core + 80, aTrop(l));
-      o += `<circle cx="${f(x)}" cy="${f(y)}" r="5" class="wh-sun ${k}"/><text x="${f(lx)}" y="${f(ly)}" class="wh-tiny wh-sunl">☉ ${k} ${g.gate}.${g.line}</text>`;
+    const AB = ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Rahu","Ketu","Uranus","Neptune","Pluto"];
+    o += `<circle cx="500" cy="500" r="${R.des - 22}" class="wh-aspring"/>`;
+    for (const b of AB){ const [x, y] = P(R.des - 22, aSid(C.sid[b])); o += `<circle cx="${f(x)}" cy="${f(y)}" r="3" class="wh-aspdot"/>`; }
+    for (let i = 0; i < AB.length; i++) for (let k = i + 1; k < AB.length; k++){
+      if (AB[i] === "Rahu" && AB[k] === "Ketu") continue;
+      const x = aspectBetween(C.sid[AB[i]], C.sid[AB[k]]); if (!x || x.n === 1) continue;
+      const [x0, y0] = P(R.des - 22, aSid(C.sid[AB[i]])), [x1, y1] = P(R.des - 22, aSid(C.sid[AB[k]]));
+      o += `<line x1="${f(x0)}" y1="${f(y0)}" x2="${f(x1)}" y2="${f(y1)}" stroke="${x.col}" class="wh-asp"><title>${AB[i]} ${x.name.toLowerCase()} ${AB[k]}</title></line>`;
     }
   }
 
@@ -192,9 +193,9 @@ function svg(chart, opt = {}){
   o += `<circle cx="500" cy="500" r="${R.core}" class="wh-core"/>`;
   if (full){
     const rv = rave(C), lines = [
-      ["wh-c0", "full weave"], ["wh-c1", opt.name || "Your chart"], ["wh-c2", opt.place || ""], ["wh-c2", opt.when || ""],
-      ["wh-c3", rv.type], ["wh-c4", `${rv.profile} · dh ${C.dharma.profile}`]];
-    const ys = [432, 464, 497, 518, 548, 574];
+      ["wh-c1", opt.name || "Your chart"], ["wh-c2", opt.place || ""], ["wh-c2", opt.when || ""],
+      ["wh-c3", rv.type], ["wh-c4", `profile ${rv.profile}`]];
+    const ys = [446, 480, 501, 534, 562];
     lines.forEach(([c, t], i) => { o += `<text x="500" y="${ys[i]}" class="${c}">${esc(t)}</text>`; });
   } else {
     o += `<text x="500" y="452" class="wh-cc">☉ ${signOf(C.sid.Sun)}</text><text x="500" y="502" class="wh-cc">☽ ${signOf(C.sid.Moon)}</text><text x="500" y="552" class="wh-cc">↑ ${signOf(C.ascS)}</text>`;

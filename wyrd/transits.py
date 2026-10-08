@@ -19,11 +19,10 @@ def transits(eph, chart, now_jd):
     later = eph.positions(now_jd + 0.5)
     sid = {b: E.norm(l - ay) for b, l in trop.items()}
 
-    carried = {}                      # gate -> what in the natal / dharma chart holds it
-    for layer, label in (("natal", ""), ("dharma", "dharma ")):
-        for side in ("personality", "design"):
-            for body, g in chart[layer][side].items():
-                carried.setdefault(g["gate"], []).append(f"{label}{side} {body}")
+    carried = {}                      # gate -> what in the natal chart holds it (the dharma layer stays in the paid reading)
+    for side in ("personality", "design"):
+        for body, g in chart["natal"][side].items():
+            carried.setdefault(g["gate"], []).append(f"{side} {body}")
 
     points = dict(chart["sid"]); points["Ascendant"] = chart["ascS"]; points["Midheaven"] = chart["mcS"]
     natal_moon_sign = int(E.norm(chart["sid"]["Moon"]) // 30)

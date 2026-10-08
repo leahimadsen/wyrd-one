@@ -456,7 +456,6 @@ function paintNak(){
         ${e && e[1] ? `<dt>Shakti</dt><dd>${e[1]}<small>${e[2]}</small></dd>` : ""}
         ${e && e[3] ? `<dt>Above / below</dt><dd>${e[3]} over ${e[4]}</dd>` : ""}
         ${e && e[5] ? `<dt>Result</dt><dd>${e[5]}</dd>` : ""}
-        ${nk[6] ? `<dt>Felt as</dt><dd>${nk[6]}</dd>` : ""}
         <dt>Standing here</dt><dd>${here.length ? here.join("<br>") : "nothing in this chart"}</dd>
       </dl>
     </div>`;
@@ -507,7 +506,6 @@ function mount(host, chart){
       <button class="hb-btn" data-hb-view="tilt">Tilted</button>
       <button class="hb-btn on" data-hb-toggle="zod" aria-pressed="true">Two zodiacs</button>
       <button class="hb-btn" data-hb-toggle="rave" aria-pressed="false">Body Rave</button>
-      <button class="hb-btn" data-hb-toggle="dharma" aria-pressed="false">Dharma Rave</button>
       <button class="hb-btn" data-hb-scan>Descent scan</button>
       <button class="hb-btn" data-hb-clear>Clear</button>
     </div>

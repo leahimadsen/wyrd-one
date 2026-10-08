@@ -183,6 +183,7 @@ def chart():
     now = jd_now()
     c["dashaTree"] = engine.dasha_tree(c, now)
     c["transits"] = transits(EPH, c, now)
+    c.pop("dharma", None)            # the Dharma Weave is part of the paid reading, never the free chart
     return jsonify(chart=json.loads(json.dumps(c, default=lambda value: value.item())), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME)
 
 @app.post("/api/checkout")
