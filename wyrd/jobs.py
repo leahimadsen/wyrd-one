@@ -18,7 +18,9 @@ def _live_subscriptions(secret):
         if after: q["starting_after"] = after
         r = stripe_api._call(secret, "GET", "/subscriptions?" + stripe_api.urllib.parse.urlencode(q))
         rows = r.get("data") or []
-        out += [s for s in rows if s.get("status") in LIVE and (s.get("metadata") or {}).get("tier") in ("member", "pro")]
+        from .billing import tier_of
+        out += [dict(s, metadata={**(s.get("metadata") or {}), "tier": tier_of(s)}) for s in rows
+                if s.get("status") in LIVE and tier_of(s) in ("member", "pro")]
         if not r.get("has_more") or not rows: return out
         after = rows[-1]["id"]
 

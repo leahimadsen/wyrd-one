@@ -4,8 +4,12 @@ There is no database: Stripe holds the customers and subscriptions, and the
 site asks it. Answers are kept in memory for a few minutes so pages stay
 quick, and dropped the moment someone buys or changes a plan here. All of
 this happens on the server; the browser is never trusted to say who paid."""
-import json, threading, time
+import json, os, threading, time
 from . import stripe_api
+
+PRICE_TIER = {p: t for p, t in ((os.environ.get("STRIPE_MEMBER_MONTHLY_PRICE"), "member"),
+                                (os.environ.get("STRIPE_MEMBER_YEARLY_PRICE"), "member"),
+                                (os.environ.get("STRIPE_PRO_MONTHLY_PRICE"), "pro")) if p}
 
 LIVE = ("active", "trialing", "past_due")      # past_due: Stripe is still retrying the card
 CACHE_SECONDS = 300
@@ -32,9 +36,9 @@ def status(secret, email, fresh=False):
                 out["gift"] = g
                 if g["live"]: out[g["tier"]] = True
             for s in stripe_api.subscriptions(secret, c["id"]):
-                tier = (s.get("metadata") or {}).get("tier")
-                if tier not in ("member", "pro"): continue
                 item = ((s.get("items") or {}).get("data") or [{}])[0]
+                tier = tier_of(s)
+                if tier not in ("member", "pro"): continue
                 plan = {"id": s["id"], "tier": tier, "status": s.get("status"),
                         "interval": ((item.get("price") or {}).get("recurring") or {}).get("interval"),
                         "periodEnd": s.get("current_period_end") or item.get("current_period_end"),
@@ -48,6 +52,15 @@ def status(secret, email, fresh=False):
         _cache[email] = (time.time(), out)
         if len(_cache) > 5000: _cache.clear()
     return out
+
+
+def tier_of(sub):
+    """Which plan a subscription is: from the price it is on now (so a switch made in the Stripe
+    portal counts at once), falling back to the tier written on it at checkout."""
+    item = ((sub.get("items") or {}).get("data") or [{}])[0]
+    price = (item.get("price") or {}).get("id")
+    if price and price in PRICE_TIER: return PRICE_TIER[price]
+    return (sub.get("metadata") or {}).get("tier")
 
 
 def forget(email):

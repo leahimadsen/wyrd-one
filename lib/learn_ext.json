@@ -1,0 +1,28 @@
+{
+  "_note": "DRAFT for Saga Devi to edit. Teaching text for the rune and Dharma Design learning pages. Rune meanings come from register_ext.json; the gate passages and the Path of Dharma come from corpus.json.",
+
+  "RUNES_LEDE": "The twenty-four runes of the Elder Futhark, as the Wyrd Console reads them: seated two to a house around your chart, lit by the planets that stand in them, and woken by the periods of your life.",
+  "RUNES_TEACH": [
+    "The Elder Futhark is the oldest runic alphabet, twenty-four signs in a fixed order. Each rune is a sound, a word and a force: Fehu is the letter F, the word for cattle and moveable wealth, and the force of energy that must circulate.",
+    "The runes come in three families of eight, called aettir. The Wyrd Console lays them around the chart in that order, so each family covers four houses: the first family the houses of the self and its ground, the second the houses of the self meeting the world, the third the houses of the self in the wider order.",
+    "Each house holds two runes. The opening rune covers the first fifteen degrees of the house, the way in. The closing rune covers the last fifteen, the way out. Because the houses count from your rising sign, your runes sit in a different place on the wheel from anyone else's.",
+    "A rune is lit when a planet or your Ascendant stands in it. A lit rune is active in your life; an unlit rune is still yours but quiet. The more important the planet, the louder the rune.",
+    "A rune wakes in time. When the period of a planet standing in it begins, or the period of the planet that rules its sign, the rune's force comes forward. Your paid reading lists each lit rune and the years it wakes."
+  ],
+  "AETTIR": [
+    {"name": "Freyr's family", "houses": "houses 1 to 4", "says": "The runes of the self and its ground: wealth, strength, defence, speech, the road, the torch, the gift and joy. Body, resources, effort, home."},
+    {"name": "Hagal's family", "houses": "houses 5 to 8", "says": "The runes of the self meeting the forces it cannot control: hail, need, ice, the harvest, the yew, the lot-cup, the guardian elk and the sun. Creation, service, partnership, crisis."},
+    {"name": "Tyr's family", "houses": "houses 9 to 12", "says": "The runes of the self in the wider order: the oath, the birch, the horse, humankind, water, the seed, daybreak and inheritance. Faith, vocation, the many, release."}
+  ],
+
+  "DHARMA_LEDE": "The Dharma Design is a second body behind your birth design: the same planets, multiplied through the ninth harmonic, showing the shape your life matures toward.",
+  "DHARMA_TEACH": [
+    "Your birth design is cast from where the planets stood at birth and about eighty-eight days before. The Dharma Design takes those same tropical positions and multiplies each by nine, the navamsa, the ninth harmonic. What lands where becomes a second set of gates: the dharma rave.",
+    "The ninth harmonic is the harmonic of dharma in the Vedic tradition: the fruit of the life, what you grow into rather than what you are issued. So read the birth design as the equipment and the Dharma Design as the work it is for.",
+    "Because the two Suns of the birth design sit eighty-eight degrees apart, multiplying by nine puts them seven hundred and ninety-two degrees apart, which is two full circles and seventy-two degrees. Every Dharma Design ever cast has its two Suns exactly one fifth of the wheel apart. That fixed angle is the Pentagram Cross.",
+    "The dharma profile falls in one of two bands. A Seam is a pairing that cannot occur at birth, made only in the dharma. An Echo repeats a shape others are born holding, earned here instead of given. A 6/1 dharma profile sits at the exact centre of the Mauve Zone.",
+    "Where a gate repeats between the birth design and the Dharma Design, the repetition is load-bearing: it is a thing the life will not outgrow. Where they differ, the difference is the maturation."
+  ],
+  "DHARMA_GATE": "In the Dharma Design this gate is not equipment you were handed but a direction you grow into. Read its engine as the work, its gifts as what ripens, and its distortion as what the maturing has to clear.",
+  "DHARMA_POSITIONS": "A planet puts this gate into your Dharma Design when it stands, in the tropical zodiac, in any of these nine narrow arcs (each about 37′ wide):"
+}

@@ -81,15 +81,17 @@ def subscriptions(secret, customer_id):
     return _call(secret, "GET", "/subscriptions?" + urllib.parse.urlencode(
         {"customer": customer_id, "status": "all", "limit": 20})).get("data") or []
 
-def subscription_checkout(secret, *, base_url, customer, tier, name, cents, interval, success, cancel):
-    return _call(secret, "POST", "/checkout/sessions", {
-        "mode": "subscription",
-        "customer": customer,
-        "line_items[0][quantity]": "1",
+def subscription_checkout(secret, *, base_url, customer, tier, name, cents, interval, success, cancel, price_id=None):
+    f = {"line_items[0][price]": price_id} if price_id else {
         "line_items[0][price_data][currency]": "usd",
         "line_items[0][price_data][unit_amount]": str(cents),
         "line_items[0][price_data][recurring][interval]": interval,
-        "line_items[0][price_data][product_data][name]": name,
+        "line_items[0][price_data][product_data][name]": name}
+    return _call(secret, "POST", "/checkout/sessions", {
+        **f,
+        "mode": "subscription",
+        "customer": customer,
+        "line_items[0][quantity]": "1",
         "allow_promotion_codes": "true",
         "subscription_data[metadata][tier]": tier,
         "metadata[tier]": tier,
@@ -97,8 +99,12 @@ def subscription_checkout(secret, *, base_url, customer, tier, name, cents, inte
         "cancel_url": f"{base_url}{cancel}",
     })
 
-def portal(secret, customer, return_url):
-    return _call(secret, "POST", "/billing_portal/sessions", {"customer": customer, "return_url": return_url})
+def portal(secret, customer, return_url, upgrade=None):
+    """Stripe's customer portal. With upgrade=sub_..., it opens straight on changing that plan."""
+    f = {"customer": customer, "return_url": return_url}
+    if upgrade:
+        f.update({"flow_data[type]": "subscription_update", "flow_data[subscription_update][subscription]": upgrade})
+    return _call(secret, "POST", "/billing_portal/sessions", f)
 
 def search_customers(secret, query):
     out, page = [], None

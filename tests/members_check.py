@@ -76,7 +76,7 @@ check("owner summary sent", any(m["to"] == "owner@x.co" for m in mailer.OUTBOX))
 
 # ---- pages for search ----
 sm = pages.sitemap("https://example")
-check("sitemap lists every learning page", sm.count("<url>") == 6 + 64 + 27 + 12)
+check("sitemap lists every learning page", sm.count("<url>") == 6 + 64 + 27 + 12 + 1 + 24 + 1 + 64)
 t, d, body, ld = pages.reports("https://example", 4400, 3520)
 check("readings page says astrology and the price", "Astrology" in t and '"price": "44.00"' in ld)
 
