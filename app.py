@@ -457,6 +457,11 @@ def page(title, desc, body, ld="", robots="index, follow", script="", status=200
 def private(title, body, script="", status=200):
     return page(title + " · The Wyrd Console", title, body, robots="noindex, nofollow", script=script, status=status)
 
+@app.get("/googled81e0f187c4a1868.html")
+def google_site_verification():
+    """Google Search Console checks this file to confirm the site is Saga Devi's."""
+    return send_from_directory(app.static_folder, "googled81e0f187c4a1868.html", mimetype="text/html")
+
 @app.get("/robots.txt")
 def robots():
     lines = ["User-agent: *", "Disallow: /admin", "Disallow: /account", "Disallow: /reading", "Disallow: /consultation",
