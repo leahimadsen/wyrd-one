@@ -84,14 +84,16 @@ class Ephemeris:
         p["Ketu"] = norm(p["Rahu"] + 180)
         return p
    
-    def positions_many(self, jds):
+    def positions_many(self, jds, bodies=None):
         """positions() and ayanamsa() for many moments in one pass: a year of
-        daily samples costs one Skyfield call per body instead of 365."""
+        daily samples costs one Skyfield call per body instead of 365.
+        `bodies` limits the work to the ones asked for."""
         import numpy as np
         t = self._t(np.asarray(jds, dtype=float))
         e = self.earth.at(t)
         lon = {}
-        for b in NAMES:
+        names = [b for b in NAMES if bodies is None or b in bodies]
+        for b in names:
             _, l, _ = e.observe(self.bodies[b]).apparent().frame_latlon(ecliptic_frame)
             lon[b] = np.mod(l.degrees, 360)
         rahu = [self._mean_node(tt) for tt in t.tt]
@@ -100,7 +102,7 @@ class Ephemeris:
         ay = mean + np.asarray(dpsi) * R2D
         out = []
         for i in range(len(jds)):
-            p = {b: float(lon[b][i]) for b in NAMES}
+            p = {b: float(lon[b][i]) for b in names}
             p["Rahu"] = rahu[i]; p["Ketu"] = norm(rahu[i] + 180)
             out.append((p, float(ay[i])))
         return out

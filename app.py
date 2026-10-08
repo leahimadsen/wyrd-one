@@ -8,7 +8,7 @@ import html, hmac, json, math, os, re, time
 from collections import defaultdict, deque
 from datetime import datetime, timezone
 
-from flask import Flask, abort, jsonify, request, send_from_directory, Response, redirect
+from flask import Flask, abort, jsonify, request, send_from_directory, Response, redirect, session
 from urllib.parse import urlencode
 
 import config
@@ -22,6 +22,10 @@ from wyrd import calendar as wcal
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, static_folder=os.path.join(HERE, "static"), static_url_path="/static")
+app.secret_key = config.SECRET_KEY or None
+app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Strict",
+                  SESSION_COOKIE_SECURE=config.BASE_URL.startswith("https://"),
+                  PERMANENT_SESSION_LIFETIME=12 * 3600)
 
 # ---------------- ephemeris ----------------
 def _load_ephemeris():
@@ -118,9 +122,10 @@ def consult_offer(slug):
 
 @app.after_request
 def private_reading_headers(response):
-    if request.path in ("/reading", "/consultation", "/api/consultation-reading") or request.path.startswith("/c/"):
+    if request.path in ("/reading", "/consultation", "/api/consultation-reading") or request.path.startswith(("/c/", "/admin")):
         response.headers["Cache-Control"] = "no-store"
-        response.headers["Referrer-Policy"] = "no-referrer"
+        # the admin's own forms need the browser to say they came from this site
+        response.headers["Referrer-Policy"] = "same-origin" if request.path.startswith("/admin") else "no-referrer"
         response.headers["X-Robots-Tag"] = "noindex, nofollow"
     return response
 
@@ -226,7 +231,6 @@ def chart():
     c["transits"] = transits(EPH, c, now)
     c["extras"] = extras(EPH, c, b)
     if c.get("unknownTime"): c["extras"]["placidus"] = None     # house cusps need a birth time
-    c.pop("dharma", None)            # the Dharma Weave is part of the paid reading, never the free chart
     return jsonify(chart=plain(c), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME)
 
 # ---------------- what's coming, today, and the sample reading ----------------
@@ -270,16 +274,8 @@ _sample_page = {}
 @app.get("/sample")
 def sample_reading():
     if "page" not in _sample_page:
-        b = birth_from(SAMPLE)
-        c = cast_for(b)
-        body = reading.build(c, engine.dasha_tree(c, jd_now()), SAMPLE)
-        born = f"{b['y']:04d}-{b['mo']:02d}-{b['d']:02d} · {b['hh']:02d}:{b['mi']:02d} ({b['ut']['label']}) · {html.escape(b['place']['label'])}"
-        page = open(os.path.join(HERE, "static", "reading.html"), encoding="utf-8").read()
-        _sample_page["page"] = (page.replace("{{TITLE}}", config.SITE_TITLE).replace("{{WHO}}", SAMPLE["name"])
-            .replace("{{BORN}}", born).replace("{{OPENING}}", config.READING_OPENING)
-            .replace("{{CLOSING}}", config.READING_CLOSING).replace("{{AUTHOR}}", config.AUTHOR)
-            .replace("{{PREVIEW}}", "SAMPLE READING — this is a made-up chart, so you can see what a reading looks like. <a href=\"/\" style=\"color:#fff\">Cast yours →</a>")
-            .replace("{{BODY}}", body))
+        _sample_page["page"] = render_reading(SAMPLE, "SAMPLE READING — this is a made-up chart, so you can see what a reading looks like. "
+                                                      "<a href=\"/\" style=\"color:#fff\">Cast yours →</a>").get_data(as_text=True)
     return Response(_sample_page["page"], mimetype="text/html")
 
 @app.post("/api/checkout")
@@ -324,9 +320,14 @@ def paid_reading():
                 return redirect("/consultation?" + urlencode({"session_id": sid}))
         meta = s.get("metadata", {})
     try:
-        b = birth_from(meta)
+        return render_reading(meta, "PREVIEW — no payment taken" if request.args.get("preview") else "")
     except BadInput:
         abort(400)
+
+def render_reading(meta, banner=""):
+    """The full reading page for a set of birth details. Used by the paid flow,
+    the sample and the private admin, so all three are always the same reading."""
+    b = birth_from(meta)
     c = cast_for(b)
     body = reading.build(c, engine.dasha_tree(c, jd_now()), meta)
     who = html.escape(meta.get("name") or "")
@@ -335,8 +336,65 @@ def paid_reading():
     return Response(page.replace("{{TITLE}}", config.SITE_TITLE).replace("{{WHO}}", who or "Your reading")
                         .replace("{{BORN}}", born).replace("{{OPENING}}", config.READING_OPENING)
                         .replace("{{CLOSING}}", config.READING_CLOSING).replace("{{AUTHOR}}", config.AUTHOR)
-                        .replace("{{PREVIEW}}", "PREVIEW — no payment taken" if request.args.get("preview") else "")
-                        .replace("{{BODY}}", body), mimetype="text/html")
+                        .replace("{{PREVIEW}}", banner).replace("{{BODY}}", body), mimetype="text/html")
+
+# ---------------- the private admin ----------------
+_login_tries = defaultdict(deque)
+
+def admin_on():
+    return bool(config.ADMIN_PASSWORD and config.SECRET_KEY)
+
+def is_admin():
+    return admin_on() and session.get("admin") is True
+
+def same_origin():
+    """A form posted from this site, not another one."""
+    site = request.headers.get("Sec-Fetch-Site")          # modern browsers say so directly
+    if site: return site == "same-origin"
+    src = request.headers.get("Origin") or request.headers.get("Referer") or ""
+    return src.startswith(request.host_url.rstrip("/"))
+
+def admin_page(name, **fill):
+    page = open(os.path.join(HERE, "static", name), encoding="utf-8").read()
+    for k, v in fill.items(): page = page.replace("{{" + k + "}}", v)
+    return Response(page, mimetype="text/html")
+
+@app.get("/admin")
+def admin():
+    if not admin_on(): abort(404)
+    if not is_admin(): return admin_page("admin-login.html", ERROR="")
+    return admin_page("admin.html")
+
+@app.post("/admin/login")
+def admin_login():
+    if not admin_on(): abort(404)
+    ip = request.headers.get("X-Forwarded-For", request.remote_addr or "").split(",")[0].strip()
+    q, now = _login_tries[ip], time.time()
+    while q and now - q[0] > 900: q.popleft()
+    if len(q) >= 8:
+        return admin_page("admin-login.html", ERROR="Too many tries. Wait fifteen minutes."), 429
+    pw = request.form.get("password", "")
+    if not same_origin() or not hmac.compare_digest(pw.encode(), config.ADMIN_PASSWORD.encode()):
+        q.append(now)
+        return admin_page("admin-login.html", ERROR="That password isn't right."), 401
+    session.clear(); session["admin"] = True; session.permanent = True
+    return redirect("/admin")
+
+@app.post("/admin/logout")
+def admin_logout():
+    if same_origin(): session.clear()
+    return redirect("/admin")
+
+@app.post("/admin/reading")
+def admin_reading():
+    if not is_admin() or not same_origin(): abort(404)
+    meta = {k: request.form.get(k, "") for k in ("name", "date", "time", "place_id", "lat", "lon", "tz", "place_label")}
+    if not meta["lat"]: meta.pop("lat"); meta.pop("lon"); meta.pop("tz")
+    try:
+        return render_reading(meta, "Generated in your admin — no payment taken. Save it as a PDF from your browser's print menu.")
+    except (BadInput, ValueError) as e:
+        return admin_page("admin.html").get_data(as_text=True).replace(
+            '<p class="err" id="admErr" role="alert"></p>', f'<p class="err" id="admErr" role="alert">{html.escape(str(e) or "Check the details.")}</p>'), 400
 
 @app.get("/healthz")
 def health():

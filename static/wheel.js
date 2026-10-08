@@ -54,10 +54,12 @@ function spread(items, gap){
 }
 
 /* ---------- the rave summary, worked out from the gates ---------- */
-function rave(chart){
+function rave(chart){ return raveOf(chart.natal); }
+/* any rave: the birth one (chart.natal) or the dharma one (chart.dharma) */
+function raveOf(R){
   const { centres, channels } = window.WyrdBody;
   const centreOf = {}; for (const k in centres) for (const g of centres[k].gates) centreOf[g] = k;
-  const gates = new Set([chart.natal.personality, chart.natal.design].flatMap(c => Object.values(c).map(v => v.gate)));
+  const gates = new Set([R.personality, R.design].flatMap(c => Object.values(c).map(v => v.gate)));
   const live = channels.filter(([a, b]) => gates.has(a) && gates.has(b));
   const def = new Set(live.flatMap(([a, b]) => [centreOf[a], centreOf[b]]));
   const adj = {}; for (const [a, b] of live){ const x = centreOf[a], y = centreOf[b]; (adj[x] ||= new Set()).add(y); (adj[y] ||= new Set()).add(x); }
@@ -79,8 +81,8 @@ function rave(chart){
   const definition = ["No definition","Single","Split","Triple split","Quadruple split"][islands] || `${islands}-way split`;
   const strategy = { "Generator":"To respond", "Manifesting Generator":"To respond, then inform", "Manifestor":"To inform",
     "Projector":"To wait for the invitation", "Reflector":"To wait a lunar cycle" }[type];
-  const P_ = chart.natal.personality, D_ = chart.natal.design;
-  return { type, strategy, authority, definition, profile: chart.natal.profile,
+  const P_ = R.personality, D_ = R.design;
+  return { type, strategy, authority, definition, profile: R.profile, defined: def,
     cross: `${P_.Sun.gate}/${P_.Earth.gate} | ${D_.Sun.gate}/${D_.Earth.gate}`,
     centres: Object.keys(centres).filter(k => def.has(k)).map(k => centres[k].label),
     open: Object.keys(centres).filter(k => !def.has(k)).map(k => centres[k].label),
@@ -370,5 +372,5 @@ function mount(host, chart, opts = {}){
   };
 }
 
-window.WyrdWheel = { mount, svg, rave, bodyFacts, bodiesIn, runeAt: (chart, l) => { C = chart; return runeAt(l); }, RAVE_BODIES, WHEEL_BODIES, NAK_SHORT, ABBR, dm };
+window.WyrdWheel = { mount, svg, rave, raveOf, bodyFacts, bodiesIn, runeAt: (chart, l) => { C = chart; return runeAt(l); }, RAVE_BODIES, WHEEL_BODIES, NAK_SHORT, ABBR, dm };
 })();

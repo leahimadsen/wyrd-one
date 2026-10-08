@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin · The Wyrd Console</title>
+<link rel="icon" href="/static/icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="stylesheet" href="/static/console.css">
+<link rel="stylesheet" href="/static/site.css">
+<link rel="stylesheet" href="/static/learn.css">
+<link rel="stylesheet" href="/static/a11y.css">
+</head>
+<body>
+<header class="seat"><div class="seat-in">
+  <h1>Generate a reading</h1>
+  <p class="seat-sub">The full paid reading for anyone, no checkout. It opens in a new tab; print it to PDF to send.</p>
+  <form class="cast" id="admForm" method="post" action="/admin/reading" target="_blank" autocomplete="off">
+    <label class="f-name">Name <span>as it should appear on the reading</span><input name="name" maxlength="80"></label>
+    <label>Date of birth <input name="date" type="date" required min="1850-01-01" max="2149-12-31"></label>
+    <label>Time of birth <input name="time" type="time" required></label>
+    <label class="f-place">Place of birth
+      <input id="admPlace" placeholder="Start typing a town or city" required role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="placeList">
+      <ul id="placeList" class="adm-list" role="listbox" hidden></ul></label>
+    <input type="hidden" name="place_id"><input type="hidden" name="lat"><input type="hidden" name="lon"><input type="hidden" name="tz"><input type="hidden" name="place_label">
+    <button type="submit" class="btn-cast">Generate the reading</button>
+    <p class="err" id="admErr" role="alert"></p>
+  </form>
+  <section class="saved" id="recentBox" hidden aria-labelledby="recentH"><h2 id="recentH">Recent, in this browser</h2><ul id="recentList"></ul></section>
+  <form method="post" action="/admin/logout" class="adm-out"><button type="submit" class="link-btn">Sign out</button></form>
+</div></header>
+<script src="/static/common.js"></script>
+<script>
+(() => {
+  const f = document.getElementById("admForm"), err = document.getElementById("admErr"), { esc } = WyrdCommon;
+  let place = null;
+  WyrdCommon.placeSearch(document.getElementById("admPlace"), document.getElementById("placeList"), p => {
+    place = p;
+    for (const [k, v] of [["place_id", p && p.id], ["lat", p && p.lat], ["lon", p && p.lon], ["tz", p && p.tz], ["place_label", p && p.label]]) f.elements[k].value = v ?? "";
+  });
+  const KEY = "wyrdAdminRecent";
+  const recent = () => { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (_) { return []; } };
+  function draw(){
+    const r = recent(); document.getElementById("recentBox").hidden = !r.length;
+    document.getElementById("recentList").innerHTML = r.map((b, i) => `<li><button type="button" class="sv-open" data-i="${i}"><b>${esc(b.name || "Unnamed")}</b>
+      <span>${esc(b.date)} · ${esc(b.time)} · ${esc((b.place_label || "").split(",")[0])}</span></button></li>`).join("");
+  }
+  document.getElementById("recentList").addEventListener("click", e => {
+    const o = e.target.closest("[data-i]"); if (!o) return; const b = recent()[+o.dataset.i];
+    for (const k of ["name", "date", "time", "place_id", "lat", "lon", "tz", "place_label"]) f.elements[k].value = b[k] ?? "";
+    document.getElementById("admPlace").value = b.place_label || ""; place = { id: b.place_id };
+  });
+  f.addEventListener("submit", e => {
+    err.textContent = "";
+    if (!place){ e.preventDefault(); err.textContent = "Choose the birthplace from the list as you type."; return; }
+    const b = Object.fromEntries(["name", "date", "time", "place_id", "lat", "lon", "tz", "place_label"].map(k => [k, f.elements[k].value]));
+    try { localStorage.setItem(KEY, JSON.stringify([b, ...recent().filter(x => !(x.date === b.date && x.time === b.time && x.name === b.name))].slice(0, 15))); } catch (_) {}
+    draw();
+  });
+  draw();
+})();
+</script>
+</body>
+</html>

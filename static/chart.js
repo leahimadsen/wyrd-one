@@ -51,6 +51,8 @@ const LANDS = [
     prompt: "Your reading reads these placements together: the Seat you rise from, the engine of your Moon, your soul-planet and its cabinet." },
   { id: "body",      name: "The harmonic body",     mark: "✶", teaser: "Seven stations, each fed by one of your planets",
     terms: ["station7", "centre", "channel", "type"], prompt: "Your reading reads the gates of your work and what your defined centres carry." },
+  { id: "dharma",    name: "The Dharma Weave",      mark: "⛤", teaser: C.dharma ? `Dharma profile ${C.dharma.profile} · the Pentagram Cross` : "What the chart ripens into",
+    terms: [], prompt: "Your reading reads your dharma Suns and Earths from the register, and walks the Path of Dharma step by step, with when each step opens in your life." },
   { id: "clock",     name: "The Vimshottari clock", mark: "◷", teaser: `${T.cur.lord} era · ${T.curA.lord} chapter, running now`,
     terms: ["vimshottari", "mahadasha", "antardasha", "pratyantar", "moonmansion"], prompt: "Your reading reads the periods running now: what this era and this chapter ask of you." },
   { id: "calendar",  name: "What's coming",         mark: "☷", teaser: "The next twelve months, dated",
@@ -58,8 +60,8 @@ const LANDS = [
   { id: "armillary", name: "The armillary",         mark: "◎", teaser: "Your sky as a sphere you can open",
     terms: ["armillary", "ayanamsa", "gate", "rune"], prompt: "Your reading draws every frame of the sphere into one account of you." },
   { id: "reading",   name: "Your full reading",     mark: "✦", teaser: "Eight movements, written for you · $44", gold: true, terms: [] },
-  { id: "compare",   name: "Compare",               mark: "⚭", teaser: "Lay someone else's chart over yours",
-    terms: [], prompt: "Your reading is about your chart alone, read in full." },
+  { id: "compare",   name: "Compare",               mark: "⚭", teaser: "You and another, or a unit of three or four",
+    terms: [], prompt: "Your reading is about your chart alone, read in full: the ground every bond stands on." },
   { id: "sky",       name: "The sky now",           mark: "☾", teaser: "Today's planets crossing yours",
     terms: ["transit", "sadesati", "retro", "orb"], prompt: "Your reading names what your chart asks of you, whatever today's sky is doing." },
   { id: "colour",    name: "The colour room",       mark: "◐", teaser: "Your twelve houses as a colour wheel",
@@ -215,11 +217,12 @@ const BUILD = {
   clock: () => { window.WyrdDasha && WyrdDasha.mount($("dashaHost"));
     if (unknown) $("dashaHost").insertAdjacentHTML("afterbegin", `<p class="unknown-note">The clock is set by the Moon. Without a birth time your Moon could be anywhere in a day's travel, so these dates may be out by months.</p>`); },
   calendar: () => WyrdLands.calendar($("calHost"), { C, birth, unknown }),
+  dharma: () => WyrdDharma.mount($("dharmaHost"), { C, unknown }),
   armillary: () => { $("armHostWrap").innerHTML = Wyrd.armillary(); watchArmillary($("p-armillary")); },
   sky: () => renderTransits(C),
   colour: () => { $("colourHost").innerHTML = Wyrd.colour(); setTimeout(() => Wyrd.afterColour(), 0); },
   bench: () => { $("benchHost").innerHTML = Wyrd.bench(); },
-  compare: () => WyrdLands.compare($("cmpHost"), { C, birth, unknown }),
+  compare: () => WyrdCompare.mount($("cmpHost"), { C, birth, unknown }),
   reading: () => {},
 };
 const built = new Set();

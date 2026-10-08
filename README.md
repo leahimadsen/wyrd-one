@@ -26,6 +26,22 @@ Web of Wyrd register, unlocked by Stripe Checkout.
 - `lib/corpus.json` — your register. Server-side only; never sent to the browser.
 - `tests/` — `verify_engine.py` (port = console), `selfcheck.py` (ephemeris wired right)
 
+## Your private admin
+`/admin` lets you generate the full paid reading for anyone, with no checkout. In Render, set
+`ADMIN_PASSWORD` (long; it's the only lock) and `SECRET_KEY` (any long random string; the blueprint
+generates one). Without both, `/admin` doesn't exist. Sign in, enter the birth details, and the reading
+opens in a new tab: print it to PDF to send. Eight wrong passwords lock sign-in for fifteen minutes.
+
+## Compare, Sukuyō and the Dharma Weave
+- `static/compare.js` — Compare: two people in full, or a unit of three or four.
+- `static/dynamics.js` — **all of Compare's writing** (the Sukuyō relations, every planet contact,
+  the house overlays). Drafted for you to rewrite in your own voice.
+- `wyrd/sukuyo.py` — the birth shuku from the old Japanese lunar calendar (rebuilt from new moons and
+  solar terms, checked against seventeen known lunar dates including the 2012 and 2017 leap months, where
+  Japan and China differ), and the sanku relations with their distances.
+- `static/dharma.js` — the free Dharma Weave land: how the dharma rave is made, with the person's numbers.
+  The paid reading's section V now also reads the dharma Earths and shows what the dharma rave defines.
+
 ## The installable app
 The site installs to a phone or computer like an app: "Install the app" appears on the first page
 and the chart page wherever the browser supports it (on iPhone it explains Share → Add to Home Screen).

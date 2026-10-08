@@ -57,6 +57,17 @@ const G = {
   centre: ["Centres", "The nine hubs of the rave body: Head, Ajna, Throat, G, Heart, Spleen, Solar plexus, Sacral and Root. A centre is defined when a complete channel runs into it."],
   channel: ["Channel", "A link between two gates in two different centres. When both of its gates are activated, by birth or design, the channel is complete and both centres are defined."],
   cross: ["Cross gates", "The gates of the four Suns and Earths: birth Sun / birth Earth | design Sun / design Earth. Together they name a person's incarnation cross."],
+  /* the Dharma Weave */
+  dharmaweave: ["Dharma Weave", "A second rave made from the same two moments as the first, birth and design, with every position passed through the navamsa (multiplied by nine). It is the chart of what the life ripens into."],
+  pentagram: ["Pentagram Cross", "The two dharma Suns always sit exactly 72° apart, one fifth of the wheel, because the 88° between birth and design multiplied by nine is 792°, which is two circles and 72°."],
+  dharmaprofile: ["Dharma profile", "The line of the dharma Sun and the line of the dharma design Sun, written like the rave profile."],
+  band: ["Seam and echo", "The two bands of the dharma Sun's line. If the Sun is in the last 11.25′ of its line it is an echo; anywhere earlier it is the seam."],
+  magenta: ["The magenta point", "The dharma profile 6/1: the exact centre of the band of pairings that cannot occur at birth."],
+  /* Sukuyō */
+  sukuyo: ["Sukuyō (宿曜)", "The Japanese school of the twenty-seven lunar mansions, brought from India through China by the monk Kūkai in the ninth century. It reads relationships by how far apart two people's mansions lie."],
+  shuku: ["Shuku (宿)", "One of Sukuyō's twenty-seven mansions. A person's birth shuku comes from the day of the old Japanese lunar calendar they were born on, so it can differ from the mansion their Moon was measured in."],
+  sanku: ["Sanku (三九の秘法)", "Sukuyō's method of reading two people: count from one shuku to the other. The twenty-seven positions fall into three rounds of nine, and every position has a name: Life, Karma and Womb, and the pairs Prosperity–Intimacy, Friendship–Decline, Peace–Destruction and Danger–Completion."],
+  distance: ["Near, middle and far", "In Sukuyō, how many shuku apart two people lie within their relation. Near bonds are felt most strongly and most quickly; far ones work slowly and quietly."],
   /* aspects */
   aspect: ["Aspect", "An angle between two planets that astrology treats as meaningful: conjunction (0°), sextile (60°), square (90°), trine (120°) and opposition (180°)."],
   orb: ["Orb", "How far an aspect is from exact. A trine with a 2° orb means the planets are 118° or 122° apart."],

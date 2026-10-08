@@ -6,6 +6,7 @@ import math
 from datetime import date, timedelta
 
 from . import engine as E
+from . import sukuyo
 
 D2R, R2D = math.pi / 180, 180 / math.pi
 norm = E.norm
@@ -119,7 +120,12 @@ def placidus_house(cusps, lon):
 
 def extras(eph, chart, birth):
     cusps = placidus(chart)
+    try:
+        shuku = sukuyo.birth_shuku(eph, birth["y"], birth["mo"], birth["d"])     # by the civil birth date
+    except Exception:
+        shuku = None
     return {
+        "sukuyo": shuku,
         "retro": retrograde(eph, chart["jd"]),
         "panchanga": panchanga(chart, birth),
         "placidus": None if cusps is None else {

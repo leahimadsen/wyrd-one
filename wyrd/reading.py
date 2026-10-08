@@ -16,6 +16,7 @@ import html, json, math, os
 from datetime import datetime, timedelta
 
 from . import engine as E
+from . import rave as RV
 
 CORPUS = json.load(open(os.path.join(os.path.dirname(__file__), "..", "lib", "corpus.json"), encoding="utf-8"))
 REG, ENG, NAKS, DEEP = CORPUS["REGISTER"], CORPUS["ENGINE"], CORPUS["NAKSHATRA"], CORPUS["NAK_DEEP"]
@@ -98,6 +99,39 @@ def register_entry(gate, line, side, label, asks):
       <div class="rd-repair"><h5>Distortion &amp; repair</h5><p>{R['r']}</p></div>
       {held}</div>"""
 
+def dharma_defines(N, Dh):
+    """What the dharma rave completes, beside the birth rave: channels and centres, named from the register."""
+    live_d, cen_d = RV.defines(Dh)
+    live_n, cen_n = RV.defines(N)
+    title = lambda g: REG.get(str(g), {}).get("t", GATE_NAME.get(str(g), ""))
+    rows = "".join(f"<tr{' class=hi' if c in live_n else ''}><td>{c[0]}–{c[1]}</td><td>{title(c[0])} · {title(c[1])}</td>"
+                   f"<td>{'also at birth' if c in live_n else 'dharma only'}</td></tr>" for c in live_d)
+    newly = [c for c in cen_d if c not in cen_n]
+    lost = [c for c in cen_n if c not in cen_d]
+    return f"""<h3 class="rd-tier">What the dharma defines</h3>
+      {pair("Dharma centres", ", ".join(cen_d) or "none — every centre open")}
+      {pair("Birth centres", ", ".join(cen_n) or "none — every centre open")}
+      {pair("Opened by the dharma", ", ".join(newly) or "nothing the birth rave leaves open")}
+      {pair("Released by the dharma", ", ".join(lost) or "nothing the birth rave defines")}
+      {f'<div class="rd-tw"><table><tr><th>Channel</th><th>Its two gates</th><th></th></tr>{rows}</table></div>' if rows else
+       '<p>The dharma rave completes no channel: it works through single gates, each one open-ended.</p>'}"""
+
+def dharma_table(N, Dh):
+    """Every body, birth beside dharma, with the register's name for each dharma gate."""
+    order = ["Sun", "Earth", "Moon", "Rahu", "Ketu", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]
+    title = lambda g: REG.get(str(g), {}).get("t", GATE_NAME.get(str(g), ""))
+    rows = []
+    for b in order:
+        for side, lab in (("personality", ""), ("design", "design ")):
+            a, d = N[side].get(b), Dh[side].get(b)
+            if not (a and d): continue
+            same = a["gate"] == d["gate"]
+            rows.append(f"<tr{' class=hi' if same else ''}><td>{GLYPH.get(b, '')} {lab}{b}</td><td>{a['gate']}.{a['line']}</td>"
+                        f"<td>{d['gate']}.{d['line']} {title(d['gate'])}</td><td>{'repeats' if same else ''}</td></tr>")
+    return f"""<h3 class="rd-tier">The whole weave</h3>
+      <p>Every body at birth and in the dharma. Where a gate repeats, the repetition is load-bearing.</p>
+      <div class="rd-tw"><table><tr><th>Body</th><th>Birth</th><th>Dharma</th><th></th></tr>{''.join(rows)}</table></div>"""
+
 def build(chart, dasha, who):
     C = chart
     asks = []
@@ -177,8 +211,15 @@ def build(chart, dasha, who):
       {pair("The law", f"{Dh['suns']['gap']:.6f}° {'✓' if Dh['suns']['holds'] else '✗'}")}
       <p class="rd-kenning">The body is written under the messenger's number, the dharma under the lover's.</p>
       {f'<p class="rd-kenning">The dharma repeats {" and ".join(repeats)} of the birth chart. The repetition is load-bearing — that is a thing the life does not get to outgrow.</p>' if repeats else ''}
+      <h3 class="rd-tier">The dharma cross</h3>
+      <p>The four positions that carry the dharma rave, as the four Suns and Earths carry the birth one: the dharma Sun and its Earth,
+      and the dharma design Sun and its Earth. Read them as you read section IV, conscious side first.</p>
       {register_entry(dps['gate'], dps['line'], 'personality', 'Dharma Sun', asks)}
-      {register_entry(dds['gate'], dds['line'], 'design', 'Dharma design Sun', asks)}"""))
+      {register_entry(Dh['personality']['Earth']['gate'], Dh['personality']['Earth']['line'], 'personality', 'Dharma Earth', asks)}
+      {register_entry(dds['gate'], dds['line'], 'design', 'Dharma design Sun', asks)}
+      {register_entry(Dh['design']['Earth']['gate'], Dh['design']['Earth']['line'], 'design', 'Dharma design Earth', asks)}
+      {dharma_defines(N, Dh)}
+      {dharma_table(N, Dh)}"""))
 
     # ---------- VI · the Path of Dharma ----------
     def steps(rave):

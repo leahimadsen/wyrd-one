@@ -16,6 +16,10 @@ CONSULTATION_PAYMENT_LINK_URL = os.environ.get("CONSULTATION_PAYMENT_LINK_URL", 
 # The unlisted 1:1 consultation page lives at /c/<CONSULT_PATH>. Pick something
 # nobody would guess (e.g. "inner-room-7k2q"). Leave it empty to switch the page off.
 CONSULT_PATH = os.environ.get("CONSULT_PATH", "").strip()
+# Your private admin at /admin: generate any reading without paying. It only
+# exists when both are set (in Render: Environment). Use a long password.
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
+SECRET_KEY     = os.environ.get("SECRET_KEY", "")        # signs the admin login cookie; any long random string
 PRICE_CENTS     = 4400
 PRODUCT_NAME    = "Your Wyrd Reading"
 # With no Stripe key set, "Buy" opens a free preview so you can proof readings locally.

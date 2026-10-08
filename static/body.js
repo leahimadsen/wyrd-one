@@ -206,7 +206,7 @@ const SIGN_GLYPH = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑",
 
 /* ---------- state ---------- */
 let C = null, root = null, deck = null, read = null;
-let woken = new Set(), last = null, nkFocus = null, showRave = false, showZod = true;
+let woken = new Set(), last = null, nkFocus = null, showRave = false, showDharma = false, showZod = true;
 let scanIdx = 0, scanTimer = null;
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const pose = { tilt: 0, turn: 0 };
@@ -269,9 +269,11 @@ function zodiacSVG(){
 /* ---------- layer 2: the figure, centres and thread ---------- */
 function centresSVG(){
   const r = showRave ? defined(gatesOf(C.natal)) : new Set();
+  const d = showDharma ? defined(gatesOf(C.dharma)) : new Set();
   let o = "";
   for (const k in HB_GEOM){
-    const g = HB_GEOM[k], cls = r.has(k) ? "rave" : "undefined";
+    const g = HB_GEOM[k], inR = r.has(k), inD = d.has(k);
+    const cls = inR && inD ? "both" : inR ? "rave" : inD ? "dharma" : "undefined";
     o += `<g class="centre ${cls}"><path class="shape" d="${shape(g)}"/>
       <text class="lbl" x="${g.x}" y="${g.y + g.s / 2 + 9}">${HB_CENTRES[k].label}</text></g>`;
   }
@@ -504,6 +506,7 @@ function mount(host, chart){
       <button class="hb-btn" data-hb-view="tilt">Tilted</button>
       <button class="hb-btn on" data-hb-toggle="zod" aria-pressed="true">Two zodiacs</button>
       <button class="hb-btn" data-hb-toggle="rave" aria-pressed="false">Body Rave</button>
+      <button class="hb-btn" data-hb-toggle="dharma" aria-pressed="false">Dharma Rave</button>
       <button class="hb-btn" data-hb-scan>Descent scan</button>
       <button class="hb-btn" data-hb-clear>Clear</button>
     </div>
@@ -522,7 +525,7 @@ function mount(host, chart){
     <div class="hb-read" id="hbRead" aria-live="polite">${idleRead()}</div>`;
   deck = host.querySelector("#hbDeck"); read = host.querySelector("#hbRead");
   host.querySelector(".hb-zod").classList.toggle("off", !showZod);
-  host.querySelector(".hb-centres").classList.toggle("on", showRave);
+  host.querySelector(".hb-centres").classList.toggle("on", showRave || showDharma);
   host.querySelector('[data-hb-toggle="zod"]').classList.toggle("on", showZod);
   setPose(0, 0, false);
   bindDrag(host.querySelector("#hbStage"));
@@ -540,10 +543,11 @@ document.addEventListener("click", e => {
   if (tg){
     const k = tg.dataset.hbToggle;
     if (k === "zod"){ showZod = !showZod; root.querySelector(".hb-zod").classList.toggle("off", !showZod); tg.classList.toggle("on", showZod); tg.setAttribute("aria-pressed", showZod); root.classList.toggle("zod-on", showZod); return; }
-    showRave = !showRave;
-    tg.classList.toggle("on", showRave); tg.setAttribute("aria-pressed", showRave);
+    if (k === "rave") showRave = !showRave; else showDharma = !showDharma;
+    const on = k === "rave" ? showRave : showDharma;
+    tg.classList.toggle("on", on); tg.setAttribute("aria-pressed", on);
     root.querySelector("#hbCentres").innerHTML = centresSVG();
-    root.querySelector("#hbCentres").classList.toggle("on", showRave);
+    root.querySelector("#hbCentres").classList.toggle("on", showRave || showDharma);
     return;
   }
   if (t.closest("[data-hb-scan]")){

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin · The Wyrd Console</title>
+<link rel="icon" href="/static/icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="stylesheet" href="/static/console.css">
+<link rel="stylesheet" href="/static/site.css">
+<link rel="stylesheet" href="/static/a11y.css">
+</head>
+<body>
+<header class="seat"><div class="seat-in">
+  <h1>Admin</h1>
+  <p class="seat-sub">For Saga Devi only.</p>
+  <form class="cast" method="post" action="/admin/login">
+    <label class="f-name">Password <input name="password" type="password" autocomplete="current-password" required autofocus></label>
+    <button type="submit" class="btn-cast">Sign in</button>
+    <p class="err" role="alert">{{ERROR}}</p>
+  </form>
+</div></header>
+</body>
+</html>
