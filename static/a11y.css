@@ -15,6 +15,7 @@
 #bodyHost .hb-hint, #bodyHost .hb-idle { color: rgba(217,212,196,.75); }
 
 /* the clock */
+#dharmaHost .vd-decode h3, #dharmaHost .vd-h,
 #dashaHost .vd-decode h3, #dashaHost .vd-yours h3, #dashaHost .vd-h, #dashaHost .vd-order li,
 #dashaHost .vd-row h4, #dashaHost .vd-lord dt { font-size: 11px; }
 #dashaHost .now-card .lvl, #dashaHost .now-card .dt, #dashaHost .now-card .rem { font-size: 11px; color: rgba(217,212,196,.75); }

@@ -128,3 +128,70 @@
 .ios-x { font: inherit; color: #eef3ef; background: var(--jade-deep); border: 1px solid var(--jade); padding: 8px 16px; border-radius: 2px; cursor: pointer; }
 /* installed: the status bar sits over the page, so leave it room */
 @media (display-mode: standalone) { .hub-in, .seat-in { padding-top: max(28px, env(safe-area-inset-top)); } }
+
+/* ---- admin ---- */
+.adm-list { position: absolute; top: 100%; left: 0; right: 0; z-index: 5; margin: 4px 0 0; padding: 4px 0; list-style: none;
+  background: #0b0d18; border: 1px solid rgba(150,130,230,.3); max-height: 300px; overflow-y: auto; }
+.adm-list li { padding: 9px 12px; cursor: pointer; color: var(--ivory); font-size: 15px; }
+.adm-list li.on, .adm-list li:hover { background: rgba(95,156,134,.18); }
+.adm-out { margin-top: 22px; }
+
+/* ---- the Dharma Weave ---- */
+.dw-step { display: grid; grid-template-columns: 34px 1fr; gap: 14px; margin: 0 0 26px; }
+.dw-step > span { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--jade); display: grid; place-items: center;
+  font-family: var(--mono); font-size: 13px; color: var(--jade); }
+.dw-step h3 { font-weight: 400; font-size: 21px; color: var(--ivory); margin: 2px 0 8px; }
+.dw-step p { margin: 0 0 10px; max-width: 70ch; }
+.dw-calc { border-collapse: collapse; font-size: 15px; margin: 4px 0 12px; }
+.dw-calc th, .dw-calc td { padding: 6px 12px 6px 0; text-align: left; font-weight: 400; white-space: nowrap; border-bottom: 1px solid var(--rule); }
+.dw-calc small { color: var(--ivory-dim); }
+.dw-pent { display: grid; grid-template-columns: minmax(0, 300px) 1fr; gap: 24px; align-items: center; }
+.dw-svg { width: 100%; height: auto; }
+.dw-svg text { text-anchor: middle; dominant-baseline: central; font-family: var(--serif); }
+.dw-ring { fill: none; stroke: rgba(156,180,166,.3); } .dw-tick { stroke: rgba(156,180,166,.35); }
+.dw-sign { fill: var(--ivory-dim); font-size: 13px; }
+.dw-star { fill: rgba(95,156,134,.08); stroke: var(--jade); stroke-width: 1.4; }
+.dw-sun.p { fill: #f1ece0; } .dw-sun.d { fill: #6fb7a0; }
+.dw-lbl { font-size: 13px; } .dw-lbl.p { fill: #f1ece0; } .dw-lbl.d { fill: #6fb7a0; }
+.dw-table { border-collapse: collapse; width: 100%; min-width: 460px; font-size: 15px; }
+.dw-table th, .dw-table td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--rule); font-weight: 400; }
+.dw-table td.des { color: #8fcab5; }
+.dw-rep { outline: 1px solid var(--gold); outline-offset: -3px; }
+@media (max-width: 640px) { .dw-pent { grid-template-columns: 1fr; } .dw-pent svg { max-width: 300px; margin: 0 auto; display: block; } }
+
+/* ---- compare ---- */
+.cp-people { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 18px; }
+.cp-chip { display: inline-flex; align-items: center; gap: 8px; padding: 7px 8px 7px 14px; border: 1px solid rgba(150,130,230,.3); border-radius: 22px; background: rgba(8,8,22,.6); }
+.cp-chip.self { border-color: var(--jade); padding-right: 14px; }
+.cp-chip small { color: var(--ivory-dim); font-size: 13px; }
+.cp-x { font: inherit; font-size: 18px; line-height: 1; color: var(--ivory-dim); background: none; border: 0; cursor: pointer; padding: 0 6px; }
+.cp-addbtn { font: inherit; font-size: 15px; color: #eef3ef; background: var(--jade-deep); border: 1px solid var(--jade); border-radius: 22px; padding: 8px 16px; cursor: pointer; }
+.cp-add select { font: inherit; font-size: 16px; color: var(--ivory); background: rgba(2,2,10,.7); border: 1px solid rgba(156,180,166,.25); padding: 10px; color-scheme: dark; }
+.cp-empty { color: var(--ivory-dim); font-style: italic; max-width: 60ch; }
+.cp-h { font-weight: 400; font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin: 30px 0 12px; }
+.sk-card { padding: 16px 18px; border: 1px solid rgba(150,130,230,.25); border-radius: 3px; background: rgba(8,8,22,.55); max-width: 70ch; }
+.sk-pair { display: flex; gap: 16px; align-items: center; margin-bottom: 8px; }
+.sk-big { font-size: 38px; color: var(--gold); line-height: 1; }
+.sk-pair h4 { font-weight: 400; font-size: 20px; margin: 0; color: var(--ivory); }
+.sk-pair .fine { margin: 2px 0 0; }
+.sk-k { color: var(--gold); }
+.sk-who { margin: 4px 0; font-size: 15px; }
+.cp-contacts { list-style: none; margin: 0; padding: 0; max-width: 72ch; }
+.cp-contacts li { padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.cp-contacts h5 { font-weight: 400; font-size: 16px; margin: 0 0 4px; color: var(--ivory); }
+.cp-contacts h5 small { color: var(--ivory-dim); }
+.cp-contacts p { margin: 0; color: rgba(217,212,196,.86); }
+.cp-over { margin: 0 0 12px; padding-left: 1.1em; max-width: 72ch; } .cp-over li { margin: 5px 0; }
+.cp-data { margin-top: 24px; } .cp-data summary { cursor: pointer; color: var(--celadon); }
+.sk-grid { border-collapse: collapse; font-size: 15px; }
+.sk-grid th { font-weight: 400; color: var(--ivory-dim); padding: 6px 10px; text-align: left; }
+.sk-grid td { padding: 4px; text-align: center; }
+.sk-self { color: var(--ivory-dim); font-size: 20px; } .sk-self small { display: block; font-size: 12px; }
+.sk-cell { font: inherit; width: 100%; min-width: 92px; padding: 8px 6px; border-radius: 3px; border: 1px solid rgba(156,180,166,.25); background: rgba(8,8,22,.6); color: var(--ivory); cursor: pointer; }
+.sk-cell span { display: block; font-size: 22px; } .sk-cell small { display: block; font-size: 12px; color: var(--ivory-dim); }
+.sk-cell[aria-pressed="true"] { border-color: var(--gold); }
+.sk-栄親 { border-color: rgba(95,156,134,.6); } .sk-安壊 { border-color: rgba(224,160,144,.6); } .sk-業胎 { border-color: rgba(184,146,74,.6); }
+.cp-sk-sum { margin: 14px 0 0; padding-left: 1.1em; max-width: 72ch; } .cp-sk-sum li { margin: 6px 0; }
+.cp-pairs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+.cal-chip { font: inherit; font-size: 14.5px; color: var(--ivory-dim); background: none; border: 1px solid rgba(156,180,166,.3); border-radius: 18px; padding: 6px 14px; cursor: pointer; }
+.cal-chip[aria-pressed="true"] { color: var(--ivory); border-color: var(--jade); background: rgba(95,156,134,.18); }

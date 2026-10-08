@@ -19,3 +19,7 @@ services:
         sync: false          # the secret part of the 1:1 page address: /c/<this>
       - key: CONSULTATION_PAYMENT_LINK_URL
         sync: false          # the buy.stripe.com link for 1:1 consultations
+      - key: ADMIN_PASSWORD
+        sync: false          # your private admin at /admin; use a long password
+      - key: SECRET_KEY
+        generateValue: true  # signs the admin login; Render makes one for you
