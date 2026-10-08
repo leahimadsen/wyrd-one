@@ -150,6 +150,7 @@ def build(chart, dasha, who):
     d9 = math.floor(E.norm(9 * asc) / 30)
     out.append(section(0, "The Seat", f"{fmt_lon(asc)} rising · {D[0]} pada {pada(asc)}", f"""
       <p><b>{FRAME[si][0]}</b> rising gives {FRAME[si][1]}</p>
+      {MORE.rising(C)}
       <div class="rd-body"><h5>Bearing</h5><p>{D[10]}</p></div>
       <div class="rd-body"><h5>Features</h5><p>{D[11]}</p></div>
       {pair("The house of arrival", f'<span class="sw" style="background:{h1["hex"]}"></span>{h1["color"]} · {h1["phase"]}')}

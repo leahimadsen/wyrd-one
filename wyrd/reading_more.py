@@ -11,6 +11,7 @@ from . import rave as RV
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C0 = json.load(open(os.path.join(HERE, "lib", "corpus.json"), encoding="utf-8"))
 X = json.load(open(os.path.join(HERE, "lib", "register_ext.json"), encoding="utf-8"))
+PL = json.load(open(os.path.join(HERE, "lib", "placements.json"), encoding="utf-8"))
 REG, NAKS, DEEP, HOUSES, GATE_NAME = C0["REGISTER"], C0["NAKSHATRA"], C0["NAK_DEEP"], C0["HOUSES"], C0["GATE_NAME"]
 esc = html.escape
 
@@ -73,22 +74,25 @@ def planets(C):
         S, T, P = X["SIGNS"][si], X["SIGNS"][ti], X["PLANETS"][b]
         h = E.house_of(s, C["ascS"]); nk = E.nak_index(s); nak = NAKS[nk]; aim = aim_of(s); r = rune_at(s, C["ascS"])
         dg = dignity(b, si)
-        if si == ti: agree = X["AGREE"]["same"].format(sign=S["sign"])
-        elif S["element"] == T["element"]: agree = X["AGREE"]["element"].format(sid=S["sign"], trop=T["sign"], element=S["element"])
-        else: agree = X["AGREE"]["differ"].format(sid=S["sign"], trop=T["sign"], e1=S["element"], e2=T["element"])
+        shift = PL["SAME"] if si == ti else PL["SHIFT"][ti]
+        tail = lambda line: line.split(": ", 1)[-1]
+        felt = "" if si == ti else (f'<p><b>Your {b}, felt:</b> {tail(PL["PIS"][b][ti])}<br>'
+                                    f'<b>Your {b}, lived:</b> {tail(PL["PIS"][b][si])}</p>')
         gp, gd = N["personality"].get(b), N["design"].get(b)
         gates = ""
         if gp:
             gates += pair("Gate, conscious", f'{gp["gate"]}.{gp["line"]} {esc(gate_title(gp["gate"]))}: {esc(first(REG.get(str(gp["gate"]), {}).get("l")))}')
         if gd:
             gates += pair("Gate, unconscious", f'{gd["gate"]}.{gd["line"]} {esc(gate_title(gd["gate"]))}')
-        out.append(f"""<div class="rd-entry"><h3>{GLYPH[b]} {b} <span class="rd-side p">{lon(s)} sidereal · {lon(t)} tropical</span></h3>
+        out.append(f"""<div class="rd-entry"><h3>{GLYPH[b]} {b} <span class="rd-side p">tropical {lon(t)} → sidereal {lon(s)}</span></h3>
           <div class="rd-hdr">{P["governs"]}</div>
-          <div class="rd-gifts"><div class="light"><h5>In your karma and reality · sidereal</h5>
-            <p>{P["sid"]} In {S["sign"]}: {S["karma"]}. It works in your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}.</p>
-            <p>Its star is <b>{nak[0]}</b>, pada {pada_of(s)}, ruled by {nak[1]}: {nak[6]} {aim["says"]}</p></div>
-          <div class="dark"><h5>In your experience · tropical</h5>
-            <p>{P["trop"]} In tropical {T["sign"]}, {T["felt"]}.</p><p>{agree}</p></div></div>
+          <div class="rd-gifts"><div class="light"><h5>How it feels · tropical {T["sign"]}</h5>
+            <p>{PL["SIGN_TROP"][ti]}</p><p><b>{PL["PIS"][b][ti]}</b></p><p>{P["trop"]}</p></div>
+          <div class="dark"><h5>What it brings · sidereal {S["sign"]}</h5>
+            <p>{PL["SIGN_SID"][si]}</p><p><b>{PL["PIS"][b][si]}</b></p>
+            <p>{P["sid"]} It works in your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}.</p>
+            <p>Its star is <b>{nak[0]}</b>, pada {pada_of(s)}, ruled by {nak[1]}: {nak[6]} {aim["says"]}</p></div></div>
+          <div class="rd-repair"><h5>{"The shift · " + T["sign"] + " into " + S["sign"] if si != ti else "One sign in both zodiacs · " + S["sign"]}</h5><p>{shift}</p>{felt}</div>
           {f'<p class="rd-kenning">{X["DIGNITY"][dg]}</p>' if dg else ""}
           {pair("Rune", f'{r["glyph"]} {r["name"]}, {r["gloss"]}. {X["RUNES"][r["name"]]["means"]}')}
           {gates}
@@ -244,3 +248,14 @@ def periods(C, dasha):
     return f"""<p>Each period of your life is ruled by one planet. Its themes come forward: the house it stands in becomes the
       life's busiest room, and the rune it stands in wakes.</p>
       <div class="rd-tw"><table><tr><th>Period</th><th>Years</th><th>Begins</th><th>Brings forward</th><th>Wakes</th></tr>{"".join(rows)}</table></div>"""
+
+
+def rising(C):
+    """The Ascendant in both zodiacs: how you meet the world, and what the world hands you on arrival."""
+    s, t = C["ascS"], C["ascT"]
+    si, ti = sign_i(s), sign_i(t)
+    shift = PL["SAME"] if si == ti else PL["SHIFT"][ti]
+    return f"""<div class="rd-gifts"><div class="light"><h5>How you meet the world · tropical {E.SIGNS[ti]} rising</h5>
+        <p>{PL["SIGN_TROP"][ti]}</p></div>
+      <div class="dark"><h5>What the world hands you · sidereal {E.SIGNS[si]} rising</h5><p>{PL["SIGN_SID"][si]}</p></div></div>
+      <div class="rd-repair"><h5>{"The shift · " + E.SIGNS[ti] + " into " + E.SIGNS[si] if si != ti else "One sign in both zodiacs"}</h5><p>{shift}</p></div>"""
