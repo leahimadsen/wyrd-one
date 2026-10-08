@@ -1,5 +1,5 @@
 {
-  "_note": "DRAFT for Saga Devi to rewrite in her own words before launch. Two lines per centre: 'lit' when the week's sky switches a centre on that the chart leaves open, 'open' when it stays open all week. Everything else in Body Weather comes from lib/corpus.json.",
+  "_note": "DRAFT for The Völva to rewrite in her own words before launch. Two lines per centre: 'lit' when the week's sky switches a centre on that the chart leaves open, 'open' when it stays open all week. Everything else in Body Weather comes from lib/corpus.json.",
   "centres": {
     "Head":   {"lit": "Questions arrive with more pressure than usual. Let them stay questions; not every one is yours to answer this week.",
                "open": "Other people's questions can feel urgent in your head. Ask whose they are before you chase them."},

@@ -32,7 +32,7 @@ services:
       - key: SMTP_PASSWORD
         sync: false          # for Gmail: an app password (Google account → Security → App passwords)
       - key: MAIL_FROM
-        sync: false          # optional: e.g. Saga Devi <you@gmail.com>
+        sync: false          # optional: e.g. The Völva <you@gmail.com>
       - key: RESEND_API_KEY
         sync: false          # optional instead of SMTP, once you have your own domain
       - key: OWNER_EMAIL

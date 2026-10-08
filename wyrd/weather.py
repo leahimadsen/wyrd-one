@@ -8,7 +8,7 @@ register passage and question. The Moon's mansion for each day, the week's
 stations and sign changes, and the current Vimshottari period run underneath.
 
 Every interpretive sentence comes from lib/corpus.json, or for the centres
-from lib/body_weather.json (Saga Devi's own lines)."""
+from lib/body_weather.json (The Völva's own lines)."""
 import html, json, os
 from datetime import datetime, timedelta, timezone
 from . import engine as E, rave as RV, calendar as wcal

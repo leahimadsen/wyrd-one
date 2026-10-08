@@ -2,7 +2,7 @@
 wake, the body's centres and channels and what feeds them, and where a person
 works and lives best.
 
-Interpretive sentences come from lib/corpus.json (Saga Devi's register) and
+Interpretive sentences come from lib/corpus.json (The Völva's register) and
 lib/register_ext.json (drafted for her to edit). This file chooses and lays out."""
 import html, json, math, os
 from . import engine as E

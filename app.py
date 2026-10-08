@@ -141,7 +141,7 @@ def private_reading_headers(response):
 def consultation_session(sid):
     """Authorize against Stripe, never against a browser's paid flag."""
     if not config.STRIPE_SECRET or not (config.CONSULTATION_PAYMENT_LINK_IDS or config.CONSULTATION_PAYMENT_LINK_URL):
-        return None, ("Consultation reports are not configured yet. Please contact Leah.", 503)
+        return None, ("Consultation reports are not configured yet. Please write to support@wyrdconsole.com.", 503)
     try:
         session = stripe_api.paid_session(config.STRIPE_SECRET, sid)
     except stripe_api.StripeError:
@@ -459,7 +459,7 @@ def private(title, body, script="", status=200):
 
 @app.get("/googled81e0f187c4a1868.html")
 def google_site_verification():
-    """Google Search Console checks this file to confirm the site is Saga Devi's."""
+    """Google Search Console checks this file to confirm the site is The Völva's."""
     return send_from_directory(app.static_folder, "googled81e0f187c4a1868.html", mimetype="text/html")
 
 @app.get("/robots.txt")
@@ -606,7 +606,7 @@ def membership_page():
                 f'<button class="{"btn-buy" if lead else "btn-cast"}" type="submit">{label}</button></form>')
     m, y, pr = config.MEMBER_MONTHLY_CENTS, config.MEMBER_YEARLY_CENTS, config.PRO_MONTHLY_CENTS
     body = f"""<h1>Wyrd Membership</h1>
-<p class="lede">Your body's weather, every week. How the planets land in the body you were born with and in your Dharma body, written in Saga Devi's words.</p>
+<p class="lede">Your body's weather, every week. How the planets land in the body you were born with and in your Dharma body, written in The Völva's words.</p>
 <div class="plans">
   <section class="plan lead"><h2>Membership</h2><div class="price">{money(m)}<small> a month</small></div>
     <ul><li><b>Body Weather every Monday:</b> which centres the week's sky switches on in your birth body and your Dharma body, which stay open, and which of your gates it lights</li>
@@ -628,7 +628,7 @@ def membership_page():
                     "brand": {"@type": "Brand", "name": "The Wyrd Console"},
                     "offers": {"@type": "Offer", "price": f"{m / 100:.2f}", "priceCurrency": "USD", "url": config.BASE_URL + "/membership"}})
     return page("Weekly Astrology Membership: Body Weather · The Wyrd Console",
-                f"A weekly astrology report for your own chart: how the week's planets land in your birth body and Dharma body. {money(m)} a month from Saga Devi.",
+                f"A weekly astrology report for your own chart: how the week's planets land in your birth body and Dharma body. {money(m)} a month from The Völva.",
                 body, ld)
 
 @app.post("/api/subscribe")
@@ -784,7 +784,7 @@ def pro_reading():
         if st["proUse"] >= config.PRO_READINGS_A_MONTH:
             return private("Practice desk", f'<h1>This month\'s readings are used</h1><p>Your plan includes {config.PRO_READINGS_A_MONTH} client readings a month. They renew on the 1st.</p>', status=402)
         billing.count_pro_reading(config.STRIPE_SECRET, email)
-        return render_reading(meta, "Prepared with The Wyrd Console Professional · written by Saga Devi. Save it as a PDF from your browser's print menu.")
+        return render_reading(meta, "Prepared with The Wyrd Console Professional · written by The Völva. Save it as a PDF from your browser's print menu.")
     except (BadInput, ValueError) as e:
         return private("Practice desk", f'<h1>Check the details</h1><p>{esc(str(e) or BAD_BIRTH)} <a href="/pro">Back</a></p>', status=400)
     except stripe_api.StripeError:

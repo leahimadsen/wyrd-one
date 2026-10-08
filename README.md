@@ -136,11 +136,11 @@ Prices are made inside each Stripe Checkout, so no products need creating in the
 3. In Stripe → Settings → Billing → Customer portal, press Save once so members can cancel or change cards.
 4. In GitHub → Settings → Secrets → Actions add `SITE_URL` and `JOBS_TOKEN` (same value as Render) for the Monday email (`.github/workflows/weekly.yml`).
 
-Body Weather's centre lines are drafts in `lib/body_weather.json` for Saga Devi to rewrite; everything else in it comes from `lib/corpus.json`.
+Body Weather's centre lines are drafts in `lib/body_weather.json` for The Völva to rewrite; everything else in it comes from `lib/corpus.json`.
 
 ## The full reading
 
-Twelve sections, about 34 printed pages: the Seat, the Engine (Moon), **the Planets** (all twelve, each read sidereally for karma and reality and tropically for experience, with dignity, rune and gates), the Soul-Planet, **the Runes** (the lit runes ranked, and the dasha periods that wake each one), the Work, **the Body** (all nine centres, every channel and the mansion and pada that feeds each gate), **Where You Thrive** (culture, places, work), the Dharma Weave, the Path of Dharma, the Clock (with the whole life by period) and the Questions. The new sections draw on `lib/register_ext.json`, drafted for Saga Devi to edit.
+Twelve sections, about 34 printed pages: the Seat, the Engine (Moon), **the Planets** (all twelve, each read sidereally for karma and reality and tropically for experience, with dignity, rune and gates), the Soul-Planet, **the Runes** (the lit runes ranked, and the dasha periods that wake each one), the Work, **the Body** (all nine centres, every channel and the mansion and pada that feeds each gate), **Where You Thrive** (culture, places, work), the Dharma Weave, the Path of Dharma, the Clock (with the whole life by period) and the Questions. The new sections draw on `lib/register_ext.json`, drafted for The Völva to edit.
 
 ## Gifts (admin only)
 
