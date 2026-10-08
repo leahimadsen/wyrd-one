@@ -585,9 +585,9 @@ def signout():
 
 # ---------------- membership and professional plans ----------------
 PLANS = {
-    "member-month": ("member", config.MEMBER_NAME, lambda: config.MEMBER_MONTHLY_CENTS, "month"),
-    "member-year":  ("member", config.MEMBER_NAME + " (yearly)", lambda: config.MEMBER_YEARLY_CENTS, "year"),
-    "pro-month":    ("pro", config.PRO_NAME, lambda: config.PRO_MONTHLY_CENTS, "month"),
+    "member-month": ("member", config.MEMBER_NAME, lambda: config.MEMBER_MONTHLY_CENTS, "month", config.MEMBER_MONTHLY_PRICE),
+    "member-year":  ("member", config.MEMBER_NAME + " (yearly)", lambda: config.MEMBER_YEARLY_CENTS, "year", config.MEMBER_YEARLY_PRICE),
+    "pro-month":    ("pro", config.PRO_NAME, lambda: config.PRO_MONTHLY_CENTS, "month", config.PRO_MONTHLY_PRICE),
 }
 
 def money(c): return f"${c / 100:.0f}" if c % 100 == 0 else f"${c / 100:.2f}"
@@ -634,13 +634,19 @@ def subscribe():
     email = signed_in()
     if not email: return redirect("/signin?" + urlencode({"next": "/membership"}))
     if limited(10): return private("Wait a minute", "<h1>Wait a minute</h1><p>Too many tries. Try again shortly.</p>", status=429)
-    tier, name, cents, interval = plan
+    tier, name, cents, interval, price_id = plan
     try:
         st = billing.status(config.STRIPE_SECRET, email, fresh=True)
         if st[tier]: return redirect("/account")                       # already has it
+        current = next((p for p in st["plans"] if p["status"] in billing.LIVE and p["tier"] == "member"), None)
+        if tier == "pro" and current and price_id:                     # a member moves up in the portal, keeping one plan
+            p = stripe_api.portal(config.STRIPE_SECRET, st["customer"], config.BASE_URL + "/account?joined=1", upgrade=current["id"])
+            billing.forget(email)
+            return redirect(p["url"], code=303)
         cid = billing.customer_for(config.STRIPE_SECRET, email)
         s = stripe_api.subscription_checkout(config.STRIPE_SECRET, base_url=config.BASE_URL, customer=cid, tier=tier, name=name,
-                                             cents=cents(), interval=interval, success="/account?joined=1", cancel="/membership")
+                                             cents=cents(), interval=interval, success="/account?joined=1", cancel="/membership",
+                                             price_id=price_id or None)
     except stripe_api.StripeError as e:
         app.logger.error("stripe: %s", e)
         return private("Try again", '<h1>Payment couldn\'t start</h1><p>Please <a href="/membership">try again</a>.</p>', status=502)

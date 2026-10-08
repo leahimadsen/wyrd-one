@@ -53,6 +53,11 @@ MEMBER_READING_CENTS = int(os.environ.get("MEMBER_READING_CENTS", "3520"))     #
 PRO_MONTHLY_CENTS    = int(os.environ.get("PRO_MONTHLY_CENTS", "4400"))        # Professional, a month
 PRO_READINGS_A_MONTH = int(os.environ.get("PRO_READINGS_A_MONTH", "30"))       # client readings included each month
 MEMBER_NAME          = "Wyrd Membership"
+# Real Stripe prices, so members can switch plans in the Stripe portal. When unset,
+# each checkout makes its price from the cents above instead.
+MEMBER_MONTHLY_PRICE = os.environ.get("STRIPE_MEMBER_MONTHLY_PRICE", "")
+MEMBER_YEARLY_PRICE  = os.environ.get("STRIPE_MEMBER_YEARLY_PRICE", "")
+PRO_MONTHLY_PRICE    = os.environ.get("STRIPE_PRO_MONTHLY_PRICE", "")
 PRO_NAME             = "Wyrd Console Professional"
 # Locks the weekly email job (POST /jobs/weekly) so only your scheduler can run it.
 JOBS_TOKEN           = os.environ.get("JOBS_TOKEN", "")

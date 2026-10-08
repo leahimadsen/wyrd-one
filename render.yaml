@@ -39,3 +39,9 @@ services:
         sync: false          # where your Monday summary goes
       - key: JOBS_TOKEN
         generateValue: true  # copy this into the GitHub secret JOBS_TOKEN for the weekly email
+      - key: STRIPE_MEMBER_MONTHLY_PRICE
+        sync: false          # price_... for Wyrd Membership monthly
+      - key: STRIPE_MEMBER_YEARLY_PRICE
+        sync: false          # price_... for Wyrd Membership yearly
+      - key: STRIPE_PRO_MONTHLY_PRICE
+        sync: false          # price_... for Wyrd Console Professional
