@@ -5,13 +5,13 @@
    - Readings, checkout and the consultation pages are never cached: they are
      private and paid for.
    Bump VERSION to throw the old cache away. */
-const VERSION = "wyrd-v6";
+const VERSION = "wyrd-v7";
 const SHELL = ["/", "/chart", "/today", "/offline",
   "/static/console.css", "/static/site.css", "/static/map.css", "/static/learn.css", "/static/body.css", "/static/dasha.css", "/static/a11y.css",
   "/static/viz.js", "/static/glossary.js", "/static/common.js", "/static/body.js", "/static/wheel.js", "/static/torus.js", "/static/dasha.js",
   "/static/transits.js", "/static/learn.js", "/static/lands.js", "/static/pulse.js", "/static/dharma.js", "/static/dynamics.js", "/static/compare.js", "/static/music.js", "/static/chart.js", "/static/app.js", "/static/today.js",
   "/static/icons/icon-192.png", "/static/icons/apple-touch-icon.png", "/static/icons/favicon-32.png"];
-const NEVER = [/^\/admin/, /^\/api\/pulse/, /^\/reading/, /^\/consultation/, /^\/c\//, /^\/sample/, /^\/(account|signin|signout|auth|pro|billing|membership|jobs)/, /^\/api\/(subscribe|account)/, /^\/api\/(checkout|consultation|places|chart|calendar)/, /\.mp3$/];
+const NEVER = [/^\/admin/, /^\/api\/pulse/, /^\/reading/, /^\/consultation/, /^\/c\//, /^\/sample/, /^\/(account|signin|signout|auth|pro|billing|membership|jobs)/, /^\/api\/(subscribe|account|me)/, /^\/api\/(checkout|consultation|places|chart|calendar)/, /\.mp3$/];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

@@ -136,3 +136,15 @@ main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
 .sv-x { font: inherit; font-size: 22px; color: var(--ivory-dim); background: none; border: 0; padding: 0 6px 0 14px; cursor: pointer; }
 .seat-links { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 22px 0 0; font-size: 15.5px; }
 .seat-links a { color: var(--celadon); text-decoration: none; border-bottom: 1px solid rgba(156,180,166,.35); }
+
+/* ---- the site bar: readings, membership, learning, account on every page ---- */
+.topbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 20px;
+  padding: calc(10px + env(safe-area-inset-top, 0px)) max(16px, 4vw) 10px; background: var(--void); border-bottom: 1px solid var(--rule);
+  font-size: 15px; position: relative; z-index: 30; }
+.topbar a { color: var(--celadon); text-decoration: none; }
+.topbar a:hover, .topbar a:focus-visible { color: var(--ivory); text-decoration: underline; }
+.tb-home { color: var(--ivory) !important; letter-spacing: .03em; }
+.tb-links { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+.tb-acct { border: 1px solid var(--jade-dim); border-radius: 2px; padding: 1px 10px; }
+.offer-member { margin-top: 22px; border-top: 1px solid var(--rule); padding-top: 18px; }
+.offer-member .btn-cast { display: inline-block; text-decoration: none; }

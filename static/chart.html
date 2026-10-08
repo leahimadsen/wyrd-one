@@ -23,6 +23,7 @@
 </head>
 <body>
 <a class="skip" href="#lands">Skip to content</a>
+<nav class="topbar" aria-label="Site"><a href="/" class="tb-home">The Wyrd Console</a><span class="tb-links"><a href="/reports">Readings</a><a href="/membership">Membership</a><a href="/learn">Learn</a><a href="/today">Today</a><a href="/account" class="tb-acct" data-acct>Sign in</a></span></nav>
 <!-- The map: the chart is the hub, and every land is one way into it.
      Each land opens on its own tab; the map is always one tap away. -->
 <header class="hub" id="skyHost">
@@ -115,11 +116,17 @@
   <section class="land-panel" id="p-reading" hidden aria-labelledby="h-reading">
     <div class="offer">
       <h2 id="h-reading">Your full reading</h2>
-      <p>Everything on the map, read. Eight movements, written for your placements and nobody else's: the Seat you rise from, the engine of your Moon, your soul-planet and its cabinet, the gates of your work, the Dharma Weave, the Path of Dharma through Mission, Illuminations and the Diamond, the periods running now, and every question your chart asks.</p>
+      <p>Everything on the map, read: thirteen sections and about forty pages, written for your placements and nobody else's. The Seat you rise from, the engine of your Moon, the Matrix your Saturn builds, every planet in both zodiacs and how they feed each other, your soul-planet and its cabinet, your runes and when they wake, the gates of your work, your body's channels, where you thrive, the Dharma Weave, the Path of Dharma, the periods of your life, and every question your chart asks.</p>
       <p class="unknown-note" id="readingUnknown" hidden>Your birth time is unknown, so your reading would be cast for noon: the rising sign, houses and the Moon's mansion may not be yours. If you can find your time, edit your details first.</p>
       <button class="btn-buy" id="buyBtn">Get my reading — $44</button>
       <p class="fine">Secure checkout by Stripe. Your reading opens the moment payment completes; bookmark the page or save it as a PDF. <a href="/sample">See a sample reading first →</a></p>
       <p class="err" id="buyErr" role="alert"></p>
+    </div>
+    <div class="offer offer-member">
+      <h3>Or become a member · $11 a month</h3>
+      <p>Body Weather every Monday: how the week's planets land in your birth body and your Dharma body, written for your chart. Your chart kept on your account, and this reading for $35.20 instead of $44.</p>
+      <a class="btn-cast" href="/membership">See the membership</a>
+      <p class="fine">Astrologers and practitioners: <a href="/membership#pro">Wyrd Console Professional</a> lets you generate readings for your clients.</p>
     </div>
   </section>
 
@@ -149,5 +156,6 @@
 <script src="/static/compare.js"></script>
 <script src="/static/music.js"></script>
 <script src="/static/chart.js"></script>
+<script>fetch("/api/me").then(r=>r.json()).then(d=>{if(d.signedIn)for(const a of document.querySelectorAll("[data-acct]"))a.textContent="Your account"}).catch(()=>{})</script>
 </body>
 </html>
