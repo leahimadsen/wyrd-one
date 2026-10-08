@@ -11,49 +11,56 @@
       "sid": "Where your life asks you to stand in your own light, and where recognition comes from or is withheld.",
       "trop": "How you feel most yourself, and what makes you feel alive enough to keep going.",
       "light": "Steady warmth that lets others orient.",
-      "shadow": "Needing to be seen to feel real."
+      "shadow": "Needing to be seen to feel real.",
+      "lends": "purpose, visibility and the will to be seen"
     },
     "Moon": {
       "governs": "Mind, mood, the mother, nourishment and memory.",
       "sid": "The emotional conditions you keep finding yourself in, and the people who mother you or need mothering.",
       "trop": "How your feelings move: their speed, their tides, what soothes them.",
       "light": "Responsiveness that keeps people fed.",
-      "shadow": "Moods mistaken for facts."
+      "shadow": "Moods mistaken for facts.",
+      "lends": "feeling, responsiveness and the need to nourish"
     },
     "Mercury": {
       "governs": "Thought, speech, trade, learning and the hands.",
       "sid": "The kind of work your mind is given, the deals and messages that shape your fortunes.",
       "trop": "How you think in the moment: the pace of your words and how you take in what you hear.",
       "light": "Precise naming that makes things workable.",
-      "shadow": "Clever talk that avoids the point."
+      "shadow": "Clever talk that avoids the point.",
+      "lends": "intelligence, skill and the urge to name and trade"
     },
     "Venus": {
       "governs": "Love, beauty, pleasure, money and agreements.",
       "sid": "The partnerships, comforts and resources that come to you, and what they cost.",
       "trop": "What you find beautiful, how you like to be loved, what pleasure feels like in your body.",
       "light": "Grace that makes people want to stay.",
-      "shadow": "Choosing comfort over truth."
+      "shadow": "Choosing comfort over truth.",
+      "lends": "grace, pleasure and the power to attract"
     },
     "Mars": {
       "governs": "Will, courage, conflict, the body's force and siblings.",
       "sid": "The fights you are handed, the work that demands strength, the places you must defend.",
       "trop": "How anger and desire move through you, and how you act when you want something.",
       "light": "Clean action at the right moment.",
-      "shadow": "Force spent on the wrong target."
+      "shadow": "Force spent on the wrong target.",
+      "lends": "drive, courage and the readiness to fight"
     },
     "Jupiter": {
       "governs": "Wisdom, teachers, children, faith and growth.",
       "sid": "Where grace arrives in your life, the teachers who find you, and what multiplies when you tend it.",
       "trop": "How you hope, what you believe in, and how generous you feel.",
       "light": "Wisdom that grows other people.",
-      "shadow": "Excess dressed as faith."
+      "shadow": "Excess dressed as faith.",
+      "lends": "wisdom, faith and the power to grow things"
     },
     "Saturn": {
       "governs": "Time, duty, limits, work and old karma.",
       "sid": "Where life is slow, where you are tested, and where effort builds something that lasts.",
       "trop": "How you feel about responsibility, fear and the passage of time.",
       "light": "Patience that builds the structure.",
-      "shadow": "Fear that calls itself caution."
+      "shadow": "Fear that calls itself caution.",
+      "lends": "patience, weight and the discipline to endure"
     },
     "Uranus": {
       "governs": "Awakening, disruption and the future arriving early.",
@@ -81,14 +88,16 @@
       "sid": "Where your life pulls you toward the unfamiliar and the more, and what you are here to learn by hunger.",
       "trop": "What you crave and how that craving feels: urgent, fascinating, never quite enough.",
       "light": "Courage to go where your line has never been.",
-      "shadow": "Hunger that eats the meal and stays hungry."
+      "shadow": "Hunger that eats the meal and stays hungry.",
+      "lends": "hunger, amplification and the pull toward the new"
     },
     "Ketu": {
       "governs": "Release, past mastery, spirit and the cut.",
       "sid": "What you already know from before, where life strips things away, and where you are free.",
       "trop": "Where you feel detached, where nothing quite satisfies, and where peace comes easiest.",
       "light": "Mastery held lightly.",
-      "shadow": "Withdrawal mistaken for wisdom."
+      "shadow": "Withdrawal mistaken for wisdom.",
+      "lends": "detachment, instinct and mastery carried from before"
     }
   },
   "SIGNS": [
@@ -460,5 +469,10 @@
     "same": "Both zodiacs put it in {sign}. What happens and how it feels are the same thing: this planet is straightforward for you.",
     "element": "The stars put it in {sid}, the seasons in {trop}. Both are {element}, so the life and the feeling pull the same way, in different keys.",
     "differ": "The stars put it in {sid} ({e1}); the seasons put it in {trop} ({e2}). You live in {e1} circumstances with {e2} in your temperament. When it feels wrong, check which of the two you are listening to."
+  },
+  "WEAVE": {
+    "self": "Its star is ruled by this planet itself, so it answers to no one: it runs on its own fuel and is one of the anchors of your chart.",
+    "hub": "{b} rules the stars of {n} of your planets. It is the hub of your chart: whatever state your {b} is in, much of your life is in too. Tend it first.",
+    "intro": "No planet works alone. Each one stands in a star, and every star is ruled by a planet. Wherever that ruling planet sits in your chart, it lends its energy to everything standing in its star. Below, each planet's line of supply is traced."
   }
 }

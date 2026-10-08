@@ -64,9 +64,65 @@ def positions(C):
     return sid, sid_des
 
 
+def star_lord(l): return E.DASHA[E.nak_index(l) % 9][0]
+def the(p): return f"the {p}" if p in ("Sun", "Moon") else p
+
+
+def woven(C, b, l):
+    """How the planets that rule this one's star and sign lend it their energy."""
+    asc = C["ascS"]; si = sign_i(l); nak = NAKS[E.nak_index(l)][0]
+    lord = star_lord(l); sl = LORD_OF_SIGN[si]
+    who = "your rising sign" if b == "Ascendant" else f"your {b}"
+    if lord == b:
+        star = X["WEAVE"]["self"].format(b=b)
+    else:
+        ll = C["sid"][lord]; ln = E.nak_index(ll)
+        star = (f"{who[0].upper() + who[1:]} stands in {nak}, a star ruled by {the(lord)}. Your {lord} sits in <b>{NAKS[ln][0]}</b> in sidereal "
+                f"{E.SIGNS[sign_i(ll)]}, your {ORD(E.house_of(ll, asc))} house. So {the(lord)} lends {X['PLANETS'][lord]['lends']} to {who}, "
+                f"and it arrives coloured by {NAKS[ln][0]}: {NAKS[ln][6]}")
+    if sl == b:
+        sign = f"It also sits in its own sign, {E.SIGNS[si]}: here it is the host, not a guest."
+    else:
+        sp = C["sid"][sl]
+        sign = (f"{E.SIGNS[si]} is ruled by {the(sl)}, and your {sl} in {E.SIGNS[sign_i(sp)]}, your {ORD(E.house_of(sp, asc))} house, "
+                f"sets the climate {who} lives in: {X['PLANETS'][sl]['lends']}.")
+    return f'<div class="rd-body"><h5>Woven in · what feeds it</h5><p>{star}</p><p>{sign}</p></div>'
+
+
+def web(C):
+    """Who lends to whom across the whole chart."""
+    asc = C["ascS"]; fed = {}
+    rows = []
+    for b in ORDER:
+        l = C["sid"][b]; lord = star_lord(l); fed.setdefault(lord, []).append(b)
+        ll = C["sid"][lord]
+        rows.append(f"<tr><td>{GLYPH[b]} {b}</td><td>{NAKS[E.nak_index(l)][0]}</td><td>{GLYPH[lord]} {lord}</td>"
+                    f"<td>{NAKS[E.nak_index(ll)][0]}, {E.SIGNS[sign_i(ll)]}, {ORD(E.house_of(ll, asc))} house</td></tr>")
+    most = max(len(v) for v in fed.values())
+    hubs = [k for k in fed if len(fed[k]) == most]
+    selfr = [b for b in ORDER if star_lord(C["sid"][b]) == b]
+    lines = []
+    if len(hubs) == 1 and most >= 2:
+        hub = hubs[0]
+        lines.append(X["WEAVE"]["hub"].format(b=hub, n=most) + f" It feeds your {', '.join(fed[hub])}.")
+    elif most >= 2:
+        lines.append(f"Your chart has several feeders of equal weight: " + "; ".join(f"{k} feeds your {' and '.join(fed[k])}" for k in hubs)
+                     + ". No single planet runs the web; the life is carried by these together.")
+    if selfr:
+        lines.append(f"Self-fuelled: {', '.join(selfr)}. These run on their own star and steady the rest.")
+    starved = [p for p, _ in E.DASHA if p not in fed]
+    if starved:
+        lines.append(f"Lending to none of your planets: {', '.join(starved)}. " + ("Its" if len(starved) == 1 else "Their")
+                     + " energy works through " + ("its" if len(starved) == 1 else "their") + " own house and sign rather than through other planets.")
+    return f"""<h3 class="rd-tier">The web · who feeds whom</h3><p>{X["WEAVE"]["intro"]}</p>
+      {"".join(f"<p>{x}</p>" for x in lines)}
+      <div class="rd-tw"><table><tr><th>Planet</th><th>Its star</th><th>Fed by</th><th>Where the feeder stands</th></tr>{"".join(rows)}</table></div>"""
+
+
 # ---------------- the planets, in both zodiacs ----------------
 def planets(C):
     out = [f'<p class="rd-kenning">{X["FRAMES"]["sidereal"]}</p><p class="rd-kenning">{X["FRAMES"]["tropical"]}</p><p>{X["FRAMES"]["both"]}</p>']
+    out.append(web(C))
     N = C["natal"]
     for b in ORDER:
         s, t = C["sid"][b], C["trop"][b]
@@ -93,6 +149,7 @@ def planets(C):
             <p>{P["sid"]} It works in your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}.</p>
             <p>Its star is <b>{nak[0]}</b>, pada {pada_of(s)}, ruled by {nak[1]}: {nak[6]} {aim["says"]}</p></div></div>
           <div class="rd-repair"><h5>{"The shift · " + T["sign"] + " into " + S["sign"] if si != ti else "One sign in both zodiacs · " + S["sign"]}</h5><p>{shift}</p>{felt}</div>
+          {woven(C, b, s)}
           {f'<p class="rd-kenning">{X["DIGNITY"][dg]}</p>' if dg else ""}
           {pair("Rune", f'{r["glyph"]} {r["name"]}, {r["gloss"]}. {X["RUNES"][r["name"]]["means"]}')}
           {gates}
@@ -258,4 +315,5 @@ def rising(C):
     return f"""<div class="rd-gifts"><div class="light"><h5>How you meet the world · tropical {E.SIGNS[ti]} rising</h5>
         <p>{PL["SIGN_TROP"][ti]}</p></div>
       <div class="dark"><h5>What the world hands you · sidereal {E.SIGNS[si]} rising</h5><p>{PL["SIGN_SID"][si]}</p></div></div>
-      <div class="rd-repair"><h5>{"The shift · " + E.SIGNS[ti] + " into " + E.SIGNS[si] if si != ti else "One sign in both zodiacs"}</h5><p>{shift}</p></div>"""
+      <div class="rd-repair"><h5>{"The shift · " + E.SIGNS[ti] + " into " + E.SIGNS[si] if si != ti else "One sign in both zodiacs"}</h5><p>{shift}</p></div>
+      {woven(C, "Ascendant", s)}"""
