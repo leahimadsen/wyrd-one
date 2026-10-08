@@ -8,7 +8,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from wyrd.ephemeris import Ephemeris
 import config
 
-TOL = {"Sun": .02, "Moon": .1, "Mercury": .05, "Venus": .05, "Mars": .05, "Jupiter": .2,
+# Mars is .1: the console's approximate Mars is off by just over .05 near an
+# opposition (July 2001 is one), while JPL's DE421 and DE440 agree to well under .001.
+TOL = {"Sun": .02, "Moon": .1, "Mercury": .05, "Venus": .05, "Mars": .1, "Jupiter": .2,
        "Saturn": .3, "Uranus": .1, "Neptune": .1, "Pluto": .1, "Rahu": .02, "Ketu": .02}
 ref = json.load(open(os.path.join(os.path.dirname(__file__), "reference_positions.json")))
 eph = Ephemeris(config.DATA_DIR, config.EPHEMERIS_FILE)

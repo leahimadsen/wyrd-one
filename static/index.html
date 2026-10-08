@@ -7,6 +7,7 @@
 <meta name="description" content="Cast your chart on the high seat: sidereal and tropical positions, the twenty-seven mansions, the sixty-four gates, the runes and the armillary. Free.">
 <link rel="stylesheet" href="/static/console.css">
 <link rel="stylesheet" href="/static/site.css">
+<link rel="stylesheet" href="/static/a11y.css">
 </head>
 <body>
 <header class="seat" id="skyHost">
@@ -19,6 +20,7 @@
         <input name="name" maxlength="80" placeholder="As you'd like it written"></label>
       <label>Date of birth <input name="date" type="date" required min="1850-01-01" max="2149-12-31"></label>
       <label>Time of birth <input name="time" type="time" required></label>
+      <label class="f-unknown"><input type="checkbox" name="unknown" id="unknownTime"> I don't know my birth time</label>
       <label class="f-place">Place of birth
         <input name="place" id="placeInput" placeholder="Start typing a town or city" required
                role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="placeList">
@@ -28,6 +30,11 @@
       <button type="submit" class="btn-cast">Cast my chart</button>
       <p class="err" id="castErr" role="alert"></p>
     </form>
+    <section class="saved" id="savedBox" hidden aria-labelledby="savedH">
+      <h2 id="savedH">Charts saved in this browser</h2>
+      <ul id="savedList"></ul>
+    </section>
+    <p class="seat-links"><a href="/today">Today's sky →</a> <a href="/sample">See a sample reading →</a></p>
   </div>
 </header>
 
@@ -38,6 +45,7 @@
 <button id="musicBtn" class="music" aria-pressed="false" hidden>♪ Music</button>
 <audio id="music" src="/static/music.mp3" loop preload="none"></audio>
 <script src="/static/viz.js"></script>
+<script src="/static/common.js"></script>
 <script src="/static/music.js"></script>
 <script src="/static/app.js"></script>
 </body>

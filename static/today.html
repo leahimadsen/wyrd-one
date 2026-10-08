@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Today's sky · The Wyrd Console</title>
+<meta name="description" content="Where every planet is today in the sidereal and tropical zodiacs: signs, mansions, gates, retrogrades, the lunar day, and the sign changes and stations of the coming month. Free, updated every fifteen minutes.">
+<link rel="stylesheet" href="/static/console.css">
+<link rel="stylesheet" href="/static/site.css">
+<link rel="stylesheet" href="/static/map.css">
+<link rel="stylesheet" href="/static/learn.css">
+<link rel="stylesheet" href="/static/a11y.css">
+</head>
+<body>
+<a class="skip" href="#today">Skip to content</a>
+<header class="hub" id="skyHost">
+  <div class="hub-in">
+    <p class="hub-crumb"><a href="/">← The Wyrd Console</a></p>
+    <h1>Today's sky</h1>
+    <p class="meta" id="when"></p>
+    <div class="td-wheel" id="tdWheel"></div>
+  </div>
+</header>
+<main id="today" class="td" tabindex="-1">
+  <section class="land-panel">
+    <div class="facts" id="tdFacts"></div>
+    <h2 class="sec-h">Every planet now</h2>
+    <div class="tw"><table class="td-table" id="tdTable"></table></div>
+    <h2 class="sec-h">The coming month</h2>
+    <ol class="cal-list" id="tdNext"></ol>
+    <p class="rd-prompt">✦ These are everyone's skies. To see which of your own planets today's sky is touching, <a href="/">cast your chart →</a></p>
+  </section>
+</main>
+<footer class="foot">
+  <p>The Wyrd Console · by Saga Devi · <a href="https://webofwyrd.substack.com">Web of Wyrd</a></p>
+  <p class="fine">Planetary positions from NASA JPL DE440. Sidereal positions use the Lahiri ayanamsa. For reflection and self-study.</p>
+</footer>
+<script src="/static/viz.js"></script>
+<script src="/static/glossary.js"></script>
+<script src="/static/today.js"></script>
+</body>
+</html>

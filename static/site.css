@@ -120,3 +120,19 @@ main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
 .mini tr:first-child th { color: var(--ivory-dim); font-size: 13px; }
 .fact-h2 { margin-top: 24px !important; }
 .asp li { gap: 10px; } .asp li span:first-child { color: var(--ivory); flex: 1; }
+
+/* ---- landing: unknown time, saved charts, links ---- */
+.cast .f-unknown { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--ivory); cursor: pointer; }
+.cast .f-unknown input { width: 18px; height: 18px; padding: 0; accent-color: var(--jade); flex: none; }
+.cast input:disabled { opacity: .45; }
+[hidden] { display: none !important; }
+.saved { margin: 26px 0 0; padding: 18px 20px; background: rgba(8,8,22,.62); border: 1px solid rgba(150,130,230,.22); border-radius: 3px; }
+.saved h2 { font-weight: 400; font-size: 17px; color: var(--celadon); margin: 0 0 10px; }
+.saved ul { list-style: none; margin: 0; padding: 0; }
+.saved li { display: flex; align-items: stretch; border-bottom: 1px solid var(--rule); }
+.sv-open { flex: 1; text-align: left; font: inherit; color: var(--ivory); background: none; border: 0; padding: 10px 0; cursor: pointer; }
+.sv-open b { font-weight: 400; display: block; } .sv-open span { font-size: 14px; color: var(--ivory-dim); }
+.sv-open:hover b { color: var(--celadon); }
+.sv-x { font: inherit; font-size: 22px; color: var(--ivory-dim); background: none; border: 0; padding: 0 6px 0 14px; cursor: pointer; }
+.seat-links { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 22px 0 0; font-size: 15.5px; }
+.seat-links a { color: var(--celadon); text-decoration: none; border-bottom: 1px solid rgba(156,180,166,.35); }

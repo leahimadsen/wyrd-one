@@ -8,16 +8,29 @@ Web of Wyrd register, unlocked by Stripe Checkout.
 - `app.py` — the web server (Flask)
 - `config.py` — prices, wording around the reading, year range
 - `wyrd/engine.py` — the chart pipeline, ported from the console and verified against it
+- `wyrd/extras.py` — retrogrades, the panchanga of the birth day, Placidus cusps (kept out of the cast so it stays identical to the console)
+- `wyrd/calendar.py` — the twelve-month calendar ("What's coming") and the public Today page
 - `wyrd/ephemeris.py` — NASA JPL DE440 via Skyfield; Lahiri ayanamsa
 - `wyrd/reading.py` — the paid reading (eight sections, all text from `lib/corpus.json`)
 - `wyrd/places.py`, `scripts/build_places.py` — worldwide place search (GeoNames)
-- `static/index.html` + `app.js` — the landing page: the high seat and the birth form
-- `static/chart.html` + `chart.js` + `map.css` — the chart page (`/chart`): the map with the
-  chart as its hub, and each land (section) on its own tab
+- `static/index.html` + `app.js` — the landing page: the birth form (with "I don't know my time") and saved charts
+- `static/chart.html` + `chart.js` — the chart page (`/chart`): the map, the tabs and every land
+- `static/learn.js` — **Learn your chart**: the thirteen-step guided path. Edit the lesson wording here.
+- `static/glossary.js` — every term's plain definition. Edit the wording here; it appears wherever the term does.
+- `static/wheel.js` — the chart wheel (simple and full views, tap to explore, compare overlay)
+- `static/lands.js` — What's coming and Compare
+- `static/today.html` + `today.js` — the public Today page (`/today`)
 - `static/consult.html` — the unlisted 1:1 consultation page (see below)
+- `static/a11y.css` — contrast and minimum text sizes for the whole site
 - `static/viz.js` is extracted from the console
 - `lib/corpus.json` — your register. Server-side only; never sent to the browser.
 - `tests/` — `verify_engine.py` (port = console), `selfcheck.py` (ephemeris wired right)
+
+## Free and paid
+The free side shows what everything **is** (positions, gates, runes, mansions, the rave, the clock,
+transits, definitions of every term). What it **means** for a person is only in the paid reading,
+and the Dharma Weave is computed for the reading only. `/sample` shows one complete reading for a
+made-up chart so people can see what they'd buy; change the chart in `app.py` (`SAMPLE`).
 
 ## Run it on your own computer
     pip install -r requirements.txt

@@ -1,126 +1,247 @@
 'use strict';
 /* The chart page. The landing page casts the chart and keeps it in this tab's
-   sessionStorage; this page draws the map (the chart as the hub, the lands
-   around it) and opens one land at a time. Lands are built the first time
-   they are visited, so the page stays light. */
-(() => {
+   sessionStorage (a shared link carries the birth details instead); this page
+   draws the map, with the chart as its hub, and opens one land at a time.
+   Lands are built the first time they are visited, so the page stays light. */
+(async () => {
 const $ = id => document.getElementById(id);
 const { signOf, degIn, nakIndex, houseOf, norm, GLYPH, NAKSHATRA } = Wyrd.helpers;
+const { esc, cast, keep, current, shareLink, fromLink, isSaved, toggleSaved } = WyrdCommon;
+const g = (k, l) => Wyrd.gloss(k, l);
 
-let saved = null;
-try { saved = JSON.parse(sessionStorage.getItem("wyrdChart") || "null"); } catch (_) {}
+/* ---------- which chart: a shared link, or the one cast in this tab ---------- */
+let saved = current();
+const linkParam = new URLSearchParams(location.search).get("b");
+if (linkParam){
+  const b = fromLink(linkParam);
+  if (b){
+    try { const j = await cast(b); keep(b, j); saved = { birth: b, result: j }; }
+    catch (x) { document.body.innerHTML = `<p class="err" style="padding:40px">${esc(x.message)} <a href="/">Cast a chart</a></p>`; return; }
+  }
+  history.replaceState(null, "", "/chart" + location.hash);     // the details don't stay in the address bar
+}
 if (!saved || !saved.result || !saved.result.chart){ location.replace("/"); return; }
-const { birth, result: J } = saved, C = J.chart, T = C.dashaTree;
+const { birth, result: J } = saved, C = J.chart, T = C.dashaTree, unknown = !!C.unknownTime;
+const X = C.extras || {};
 Wyrd.setChart(C);
 
-/* ---------- the lands ---------- */
-const sid = b => signOf(C.sid[b]);
-const LANDS = [
-  { id: "chart",     name: "Your chart",            mark: "☉", teaser: `${signOf(C.ascS)} rising · Moon in ${NAKSHATRA[nakIndex(C.sid.Moon)][0]}` },
-  { id: "body",      name: "The harmonic body",     mark: "✶", teaser: "Seven stations, each fed by one of your planets" },
-  { id: "clock",     name: "The Vimshottari clock", mark: "◷", teaser: `${T.cur.lord} era · ${T.curA.lord} chapter, running now` },
-  { id: "armillary", name: "The armillary",         mark: "◎", teaser: "Your sky as a sphere you can open" },
-  { id: "reading",   name: "Your full reading",     mark: "✦", teaser: "Eight movements, written for you · $44", gold: true },
-  { id: "sky",       name: "The sky now",           mark: "☾", teaser: "Today's planets crossing yours" },
-  { id: "colour",    name: "The colour room",       mark: "◐", teaser: "Your twelve houses as a colour wheel" },
-  { id: "bench",     name: "The bench",             mark: "♪", teaser: "Hear two of your planets together" },
-];
+/* ---------- small facts used across the page ---------- */
+const BODIES = ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Rahu","Ketu","Uranus","Neptune","Pluto"];
+const EXALT = { Sun: 0, Moon: 1, Mars: 9, Mercury: 5, Jupiter: 3, Venus: 11, Saturn: 6 };
+const OWN = { Sun: [4], Moon: [3], Mars: [0, 7], Mercury: [2, 5], Jupiter: [8, 11], Venus: [1, 6], Saturn: [9, 10] };
+const MOOLA = { Sun: [4, 0, 20], Moon: [1, 3, 30], Mars: [0, 0, 12], Mercury: [5, 15, 20], Jupiter: [8, 0, 10], Venus: [6, 0, 15], Saturn: [10, 0, 20] };
+function dignity(b){
+  if (!(b in EXALT)) return null;
+  const l = C.sid[b], s = Math.floor(norm(l) / 30), d = degIn(l), m = MOOLA[b];
+  if (s === EXALT[b] && !(b === "Mercury" && d >= 15) && !(b === "Moon" && d >= 3)) return { k: "ex", label: "exalted", key: "exalted" };
+  if (s === (EXALT[b] + 6) % 12) return { k: "deb", label: "debilitated", key: "debilitated" };
+  if (s === m[0] && d >= m[1] && d < m[2]) return { k: "mt", label: "moolatrikona", key: "moolatrikona" };
+  if (OWN[b].includes(s)) return { k: "own", label: "own sign", key: "ownsign" };
+  return null;
+}
+const retro = b => !!(X.retro && X.retro[b]);
+const dm = l => { const d = degIn(l); let a = Math.floor(d), m = Math.round((d - a) * 60); if (m === 60){ a++; m = 0; } return `${a}°${String(m).padStart(2, "0")}′`; };
+const fmt = l => `${signOf(l)} ${dm(l)}`;
+const pada = l => Math.floor((norm(l) % (360/27)) / (360/108)) + 1;
 
+/* ---------- the lands ---------- */
+const LANDS = [
+  { id: "chart",     name: "Your chart",            mark: "☉", teaser: unknown ? `Sun in ${signOf(C.sid.Sun)} · Moon in ${signOf(C.sid.Moon)}` : `${signOf(C.ascS)} rising · Moon in ${NAKSHATRA[nakIndex(C.sid.Moon)][0]}`,
+    terms: ["sidereal", "tropical", "house", "nakshatra", "pada", "rune", "gate", "design", "retro", "dignity", "navamsa"],
+    prompt: "Your reading reads these placements together: the Seat you rise from, the engine of your Moon, your soul-planet and its cabinet." },
+  { id: "body",      name: "The harmonic body",     mark: "✶", teaser: "Seven stations, each fed by one of your planets",
+    terms: ["station7", "centre", "channel", "type"], prompt: "Your reading reads the gates of your work and what your defined centres carry." },
+  { id: "clock",     name: "The Vimshottari clock", mark: "◷", teaser: `${T.cur.lord} era · ${T.curA.lord} chapter, running now`,
+    terms: ["vimshottari", "mahadasha", "antardasha", "pratyantar", "moonmansion"], prompt: "Your reading reads the periods running now: what this era and this chapter ask of you." },
+  { id: "calendar",  name: "What's coming",         mark: "☷", teaser: "The next twelve months, dated",
+    terms: [], prompt: "Your reading reads the periods running now, and the questions your chart keeps asking whatever the sky does." },
+  { id: "armillary", name: "The armillary",         mark: "◎", teaser: "Your sky as a sphere you can open",
+    terms: ["armillary", "ayanamsa", "gate", "rune"], prompt: "Your reading draws every frame of the sphere into one account of you." },
+  { id: "reading",   name: "Your full reading",     mark: "✦", teaser: "Eight movements, written for you · $44", gold: true, terms: [] },
+  { id: "compare",   name: "Compare",               mark: "⚭", teaser: "Lay someone else's chart over yours",
+    terms: [], prompt: "Your reading is about your chart alone, read in full." },
+  { id: "sky",       name: "The sky now",           mark: "☾", teaser: "Today's planets crossing yours",
+    terms: ["transit", "sadesati", "retro", "orb"], prompt: "Your reading names what your chart asks of you, whatever today's sky is doing." },
+  { id: "colour",    name: "The colour room",       mark: "◐", teaser: "Your twelve houses as a colour wheel",
+    terms: ["house", "sign"], prompt: "Your reading reads the houses your planets light, one by one." },
+  { id: "bench",     name: "The bench",             mark: "♪", teaser: "Hear two of your planets together",
+    terms: ["graha", "aspect"], prompt: "Your reading reads how your planets work together, as a cabinet around your soul-planet." },
+];
+const LEARN = { id: "learn", name: "Learn your chart", mark: "✧" };
+const ORDER = [LEARN, ...LANDS];
+
+/* ---------- the header: who, the tools, the path ---------- */
+$("who").textContent = birth.name ? `${birth.name}'s chart` : "Your chart";
+$("chartMeta").textContent = `${birth.date}${unknown ? " · time unknown" : ` at ${birth.time} (${J.utc})`} · ${J.place.label}`;
+if (unknown){
+  const span = C.moonSpan && C.moonSpan.length > 1 ? ` Your Moon may have been in ${C.moonSpan.join(" or ")}.` : "";
+  $("unknownNote").hidden = false;
+  $("unknownNote").textContent = `Birth time unknown: the chart is cast for noon, houses are counted from your Sun's sign, and the rising sign and angles are left out.${span}`;
+  $("readingUnknown").hidden = false;
+}
+function drawTools(){
+  const sv = isSaved(birth);
+  const html = short => `<a class="ctool" href="/?edit=1" ${short ? `aria-label="Edit birth details" title="Edit birth details"` : ""}>✎${short ? "" : " Edit details"}</a>
+    <button type="button" class="ctool" data-tool="save" aria-pressed="${sv}" ${short ? `aria-label="${sv ? "Saved" : "Save chart"}" title="${sv ? "Saved" : "Save chart"}"` : ""}>${sv ? "★" : "☆"}${short ? "" : sv ? " Saved" : " Save chart"}</button>
+    <button type="button" class="ctool" data-tool="share" ${short ? `aria-label="Copy link" title="Copy link"` : ""}>⤴${short ? "" : " Copy link"}</button>`;
+  $("tools").innerHTML = html(false);
+  $("tabTools").innerHTML = html(true);
+}
+drawTools();
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2600); }
+document.addEventListener("click", async e => {
+  const t = e.target.closest("[data-tool]"); if (!t) return;
+  if (t.dataset.tool === "save"){ const on = toggleSaved(birth); drawTools(); toast(on ? "Saved in this browser. It's listed on the first page." : "Removed from this browser."); }
+  if (t.dataset.tool === "share"){
+    const url = shareLink(birth);
+    try { await navigator.clipboard.writeText(url); toast("Link copied. Anyone with it can open this chart."); }
+    catch (_) { prompt("Copy this link. Anyone with it can open this chart:", url); }
+  }
+});
+function drawStart(){
+  const p = WyrdLearn.progress();
+  $("startHere").innerHTML = p && p.max > 0
+    ? `<b>Continue learning your chart</b><span>Step ${p.step + 1} of ${p.total} · ${Math.round((p.max + 1) / p.total * 100)}% walked</span>`
+    : `<b>New to charts? Start here</b><span>Walk through your own chart in ${WyrdLearn.count} short steps, one ring at a time</span>`;
+  $("startHere").href = p ? `#learn/${p.step + 1}` : "#learn/1";
+}
+drawStart();
+
+/* ---------- the map ---------- */
 function drawMap(){
-  const pos = LANDS.map((l, i) => {
-    const a = i * Math.PI / 4;
-    return { ...l, x: 50 + 40 * Math.sin(a), y: 50 - 40 * Math.cos(a) };
-  });
+  const n = LANDS.length;
+  const pos = LANDS.map((l, i) => { const a = i * 2 * Math.PI / n; return { ...l, x: 50 + 40 * Math.sin(a), y: 50 - 40 * Math.cos(a) }; });
   const paths = pos.map(p => `<line x1="50" y1="50" x2="${p.x.toFixed(2)}" y2="${p.y.toFixed(2)}"${p.gold ? ` class="gold"` : ""}/>`).join("");
   $("map").innerHTML = `
     <svg class="map-paths" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
       <circle cx="50" cy="50" r="40" class="rail"/>${paths}</svg>
-    <a class="map-core" href="#chart" aria-label="Open your chart">${WyrdWheel.svg(C, { compact: true })}</a>
+    <a class="map-core" href="#chart" aria-label="Open your chart">${WyrdWheel.svg(C, { compact: true, unknownTime: unknown })}</a>
     ${pos.map(p => `<a class="land${p.gold ? " gold" : ""}" href="#${p.id}" style="--x:${p.x.toFixed(2)}%;--y:${p.y.toFixed(2)}%">
       <span class="land-mark" aria-hidden="true">${p.mark}</span><b>${p.name}</b><small>${p.teaser}</small></a>`).join("")}`;
-  $("tabsIn").innerHTML = `<a href="#map" class="tab tab-map">◎ Map</a>` +
+  $("tabsIn").innerHTML = `<a href="#map" class="tab tab-map">◎ Map</a><a href="#learn" class="tab tab-learn" data-tab="learn">✧ Learn</a>` +
     LANDS.map(l => `<a href="#${l.id}" class="tab${l.gold ? " gold" : ""}" data-tab="${l.id}">${l.name.replace(/^The |^Your /, "")}</a>`).join("");
 }
 
-/* ---------- each land, built on first visit ---------- */
-function fmt(l){
-  const d = degIn(l); let deg = Math.floor(d), min = Math.round((d - deg) * 60); if (min === 60){ deg++; min = 0; }
-  return `${signOf(l)} ${deg}°${String(min).padStart(2, "0")}′`;
-}
-function chartTable(){
-  const pada = l => Math.floor((norm(l) % (360/27)) / (360/108)) + 1;
-  const NP = C.natal.personality, ND = C.natal.design;
-  const gl = g => g ? `${g.gate}.${g.line}` : "—";
-  $("chartWheel").innerHTML = WyrdWheel.svg(C, { name: birth.name || "Your chart", place: J.place.label.split(",")[0],
-    when: `${birth.date} ${birth.time}` });
+/* ---------- Your chart ---------- */
+function chartLand(){
+  const wx = $("chartWheel");
+  const W = WyrdWheel.mount(wx, C, { level: "full", name: birth.name || "Your chart", place: J.place.label.split(",")[0],
+    when: unknown ? `${birth.date} · time unknown` : `${birth.date} ${birth.time}`, unknownTime: unknown });
+  wx.querySelector(".wx-bar").insertAdjacentHTML("beforeend",
+    `<span class="wx-dl"><button type="button" class="wx-lv" data-dl="png">Download image</button><button type="button" class="wx-lv" data-dl="svg">SVG</button></span>`);
+  wx.addEventListener("click", e => { const d = e.target.closest("[data-dl]"); if (d) downloadWheel(wx.querySelector(".wx-stage svg"), d.dataset.dl); });
 
-  const order = ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Rahu","Ketu","Uranus","Neptune","Pluto"];
-  const rows = order.map(b => {
-    const l = C.sid[b], ru = WyrdWheel.runeAt(C, l);
-    return `<tr><th scope="row">${GLYPH[b] || ""} ${b}</th><td>${fmt(l)}</td><td>${fmt(C.trop[b])}</td>
-      <td>${NAKSHATRA[nakIndex(l)][0]} ${pada(l)}</td><td>${houseOf(l, C.ascS)}</td><td>${ru.glyph} ${ru.name}</td>
-      <td>${C.nav && C.nav[b] != null ? signOf(C.nav[b]) : "—"}</td><td>${gl(NP[b])}</td><td class="des">${gl(ND[b])}</td></tr>`;
+  const NP = C.natal.personality, ND = C.natal.design, PL = X.placidus;
+  const gl = v => v ? `${v.gate}.${v.line}` : "—";
+  const head = [["Body"], [g("sidereal", "Sidereal")], [g("tropical", "Tropical")], [g("nakshatra", "Mansion") + " · " + g("pada", "pada")],
+    [g("house", unknown ? "House (solar)" : "House")], ...(PL ? [[g("placidus", "Placidus")]] : []), [g("rune", "Rune")], [g("navamsa", "Navamsa")],
+    [g("dignity", "Dignity")], [g("gate", "Gate")], [g("design", "Design gate")]];
+  const rows = BODIES.map(b => {
+    const l = C.sid[b], ru = WyrdWheel.runeAt(C, l), d = dignity(b);
+    return `<tr><th scope="row">${GLYPH[b]} ${b}${retro(b) ? ` <span class="rx" title="retrograde">℞</span>` : ""}</th><td>${fmt(l)}</td><td>${fmt(C.trop[b])}</td>
+      <td>${NAKSHATRA[nakIndex(l)][0]} ${pada(l)}</td><td>${houseOf(l, C.ascS)}</td>${PL ? `<td>${PL.houses[b]}</td>` : ""}<td>${ru.glyph} ${ru.name}</td>
+      <td>${C.nav && C.nav[b] != null ? signOf(C.nav[b]) : "—"}</td><td>${d ? `<span class="dg ${d.k}">${d.label}</span>` : ""}</td><td>${gl(NP[b])}</td><td class="des">${gl(ND[b])}</td></tr>`;
   }).join("");
-  const angRow = (n, l, mansion) => { const ru = WyrdWheel.runeAt(C, l);
-    return `<tr class="ang"><th scope="row">${n}</th><td>${fmt(l)}</td><td>${fmt(n === "Ascendant" ? C.ascT : C.mcT)}</td><td>${mansion}</td>
-      <td>${houseOf(l, C.ascS)}</td><td>${ru.glyph} ${ru.name}</td><td>${n === "Ascendant" && C.navAsc != null ? signOf(C.navAsc) : "—"}</td><td>—</td><td>—</td></tr>`; };
-  $("posTable").innerHTML = `<caption>Sidereal is Lahiri; the gates run on the tropical wheel. Design is the moment the Sun stood 88° earlier.</caption>
-    <tr><th scope="col">Body</th><th scope="col">Sidereal</th><th scope="col">Tropical</th><th scope="col">Mansion · pada</th><th scope="col">House</th><th scope="col">Rune</th><th scope="col">Navamsa</th><th scope="col">Gate</th><th scope="col">Design gate</th></tr>
+  const dash = n => `<td>—</td>`.repeat(n);
+  const angRow = (n, l, lt, mansion) => { const ru = WyrdWheel.runeAt(C, l);
+    return `<tr class="ang"><th scope="row">${g(n === "Ascendant" ? "asc" : "mc", n)}</th><td>${fmt(l)}</td><td>${fmt(lt)}</td><td>${mansion}</td>
+      <td>${houseOf(l, C.ascS)}</td>${PL ? `<td>${n === "Ascendant" ? 1 : 10}</td>` : ""}<td>${ru.glyph} ${ru.name}</td><td>${n === "Ascendant" && C.navAsc != null ? signOf(C.navAsc) : "—"}</td>${dash(3)}</tr>`; };
+  $("posTable").innerHTML = `<caption>Sidereal is Lahiri; the gates run on the tropical wheel. ℞ marks a planet that was retrograde.</caption>
+    <tr>${head.map(h => `<th scope="col">${h[0]}</th>`).join("")}</tr>
     ${rows}
-    <tr><th scope="row">⊕ Earth</th><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>${gl(NP.Earth)}</td><td class="des">${gl(ND.Earth)}</td></tr>
-    ${angRow("Ascendant", C.ascS, `${NAKSHATRA[nakIndex(C.ascS)][0]} ${pada(C.ascS)}`)}
-    ${angRow("Midheaven", C.mcS, NAKSHATRA[nakIndex(C.mcS)][0])}`;
+    <tr><th scope="row">⊕ Earth</th>${dash(PL ? 8 : 7)}<td>${gl(NP.Earth)}</td><td class="des">${gl(ND.Earth)}</td></tr>
+    ${unknown ? "" : angRow("Ascendant", C.ascS, C.ascT, `${NAKSHATRA[nakIndex(C.ascS)][0]} ${pada(C.ascS)}`) + angRow("Midheaven", C.mcS, C.mcT, NAKSHATRA[nakIndex(C.mcS)][0])}`;
 
-  const rv = WyrdWheel.rave(C);
-  const kar = Object.entries(C.karaka).map(([k, b]) => `<li><span>${k.replace("karaka", "")}</span>${GLYPH[b]} ${b}</li>`).join("");
-  const bodies = ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Rahu","Ketu","Uranus","Neptune","Pluto"], asp = [];
-  for (let i = 0; i < bodies.length; i++) for (let k = i + 1; k < bodies.length; k++){
-    const [a, b] = [bodies[i], bodies[k]];
-    if ((a === "Rahu" && b === "Ketu")) continue;
+  const rv = WyrdWheel.rave(C), P = X.panchanga;
+  const kar = Object.entries(C.karaka).map(([k, b]) => `<li><span>${k === "Atmakaraka" ? g("atmakaraka", "Atma") : k.replace("karaka", "")}</span>${GLYPH[b]} ${b}</li>`).join("");
+  const asp = [];
+  for (let i = 0; i < BODIES.length; i++) for (let k = i + 1; k < BODIES.length; k++){
+    const [a, b] = [BODIES[i], BODIES[k]]; if (a === "Rahu" && b === "Ketu") continue;
     const x = aspectBetween(C.sid[a], C.sid[b]);
     if (x) asp.push(`<li><span>${GLYPH[a]} ${a} · ${GLYPH[b]} ${b}</span><span style="color:${x.col}">${x.name}</span><span>${x.orb.toFixed(1)}°</span></li>`);
   }
   $("facts").innerHTML = `
     <div class="fact"><h3>The rave</h3>
-      <dl><dt>Type</dt><dd>${rv.type}</dd><dt>Strategy</dt><dd>${rv.strategy}</dd><dt>Authority</dt><dd>${rv.authority}</dd>
-      <dt>Definition</dt><dd>${rv.definition}</dd><dt>Profile</dt><dd>${rv.profile}</dd><dt>Cross gates</dt><dd>${rv.cross}</dd>
-      <dt>Defined</dt><dd>${rv.centres.join(", ") || "—"}</dd><dt>Open</dt><dd>${rv.open.join(", ") || "—"}</dd>
-      <dt>Channels</dt><dd>${rv.channels.join(", ") || "—"}</dd></dl></div>
-    <div class="fact"><h3>The seven karakas</h3><ul class="kar">${kar}</ul>
-      <h3 class="fact-h2">Aspects</h3><ul class="kar asp">${asp.join("") || "<li>None within orb</li>"}</ul></div>`;
+      <dl><dt>${g("type")}</dt><dd>${rv.type}</dd><dt>${g("strategy")}</dt><dd>${rv.strategy}</dd><dt>${g("authority")}</dt><dd>${rv.authority}</dd>
+      <dt>${g("definition")}</dt><dd>${rv.definition}</dd><dt>${g("profile")}</dt><dd>${rv.profile}</dd><dt>${g("cross", "Cross gates")}</dt><dd>${rv.cross}</dd>
+      <dt>${g("centre", "Defined")}</dt><dd>${rv.centres.join(", ") || "—"}</dd><dt>Open</dt><dd>${rv.open.join(", ") || "—"}</dd>
+      <dt>${g("channel", "Channels")}</dt><dd>${rv.channels.join(", ") || "—"}</dd></dl></div>
+    ${P ? `<div class="fact"><h3>${g("panchanga", "Your birth day")}</h3>
+      <dl><dt>${g("vara")}</dt><dd>${P.vara} <small>(${P.varaLord})</small></dd><dt>${g("tithi")}</dt><dd>${P.paksha} ${P.tithiName} <small>(${P.tithi} of 30)</small></dd>
+      <dt>Mansion</dt><dd>${unknown && C.moonSpan && C.moonSpan.length > 1 ? C.moonSpan.join(" or ") : P.nakshatra}</dd><dt>${g("yoga")}</dt><dd>${P.yoga}</dd><dt>${g("karana")}</dt><dd>${P.karana}</dd>
+      ${P.sunrise && !unknown ? `<dt>Sunrise</dt><dd>${P.sunrise}${P.beforeSunrise ? " <small>(born before it: still the previous Vedic day)</small>" : ""}</dd>` : ""}</dl></div>` : ""}
+    <div class="fact"><h3>${g("karaka", "The seven karakas")}</h3><ul class="kar">${kar}</ul>
+      <h3 class="fact-h2">${g("aspect", "Aspects")}</h3><ul class="kar asp">${asp.join("") || "<li>None within orb</li>"}</ul></div>
+    ${PL ? `<div class="fact"><h3>${g("placidus", "Placidus cusps")}</h3><p class="fine">Tropical. For comparison with the whole-sign houses this console reads.</p>
+      <ol class="cusps">${PL.cusps.map((c, i) => `<li><span>${i + 1}</span>${SIGNS[Math.floor(norm(c) / 30)]} ${dm(c)}</li>`).join("")}</ol></div>` : ""}`;
 }
+
+/* the wheel as a file: copy the computed look onto each element so it stands alone */
+function downloadWheel(svgEl, kind){
+  if (!svgEl) return;
+  const clone = svgEl.cloneNode(true), src = svgEl.querySelectorAll("*"), dst = clone.querySelectorAll("*");
+  const PROPS = ["fill", "stroke", "stroke-width", "stroke-dasharray", "opacity", "font-size", "font-family", "font-weight", "text-anchor", "dominant-baseline", "letter-spacing"];
+  src.forEach((el, i) => { const cs = getComputedStyle(el); dst[i].setAttribute("style", PROPS.map(p => `${p}:${cs.getPropertyValue(p)}`).join(";")); });
+  clone.classList.remove("selecting", "focusing");
+  const vb = clone.getAttribute("viewBox").split(" ").map(Number);
+  clone.setAttribute("xmlns", "http://www.w3.org/2000/svg"); clone.setAttribute("width", vb[2]); clone.setAttribute("height", vb[3]);
+  clone.insertAdjacentHTML("afterbegin", `<rect x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}" fill="#05080a"/>`);
+  const text = new XMLSerializer().serializeToString(clone), name = `${(birth.name || "chart").replace(/[^\w-]+/g, "-")}-wheel`;
+  const save = (blob, ext) => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${name}.${ext}`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); };
+  const blob = new Blob([text], { type: "image/svg+xml" });
+  if (kind === "svg"){ save(blob, "svg"); return; }
+  const img = new Image(), url = URL.createObjectURL(blob);
+  img.onload = () => {
+    const k = 2, cv = document.createElement("canvas"); cv.width = vb[2] * k; cv.height = vb[3] * k;
+    cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height); URL.revokeObjectURL(url);
+    cv.toBlob(b => save(b, "png"), "image/png");
+  };
+  img.src = url;
+}
+
+/* ---------- each land, built on first visit ---------- */
+let learn = null;
 const BUILD = {
-  chart: chartTable,
+  learn: () => { learn = WyrdLearn.mount($("learnHost"), { C, birth, unknown, name: birth.name, dignity, retro, onStep: drawStart }); },
+  chart: chartLand,
   body: () => window.WyrdBody && WyrdBody.mount($("bodyHost"), C),
-  clock: () => window.WyrdDasha && WyrdDasha.mount($("dashaHost")),
+  clock: () => { window.WyrdDasha && WyrdDasha.mount($("dashaHost"));
+    if (unknown) $("dashaHost").insertAdjacentHTML("afterbegin", `<p class="unknown-note">The clock is set by the Moon. Without a birth time your Moon could be anywhere in a day's travel, so these dates may be out by months.</p>`); },
+  calendar: () => WyrdLands.calendar($("calHost"), { C, birth, unknown }),
   armillary: () => { $("armHostWrap").innerHTML = Wyrd.armillary(); watchArmillary($("p-armillary")); },
   sky: () => renderTransits(C),
   colour: () => { $("colourHost").innerHTML = Wyrd.colour(); setTimeout(() => Wyrd.afterColour(), 0); },
   bench: () => { $("benchHost").innerHTML = Wyrd.bench(); },
+  compare: () => WyrdLands.compare($("cmpHost"), { C, birth, unknown }),
   reading: () => {},
 };
 const built = new Set();
+function decorate(L){
+  const panel = $("p-" + L.id), lede = panel.querySelector(".lede");
+  if (L.terms && L.terms.length && lede) lede.insertAdjacentHTML("afterend", Wyrd.glossTerms(L.terms));
+  if (L.prompt) panel.insertAdjacentHTML("beforeend", `<p class="rd-prompt">✦ ${L.prompt} <a href="#reading">About the reading →</a></p>`);
+}
 
 /* ---------- moving between the map and the lands ---------- */
 function go(){
-  const id = location.hash.slice(1);
-  const land = LANDS.find(l => l.id === id);
+  const [id, arg] = location.hash.slice(1).split("/");
+  const land = ORDER.find(l => l.id === id);
   $("skyHost").hidden = !!land; $("tabs").hidden = !land; $("landNav").hidden = !land;
-  LANDS.forEach(l => { $("p-" + l.id).hidden = l !== land; });
+  ORDER.forEach(l => { $("p-" + l.id).hidden = l !== land; });
   document.querySelectorAll("[data-tab]").forEach(t =>
     t.dataset.tab === id ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current"));
-  if (!land){ Wyrd.sky.start(); document.title = "Your chart · The Wyrd Console"; return; }
+  if (!land){ drawStart(); Wyrd.sky.start(); document.title = `${birth.name ? birth.name + "'s chart" : "Your chart"} · The Wyrd Console`; return; }
   Wyrd.sky.stop();
-  if (!built.has(id)){ built.add(id); BUILD[id](); }
-  const i = LANDS.indexOf(land), prev = LANDS[(i + LANDS.length - 1) % LANDS.length], next = LANDS[(i + 1) % LANDS.length];
+  if (!built.has(id)){ built.add(id); if (land !== LEARN) decorate(land); BUILD[id](); }
+  if (id === "learn" && arg && learn) learn.show(+arg - 1);
+  const i = ORDER.indexOf(land), prev = ORDER[(i + ORDER.length - 1) % ORDER.length], next = ORDER[(i + 1) % ORDER.length];
   $("landNav").innerHTML = `<a href="#${prev.id}">← ${prev.name}</a><a href="#map" class="to-map">◎ Back to the map</a><a href="#${next.id}">${next.name} →</a>`;
   document.title = `${land.name} · The Wyrd Console`;
-  document.querySelector(`[data-tab="${id}"]`).scrollIntoView({ block: "nearest", inline: "center" });
+  const tab = document.querySelector(`[data-tab="${id}"]`); if (tab) tab.scrollIntoView({ block: "nearest", inline: "center" });
   scrollTo(0, 0);
+  $("lands").focus({ preventScroll: true });
 }
 
-$("who").textContent = birth.name ? `${birth.name}'s chart` : "Your chart";
-$("chartMeta").textContent = `${birth.date} at ${birth.time} (${J.utc}) · ${J.place.label}`;
 drawMap();
 addEventListener("hashchange", go);
 go();
@@ -130,8 +251,7 @@ $("buyBtn").addEventListener("click", async () => {
   const err = $("buyErr"), btn = $("buyBtn"); err.textContent = "";
   btn.disabled = true; btn.textContent = "Opening checkout…";
   try {
-    const r = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
-                                             body: JSON.stringify(birth) });
+    const r = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(birth) });
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || "Checkout couldn't open.");
     location.href = j.url;

@@ -84,6 +84,27 @@ class Ephemeris:
         p["Ketu"] = norm(p["Rahu"] + 180)
         return p
    
+    def positions_many(self, jds):
+        """positions() and ayanamsa() for many moments in one pass: a year of
+        daily samples costs one Skyfield call per body instead of 365."""
+        import numpy as np
+        t = self._t(np.asarray(jds, dtype=float))
+        e = self.earth.at(t)
+        lon = {}
+        for b in NAMES:
+            _, l, _ = e.observe(self.bodies[b]).apparent().frame_latlon(ecliptic_frame)
+            lon[b] = np.mod(l.degrees, 360)
+        rahu = [self._mean_node(tt) for tt in t.tt]
+        mean = LAHIRI_AY0 + (_precession_arcsec(t.tt) - _precession_arcsec(LAHIRI_T0)) / 3600.0
+        dpsi, _ = _nutation(t)
+        ay = mean + np.asarray(dpsi) * R2D
+        out = []
+        for i in range(len(jds)):
+            p = {b: float(lon[b][i]) for b in NAMES}
+            p["Rahu"] = rahu[i]; p["Ketu"] = norm(rahu[i] + 180)
+            out.append((p, float(ay[i])))
+        return out
+
     @staticmethod
     def _mean_node(jd_tt):
         T = (jd_tt - 2451545.0) / 36525.0

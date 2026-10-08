@@ -8,10 +8,13 @@
 <link rel="stylesheet" href="/static/console.css">
 <link rel="stylesheet" href="/static/site.css">
 <link rel="stylesheet" href="/static/map.css">
+<link rel="stylesheet" href="/static/learn.css">
 <link rel="stylesheet" href="/static/body.css">
 <link rel="stylesheet" href="/static/dasha.css">
+<link rel="stylesheet" href="/static/a11y.css">
 </head>
 <body>
+<a class="skip" href="#lands">Skip to content</a>
 <!-- The map: the chart is the hub, and every land is one way into it.
      Each land opens on its own tab; the map is always one tap away. -->
 <header class="hub" id="skyHost">
@@ -19,59 +22,87 @@
     <p class="hub-crumb"><a href="/">← Cast another chart</a></p>
     <h1 id="who">Your chart</h1>
     <p class="meta" id="chartMeta"></p>
+    <div class="ctools" id="tools"></div>
+    <p class="unknown-note" id="unknownNote" hidden></p>
+    <a class="start" id="startHere" href="#learn"></a>
     <nav class="map" id="map" aria-label="The lands of your chart"></nav>
-    <p class="map-hint">Every land is a different way into the same chart. Start anywhere.</p>
+    <p class="map-hint">Every land is a different way into the same chart. Start anywhere, or follow the path above.</p>
   </div>
 </header>
 
-<nav class="tabs" id="tabs" aria-label="Sections" hidden><div class="tabs-in" id="tabsIn"></div></nav>
+<div class="tabs" id="tabs" hidden><nav class="tabs-in" id="tabsIn" aria-label="Sections"></nav><div class="tab-tools" id="tabTools"></div></div>
 
-<main id="lands">
-  <section class="land-panel" id="p-chart" hidden>
-    <h2>Your chart</h2>
-    <p class="lede">Everything your chart holds, laid out in full. What it means is the work of the reading.</p>
+<main id="lands" tabindex="-1">
+  <section class="land-panel" id="p-learn" hidden aria-labelledby="h-learn">
+    <h2 id="h-learn">Learn your chart</h2>
+    <div id="learnHost"></div>
+  </section>
+
+  <section class="land-panel" id="p-chart" hidden aria-labelledby="h-chart">
+    <h2 id="h-chart">Your chart</h2>
+    <p class="lede">Where was everything when I was born?</p>
     <div class="chart-wheel" id="chartWheel"></div>
-    <p class="wh-key"><span><i style="background:#3a3c40"></i>gate at birth</span><span><i style="background:#1e3a39"></i>design gate</span><span><i style="background:#3a3c40;border-color:#f3efe4"></i>rune a body stands in</span><span><i style="background:#24302c"></i>the Moon's mansion</span><span style="color:#6fb7a0">teal glyphs: design bodies</span></p>
+    <p class="wh-key"><span><i style="background:#3a3c40"></i>gate at birth</span><span><i style="background:#1e3a39"></i>design gate</span><span><i style="background:#3a3c40;border-color:#f3efe4"></i>rune a planet stands in</span><span><i style="background:#24302c"></i>the Moon's mansion</span><span style="color:#6fb7a0">teal glyphs: design planets</span></p>
+    <h3 class="sec-h">Every placement</h3>
     <div class="tw"><table id="posTable"></table></div>
     <div class="facts" id="facts"></div>
   </section>
 
-  <section class="land-panel" id="p-body" hidden>
-    <h2>The harmonic body</h2>
+  <section class="land-panel" id="p-body" hidden aria-labelledby="h-body">
+    <h2 id="h-body">The harmonic body</h2>
+    <p class="lede">Which planet feeds each station of the body, from crown to root?</p>
     <div id="bodyHost"></div>
   </section>
 
-  <section class="land-panel" id="p-clock" hidden>
-    <h2>The Vimshottari clock</h2>
+  <section class="land-panel" id="p-clock" hidden aria-labelledby="h-clock">
+    <h2 id="h-clock">The Vimshottari clock</h2>
+    <p class="lede">Which chapter of my life am I in, and when does it turn?</p>
     <div id="dashaHost"></div>
   </section>
 
-  <section class="land-panel" id="p-armillary" hidden>
-    <h2>The armillary</h2>
+  <section class="land-panel" id="p-armillary" hidden aria-labelledby="h-armillary">
+    <h2 id="h-armillary">The armillary</h2>
+    <p class="lede">How do the zodiacs, gates, runes and mansions sit against each other?</p>
     <div id="armHostWrap"></div>
   </section>
 
-  <section class="land-panel" id="p-sky" hidden>
-    <h2>The sky now</h2>
+  <section class="land-panel" id="p-sky" hidden aria-labelledby="h-sky">
+    <h2 id="h-sky">The sky now</h2>
+    <p class="lede">Where are the planets today, and which of mine are they touching?</p>
     <div id="trHost"></div>
   </section>
 
-  <section class="land-panel" id="p-colour" hidden>
-    <h2>The colour room</h2>
+  <section class="land-panel" id="p-calendar" hidden aria-labelledby="h-calendar">
+    <h2 id="h-calendar">What's coming</h2>
+    <p class="lede">What happens in my sky over the next twelve months?</p>
+    <div id="calHost"></div>
+  </section>
+
+  <section class="land-panel" id="p-colour" hidden aria-labelledby="h-colour">
+    <h2 id="h-colour">The colour room</h2>
+    <p class="lede">What colour is each house, and where do my planets sit on the colour wheel?</p>
     <div id="colourHost"></div>
   </section>
 
-  <section class="land-panel" id="p-bench" hidden>
-    <h2>The bench</h2>
+  <section class="land-panel" id="p-bench" hidden aria-labelledby="h-bench">
+    <h2 id="h-bench">The bench</h2>
+    <p class="lede">What do two of my planets sound like together?</p>
     <div id="benchHost"></div>
   </section>
 
-  <section class="land-panel" id="p-reading" hidden>
+  <section class="land-panel" id="p-compare" hidden aria-labelledby="h-compare">
+    <h2 id="h-compare">Compare two charts</h2>
+    <p class="lede">Where does someone else's chart fall in mine?</p>
+    <div id="cmpHost"></div>
+  </section>
+
+  <section class="land-panel" id="p-reading" hidden aria-labelledby="h-reading">
     <div class="offer">
-      <h2>Your full reading</h2>
+      <h2 id="h-reading">Your full reading</h2>
       <p>Everything on the map, read. Eight movements, written for your placements and nobody else's: the Seat you rise from, the engine of your Moon, your soul-planet and its cabinet, the gates of your work, the Dharma Weave, the Path of Dharma through Mission, Illuminations and the Diamond, the periods running now, and every question your chart asks.</p>
+      <p class="unknown-note" id="readingUnknown" hidden>Your birth time is unknown, so your reading would be cast for noon: the rising sign, houses and the Moon's mansion may not be yours. If you can find your time, edit your details first.</p>
       <button class="btn-buy" id="buyBtn">Get my reading — $44</button>
-      <p class="fine">Secure checkout by Stripe. Your reading opens the moment payment completes; bookmark the page or save it as a PDF.</p>
+      <p class="fine">Secure checkout by Stripe. Your reading opens the moment payment completes; bookmark the page or save it as a PDF. <a href="/sample">See a sample reading first →</a></p>
       <p class="err" id="buyErr" role="alert"></p>
     </div>
   </section>
@@ -80,16 +111,21 @@
 </main>
 
 <footer class="foot">
-  <p>The Wyrd Console · by Saga Devi · <a href="https://webofwyrd.substack.com">Web of Wyrd</a></p>
+  <p>The Wyrd Console · by Saga Devi · <a href="https://webofwyrd.substack.com">Web of Wyrd</a> · <a href="/today">Today's sky</a></p>
   <p class="fine">Planetary positions from NASA JPL DE440. Places from <a href="https://www.geonames.org/">GeoNames</a> (CC BY 4.0). For reflection and self-study; not medical, legal or financial advice.</p>
 </footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <button id="musicBtn" class="music" aria-pressed="false" hidden>♪ Music</button>
 <audio id="music" src="/static/music.mp3" loop preload="none"></audio>
 <script src="/static/viz.js"></script>
+<script src="/static/glossary.js"></script>
+<script src="/static/common.js"></script>
 <script src="/static/body.js"></script>
 <script src="/static/wheel.js"></script>
 <script src="/static/dasha.js"></script>
 <script src="/static/transits.js"></script>
+<script src="/static/learn.js"></script>
+<script src="/static/lands.js"></script>
 <script src="/static/music.js"></script>
 <script src="/static/chart.js"></script>
 </body>
