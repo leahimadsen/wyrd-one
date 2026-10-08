@@ -73,7 +73,13 @@ footer{margin-top:60px;color:var(--dim);font-size:14px;border-top:1px solid var(
 @media(max-width:600px){.rd-gifts,.rd-triad{grid-template-columns:1fr}.rd-pair{grid-template-columns:1fr;gap:2px}}
 @media print{
   :root{--void:#fff;--ivory:#1b1b1b;--dim:#666;--celadon:#2f5f50;--jade:#2f6f5a;--gold:#8a6a2a;--rule:#ddd}
-  body{font-size:11.5pt}.tools,.preview{display:none}.wrap{width:auto;padding:0}
+  @page{margin:.65in .7in}
+  body{font-size:10.5pt;line-height:1.5}.tools,.preview{display:none}.wrap{width:auto;padding:0}
+  header h1{font-size:30pt}.opening,.closing{font-size:11pt}
+  .rd-sec{padding-top:0;margin-top:22pt}.rd-sec h2{font-size:20pt}.rd-sec h3{font-size:13pt;margin:16pt 0 4pt;break-after:avoid}
+  .rd-pair{font-size:10pt;padding:4pt 0;gap:10pt;break-inside:avoid}.rd-hdr,.rd-note,.rd-held{font-size:9.5pt}
+  .rd-body h5,.rd-gifts h5,.rd-repair h5{font-size:10pt;margin:8pt 0 1pt}table{font-size:9.5pt}
+  .rd-entry{margin:12pt 0}.rd-entry p,.rd-body p{margin:4pt 0}.rd-step{break-inside:avoid}
   .rd-ask{background:none}a{color:inherit}
 }
 </style>

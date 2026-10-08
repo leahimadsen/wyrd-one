@@ -22,7 +22,7 @@ def _call(secret, method, path, fields=None):
     except (urllib.error.URLError, TimeoutError, ValueError) as e:
         raise StripeError("Stripe could not be reached.") from e
 
-def create_checkout(secret, *, base_url, price_id, price_cents, product_name, metadata, email=None):
+def create_checkout(secret, *, base_url, price_id, price_cents, product_name, metadata, email=None, customer=None):
     f = {
         "mode": "payment",
         "success_url": f"{base_url}/reading?session_id={{CHECKOUT_SESSION_ID}}",
@@ -36,7 +36,8 @@ def create_checkout(secret, *, base_url, price_id, price_cents, product_name, me
         f["line_items[0][price_data][currency]"] = "usd"
         f["line_items[0][price_data][unit_amount]"] = str(price_cents)
         f["line_items[0][price_data][product_data][name]"] = product_name
-    if email: f["customer_email"] = email
+    if customer: f["customer"] = customer
+    elif email: f["customer_email"] = email
     for k, v in metadata.items():
         f[f"metadata[{k}]"] = str(v)[:500]
         f[f"payment_intent_data[metadata][{k}]"] = str(v)[:500]
@@ -58,3 +59,53 @@ def payment_link(secret, link_id):
     if not isinstance(link_id, str) or not link_id.startswith("plink_") or len(link_id) > 200:
         return None
     return _call(secret, "GET", "/payment_links/" + urllib.parse.quote(link_id, safe=""))
+
+
+# ---------------- subscriptions: membership and professional ----------------
+# Prices are made inside each checkout (price_data), like the $44 reading, so
+# nothing has to be set up in the Stripe dashboard first. A plan's tier rides
+# in the subscription's metadata, which is how the site knows what was bought.
+def find_customer(secret, email):
+    r = _call(secret, "GET", "/customers?" + urllib.parse.urlencode({"email": email, "limit": 10}))
+    rows = r.get("data") or []
+    return next((c for c in rows if (c.get("metadata") or {}).get("wyrd") == "1"), rows[0] if rows else None)
+
+def create_customer(secret, email):
+    return _call(secret, "POST", "/customers", {"email": email, "metadata[wyrd]": "1"})
+
+def update_customer_metadata(secret, customer_id, fields):
+    return _call(secret, "POST", "/customers/" + urllib.parse.quote(customer_id, safe=""),
+                 {f"metadata[{k}]": str(v)[:500] for k, v in fields.items()})
+
+def subscriptions(secret, customer_id):
+    return _call(secret, "GET", "/subscriptions?" + urllib.parse.urlencode(
+        {"customer": customer_id, "status": "all", "limit": 20})).get("data") or []
+
+def subscription_checkout(secret, *, base_url, customer, tier, name, cents, interval, success, cancel):
+    return _call(secret, "POST", "/checkout/sessions", {
+        "mode": "subscription",
+        "customer": customer,
+        "line_items[0][quantity]": "1",
+        "line_items[0][price_data][currency]": "usd",
+        "line_items[0][price_data][unit_amount]": str(cents),
+        "line_items[0][price_data][recurring][interval]": interval,
+        "line_items[0][price_data][product_data][name]": name,
+        "allow_promotion_codes": "true",
+        "subscription_data[metadata][tier]": tier,
+        "metadata[tier]": tier,
+        "success_url": f"{base_url}{success}",
+        "cancel_url": f"{base_url}{cancel}",
+    })
+
+def portal(secret, customer, return_url):
+    return _call(secret, "POST", "/billing_portal/sessions", {"customer": customer, "return_url": return_url})
+
+def search_customers(secret, query):
+    out, page = [], None
+    while True:
+        q = {"query": query, "limit": 100}
+        if page: q["page"] = page
+        r = _call(secret, "GET", "/customers/search?" + urllib.parse.urlencode(q))
+        out += r.get("data") or []
+        if not r.get("has_more") or not r.get("next_page"): return out
+        page = r["next_page"]

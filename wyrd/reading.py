@@ -5,18 +5,25 @@ which passages a chart calls for and lays them out.
 
   I    The Seat            rising sign and mansion: frame, bearing, features
   II   The Engine          the Moon's mansion, worked in full
-  III  The Soul-Planet     the Atmakaraka and its cabinet of seven
-  IV   The Work            personality and design Suns and Earths, from the register
-  V    The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
-  VI   The Path of Dharma  Mission, Illuminations, the Diamond
-  VII  The Clock           the periods running now
-  VIII The Questions       every question the chart asked, gathered
+  III  The Planets         every planet: sidereal (karma, reality) and tropical (experience)
+  IV   The Soul-Planet     the Atmakaraka and its cabinet of seven
+  V    The Runes           the runes the chart lights, ranked, and the periods that wake them
+  VI   The Work            personality and design Suns and Earths, from the register
+  VII  The Body            centres, channels, and the mansions and padas that feed them
+  VIII Where You Thrive    culture, places and work
+  IX   The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
+  X    The Path of Dharma  Mission, Illuminations, the Diamond
+  XI   The Clock           the periods running now, and the whole life by period
+  XII  The Questions       every question the chart asked, gathered
+
+The planets, runes, body and thriving sections draw on lib/register_ext.json too.
 """
 import html, json, math, os
 from datetime import datetime, timedelta
 
 from . import engine as E
 from . import rave as RV
+from . import reading_more as MORE
 
 CORPUS = json.load(open(os.path.join(os.path.dirname(__file__), "..", "lib", "corpus.json"), encoding="utf-8"))
 REG, ENG, NAKS, DEEP = CORPUS["REGISTER"], CORPUS["ENGINE"], CORPUS["NAKSHATRA"], CORPUS["NAK_DEEP"]
@@ -25,7 +32,7 @@ GATE_NAME, KGLOSS, SEQ = CORPUS["GATE_NAME"], CORPUS["KARAKA_GLOSS"], CORPUS["SE
 
 GLYPH = {"Sun": "☉", "Moon": "☽", "Mercury": "☿", "Venus": "♀", "Mars": "♂", "Jupiter": "♃",
          "Saturn": "♄", "Uranus": "♅", "Neptune": "♆", "Pluto": "♇", "Rahu": "☊", "Ketu": "☋", "Earth": "⊕"}
-ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"]
+ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
 
 esc = html.escape
 
@@ -69,7 +76,7 @@ def jd_date(jd):
     return (datetime(2000, 1, 1, 12) + timedelta(days=jd - 2451545.0)).strftime("%b %Y")
 
 def section(n, title, sub, body):
-    return f"""<section class="rd-sec"><div class="rd-num">{ROMAN[n]}</div>
+    return f"""<section class="rd-sec"><div class="rd-num">{{{{N}}}}</div>
       <h2>{title}</h2><div class="rd-sub">{sub}</div>{body}</section>"""
 
 def pair(k, v):
@@ -167,6 +174,9 @@ def build(chart, dasha, who):
       {pair("Does well", Dm[12])}{pair("Goes wrong", Dm[13])}
       <div class="rd-ask">{e[10]}</div>"""))
 
+    # ---------- the planets, both zodiacs ----------
+    out.append(section(0, "The Planets", "every planet, among the stars and in the seasons", MORE.planets(C)))
+
     # ---------- III · the soul-planet ----------
     K = C["karaka"]; ak = K["Atmakaraka"]; l = C["sid"][ak]
     stations = [(1, "the body"), (9, "the dharma"), (10, "the public"), (12, "the ancestral"), (60, "the sum of karmas")]
@@ -182,6 +192,9 @@ def build(chart, dasha, who):
       {pair(f"{ak} across the divisions", " · ".join(f"D{n} {naks[i]}" for i, (n, _) in enumerate(stations)))}
       {f'<p class="rd-kenning"><b>{", ".join(rep)}</b> repeats across divisions. A soul-planet that repeats a star, a house, or a rune is repeating the life\'s keynote.</p>' if rep else ''}"""))
 
+    # ---------- the runes ----------
+    out.append(section(0, "The Runes", "which runes your chart lights, and when they wake", MORE.runes(C, dasha)))
+
     # ---------- IV · the work ----------
     N = C["natal"]
     work = "".join([
@@ -193,6 +206,10 @@ def build(chart, dasha, who):
       <p class="rd-kenning">Personality is what you know you carry. Design runs underneath, and a design-side
       activation stays in distortion until it is named. So the design entries open on the engine and keep their
       question for the end.</p>{work}"""))
+
+    # ---------- the body ----------
+    out.append(section(0, "The Body", "your centres and channels, and the mansions that feed them", MORE.body(C)))
+    out.append(section(0, "Where You Thrive", "culture, places and work", MORE.thrive(C)))
 
     # ---------- V · the dharma weave ----------
     Dh = C["dharma"]
@@ -213,7 +230,7 @@ def build(chart, dasha, who):
       {f'<p class="rd-kenning">The dharma repeats {" and ".join(repeats)} of the birth chart. The repetition is load-bearing — that is a thing the life does not get to outgrow.</p>' if repeats else ''}
       <h3 class="rd-tier">The dharma cross</h3>
       <p>The four positions that carry the dharma rave, as the four Suns and Earths carry the birth one: the dharma Sun and its Earth,
-      and the dharma design Sun and its Earth. Read them as you read section IV, conscious side first.</p>
+      and the dharma design Sun and its Earth. Read them as you read section VI, conscious side first.</p>
       {register_entry(dps['gate'], dps['line'], 'personality', 'Dharma Sun', asks)}
       {register_entry(Dh['personality']['Earth']['gate'], Dh['personality']['Earth']['line'], 'personality', 'Dharma Earth', asks)}
       {register_entry(dds['gate'], dds['line'], 'design', 'Dharma design Sun', asks)}
@@ -236,7 +253,7 @@ def build(chart, dasha, who):
                 t = R.get("t", GATE_NAME.get(str(g["gate"]), ""))
                 act = activation(g["gate"], g["line"], C, dasha, n)
                 if col == "design":
-                    q = '<p class="rd-step-q held">This is design-side. Read the gate\'s engine in section IV or V first; its question waits in section VIII.</p>'
+                    q = '<p class="rd-step-q held">This is design-side. Read the gate\'s engine in section VI or IX first; its question waits in section XII.</p>'
                 else:
                     q = f'<p class="rd-step-q">The question to carry: <em>{R.get("a", "")}</em></p>' if R.get("a") else ""
                 out.append(f"""<div class="rd-step"><div class="rd-sn">Step {k}</div>
@@ -285,7 +302,8 @@ def build(chart, dasha, who):
       {pair("Pratyantar", f"{lord(p['lord'])} · {jd_date(p['from'])} – {jd_date(p['to'])}")}
       <div class="rd-tw"><table><tr><th>Period</th><th>From</th><th>To</th></tr>{''.join(
         f"<tr{' class=hi' if m['now'] else ''}><td>{GLYPH.get(m['lord'], '')} {m['lord']}</td><td>{jd_date(m['from'])}</td><td>{jd_date(m['to'])}</td></tr>"
-        for m in dasha['maha'])}</table></div>"""))
+        for m in dasha['maha'])}</table></div>
+      <h3 class="rd-tier">Your life by period</h3>{MORE.periods(C, dasha)}"""))
 
     # ---------- VIII · the questions ----------
     qs = "".join(f'<li><div class="rd-ql">{esc(lab)}{" · held, design-side" if d else ""}</div><div>{q}</div></li>'
@@ -293,4 +311,6 @@ def build(chart, dasha, who):
     out.append(section(7, "The Questions", "every question your chart asked, in the order it asked them",
                        f'<ol class="rd-qs">{qs}</ol>'))
 
+    for i in range(len(out)):                       # number the sections in the order they stand
+        out[i] = out[i].replace("{{N}}", ROMAN[i], 1)
     return "".join(out)

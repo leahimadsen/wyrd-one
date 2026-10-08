@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESC}}">
+<meta name="robots" content="{{ROBOTS}}">
+<link rel="canonical" href="{{CANON}}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Wyrd Console">
+<meta property="og:title" content="{{TITLE}}">
+<meta property="og:description" content="{{DESC}}">
+<meta property="og:url" content="{{CANON}}">
+<meta property="og:image" content="{{BASE}}/static/icons/icon-512.png">
+<meta name="twitter:card" content="summary">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#05080a">
+<link rel="icon" href="/static/icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="/static/console.css">
+<link rel="stylesheet" href="/static/site.css">
+<link rel="stylesheet" href="/static/a11y.css">
+<link rel="stylesheet" href="/static/plans.css">
+{{LD}}
+</head>
+<body class="pg">
+<nav class="pg-top" aria-label="Site">
+  <a href="/" class="pg-home">The Wyrd Console</a>
+  <span><a href="/reports">Astrology readings</a> <a href="/membership">Membership</a> <a href="/learn">Learn</a> <a href="/today">Today's sky</a> {{WHO}}</span>
+</nav>
+<main class="pg-main" id="main">
+{{BODY}}
+</main>
+<footer class="pg-foot"><p>The Wyrd Console · astrology by Saga Devi · <a href="https://thewebofwyrd.substack.com">The Web of Wyrd</a> · <a href="/">Cast your free birth chart</a></p></footer>
+{{SCRIPT}}
+</body>
+</html>

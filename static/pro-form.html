@@ -1,0 +1,12 @@
+<form class="cast" id="proForm" method="post" action="/pro/reading" target="_blank" autocomplete="off">
+  <label class="f-name">Client's name <span>as it should appear on the reading</span><input name="name" maxlength="80"></label>
+  <label>Date of birth <input name="date" type="date" required min="1850-01-01" max="2149-12-31"></label>
+  <label>Time of birth <input name="time" type="time" required></label>
+  <label class="f-place">Place of birth
+    <input id="proPlace" placeholder="Start typing a town or city" required role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="placeList">
+    <ul id="placeList" role="listbox" hidden></ul></label>
+  <input type="hidden" name="place_id"><input type="hidden" name="lat"><input type="hidden" name="lon"><input type="hidden" name="tz"><input type="hidden" name="place_label">
+  <button type="submit" class="btn-cast" name="kind" value="reading">Generate the full reading</button>
+  <button type="submit" class="btn-cast" name="kind" value="weather">This week's Body Weather</button>
+  <p class="err" id="proErr" role="alert"></p>
+</form>
