@@ -349,6 +349,7 @@ function mount(host, chart, opts = {}){
       card.innerHTML = `<h4>${title}</h4><p class="wx-kind">${gl(gk, gname)}</p>${extra}<p>${here.length ? "Here: " : ""}${who}</p>`;
     }
     if (!quiet && opts.onSelect) opts.onSelect(sel);
+    if (!quiet && window.Wyrd && Wyrd.pulse) Wyrd.pulse("tap", kind);
   }
   stage.addEventListener("click", e => {
     const pl = e.target.closest(".wh-pl");
@@ -361,7 +362,7 @@ function mount(host, chart, opts = {}){
     const pl = e.target.closest(".wh-pl");
     if (pl && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); select("body", pl.dataset.body); }
   });
-  host.addEventListener("click", e => { const b = e.target.closest(".wx-lv"); if (b){ level = b.dataset.lv; draw(); } });
+  host.addEventListener("click", e => { const b = e.target.closest(".wx-lv[data-lv]"); if (b){ level = b.dataset.lv; draw(); window.Wyrd && Wyrd.pulse && Wyrd.pulse("act", "level"); } });
   draw();
   return {
     setLevel(l){ level = l; draw(); },

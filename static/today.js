@@ -8,6 +8,7 @@ const dm = l => { const d = degIn(l); let a = Math.floor(d), m = Math.round((d -
 const pada = l => Math.floor((norm(l) % (360/27)) / (360/108)) + 1;
 const day = jd => new Date((jd - 2440587.5) * 864e5).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
 Wyrd.sky.start();
+if (Wyrd.pulse) Wyrd.pulse("act", "today");
 
 let D;
 try { const r = await fetch("/api/today"); D = await r.json(); if (!r.ok) throw new Error(D.error); }

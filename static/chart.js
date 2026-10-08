@@ -88,7 +88,7 @@ if (unknown){
 }
 function drawTools(){
   const sv = isSaved(birth);
-  const html = short => `<a class="ctool" href="/?edit=1" ${short ? `aria-label="Edit birth details" title="Edit birth details"` : ""}>✎${short ? "" : " Edit details"}</a>
+  const html = short => `<a class="ctool" href="/?edit=1" data-pulse="act:edit" ${short ? `aria-label="Edit birth details" title="Edit birth details"` : ""}>✎${short ? "" : " Edit details"}</a>
     <button type="button" class="ctool" data-tool="save" aria-pressed="${sv}" ${short ? `aria-label="${sv ? "Saved" : "Save chart"}" title="${sv ? "Saved" : "Save chart"}"` : ""}>${sv ? "★" : "☆"}${short ? "" : sv ? " Saved" : " Save chart"}</button>
     <button type="button" class="ctool" data-tool="share" ${short ? `aria-label="Copy link" title="Copy link"` : ""}>⤴${short ? "" : " Copy link"}</button>
     ${short ? "" : `<button type="button" class="ctool" data-install hidden>⬇ Install the app</button>`}`;
@@ -100,6 +100,7 @@ drawTools();
 function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2600); }
 document.addEventListener("click", async e => {
   const t = e.target.closest("[data-tool]"); if (!t) return;
+  if (Wyrd.pulse) Wyrd.pulse("act", t.dataset.tool);
   if (t.dataset.tool === "save"){ const { offlineSince, ...fresh } = J; const on = toggleSaved(birth, fresh); drawTools(); toast(on ? "Saved in this browser. It's listed on the first page." : "Removed from this browser."); }
   if (t.dataset.tool === "share"){
     const url = shareLink(birth);
@@ -124,11 +125,25 @@ function drawMap(){
   $("map").innerHTML = `
     <svg class="map-paths" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
       <circle cx="50" cy="50" r="40" class="rail"/>${paths}</svg>
-    <a class="map-core" href="#chart" aria-label="Open your chart">${WyrdWheel.svg(C, { compact: true, unknownTime: unknown })}</a>
+    <div class="map-core tz-core"></div>
     ${pos.map(p => `<a class="land${p.gold ? " gold" : ""}" href="#${p.id}" style="--x:${p.x.toFixed(2)}%;--y:${p.y.toFixed(2)}%">
       <span class="land-mark" aria-hidden="true">${p.mark}</span><b>${p.name}</b><small>${p.teaser}</small></a>`).join("")}`;
   $("tabsIn").innerHTML = `<a href="#map" class="tab tab-map">◎ Map</a><a href="#learn" class="tab tab-learn" data-tab="learn">✧ Learn</a>` +
     LANDS.map(l => `<a href="#${l.id}" class="tab${l.gold ? " gold" : ""}" data-tab="${l.id}">${l.name.replace(/^The |^Your /, "")}</a>`).join("");
+}
+
+/* the torus at the map's centre, and its layer switches */
+let TZ = null;
+function mountTorus(){
+  const core = document.querySelector(".tz-core");
+  try { TZ = WyrdTorus.mount(core, C, { caption: $("tzCap") }); }
+  catch (_) { core.outerHTML = `<a class="map-core" href="#chart" aria-label="Open your chart">${WyrdWheel.svg(C, { compact: true, unknownTime: unknown })}</a>`; return; }
+  $("tzLayers").innerHTML = TZ.layers.map(l => `<button type="button" class="tz-chip" data-layer="${l.id}" aria-pressed="true">${l.name}</button>`).join("")
+    + `<a class="tz-chip open" href="#chart">Open your chart →</a>`;
+  $("tzLayers").addEventListener("click", e => {
+    const b = e.target.closest("[data-layer]"); if (!b) return;
+    const v = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", v); TZ.toggle(b.dataset.layer, v);
+  });
 }
 
 /* ---------- Your chart ---------- */
@@ -138,7 +153,7 @@ function chartLand(){
     when: unknown ? `${birth.date} · time unknown` : `${birth.date} ${birth.time}`, unknownTime: unknown });
   wx.querySelector(".wx-bar").insertAdjacentHTML("beforeend",
     `<span class="wx-dl"><button type="button" class="wx-lv" data-dl="png">Download image</button><button type="button" class="wx-lv" data-dl="svg">SVG</button></span>`);
-  wx.addEventListener("click", e => { const d = e.target.closest("[data-dl]"); if (d) downloadWheel(wx.querySelector(".wx-stage svg"), d.dataset.dl); });
+  wx.addEventListener("click", e => { const d = e.target.closest("[data-dl]"); if (d && Wyrd.pulse) Wyrd.pulse("act", "download"); if (d) downloadWheel(wx.querySelector(".wx-stage svg"), d.dataset.dl); });
 
   const NP = C.natal.personality, ND = C.natal.design, PL = X.placidus;
   const gl = v => v ? `${v.gate}.${v.line}` : "—";
@@ -233,19 +248,27 @@ function decorate(L){
 }
 
 /* ---------- moving between the map and the lands ---------- */
+/* where other visitors usually go next, learned from the anonymous counts */
+let NEXT = {}, prevLand = null;
+fetch("/api/pulse/next").then(r => r.ok ? r.json() : {}).then(j => { NEXT = j || {}; }).catch(() => {});
 function go(){
   const [id, arg] = location.hash.slice(1).split("/");
+  const here = ORDER.some(l => l.id === id) ? id : "map";
+  if (Wyrd.pulse && here !== prevLand){ Wyrd.pulse("land", here); if (prevLand) Wyrd.pulse("move", `${prevLand}-${here}`); }
+  prevLand = here;
   const land = ORDER.find(l => l.id === id);
   $("skyHost").hidden = !!land; $("tabs").hidden = !land; $("landNav").hidden = !land;
   ORDER.forEach(l => { $("p-" + l.id).hidden = l !== land; });
   document.querySelectorAll("[data-tab]").forEach(t =>
     t.dataset.tab === id ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current"));
-  if (!land){ drawStart(); Wyrd.sky.start(); document.title = `${birth.name ? birth.name + "'s chart" : "Your chart"} · The Wyrd Console`; return; }
-  Wyrd.sky.stop();
+  if (!land){ drawStart(); Wyrd.sky.start(); if (TZ) TZ.start(); document.title = `${birth.name ? birth.name + "'s chart" : "Your chart"} · The Wyrd Console`; return; }
+  Wyrd.sky.stop(); if (TZ) TZ.stop();
   if (!built.has(id)){ built.add(id); if (land !== LEARN) decorate(land); BUILD[id](); }
   if (id === "learn" && arg && learn) learn.show(+arg - 1);
   const i = ORDER.indexOf(land), prev = ORDER[(i + ORDER.length - 1) % ORDER.length], next = ORDER[(i + 1) % ORDER.length];
-  $("landNav").innerHTML = `<a href="#${prev.id}">← ${prev.name}</a><a href="#map" class="to-map">◎ Back to the map</a><a href="#${next.id}">${next.name} →</a>`;
+  const often = (NEXT[id] || []).map(n => ORDER.find(l => l.id === n)).filter(l => l && l.id !== id);
+  $("landNav").innerHTML = (often.length ? `<p class="often">People here often go on to ${often.map(l => `<a href="#${l.id}">${l.name}</a>`).join(" or ")}.</p>` : "")
+    + `<a href="#${prev.id}">← ${prev.name}</a><a href="#map" class="to-map">◎ Back to the map</a><a href="#${next.id}">${next.name} →</a>`;
   document.title = `${land.name} · The Wyrd Console`;
   const tab = document.querySelector(`[data-tab="${id}"]`); if (tab) tab.scrollIntoView({ block: "nearest", inline: "center" });
   scrollTo(0, 0);
@@ -253,11 +276,13 @@ function go(){
 }
 
 drawMap();
+mountTorus();
 addEventListener("hashchange", go);
 go();
 
 /* ---------- the reading ---------- */
 $("buyBtn").addEventListener("click", async () => {
+  if (Wyrd.pulseNow) Wyrd.pulseNow("act", "buy");
   const err = $("buyErr"), btn = $("buyBtn"); err.textContent = "";
   btn.disabled = true; btn.textContent = "Opening checkout…";
   try {

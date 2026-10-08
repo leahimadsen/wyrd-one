@@ -96,6 +96,7 @@ let pop = null, opener = null;
 function close(){ if (pop){ pop.remove(); pop = null; } if (opener){ opener.setAttribute("aria-expanded", "false"); opener = null; } }
 function open(btn){
   const key = btn.dataset.gl, e = G[key]; if (!e) return;
+  if (opener !== btn && window.Wyrd && Wyrd.pulse) Wyrd.pulse("gloss", key);
   if (opener === btn){ close(); return; }
   close(); opener = btn; btn.setAttribute("aria-expanded", "true");
   pop = document.createElement("div");

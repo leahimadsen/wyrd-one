@@ -42,17 +42,18 @@
       <h2 id="savedH">Charts saved in this browser</h2>
       <ul id="savedList"></ul>
     </section>
-    <p class="seat-links"><a href="/today">Today's sky →</a> <a href="/sample">See a sample reading →</a> <a href="#" data-install hidden>Install the app →</a></p>
+    <p class="seat-links"><a href="/today" data-pulse="act:today">Today's sky →</a> <a href="/sample" data-pulse="act:sample">See a sample reading →</a> <a href="#" data-install hidden>Install the app →</a></p>
   </div>
 </header>
 
 <footer class="foot">
-  <p>The Wyrd Console · by Saga Devi · <a href="https://webofwyrd.substack.com">Web of Wyrd</a></p>
+  <p>The Wyrd Console · by Saga Devi · <a href="https://thewebofwyrd.substack.com">Web of Wyrd</a></p>
   <p class="fine">Planetary positions from NASA JPL DE440. Places from <a href="https://www.geonames.org/">GeoNames</a> (CC BY 4.0). For reflection and self-study; not medical, legal or financial advice.</p>
 </footer>
 <button id="musicBtn" class="music" aria-pressed="false" hidden>♪ Music</button>
 <audio id="music" src="/static/music.mp3" loop preload="none"></audio>
 <script src="/static/viz.js"></script>
+<script src="/static/pulse.js"></script>
 <script src="/static/common.js"></script>
 <script src="/static/music.js"></script>
 <script src="/static/app.js"></script>

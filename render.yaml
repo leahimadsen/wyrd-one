@@ -23,3 +23,5 @@ services:
         sync: false          # your private admin at /admin; use a long password
       - key: SECRET_KEY
         generateValue: true  # signs the admin login; Render makes one for you
+      - key: GITHUB_TOKEN
+        sync: false          # lets Pulse save its anonymous counts to the wyrd-data branch (Contents: read and write, this repo only)

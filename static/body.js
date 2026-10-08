@@ -206,7 +206,7 @@ const SIGN_GLYPH = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑",
 
 /* ---------- state ---------- */
 let C = null, root = null, deck = null, read = null;
-let woken = new Set(), last = null, nkFocus = null, showRave = false, showDharma = false, showZod = true;
+let woken = new Set(), last = null, nkFocus = null, showRave = false, showDharma = false, showZod = true, showTorus = true;
 let scanIdx = 0, scanTimer = null;
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const pose = { tilt: 0, turn: 0 };
@@ -495,24 +495,48 @@ function bindDrag(stage){
   addEventListener("pointerup", end); addEventListener("pointercancel", end);
 }
 
+/* ---------- the torus field ----------
+   The body's own field: it bursts from the crown, falls around both sides in
+   nested loops, is drawn back in beneath the feet and rises up the central axis
+   to the crown again. Bursts mark where it breaks out: crown, root and feet. */
+const AXIS = { x: 450, crown: 150, root: 445, feet: 640 };
+function torusSVG(){
+  const { x, crown, feet } = AXIS, loops = [95, 150, 205, 262, 320];
+  let o = `<defs><radialGradient id="hbBurst"><stop offset="0" stop-color="rgba(222,236,228,.9)"/><stop offset=".35" stop-color="rgba(95,156,134,.45)"/>
+    <stop offset="1" stop-color="rgba(95,156,134,0)"/></radialGradient></defs>`;
+  loops.forEach((w, i) => {
+    for (const side of [1, -1]){
+      const X = k => (x + side * w * k).toFixed(1);
+      const d = `M${x},${crown} C${X(.55)},${crown - 120 + i * 8} ${X(1.12)},${crown + 40} ${X(1)},${(crown + feet) / 2} C${X(.92)},${feet - 40} ${X(.5)},${feet + 70 - i * 6} ${x},${feet}`;
+      o += `<path d="${d}" class="tf-line"/><path d="${d}" pathLength="200" class="tf-flow" style="animation-delay:${(-i * 1.1 - (side > 0 ? 0 : .55)).toFixed(2)}s"/>`;
+    }
+  });
+  o += `<path d="M${x},${feet} L${x},${crown}" class="tf-line axis"/><path d="M${x},${feet} L${x},${crown}" pathLength="200" class="tf-flow axis"/>`;
+  for (const [y, r] of [[crown, 46], [AXIS.root, 30], [feet, 40]])
+    o += `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#hbBurst)" class="tf-burst"/>`;
+  return o;
+}
+
 /* ---------- mount ---------- */
 function mount(host, chart){
   C = chart; root = host; woken = new Set(); last = null; nkFocus = null; stopScan();
   host.classList.add("hb");
   host.innerHTML = `
-    <p class="hb-intro">The proportional figure with its seven stations. Each is fed by one planet, standing beside it on its own thread; the label under each planet is the house it stands in, which is the colour that station eats. Around the figure, the two zodiacs: tropical outside, sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on the inner ring.</p>
+    <p class="hb-intro">The proportional figure with its seven stations, inside its torus field: the current bursts from the crown, falls around the body, is drawn in beneath the feet and rises up the axis again. Each is fed by one planet, standing beside it on its own thread; the label under each planet is the house it stands in, which is the colour that station eats. Around the figure, the two zodiacs: tropical outside, sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on the inner ring.</p>
     <div class="hb-ctl">
       <button class="hb-btn on" data-hb-view="up">Upright</button>
       <button class="hb-btn" data-hb-view="tilt">Tilted</button>
       <button class="hb-btn on" data-hb-toggle="zod" aria-pressed="true">Two zodiacs</button>
       <button class="hb-btn" data-hb-toggle="rave" aria-pressed="false">Body Rave</button>
       <button class="hb-btn" data-hb-toggle="dharma" aria-pressed="false">Dharma Rave</button>
+      <button class="hb-btn on" data-hb-toggle="torus" aria-pressed="true">Torus field</button>
       <button class="hb-btn" data-hb-scan>Descent scan</button>
       <button class="hb-btn" data-hb-clear>Clear</button>
     </div>
     <div class="hb-stage" id="hbStage">
       <div class="hb-deck" id="hbDeck">
         <svg class="hb-layer hb-zod" viewBox="0 0 900 900" aria-label="The two zodiacs around the body">${zodiacSVG()}</svg>
+        <svg class="hb-layer hb-torus" viewBox="0 0 900 900" aria-hidden="true">${torusSVG()}</svg>
         <svg class="hb-layer hb-fig" viewBox="0 0 900 900" role="img" aria-label="The harmonic body">
           ${FIGURE}<g class="hb-centres" id="hbCentres">${centresSVG()}</g></svg>
         <svg class="hb-layer hb-top" viewBox="0 0 900 900" aria-label="The seven stations and the planets that feed them">
@@ -525,6 +549,9 @@ function mount(host, chart){
     <div class="hb-read" id="hbRead" aria-live="polite">${idleRead()}</div>`;
   deck = host.querySelector("#hbDeck"); read = host.querySelector("#hbRead");
   host.querySelector(".hb-zod").classList.toggle("off", !showZod);
+  host.querySelector(".hb-torus").classList.toggle("off", !showTorus);
+  host.querySelector('[data-hb-toggle="torus"]').classList.toggle("on", showTorus);
+  host.querySelector('[data-hb-toggle="torus"]').setAttribute("aria-pressed", showTorus);
   host.querySelector(".hb-centres").classList.toggle("on", showRave || showDharma);
   host.querySelector('[data-hb-toggle="zod"]').classList.toggle("on", showZod);
   setPose(0, 0, false);
@@ -543,6 +570,7 @@ document.addEventListener("click", e => {
   if (tg){
     const k = tg.dataset.hbToggle;
     if (k === "zod"){ showZod = !showZod; root.querySelector(".hb-zod").classList.toggle("off", !showZod); tg.classList.toggle("on", showZod); tg.setAttribute("aria-pressed", showZod); root.classList.toggle("zod-on", showZod); return; }
+    if (k === "torus"){ showTorus = !showTorus; root.querySelector(".hb-torus").classList.toggle("off", !showTorus); tg.classList.toggle("on", showTorus); tg.setAttribute("aria-pressed", showTorus); return; }
     if (k === "rave") showRave = !showRave; else showDharma = !showDharma;
     const on = k === "rave" ? showRave : showDharma;
     tg.classList.toggle("on", on); tg.setAttribute("aria-pressed", on);

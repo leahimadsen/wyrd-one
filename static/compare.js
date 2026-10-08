@@ -49,7 +49,7 @@ function contactText(c, A, B){
   const D = T(), key = ORDER.indexOf(c.p) <= ORDER.indexOf(c.q) ? `${c.p}-${c.q}` : `${c.q}-${c.p}`, e = D.PAIRS[key];
   /* the writing says "the Sun person", "the Moon person": put the right name in */
   const fill = s => s.replace(/the (\w+) person/g, (m, pl) => c.p === c.q ? "one of you" : pl === c.p ? esc(A.name) : pl === c.q ? esc(B.name) : m);
-  if (e) return `${fill(e.core)} ${fill(e[c.f])}`;
+  if (e) return `${fill(e.core)} ${fill(e[c.f])}${e.ask ? `<em class="cp-ask">${fill(e.ask)}</em>` : ""}`;
   return `${esc(A.name)}'s ${c.p} (${D.ROLE[c.p]}) meets ${esc(B.name)}'s ${c.q} (${D.ROLE[c.q]}), ${D.FLAVOUR[c.f]}.`;
 }
 function sukuyoBlock(R, A, B){
@@ -61,7 +61,7 @@ function sukuyoBlock(R, A, B){
     <div class="sk-pair"><span class="sk-big">${R.pair}</span><div><h4>${t.title}</h4><p class="fine">${t.short}${R.distance ? ` · ${g("distance", R.distance)}` : ""}</p></div></div>
     <p class="sk-who">${esc(A.name)}: <span class="sk-k">${R.a.kanji}</span> ${R.a.read} · ${esc(B.name)}: <span class="sk-k">${R.b.kanji}</span> ${R.b.read}</p>
     ${R.pair === "命" ? "" : `<p class="sk-who">${role(R.toA, B.name, A.name)}; ${role(R.toB, A.name, B.name)}.</p>`}
-    <p>${t.text}</p>${R.distance ? `<p>${D.DISTANCE[R.distance]}</p>` : ""}</div>`;
+    <p>${t.text}</p>${R.distance ? `<p>${D.DISTANCE[R.distance]}</p>` : ""}${t.ask ? `<p class="cp-ask">${t.ask}</p>` : ""}</div>`;
 }
 function overview(cs, R, together){
   const n = { conj: 0, soft: 0, hard: 0 }; cs.forEach(c => n[c.f]++);
@@ -80,7 +80,8 @@ function pairView(A, B){
   const together = WyrdBody.channels.filter(ch => completes(both, ch) && !completes(gA, ch) && !completes(gB, ch));
   const shared = [...gA].filter(x => gB.has(x)).sort((a, b) => a - b);
   const over = (P, Q) => OVERLAY.map(b => { const h = houseOf(P.C.sid[b], Q.C.ascS);
-    return `<li><b>${esc(P.name)}'s ${GLYPH[b]} ${b}</b> ${D.IN_HOUSE[b]} ${esc(Q.name)}'s ${ORD(h)} house: ${D.HOUSE[h - 1]}.</li>`; }).join("");
+    const phase = typeof HOUSES !== "undefined" && HOUSES[h - 1] ? HOUSES[h - 1].phase : D.HOUSE[h - 1];
+    return `<li><b>${esc(P.name)}'s ${GLYPH[b]} ${b}</b> ${D.IN_HOUSE[b]} ${esc(Q.name)}'s ${ORD(h)} house — ${phase.charAt(0).toLowerCase() + phase.slice(1)}.</li>`; }).join("");
   const top = cs.slice(0, 6).map(c => `<li><h5>${esc(A.name)}'s ${GLYPH[c.p]} ${c.p} · ${esc(B.name)}'s ${GLYPH[c.q]} ${c.q}
       <span style="color:${c.x.col}">${c.x.name.toLowerCase()}</span> <small>orb ${c.x.orb.toFixed(1)}°</small></h5><p>${contactText(c, A, B)}</p></li>`).join("");
   const rows = (P, Q) => WyrdWheel.WHEEL_BODIES.map(b => `<tr><th>${GLYPH[b]} ${b}</th><td>${signOf(P.C.sid[b])}</td><td>${houseOf(P.C.sid[b], Q.C.ascS)}</td></tr>`).join("");
@@ -195,6 +196,7 @@ function mount(host, X){
         if (!chart || !chart.extras || !chart.extras.sukuyo || !chart.dharma) chart = (await cast(b)).chart;
         people.push({ name: b.name || `Person ${people.length + 1}`, C: chart, birth: b });
         adding = false; pairSel = `0-${people.length - 1}`; draw();
+        if (Wyrd.pulse) Wyrd.pulse("compare", people.length);
       } catch (x) { err.textContent = x instanceof TypeError ? "You're offline. Comparing needs a connection." : x.message; btn.disabled = false; btn.textContent = "Add"; }
     });
     f.querySelector(".cp-cancel").addEventListener("click", () => { adding = false; draw(); });

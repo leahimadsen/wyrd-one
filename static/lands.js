@@ -62,7 +62,7 @@ function calendar(host, X){
     body.innerHTML = html + "</ol>" + (X.unknown ? `<p class="unknown-note">Without a birth time, transits to the rising sign and midheaven are left out, and the clock's dates may be out by months.</p>` : "");
   }
   host.addEventListener("click", e => {
-    const b = e.target.closest("[data-f]"); if (b){ filter = b.dataset.f; paint(); }
+    const b = e.target.closest("[data-f]"); if (b){ filter = b.dataset.f; paint(); if (Wyrd.pulse) Wyrd.pulse("calendar", filter); }
     if (e.target.closest("[data-retry]")) load();
   });
   function load(){

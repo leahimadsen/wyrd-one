@@ -127,3 +127,16 @@
   .hb-spine,.hb-top .station.woken .halo,.hb-top .g-mark.feeding .ring{animation:none}
   .hb-top .station.bloomed .bloom{animation:none}
 }
+
+/* ===== the torus field ===== */
+.hb-torus{transform:translateZ(-35px) scale(1.02);transition:opacity 700ms var(--ease)}
+.hb-torus.off{opacity:0}
+.hb-torus .tf-line{fill:none;stroke:rgba(95,156,134,.16);stroke-width:1.2}
+.hb-torus .tf-line.axis{stroke:rgba(156,180,166,.3);stroke-width:1.6}
+.hb-torus .tf-flow{fill:none;stroke:rgba(190,228,212,.6);stroke-width:2;stroke-linecap:round;stroke-dasharray:1.2 8.8;
+  animation:tfFlow 7s linear infinite}
+.hb-torus .tf-flow.axis{stroke:rgba(222,236,228,.95);stroke-width:3;animation-duration:3.5s}
+.hb-torus .tf-burst{animation:tfBurst 3.5s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes tfFlow{to{stroke-dashoffset:-200}}
+@keyframes tfBurst{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+@media (prefers-reduced-motion:reduce){.hb-torus .tf-flow,.hb-torus .tf-burst{animation:none}}

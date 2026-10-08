@@ -100,6 +100,7 @@ addEventListener("appinstalled", () => { deferred = null; syncInstall(); });
 document.addEventListener("click", async e => {
   const b = e.target.closest("[data-install]"); if (!b) return;
   e.preventDefault();
+  if (window.Wyrd && Wyrd.pulse) Wyrd.pulse("act", "install");
   if (deferred){ deferred.prompt(); await deferred.userChoice.catch(() => {}); deferred = null; syncInstall(); return; }
   if (isIOS) iosHelp();
 });

@@ -195,3 +195,7 @@
 .cp-pairs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
 .cal-chip { font: inherit; font-size: 14.5px; color: var(--ivory-dim); background: none; border: 1px solid rgba(156,180,166,.3); border-radius: 18px; padding: 6px 14px; cursor: pointer; }
 .cal-chip[aria-pressed="true"] { color: var(--ivory); border-color: var(--jade); background: rgba(95,156,134,.18); }
+.often { flex-basis: 100%; margin: 0 0 6px; color: var(--ivory-dim); font-size: 15px; }
+.often a { color: var(--celadon) !important; }
+.cp-ask { display: block; margin-top: 8px; font-style: italic; color: var(--gold); }
+p.cp-ask { margin: 10px 0 0; }
