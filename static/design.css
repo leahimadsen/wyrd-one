@@ -1,0 +1,46 @@
+/* Your design (the bodygraph in motion), the rune stave, and the Jyotish match in Compare. */
+.dg-ctl { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+.dg-ctl .hb-btn[aria-pressed="true"] { background: var(--jade-deep); border-color: var(--jade); color: #eef3ef; }
+.dg-wrap { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 28px; align-items: start; }
+@media (max-width: 760px) { .dg-wrap { grid-template-columns: minmax(0, 1fr); } }
+.dg-graph { background: radial-gradient(circle at 50% 45%, rgba(95,156,134,.08), transparent 70%); border: 1px solid var(--rule); border-radius: 3px; padding: 8px; }
+.dg-svg { width: 100%; height: auto; display: block; }
+.dg-ch { stroke: rgba(156,180,166,.16); stroke-width: 3; stroke-linecap: round; }
+.dg-ch.birth { stroke: rgba(184,146,74,.75); stroke-width: 4; }
+.dg-ch.dharma { stroke: rgba(150,120,255,.75); stroke-width: 4; }
+.dg-ch.both { stroke: rgba(225,222,240,.85); stroke-width: 5; }
+.dg-spark { filter: drop-shadow(0 0 4px currentColor); }
+.dg-spark.birth { fill: #f2d48a; color: #f2d48a; }
+.dg-spark.dharma { fill: #c9b8ff; color: #c9b8ff; }
+.dg-spark.both { fill: #fff; color: #fff; }
+.dg-c path { fill: #0b1114; stroke: rgba(156,180,166,.45); stroke-width: 1.5; }
+.dg-c.birth path { fill: rgba(184,146,74,.55); stroke: #d9b46a; }
+.dg-c.dharma path { fill: rgba(150,120,255,.45); stroke: #b6a3ff; }
+.dg-c.both path { fill: rgba(225,222,240,.6); stroke: #fff; }
+.dg-c.motor:not(.open) path { animation: dgBreathe 3.2s ease-in-out infinite; }
+.dg-c text { fill: var(--ivory); font-size: 10.5px; text-anchor: middle; pointer-events: none; }
+@keyframes dgBreathe { 50% { filter: drop-shadow(0 0 7px rgba(242,212,138,.6)); } }
+@media (prefers-reduced-motion: reduce) { .dg-c.motor path { animation: none; } }
+.dg-facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 16px; margin: 8px 0 12px; }
+.dg-facts dt { color: var(--ivory-dim); } .dg-facts dd { margin: 0; color: var(--ivory); }
+.dg-cen, .dg-chs { padding-left: 18px; } .dg-cen li { margin: 6px 0; } .dg-cen li.on b { color: #f2d48a; }
+.dg-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+.dg-key { font-size: 13.5px; color: var(--ivory-dim); display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.dg-key .k { display: inline-block; width: 14px; height: 10px; border-radius: 2px; margin-right: -8px; }
+.dg-key .k.birth { background: rgba(184,146,74,.8); } .dg-key .k.dharma { background: rgba(150,120,255,.75); }
+.dg-key .k.both { background: rgba(225,222,240,.8); } .dg-key .k.open { background: #0b1114; border: 1px solid rgba(156,180,166,.45); }
+
+.rn-svg { stroke: #e6d6a8; stroke-width: 3.2; fill: none; display: block; }
+.rn-staves { display: flex; flex-wrap: wrap; gap: 24px; margin: 14px 0 6px; }
+.rn-staves figure { margin: 0; display: flex; gap: 14px; align-items: center; background: rgba(184,146,74,.06); border: 1px solid var(--gold-dim); border-radius: 3px; padding: 12px 18px; }
+.rn-staves .rn-svg { filter: drop-shadow(0 0 6px rgba(242,212,138,.35)); }
+.rn-list { list-style: none; padding: 0; display: grid; gap: 10px; }
+.rn-row, .rn-pair { display: flex; gap: 14px; align-items: center; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+.rn-row p, .rn-pair p { margin: 2px 0 0; }
+.rn-craft li { margin: 6px 0; max-width: 66ch; }
+.rn-shared { display: flex; gap: 14px; align-items: center; margin: 10px 0; }
+
+.kt-score { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; margin: 8px 0; }
+.kt-big { font-size: 34px; color: #f2d48a; } .kt-or { color: var(--ivory-dim); font-size: 14px; margin-right: 12px; }
+table.kt td { vertical-align: top; } .kt-n { white-space: nowrap; font-variant-numeric: tabular-nums; } .kt-f { color: var(--ivory-dim); }
+.dg-c.birth text, .dg-c.both text, .dg-c.dharma text { fill: #120f1c; font-weight: 600; }

@@ -267,10 +267,32 @@ function zodiacSVG(){
 }
 
 /* ---------- layer 2: the figure, centres and thread ---------- */
+/* the live channels as moving light between the centres, rising toward the throat */
+function liveChannels(gates){ const have = new Set(gates); return HB_CHANNELS.filter(([a, b]) => have.has(a) && have.has(b)); }
+function flowSVG(){
+  const lr = showRave ? liveChannels(gatesOf(C.natal)).map(c => c.join("-")) : [];
+  const ld = showDharma && C.dharma ? liveChannels(gatesOf(C.dharma)).map(c => c.join("-")) : [];
+  const keys = [...new Set([...lr, ...ld])], bundle = {};
+  let o = "";
+  for (const k of keys){
+    const [a, b] = k.split("-").map(Number), ca = HB_GATE_CENTRE[a], cb = HB_GATE_CENTRE[b];
+    const pair = [ca, cb].sort().join("|"), i = (bundle[pair] = (bundle[pair] || 0) + 1) - 1;
+    /* rise: from the lower centre to the higher one (toward the throat), offset when several share a route */
+    let [p, q] = HB_GEOM[ca].y >= HB_GEOM[cb].y ? [HB_GEOM[ca], HB_GEOM[cb]] : [HB_GEOM[cb], HB_GEOM[ca]];
+    const len = Math.hypot(q.x - p.x, q.y - p.y) || 1, off = (i % 2 ? -1 : 1) * Math.ceil(i / 2) * 4;
+    const nx = -(q.y - p.y) / len * off, ny = (q.x - p.x) / len * off;
+    const cls = lr.includes(k) && ld.includes(k) ? "both" : lr.includes(k) ? "rave" : "dharma";
+    const path = `M${(p.x + nx).toFixed(1)},${(p.y + ny).toFixed(1)} L${(q.x + nx).toFixed(1)},${(q.y + ny).toFixed(1)}`;
+    o += `<path class="hb-chan ${cls}" d="${path}"><title>Channel ${a}–${b}</title></path>`;
+    if (!reduce) for (let j = 0; j < 2; j++)
+      o += `<circle class="hb-spark ${cls}" r="2.6"><animateMotion dur="${(len / 30).toFixed(2)}s" begin="${(j * len / 60).toFixed(2)}s" repeatCount="indefinite" path="${path}"/></circle>`;
+  }
+  return o;
+}
 function centresSVG(){
   const r = showRave ? defined(gatesOf(C.natal)) : new Set();
   const d = showDharma ? defined(gatesOf(C.dharma)) : new Set();
-  let o = "";
+  let o = flowSVG();
   for (const k in HB_GEOM){
     const g = HB_GEOM[k], inR = r.has(k), inD = d.has(k);
     const cls = inR && inD ? "both" : inR ? "rave" : inD ? "dharma" : "undefined";
