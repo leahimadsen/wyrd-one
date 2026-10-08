@@ -184,6 +184,7 @@ function mount(host, X){
 
   function show(i, focusText){
     step = Math.max(0, Math.min(LESSONS.length - 1, i)); save(step);
+    if (Wyrd.pulse) Wyrd.pulse("learn", step + 1);
     const L = LESSONS[step], next = LESSONS[step + 1], prev = LESSONS[step - 1];
     host.querySelectorAll(".ln-steps a").forEach((a, k) => {
       a.classList.toggle("on", k === step); a.classList.toggle("done", k < maxReached());

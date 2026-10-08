@@ -32,10 +32,28 @@ Web of Wyrd register, unlocked by Stripe Checkout.
 generates one). Without both, `/admin` doesn't exist. Sign in, enter the birth details, and the reading
 opens in a new tab: print it to PDF to send. Eight wrong passwords lock sign-in for fifteen minutes.
 
+## Pulse and Insights: the console notices what people use
+The site counts what visitors do, anonymously: which lands they open and in what order, how far they
+walk the learning path, which terms they look up, how many people they compare. No birth details, names
+or IP addresses, and nothing at all from browsers that send Do Not Track or Global Privacy Control.
+- **Insights** at `/admin/insights` shows it, with plain-language findings ("most people stop the
+  learning path at step 5", "the most looked-up term is pada").
+- The site adapts: each land suggests where other visitors most often go next.
+- Counts are saved every ten minutes to the **`wyrd-data` branch** of this repository (never `main`, so
+  saving never redeploys the site). In Render set `GITHUB_TOKEN`: a fine-grained GitHub token for this
+  repository only, with **Contents: read and write**. Without it, counts live in memory until a restart.
+- Mention the anonymous counting in your privacy policy.
+
+## The torus
+- `static/torus.js` — the map's centre: the chart as a luminous torus you can turn. The zodiac runs round
+  the ring; the houses, signs, runes, gates, mansions and tropical signs wrap round the tube; the planets ride
+  the outer edge; a field of light flows through it. Layers switch on and off and build up again.
+- The harmonic body has its own torus field (the "Torus field" switch).
+
 ## Compare, Sukuyō and the Dharma Weave
 - `static/compare.js` — Compare: two people in full, or a unit of three or four.
 - `static/dynamics.js` — **all of Compare's writing** (the Sukuyō relations, every planet contact,
-  the house overlays). Drafted for you to rewrite in your own voice.
+  the house overlays), written in the register's voice: engines, flood and freeze, a closing question.
 - `wyrd/sukuyo.py` — the birth shuku from the old Japanese lunar calendar (rebuilt from new moons and
   solar terms, checked against seventeen known lunar dates including the 2012 and 2017 leap months, where
   Japan and China differ), and the sanku relations with their distances.

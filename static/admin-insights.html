@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Insights · The Wyrd Console</title>
+<link rel="icon" href="/static/icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="stylesheet" href="/static/console.css">
+<link rel="stylesheet" href="/static/site.css">
+<link rel="stylesheet" href="/static/learn.css">
+<link rel="stylesheet" href="/static/a11y.css">
+<style>
+.ins { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 60px; }
+.ins h1 { font-weight: 300; font-size: clamp(34px, 6vw, 52px); color: #e6e1f4; margin: 0 0 6px; }
+.ins-bar { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; margin: 0 0 26px; color: var(--ivory-dim); font-size: 14.5px; }
+.ins-bar form { display: inline; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 0 0 30px; }
+.tile { padding: 14px 16px; border: 1px solid rgba(150,130,230,.25); border-radius: 3px; background: rgba(8,8,22,.55); }
+.tile b { display: block; font-weight: 400; font-size: 34px; color: var(--ivory); line-height: 1.1; }
+.tile span { color: var(--ivory-dim); font-size: 14px; }
+.noticed { margin: 0 0 34px; padding: 18px 22px; border: 1px solid var(--jade); border-radius: 3px; background: rgba(38,81,74,.18); }
+.noticed h2 { font-weight: 400; font-size: 20px; color: var(--celadon); margin: 0 0 10px; }
+.noticed li { margin: 7px 0; }
+.ins h2.sec { font-weight: 400; font-size: 21px; color: var(--ivory); margin: 34px 0 12px; }
+.bars { list-style: none; margin: 0; padding: 0; }
+.bars li { display: grid; grid-template-columns: minmax(110px, 200px) 1fr 4.5em; gap: 12px; align-items: center; padding: 3px 0; font-size: 15px; }
+.bars .lbl { color: var(--ivory); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bars .track { height: 14px; }
+.bars .fill { height: 14px; min-width: 2px; background: #5f9c86; border-radius: 0 4px 4px 0; }
+.bars li:hover .fill { background: #7fbca4; }
+.bars .val { color: var(--ivory-dim); text-align: right; font-variant-numeric: tabular-nums; }
+.days { display: flex; align-items: flex-end; gap: 2px; height: 140px; border-bottom: 1px solid var(--rule); }
+.days div { flex: 1; background: #5f9c86; border-radius: 4px 4px 0 0; min-height: 1px; position: relative; }
+.days div:hover { background: #7fbca4; }
+.days-axis { display: flex; justify-content: space-between; color: var(--ivory-dim); font-size: 13px; margin-top: 4px; }
+.range button { font: inherit; font-size: 14px; color: var(--ivory-dim); background: none; border: 1px solid rgba(156,180,166,.3); border-radius: 16px; padding: 5px 12px; cursor: pointer; }
+.range button[aria-pressed="true"] { color: var(--ivory); border-color: var(--jade); background: rgba(95,156,134,.18); }
+.empty { color: var(--ivory-dim); font-style: italic; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 40px; }
+@media (max-width: 760px) { .two { grid-template-columns: 1fr; } .bars li { grid-template-columns: 110px 1fr 3.5em; } }
+.tip { position: fixed; pointer-events: none; background: #0d1018; border: 1px solid var(--jade); padding: 6px 10px; border-radius: 3px; font-size: 14px; z-index: 30; display: none; }
+</style>
+</head>
+<body>
+<main class="ins">
+  <p class="hub-crumb"><a href="/admin">← Generate a reading</a></p>
+  <h1>Insights</h1>
+  <div class="ins-bar">
+    <span>Anonymous counts only: no birth details, no names, no IP addresses. Counts are {{SAVING}}.</span>
+    <form method="post" action="/admin/insights/save"><button type="submit" class="link-btn">Save now</button></form>
+  </div>
+  <div class="range" role="group" aria-label="Period"><button type="button" data-days="7">7 days</button> <button type="button" data-days="30" aria-pressed="true">30 days</button> <button type="button" data-days="90">90 days</button></div>
+  <div id="out"></div>
+</main>
+<div class="tip" id="tip" role="tooltip"></div>
+<script src="/static/viz.js"></script>
+<script src="/static/glossary.js"></script>
+<script type="application/json" id="pulse">{{DATA}}</script>
+<script>
+(() => {
+const RAW = JSON.parse(document.getElementById("pulse").textContent).days || {};
+const LAND = { map: "The map", learn: "Learn your chart", chart: "Your chart", body: "The harmonic body", dharma: "The Dharma Weave", clock: "The Vimshottari clock",
+  calendar: "What's coming", armillary: "The armillary", reading: "Your full reading", compare: "Compare", sky: "The sky now", colour: "The colour room", bench: "The bench" };
+const STEPS = ["The wheel", "Two zodiacs", "The houses", "The planets", "Aspects", "The mansions", "The runes", "The gates", "The rave", "Your birth day", "The clock", "The sky now", "Where to go next"];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let span = 30;
+
+function window_(){
+  const cut = new Date(Date.now() - (span - 1) * 864e5).toISOString().slice(0, 10);
+  const days = Object.keys(RAW).filter(d => d >= cut).sort();
+  const sum = ev => { const o = {}; days.forEach(d => Object.entries((RAW[d].events || {})[ev] || {}).forEach(([k, n]) => o[k] = (o[k] || 0) + n)); return o; };
+  return { days, sum, visitors: days.map(d => [d, RAW[d].visitors || 0]) };
+}
+const total = o => Object.values(o).reduce((a, b) => a + b, 0);
+function bars(obj, label = k => k, max = 14, keepOrder = false){
+  const rows = (keepOrder ? Object.entries(obj) : Object.entries(obj).sort((a, b) => b[1] - a[1])).slice(0, max);
+  if (!rows.length) return `<p class="empty">Nothing counted yet.</p>`;
+  const top = Math.max(1, ...rows.map(r => r[1]));
+  return `<ul class="bars">${rows.map(([k, n]) => `<li data-tip="${esc(label(k))}: ${n}"><span class="lbl">${esc(label(k))}</span>
+    <span class="track"><span class="fill" style="display:block;width:${(n / top * 100).toFixed(1)}%"></span></span><span class="val">${n}</span></li>`).join("")}</ul>`;
+}
+function draw(){
+  const W = window_(), lands = W.sum("land"), learn = W.sum("learn"), gloss = W.sum("gloss"), cmp = W.sum("compare"), act = W.sum("act"),
+        cast = W.sum("cast"), moves = W.sum("move"), cal = W.sum("calendar"), taps = W.sum("tap");
+  const visitors = W.visitors.reduce((a, [, n]) => a + n, 0), casts = total(cast);
+  /* what the console noticed */
+  const notes = [];
+  const lr = Object.entries(lands).filter(([k]) => k !== "map").sort((a, b) => b[1] - a[1]);
+  if (lr.length) notes.push(`<b>${LAND[lr[0][0]]}</b> is the most-opened land (${lr[0][1]} visits)${lr.length > 2 ? `; <b>${LAND[lr[lr.length - 1][0]]}</b> is the least (${lr[lr.length - 1][1]}).` : "."}`);
+  const funnel = STEPS.map((_, i) => learn[String(i + 1)] || 0);
+  if (funnel[0] >= 5){
+    let worst = -1, drop = 0;
+    for (let i = 1; i < funnel.length; i++){ const d = funnel[i - 1] ? 1 - funnel[i] / funnel[i - 1] : 0; if (d > drop){ drop = d; worst = i; } }
+    notes.push(`${Math.round(funnel[funnel.length - 1] / funnel[0] * 100)}% of people who start the learning path reach the end.` +
+      (worst > 0 && drop > .2 ? ` The biggest drop is after step ${worst}, <b>${STEPS[worst - 1]}</b> (${Math.round(drop * 100)}% stop there): that lesson may need to be shorter or clearer.` : ""));
+  }
+  const gt = Object.entries(gloss).sort((a, b) => b[1] - a[1]);
+  if (gt.length && gt[0][1] >= 3) notes.push(`The most looked-up term is <b>${esc(Wyrd.GLOSSARY[gt[0][0]] ? Wyrd.GLOSSARY[gt[0][0]][0] : gt[0][0])}</b> (${gt[0][1]} times): people want more on it.`);
+  const units = (cmp["3"] || 0) + (cmp["4"] || 0), pairs = cmp["2"] || 0;
+  if (units + pairs >= 3) notes.push(`${pairs + units} comparisons, ${Math.round(units / (units + pairs) * 100)}% of them units of three or four. ${units + pairs >= 10 ? "There is demand for a paid relationship or family reading." : ""}`);
+  if (lands.reading) notes.push(`The reading was looked at ${lands.reading} times and checkout opened ${act.buy || 0} times (${lands.reading ? Math.round((act.buy || 0) / lands.reading * 100) : 0}%).`);
+  if (casts) notes.push(`${Math.round((cast.unknown || 0) / casts * 100)}% of charts were cast without a birth time.`);
+  const mv = Object.entries(moves).filter(([k]) => !k.endsWith("-map") && !k.startsWith("map-")).sort((a, b) => b[1] - a[1]);
+  if (mv.length && mv[0][1] >= 3){ const [a, b] = mv[0][0].split("-"); notes.push(`The most-walked path between lands is <b>${LAND[a]} → ${LAND[b]}</b>. The site now suggests it to everyone.`); }
+  /* visitors per day */
+  const vmax = Math.max(1, ...W.visitors.map(([, n]) => n));
+  const daysHtml = W.visitors.length ? `<div class="days">${W.visitors.map(([d, n]) => `<div style="height:${(n / vmax * 100).toFixed(1)}%" data-tip="${d}: ${n} visitor${n === 1 ? "" : "s"}"></div>`).join("")}</div>
+    <div class="days-axis"><span>${W.visitors[0][0]}</span><span>${W.visitors[W.visitors.length - 1][0]}</span></div>` : `<p class="empty">No visitors counted in this period yet.</p>`;
+  document.getElementById("out").innerHTML = `
+    <div class="tiles"><div class="tile"><b>${visitors}</b><span>visitors</span></div><div class="tile"><b>${casts}</b><span>charts cast</span></div>
+      <div class="tile"><b>${lands.reading || 0}</b><span>looked at the reading</span></div><div class="tile"><b>${act.buy || 0}</b><span>opened checkout</span></div></div>
+    <section class="noticed"><h2>What the console noticed</h2>${notes.length ? `<ul>${notes.map(n => `<li>${n}</li>`).join("")}</ul>` : `<p class="empty">Not enough visits yet to notice anything. It will fill in as people use the site.</p>`}</section>
+    <h2 class="sec">Visitors per day</h2>${daysHtml}
+    <h2 class="sec">Lands opened</h2>${bars(lands, k => LAND[k] || k)}
+    <h2 class="sec">How far people walk the learning path</h2>${funnel[0] ? bars(Object.fromEntries(STEPS.map((st, i) => [`${i + 1}. ${st}`, funnel[i]])), k => k, 13, true) : `<p class="empty">Nobody has started it yet.</p>`}
+    <div class="two"><div><h2 class="sec">Terms looked up</h2>${bars(gloss, k => Wyrd.GLOSSARY[k] ? Wyrd.GLOSSARY[k][0] : k, 12)}</div>
+      <div><h2 class="sec">Things people did</h2>${bars(act, k => ({ buy: "Opened checkout", share: "Copied a share link", save: "Saved a chart", download: "Downloaded the wheel", install: "Installed the app", sample: "Opened the sample", today: "Opened Today's sky", edit: "Edited their details", level: "Switched wheel view" })[k] || k)}</div></div>
+    <div class="two"><div><h2 class="sec">Compare</h2>${bars(cmp, k => `${k} people`)}</div>
+      <div><h2 class="sec">What's coming, filtered by</h2>${bars(cal, k => ({ all: "Everything", you: "Touching my chart", clock: "My clock", ingress: "Sign changes", station: "Retrogrades" })[k] || k)}</div></div>
+    <h2 class="sec">Taps on the wheel</h2>${bars(taps, k => ({ body: "Planets", des: "Design planets", sign: "Sidereal signs", trop: "Tropical signs", rune: "Runes", gate: "Gates", nak: "Mansions", house: "Houses" })[k] || k)}`;
+  document.querySelectorAll(".range button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.days === span));
+}
+document.querySelector(".range").addEventListener("click", e => { const b = e.target.closest("[data-days]"); if (b){ span = +b.dataset.days; draw(); } });
+const tip = document.getElementById("tip");
+document.addEventListener("mousemove", e => {
+  const t = e.target.closest("[data-tip]");
+  if (!t){ tip.style.display = "none"; return; }
+  tip.textContent = t.dataset.tip; tip.style.display = "block";
+  tip.style.left = Math.min(innerWidth - tip.offsetWidth - 8, e.clientX + 14) + "px"; tip.style.top = (e.clientY + 14) + "px";
+});
+draw();
+})();
+</script>
+</body>
+</html>

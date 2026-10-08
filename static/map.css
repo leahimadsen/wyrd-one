@@ -187,3 +187,16 @@
 .gl-row span:first-child { font-style: italic; }
 .gl-all { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px 28px; margin: 0; }
 .gl-all dt { color: var(--celadon); } .gl-all dd { margin: 2px 0 0; font-size: 14.5px; color: rgba(217,212,196,.8); }
+
+/* ---- the torus at the map's centre ---- */
+.map-core.tz-core { width: 56%; aspect-ratio: auto; border-radius: 0; background: none; box-shadow: none; }
+.tz-cv { display: block; width: 100%; cursor: grab; touch-action: none; border-radius: 50%; }
+.tz-cv:active { cursor: grabbing; }
+.tz-cv:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+.tz-layers { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 14px auto 6px; max-width: 760px; }
+.tz-chip { font: inherit; font-size: 14px; color: var(--ivory-dim); background: rgba(8,8,22,.7); border: 1px solid rgba(150,130,230,.3);
+  border-radius: 18px; padding: 6px 13px; cursor: pointer; text-decoration: none; }
+.tz-chip[aria-pressed="true"] { color: var(--ivory); border-color: var(--jade); background: rgba(38,81,74,.35); }
+.tz-chip.open { color: var(--gold); border-color: rgba(184,146,74,.5); }
+.tz-cap { min-height: 1.6em; color: var(--celadon); font-size: 15px; margin: 4px 0 0; }
+@media (max-width: 720px) { .map-core.tz-core { width: 100%; margin: 0 auto 10px; } }

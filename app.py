@@ -19,6 +19,8 @@ from wyrd import stripe_api
 from wyrd.transits import transits
 from wyrd.extras import extras
 from wyrd import calendar as wcal
+from wyrd import pulse
+import atexit
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, static_folder=os.path.join(HERE, "static"), static_url_path="/static")
@@ -45,8 +47,11 @@ PLACES = Places(_db if os.path.exists(_db) else os.path.join(config.DATA_DIR, "p
 # ---------------- small helpers ----------------
 _hits = defaultdict(deque)
 def limited(n=40, per=60):
+    """Too many requests from one visitor to THIS endpoint in the last `per` seconds?
+    Each endpoint keeps its own count, so browsing (place search, pulse) can never
+    use up the allowance for casting a chart or opening checkout."""
     ip = request.headers.get("X-Forwarded-For", request.remote_addr or "").split(",")[0].strip()
-    q, now = _hits[ip], time.time()
+    q, now = _hits[(ip, request.endpoint)], time.time()
     while q and now - q[0] > per: q.popleft()
     q.append(now)
     return len(q) > n
@@ -395,6 +400,40 @@ def admin_reading():
     except (BadInput, ValueError) as e:
         return admin_page("admin.html").get_data(as_text=True).replace(
             '<p class="err" id="admErr" role="alert"></p>', f'<p class="err" id="admErr" role="alert">{html.escape(str(e) or "Check the details.")}</p>'), 400
+
+# ---------------- pulse: anonymous counts, so the console notices what people use ----------------
+atexit.register(pulse.flush)
+_next_cache = {"at": 0, "data": {}}
+
+@app.post("/api/pulse")
+def pulse_in():
+    if limited(120) or (request.content_length or 0) > 8000: return "", 204
+    try:
+        d = json.loads(request.get_data(as_text=True) or "{}")
+        pulse.record(d.get("e") or [], str(d.get("v") or ""))
+    except (ValueError, AttributeError, TypeError):
+        pass
+    return "", 204
+
+@app.get("/api/pulse/next")
+def pulse_next():
+    if time.time() - _next_cache["at"] > 600:
+        try: _next_cache.update(at=time.time(), data=pulse.next_lands())
+        except Exception: _next_cache["at"] = time.time()
+    r = jsonify(_next_cache["data"]); r.headers["Cache-Control"] = "public, max-age=600"
+    return r
+
+@app.get("/admin/insights")
+def admin_insights():
+    if not is_admin(): return redirect("/admin")
+    return admin_page("admin-insights.html", DATA=json.dumps(pulse.data()).replace("<", "\\u003c"),
+                      SAVING="saved to GitHub every ten minutes" if pulse.TOKEN else "kept in memory only: set GITHUB_TOKEN in Render to keep them")
+
+@app.post("/admin/insights/save")
+def admin_insights_save():
+    if not is_admin() or not same_origin(): abort(404)
+    pulse.flush()
+    return redirect("/admin/insights")
 
 @app.get("/healthz")
 def health():

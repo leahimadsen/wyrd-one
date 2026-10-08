@@ -70,7 +70,7 @@ f.addEventListener("submit", async e => {
   if (!f.date.value || (!unk.checked && !f.time.value)){ err.textContent = "Enter your date of birth, and your time if you know it."; return; }
   if (!place){ err.textContent = "Choose your birthplace from the list as you type."; $("placeInput").focus(); return; }
   const birth = birthFromForm();
-  if (!consultSid) return open(birth, btn);
+  if (!consultSid){ Wyrd.pulseNow && Wyrd.pulseNow("cast", unk.checked ? "unknown" : "known"); return open(birth, btn); }
   btn.disabled = true; btn.textContent = "Opening…";
   try {
     const r = await fetch("/api/consultation-reading", { method: "POST", headers: { "Content-Type": "application/json" },
