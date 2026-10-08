@@ -2,8 +2,9 @@
 /* ============================================================
    COMPARE
    You and up to three more people.
-   Two people: the pair, in full (Sukuyō, the dynamic in words, houses
-   both ways, the two charts on one wheel, the data).
+   Two people: the pair, in full (Sukuyō, the Jyotish eight-fold match,
+   the aspects in words, the bind runes the two charts make, houses both
+   ways, the two charts on one wheel, the data).
    Three or four: the unit (every pair's Sukuyō bond in one grid, what
    the group completes together, the elements between you), and any
    pair can be opened in full.
@@ -88,8 +89,10 @@ function pairView(A, B){
   return `<div class="cp-pair">
     <h3 class="sec-h">${esc(A.name)} and ${esc(B.name)}</h3>
     <h4 class="cp-h">${g("sukuyo", "Sukuyō")} · the bond by the lunar mansions</h4>${sukuyoBlock(R, A, B)}
-    <h4 class="cp-h">The dynamic</h4>${overview(cs, R, together)}
+    <h4 class="cp-h">Jyotish · the eight-fold match</h4>${window.WyrdKuta ? WyrdKuta.html(A, B) : ""}
+    <h4 class="cp-h">Traditional synastry · the aspects between you</h4>${overview(cs, R, together)}
     ${top ? `<ol class="cp-contacts">${top}</ol>` : `<p>No close contacts between the main planets: a bond that works through the houses rather than the aspects.</p>`}
+    <h4 class="cp-h">${g("rune", "Runes")} · the bind runes you make together</h4>${window.WyrdRunes ? WyrdRunes.pairHTML(A, B) : ""}
     <h4 class="cp-h">Where you land in each other's lives</h4>
     ${A.C.unknownTime || B.C.unknownTime ? `<p class="unknown-note">A birth time is unknown, so that chart's houses are counted from its Sun.</p>` : ""}
     <ul class="cp-over">${over(B, A)}</ul><ul class="cp-over">${over(A, B)}</ul>
@@ -131,6 +134,8 @@ function unitView(P){
     <h3 class="sec-h">Your unit of ${P.length}</h3>
     <h4 class="cp-h">${g("sukuyo", "Sukuyō")} · every bond at once</h4>${grid}
     <ul class="cp-sk-sum">${summary}</ul>
+    ${window.WyrdKuta ? `<h4 class="cp-h">Jyotish · every pair's match</h4><ul class="kar">${pairs.map(([i, k]) => { const x = WyrdKuta.read(P[i].C.sid.Moon, P[k].C.sid.Moon), y = WyrdKuta.read(P[k].C.sid.Moon, P[i].C.sid.Moon);
+      return `<li><span>${esc(P[i].name)} · ${esc(P[k].name)}</span><span>${x.total === y.total ? x.total : `${x.total} / ${y.total}`} of 36</span></li>`; }).join("")}</ul>` : ""}
     <h4 class="cp-h">What you complete together</h4>
     <p>${unitOnly.length ? `The unit completes <b>${unitOnly.length}</b> ${g("channel", unitOnly.length > 1 ? "channels" : "channel")} no one of you has alone:` : "No channel needs the whole unit: each one the group completes, someone already carries."}</p>
     ${unitOnly.length ? `<ul class="ln-list">${unitOnly.map(ch => `<li>${ch[0]}–${ch[1]}: ${brings(ch)}${pairOnly.includes(ch) ? "" : " <small>(only with three or more of you)</small>"}</li>`).join("")}</ul>` : ""}

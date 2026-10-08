@@ -140,3 +140,9 @@
 @keyframes tfFlow{to{stroke-dashoffset:-200}}
 @keyframes tfBurst{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
 @media (prefers-reduced-motion:reduce){.hb-torus .tf-flow,.hb-torus .tf-burst{animation:none}}
+
+/* live channels on the body: moving light between defined centres */
+.hb-chan { fill: none; stroke-width: 2.4; stroke-linecap: round; opacity: .8; }
+.hb-chan.rave { stroke: #d9b46a; } .hb-chan.dharma { stroke: #b6a3ff; } .hb-chan.both { stroke: #f4efff; }
+.hb-spark { filter: drop-shadow(0 0 3px currentColor); }
+.hb-spark.rave { fill: #f2d48a; color: #f2d48a; } .hb-spark.dharma { fill: #c9b8ff; color: #c9b8ff; } .hb-spark.both { fill: #fff; color: #fff; }
