@@ -65,10 +65,18 @@ def payment_link(secret, link_id):
 # Prices are made inside each checkout (price_data), like the $44 reading, so
 # nothing has to be set up in the Stripe dashboard first. A plan's tier rides
 # in the subscription's metadata, which is how the site knows what was bought.
+def find_customers(secret, email):
+    """Every Stripe customer with this email (checkout can make a second one for the same person)."""
+    return _call(secret, "GET", "/customers?" + urllib.parse.urlencode({"email": email, "limit": 10})).get("data") or []
+
 def find_customer(secret, email):
-    r = _call(secret, "GET", "/customers?" + urllib.parse.urlencode({"email": email, "limit": 10}))
-    rows = r.get("data") or []
+    rows = find_customers(secret, email)
     return next((c for c in rows if (c.get("metadata") or {}).get("wyrd") == "1"), rows[0] if rows else None)
+
+def checkout_session(secret, session_id):
+    if not isinstance(session_id, str) or not session_id.startswith("cs_") or len(session_id) > 200:
+        return None
+    return _call(secret, "GET", "/checkout/sessions/" + urllib.parse.quote(session_id, safe="") + "?expand[]=customer")
 
 def create_customer(secret, email):
     return _call(secret, "POST", "/customers", {"email": email, "metadata[wyrd]": "1"})
@@ -87,10 +95,10 @@ def subscription_checkout(secret, *, base_url, customer, tier, name, cents, inte
         "line_items[0][price_data][unit_amount]": str(cents),
         "line_items[0][price_data][recurring][interval]": interval,
         "line_items[0][price_data][product_data][name]": name}
+    if customer: f["customer"] = customer          # signed in: their customer. Not signed in: Stripe asks for the email
     return _call(secret, "POST", "/checkout/sessions", {
         **f,
         "mode": "subscription",
-        "customer": customer,
         "line_items[0][quantity]": "1",
         "allow_promotion_codes": "true",
         "subscription_data[metadata][tier]": tier,

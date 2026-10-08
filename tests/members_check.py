@@ -30,7 +30,7 @@ def sub(i, tier, status, cust="cus_1"):
     return {"id": f"sub_{i}", "customer": cust, "status": status, "metadata": {"tier": tier}, "cancel_at_period_end": False,
             "items": {"data": [{"price": {"recurring": {"interval": "month"}}, "current_period_end": time.time() + 86400}]}}
 SUBS = [sub(1, "member", "active"), sub(2, "pro", "canceled")]
-stripe_api.find_customer = lambda s, e: next((c for c in CUST.values() if c["email"] == e), None)
+stripe_api.find_customers = lambda s, e: [c for c in CUST.values() if c["email"] == e]
 stripe_api.subscriptions = lambda s, c: [x for x in SUBS if x["customer"] == c]
 stripe_api.update_customer_metadata = lambda s, c, f: CUST[c]["metadata"].update({k: str(v) for k, v in f.items()})
 

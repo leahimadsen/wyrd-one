@@ -24,10 +24,13 @@ def status(secret, email, fresh=False):
     if hit and not fresh and time.time() - hit[0] < CACHE_SECONDS: return hit[1]
     out = _empty()
     try:
-        c = stripe_api.find_customer(secret, email)
-        if c:
+        found = stripe_api.find_customers(secret, email)
+        found.sort(key=lambda c: (c.get("metadata") or {}).get("wyrd") != "1")    # the site's own customer first
+        if found:
+            c = found[0]
             out["customer"] = c["id"]
-            meta = c.get("metadata") or {}
+            meta = {}
+            for x in reversed(found): meta.update(x.get("metadata") or {})        # saved chart, gift, counts: wherever they are
             try: out["birth"] = json.loads(meta["wyrd_birth"]) if meta.get("wyrd_birth") else None
             except ValueError: out["birth"] = None
             out["proUse"] = _use(meta)
@@ -35,16 +38,19 @@ def status(secret, email, fresh=False):
             if g:
                 out["gift"] = g
                 if g["live"]: out[g["tier"]] = True
+        for c in found:
             for s in stripe_api.subscriptions(secret, c["id"]):
                 item = ((s.get("items") or {}).get("data") or [{}])[0]
                 tier = tier_of(s)
                 if tier not in ("member", "pro"): continue
-                plan = {"id": s["id"], "tier": tier, "status": s.get("status"),
+                plan = {"id": s["id"], "tier": tier, "status": s.get("status"), "customer": c["id"],
                         "interval": ((item.get("price") or {}).get("recurring") or {}).get("interval"),
                         "periodEnd": s.get("current_period_end") or item.get("current_period_end"),
                         "cancelAtEnd": bool(s.get("cancel_at_period_end"))}
                 out["plans"].append(plan)
-                if plan["status"] in LIVE: out[tier] = True
+                if plan["status"] in LIVE:
+                    out[tier] = True
+                    out["customer"] = c["id"]              # the portal opens on the customer that is paying
     except stripe_api.StripeError:
         if hit: return hit[1]                      # Stripe unreachable: keep the last answer we had
         raise
