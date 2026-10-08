@@ -21,6 +21,7 @@
 </head>
 <body>
 <a class="skip" href="#today">Skip to content</a>
+<nav class="topbar" aria-label="Site"><a href="/" class="tb-home">The Wyrd Console</a><span class="tb-links"><a href="/reports">Readings</a><a href="/membership">Membership</a><a href="/learn">Learn</a><a href="/today">Today</a><a href="/account" class="tb-acct" data-acct>Sign in</a></span></nav>
 <header class="hub" id="skyHost">
   <div class="hub-in">
     <p class="hub-crumb"><a href="/">← The Wyrd Console</a></p>
@@ -49,5 +50,6 @@
 <script src="/static/glossary.js"></script>
 <script src="/static/common.js"></script>
 <script src="/static/today.js"></script>
+<script>fetch("/api/me").then(r=>r.json()).then(d=>{if(d.signedIn)for(const a of document.querySelectorAll("[data-acct]"))a.textContent="Your account"}).catch(()=>{})</script>
 </body>
 </html>

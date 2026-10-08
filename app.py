@@ -535,6 +535,11 @@ def account_status(email, fresh=False):
 
 def esc(v): return html.escape(str(v))
 
+@app.get("/api/me")
+def api_me():
+    r = jsonify(signedIn=bool(signed_in())); r.headers["Cache-Control"] = "no-store"
+    return r
+
 @app.get("/signin")
 def signin_page():
     nxt = accounts.safe_next(request.args.get("next", "/account"))
