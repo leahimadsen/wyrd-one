@@ -40,7 +40,7 @@ a { color: var(--celadon); }
 
 /* ---- results ---- */
 main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
-.blk { padding: 46px 0; border-top: 1px solid var(--rule); }
+.blk { padding: 46px 0; border-top: 1px solid var(--rule); overflow-x: clip; }
 .blk h2 { font-weight: 400; font-size: 30px; color: var(--celadon); margin: 0 0 6px; }
 .meta { color: var(--ivory-dim); margin: 0 0 20px; }
 .tw { overflow-x: auto; -webkit-overflow-scrolling: touch; }
