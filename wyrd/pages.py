@@ -1,7 +1,7 @@
 """Public pages search engines can read: the astrology readings on offer, and a
 learning page for every gate, nakshatra (lunar mansion) and sidereal sign.
 
-Each learning page carries the facts and a short taste of Saga Devi's register
+Each learning page carries the facts and a short taste of The Völva's register
 from lib/corpus.json, then points to the free birth chart and the paid reading.
 The full passages stay in the paid reading."""
 import html, json, os, re
@@ -49,11 +49,11 @@ def _cta():
 def reports(base, price_cents, member_cents):
     p = price_cents / 100
     body = f"""
-<h1>Astrology readings by Saga Devi</h1>
+<h1>Astrology readings by The Völva</h1>
 <p class="lede">A personal astrology report written from your exact birth chart: sidereal and tropical, the lunar mansions, the 64 gates, the runes, your Vimshottari periods and your Dharma body.</p>
 <div class="plans">
   <section class="plan lead"><h2>Natal astrology reading</h2><div class="price">${p:.0f}<small> once</small></div>
-    <ul><li>Your full birth chart reading, written from Saga Devi's register</li><li>Sidereal signs, nakshatras and houses</li>
+    <ul><li>Your full birth chart reading, written from The Völva's register</li><li>Sidereal signs, nakshatras and houses</li>
     <li>Your harmonic body and Dharma body</li><li>Your current Vimshottari period</li><li>Questions to work with, gathered at the end</li></ul>
     <a class="btn-buy" href="/chart#reading">Cast your chart, then buy the reading</a>
     <a class="alt" href="/sample">Read a sample reading first</a></section>
@@ -62,7 +62,7 @@ def reports(base, price_cents, member_cents):
     <li>Your chart kept on your account</li><li>The natal reading for ${member_cents / 100:.2f} instead of ${p:.0f}</li></ul>
     <a class="btn-cast" href="/membership">See the membership</a></section>
   <section class="plan"><h2>1:1 consultation</h2><div class="price">$100<small> an hour</small></div>
-    <ul><li>A session with Saga Devi on your chart</li><li>Ask through <a href="https://thewebofwyrd.substack.com">The Web of Wyrd</a></li></ul></section>
+    <ul><li>A session with The Völva on your chart</li><li>Ask through <a href="https://thewebofwyrd.substack.com">The Web of Wyrd</a></li></ul></section>
 </div>
 <h2>Questions</h2>
 <h3>What do I need for an astrology reading?</h3><p>Your date, time and place of birth. If you don't know the time, the free chart still works with solar houses, and the reading tells you which parts depend on the time.</p>
@@ -75,12 +75,12 @@ def reports(base, price_cents, member_cents):
            ("How do I get my reading?", "Straight after payment it opens in your browser, and can be saved as a PDF.")]
     ld = _ld({"@context": "https://schema.org", "@graph": [
         {"@type": "Product", "name": "Natal astrology reading", "brand": {"@type": "Brand", "name": "The Wyrd Console"},
-         "description": "A personal astrology report written from your birth chart by Saga Devi: sidereal signs, nakshatras, the 64 gates, the harmonic and Dharma bodies, and Vimshottari periods.",
+         "description": "A personal astrology report written from your birth chart by The Völva: sidereal signs, nakshatras, the 64 gates, the harmonic and Dharma bodies, and Vimshottari periods.",
          "url": base + "/reports", "image": base + "/static/icons/icon-512.png",
          "offers": {"@type": "Offer", "price": f"{p:.2f}", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": base + "/reports"}},
         {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}]})
     return ("Astrology Readings & Birth Chart Reports · The Wyrd Console",
-            f"Personal astrology readings by Saga Devi, written from your exact birth chart: sidereal signs, nakshatras, the 64 gates and your Dharma body. ${p:.0f}, ready the moment you pay.",
+            f"Personal astrology readings by The Völva, written from your exact birth chart: sidereal signs, nakshatras, the 64 gates and your Dharma body. ${p:.0f}, ready the moment you pay.",
             body, ld)
 
 
@@ -90,14 +90,14 @@ def learn_index(base):
     naks = "".join(f'<li><a href="/learn/nakshatras/{s}">{e(C["NAKSHATRA"][i][0])}</a></li>' for s, i in NAKS)
     signs = "".join(f'<li><a href="/learn/signs/{s}">{e(C["SIGN_FRAME"][i][0])}</a></li>' for s, i in SIGNS)
     body = f"""<h1>Learn astrology with the Wyrd Console</h1>
-<p class="lede">The building blocks of your birth chart: the twelve sidereal signs, the twenty-seven nakshatras, and the sixty-four gates, each in Saga Devi's words.</p>
+<p class="lede">The building blocks of your birth chart: the twelve sidereal signs, the twenty-seven nakshatras, and the sixty-four gates, each in The Völva's words.</p>
 <h2>The 12 sidereal signs</h2><ul class="terms">{signs}</ul>
 <h2>The 27 nakshatras (lunar mansions)</h2><ul class="terms">{naks}</ul>
 <h2>The 64 gates</h2><ul class="terms">{gates}</ul>
 <h2>Go further</h2><ul class="terms"><li><a href="/learn/runes">Learn the runes: the 24 runes of the Elder Futhark</a></li>
 <li><a href="/learn/dharma">Learn the Dharma Design: the 64 gates of dharma</a></li></ul>{_cta()}"""
     return ("Learn Astrology: Signs, Nakshatras & the 64 Gates · The Wyrd Console",
-            "A free guide to the twelve sidereal signs, the twenty-seven nakshatras and the sixty-four gates, written by Saga Devi.",
+            "A free guide to the twelve sidereal signs, the twenty-seven nakshatras and the sixty-four gates, written by The Völva.",
             body, _crumbs(base, [("Learn", "/learn")]))
 
 
@@ -156,7 +156,7 @@ def sign(base, s):
 <dl class="facts"><dt>Nakshatras in {e(name)}</dt><dd>{", ".join(f'<a href="/learn/nakshatras/{slug(k)}">{e(k)}</a>' for k in naks)}</dd>
 <dt>Natural house</dt><dd>House {house["n"]}: {e(house["phase"])}</dd></dl>{_cta()}"""
     return (f"{name} Sign Meaning · Sidereal Astrology · The Wyrd Console",
-            f"{name} in sidereal (Vedic) astrology: its nakshatras, its natural house, and the body {name} rising shapes. From Saga Devi's Wyrd Console.",
+            f"{name} in sidereal (Vedic) astrology: its nakshatras, its natural house, and the body {name} rising shapes. From The Völva's Wyrd Console.",
             body, _crumbs(base, [("Learn", "/learn"), (name, f"/learn/signs/{s}")]))
 
 
@@ -242,7 +242,7 @@ def dharma_index(base):
 {"".join(seqs)}
 <h2 id="gates">The 64 gates of dharma</h2><ul class="terms">{gates}</ul>{_cta()}"""
     return ("Learn the Dharma Design: the 64 Gates of Dharma · The Wyrd Console",
-            "What the Dharma Design is, the Pentagram Cross, the dharma profile, the eleven spheres of the Path of Dharma, and the 64 gates of dharma, by Saga Devi.",
+            "What the Dharma Design is, the Pentagram Cross, the dharma profile, the eleven spheres of the Path of Dharma, and the 64 gates of dharma, by The Völva.",
             body, _crumbs(base, [("Learn", "/learn"), ("Dharma Design", "/learn/dharma")]))
 
 

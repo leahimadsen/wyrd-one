@@ -10,7 +10,7 @@ SMTP_HOST = os.environ.get("SMTP_HOST", "")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", "465") or 465)
 SMTP_USER = os.environ.get("SMTP_USER", "")
 SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
-FROM = os.environ.get("MAIL_FROM", "") or (f"Saga Devi <{SMTP_USER}>" if SMTP_USER else "Saga Devi <readings@example.com>")
+FROM = os.environ.get("MAIL_FROM", "") or (f"The Völva <{SMTP_USER}>" if SMTP_USER else "The Völva <readings@example.com>")
 OUTBOX = []
 log = logging.getLogger("wyrd.mail")
 

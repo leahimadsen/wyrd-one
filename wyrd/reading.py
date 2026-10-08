@@ -1,5 +1,5 @@
 """
-The paid reading, assembled in story order from Leah's own register.
+The paid reading, assembled in story order from The Völva's own register.
 Every interpretive sentence comes from corpus.json; this file only chooses
 which passages a chart calls for and lays them out.
 

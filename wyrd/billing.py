@@ -104,7 +104,7 @@ def _empty():
     return {"customer": None, "member": False, "pro": False, "plans": [], "birth": None, "proUse": 0, "gift": None}
 
 
-# ---------------- gifts: a membership or Professional plan given by Saga Devi ----------------
+# ---------------- gifts: a membership or Professional plan given by The Völva ----------------
 # Kept on the Stripe customer as metadata, so nothing is charged and no
 # subscription exists. wyrd_gift_until is a date (YYYY-MM-DD) or "forever".
 def gift_of(meta):

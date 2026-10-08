@@ -31,7 +31,7 @@ EPHEMERIS_FILE  = os.environ.get("EPHEMERIS_FILE", "de440s.bsp")  # covers 1849-
 YEAR_MIN, YEAR_MAX = 1850, 2149
 
 SITE_TITLE      = "The Wyrd Console"
-AUTHOR          = "Saga Devi"
+AUTHOR          = "The Völva"
 
 # --- your words around the reading. Edit freely; plain text or simple HTML. ---
 READING_OPENING = (
