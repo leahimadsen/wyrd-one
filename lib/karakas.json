@@ -1,0 +1,130 @@
+{
+  "_note": "DRAFT for Saga Devi to edit. The seven chara karakas in depth: each role, each planet in each role, the Karakamsa (the soul-planet's navamsa sign), the partner from the Darakaraka and the work from the Amatyakaraka.",
+
+  "INTRO": "Seven planets are ranked by how far each has travelled through its sign. The one furthest along becomes the Atmakaraka, the soul's own planet; the others become its cabinet, each with a portfolio. These roles are personal: no one else with your planets in the same signs need have the same cabinet. Read each karaka as a person in your life and a part of you at once.",
+
+  "ROLES": {
+    "Atmakaraka":    {"rules": "The soul and what it came here to learn.", "asks": "This planet's lesson is the life's main lesson. Whatever it struggles with, you struggle with until it is learned; whatever it masters becomes your gift to others.", "people": "You, at your deepest; and the teachers who show you yourself."},
+    "Amatyakaraka":  {"rules": "Career, means and how the soul's work gets done.", "asks": "This planet is the minister who carries out the soul's orders. Its nature is the nature of the work that suits you and of the people who employ, advise or fund you.", "people": "Bosses, advisers, patrons, colleagues."},
+    "Bhratrikaraka": {"rules": "Siblings, courage, initiative and the guru.", "asks": "This planet shows who stands beside you and how you find the nerve to act. In the tradition it also shows the teacher who walks with you.", "people": "Brothers, sisters, close friends, mentors."},
+    "Matrikaraka":   {"rules": "The mother, nourishment, home and education.", "asks": "This planet shows how you were nourished and how you nourish yourself. Its condition is the condition of your emotional foundation.", "people": "Your mother and anyone who mothers you."},
+    "Putrakaraka":   {"rules": "Children, students, creativity and intelligence.", "asks": "This planet shows what you generate and pass on: children, students, ideas, works. Its nature is the nature of your creative intelligence.", "people": "Children, students, protégés."},
+    "Gnatikaraka":   {"rules": "Rivals, illness, debts and daily friction.", "asks": "This planet shows where friction comes from and what it teaches. Handled well, it makes you strong and skilled; ignored, it wears you down.", "people": "Competitors, opponents, difficult relatives."},
+    "Darakaraka":    {"rules": "The partner and every close one-to-one bond.", "asks": "This planet shows not who you want but who arrives, and what partnership teaches you. Its nature is the nature of your significant other.", "people": "Spouse, partners, business partners."}
+  },
+
+  "ROLE_PLANET": {
+    "Atmakaraka": {
+      "Sun": "The Sun as soul-planet: the lesson is ego and authority. You are here to shine without needing to dominate, and to lead without needing to be seen.",
+      "Moon": "The Moon as soul-planet: the lesson is feeling and care. You are here to nourish without drowning, and to trust emotions without being ruled by them.",
+      "Mars": "Mars as soul-planet: the lesson is anger and force. You are here to fight only for what is right, and to master your own aggression.",
+      "Mercury": "Mercury as soul-planet: the lesson is speech and intelligence. You are here to tell the truth and use cleverness in service of others.",
+      "Jupiter": "Jupiter as soul-planet: the lesson is wisdom and faith. You are here to teach and guide, and to stay humble before what you don't know.",
+      "Venus": "Venus as soul-planet: the lesson is desire and love. You are here to love purely and to enjoy beauty without attachment.",
+      "Saturn": "Saturn as soul-planet: the lesson is suffering and duty. You are here to endure, to serve, and to free yourself from fear through patience."
+    },
+    "Amatyakaraka": {
+      "Sun": "The Sun as minister: work in leadership, government, authority or medicine. Bosses are powerful and proud; you rise through visibility.",
+      "Moon": "The Moon as minister: work with the public, care, food, hospitality or emotional service. Your career moves with tides.",
+      "Mars": "Mars as minister: work with force, engineering, the body, defence, surgery or sport. You rise by competing.",
+      "Mercury": "Mercury as minister: work with words, trade, teaching, writing, accounts or technology. You rise by thinking well.",
+      "Jupiter": "Jupiter as minister: work in teaching, law, counsel, finance or ministry. You rise by being trusted.",
+      "Venus": "Venus as minister: work in art, beauty, design, luxury, diplomacy or relationships. You rise through grace and taste.",
+      "Saturn": "Saturn as minister: work that is slow and structured: administration, labour, land, law or service to the many. You rise late and last."
+    },
+    "Bhratrikaraka": {
+      "Sun": "The Sun here: a strong, proud sibling or mentor; your courage comes from conviction.",
+      "Moon": "The Moon here: a caring, changeable sibling or companion; your courage comes from feeling.",
+      "Mars": "Mars here: a bold or combative sibling; your courage is physical and quick.",
+      "Mercury": "Mercury here: a clever, talkative sibling or friend; your courage is in words and wit.",
+      "Jupiter": "Jupiter here: a wise sibling or a true guru walks beside you; your courage comes from faith.",
+      "Venus": "Venus here: a graceful, artistic sibling or friend; your courage comes from love.",
+      "Saturn": "Saturn here: responsibility for or distance from siblings; your courage is endurance."
+    },
+    "Matrikaraka": {
+      "Sun": "The Sun here: a strong, authoritative mother; you were nourished through structure and pride.",
+      "Moon": "The Moon here: a deeply caring, emotional mother; nourishment came through feeling.",
+      "Mars": "Mars here: a fierce, protective or demanding mother; nourishment came through strength.",
+      "Mercury": "Mercury here: a clever, talkative, youthful mother; nourishment came through learning.",
+      "Jupiter": "Jupiter here: a wise, generous, devout mother; nourishment came through faith and teaching.",
+      "Venus": "Venus here: a beautiful, gracious, pleasure-loving mother; nourishment came through comfort.",
+      "Saturn": "Saturn here: a serious, burdened or distant mother; nourishment came through duty, and you learned to feed yourself."
+    },
+    "Putrakaraka": {
+      "Sun": "The Sun here: proud, bright children or students; your creativity wants to lead.",
+      "Moon": "The Moon here: sensitive, nurturing children; your creativity is emotional and intuitive.",
+      "Mars": "Mars here: energetic, headstrong children; your creativity is bold and physical.",
+      "Mercury": "Mercury here: clever, quick children or students; your creativity is verbal and inventive.",
+      "Jupiter": "Jupiter here: wise, fortunate children or students; your creativity teaches.",
+      "Venus": "Venus here: artistic, charming children; your creativity is beautiful and sensual.",
+      "Saturn": "Saturn here: children come late or bring responsibility; your creativity is patient and builds things that last."
+    },
+    "Gnatikaraka": {
+      "Sun": "The Sun here: friction with authority, ego clashes, the heart and eyes to watch. You grow by humbling pride.",
+      "Moon": "The Moon here: friction through moods and family, the stomach and nerves to watch. You grow by steadying feeling.",
+      "Mars": "Mars here: open rivals, accidents, inflammation, fights. You grow strong by fighting cleanly.",
+      "Mercury": "Mercury here: friction through words, contracts and nerves. You grow by speaking precisely.",
+      "Jupiter": "Jupiter here: friction through excess, debts, teachers or beliefs. You grow by keeping measure.",
+      "Venus": "Venus here: friction through pleasure, partners or money spent. You grow by choosing well.",
+      "Saturn": "Saturn here: long, slow obstacles, chronic issues, old debts. You grow by enduring and paying them off."
+    },
+    "Darakaraka": {
+      "Sun": "The Sun as partner: a proud, strong, visible partner, sometimes dominant; partnership teaches you about authority.",
+      "Moon": "The Moon as partner: a caring, emotional, changeable partner; partnership teaches you about nourishment.",
+      "Mars": "Mars as partner: an energetic, passionate, combative partner; partnership teaches you about conflict and desire.",
+      "Mercury": "Mercury as partner: a youthful, clever, talkative partner; partnership teaches you through conversation.",
+      "Jupiter": "Jupiter as partner: a wise, generous, often older or teacherly partner; partnership teaches you faith.",
+      "Venus": "Venus as partner: a beautiful, artistic, affectionate partner; partnership teaches you pleasure and grace.",
+      "Saturn": "Saturn as partner: a serious, older or burdened partner, a slow-building bond; partnership teaches you commitment."
+    }
+  },
+
+  "KARAKAMSA_INTRO": "The navamsa sign of your soul-planet is the Karakamsa: what the soul is reaching toward in this life, its deepest wish.",
+  "KARAKAMSA": [
+    "Karakamsa in Aries: the soul wants courage and independence; it reaches toward leading and beginning.",
+    "Karakamsa in Taurus: the soul wants peace, beauty and abundance; it reaches toward building what lasts.",
+    "Karakamsa in Gemini: the soul wants knowledge; it reaches toward learning, writing and sharing.",
+    "Karakamsa in Cancer: the soul wants belonging; it reaches toward home, care and devotion.",
+    "Karakamsa in Leo: the soul wants to shine; it reaches toward creation, leadership and the heart.",
+    "Karakamsa in Virgo: the soul wants purity and skill; it reaches toward service and healing.",
+    "Karakamsa in Libra: the soul wants harmony; it reaches toward partnership, justice and art.",
+    "Karakamsa in Scorpio: the soul wants truth beneath the surface; it reaches toward transformation and the occult.",
+    "Karakamsa in Sagittarius: the soul wants meaning; it reaches toward dharma, teaching and the far horizon.",
+    "Karakamsa in Capricorn: the soul wants to master duty; it reaches toward structure, work and responsibility.",
+    "Karakamsa in Aquarius: the soul wants to serve the many; it reaches toward community, ideals and the future.",
+    "Karakamsa in Pisces: the soul wants liberation; it reaches toward devotion, compassion and release."
+  ],
+
+  "PARTNER": [
+    "Partner energy in Aries: direct, independent, quick and courageous.",
+    "Partner energy in Taurus: steady, sensual, loyal, fond of comfort.",
+    "Partner energy in Gemini: curious, talkative, youthful, restless.",
+    "Partner energy in Cancer: caring, protective, emotional, home-centred.",
+    "Partner energy in Leo: warm, proud, generous, wants to be admired.",
+    "Partner energy in Virgo: practical, careful, helpful, sometimes critical.",
+    "Partner energy in Libra: graceful, fair, sociable, partnership-minded.",
+    "Partner energy in Scorpio: intense, private, loyal, transforming.",
+    "Partner energy in Sagittarius: free, frank, philosophical, adventurous.",
+    "Partner energy in Capricorn: responsible, ambitious, reserved, steady.",
+    "Partner energy in Aquarius: independent, unusual, friendly, idealistic.",
+    "Partner energy in Pisces: gentle, dreamy, devoted, spiritual."
+  ],
+
+  "WORK": [
+    "Work in Aries: pioneering, competitive, physical; you do best starting things.",
+    "Work in Taurus: building value: finance, food, land, beauty, craft.",
+    "Work in Gemini: communication: writing, trade, media, teaching, technology.",
+    "Work in Cancer: care: home, hospitality, food, healing, the public.",
+    "Work in Leo: leadership, performance, creative direction, government.",
+    "Work in Virgo: analysis, health, service, editing, systems.",
+    "Work in Libra: law, diplomacy, design, partnerships, trade.",
+    "Work in Scorpio: research, psychology, crisis work, finance, the hidden.",
+    "Work in Sagittarius: teaching, law, publishing, travel, religion.",
+    "Work in Capricorn: management, administration, building institutions.",
+    "Work in Aquarius: networks, science, technology, social causes.",
+    "Work in Pisces: healing, art, spirituality, charity, the sea."
+  ],
+
+  "PAIR_AK_AMK": "Your soul-planet and its minister stand together or face each other directly. The tradition calls this a mark of rising: what the soul wants and the work you do are aligned.",
+  "PAIR_AK_DK": "Your soul-planet and your partner-planet stand together or face each other directly. Partnership is central to your soul's work: you learn who you are through the one beside you."
+}

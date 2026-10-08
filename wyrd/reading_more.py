@@ -384,3 +384,42 @@ def matrix(C, dasha):
       <p>{MX["RETURNS"]} Your Saturn returns fall around {returns}.</p>
       <ul>{sat_rows or "<li>No Saturn period falls in the 120-year cycle shown.</li>"}</ul>
       {f'<p>Inside your current period, the Saturn sub-period runs {E_year(sat_sub[0]["from"])}–{E_year(sat_sub[0]["to"])}{" and is running now" if sat_sub[0]["now"] else ""}: the matrix is reviewed then.</p>' if sat_sub else ""}"""
+
+
+# ---------------- the karakas in depth ----------------
+KA = json.load(open(os.path.join(HERE, "lib", "karakas.json"), encoding="utf-8"))
+
+
+def karakas_more(C, dasha):
+    asc = C["ascS"]; K = C["karaka"]; born = C["jd"]
+    nav = lambda l: sign_i(E.varga(l, 9))
+    out = [f'<h3 class="rd-tier">Your cabinet, one by one</h3><p>{KA["INTRO"]}</p>']
+    for role, b in K.items():
+        R = KA["ROLES"][role]; l = C["sid"][b]; si = sign_i(l); h = E.house_of(l, asc); ni = E.nak_index(l); n = NAKS[ni]
+        periods = "; ".join(f'{E_year(m["from"])}–{E_year(m["to"])} ' + ("(from birth)" if m["from"] <= born else f'(age {int((m["from"] - born) / E.YEAR)})')
+                            + (" · now" if m["now"] else "")
+                            for m in dasha["maha"] if m["lord"] == b and (m["from"] - born) / E.YEAR < 100)
+        extra = ""
+        if role == "Atmakaraka":
+            extra = (f'<div class="rd-body"><h5>Karakamsa · {E.SIGNS[nav(l)]}</h5><p>{KA["KARAKAMSA_INTRO"]} {KA["KARAKAMSA"][nav(l)]}</p></div>'
+                     + woven(C, b, l))
+        elif role == "Amatyakaraka":
+            extra = pair("The work", KA["WORK"][si] + (" It holds the same sign in the navamsa, so this is doubly true." if nav(l) == si
+                                                         else f' In the navamsa: {KA["WORK"][nav(l)].split(": ", 1)[-1]}'))
+        elif role == "Darakaraka":
+            extra = pair("The partner", KA["PARTNER"][si] + (" It holds the same sign in the navamsa, so this is doubly true." if nav(l) == si
+                                                               else f' In the navamsa, deeper in the bond: {KA["PARTNER"][nav(l)].split(": ", 1)[-1]}'))
+        out.append(f"""<div class="rd-entry"><h3>{role} · {GLYPH[b]} {b} <span class="rd-side p">{deg(l)} into {E.SIGNS[si]}</span></h3>
+          <div class="rd-hdr">{R["rules"]}</div>
+          <p>{R["asks"]}</p>
+          <p><b>{KA["ROLE_PLANET"][role][b]}</b></p>
+          <p>It stands in sidereal {E.SIGNS[si]}, your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}: this part of your life plays out there. Its star is {n[0]}, pada {pada_of(l)}: {n[6]}</p>
+          {extra}
+          {pair("In your life", R["people"])}
+          {pair("Its periods", periods or "its period falls after age 100")}</div>""")
+    ak, amk, dk = C["sid"][K["Atmakaraka"]], C["sid"][K["Amatyakaraka"]], C["sid"][K["Darakaraka"]]
+    close = lambda a, b: (sign_i(a) - sign_i(b)) % 12 in (0, 6)
+    notes = [KA["PAIR_AK_AMK"]] if close(ak, amk) else []
+    if close(ak, dk): notes.append(KA["PAIR_AK_DK"])
+    if notes: out.append('<h3 class="rd-tier">How the cabinet works together</h3>' + "".join(f"<p>{x}</p>" for x in notes))
+    return "".join(out)
