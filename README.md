@@ -26,6 +26,14 @@ Web of Wyrd register, unlocked by Stripe Checkout.
 - `lib/corpus.json` — your register. Server-side only; never sent to the browser.
 - `tests/` — `verify_engine.py` (port = console), `selfcheck.py` (ephemeris wired right)
 
+## The installable app
+The site installs to a phone or computer like an app: "Install the app" appears on the first page
+and the chart page wherever the browser supports it (on iPhone it explains Share → Add to Home Screen).
+- `static/manifest.webmanifest` — the app's name, colours and icons (`static/icons/`)
+- `static/sw.js` — works offline: pages come from the network when there is one and from the
+  cache when there isn't. Saved charts open offline. Readings, checkout and consultations are
+  never cached. If an update ever seems stuck, raise `VERSION` at the top of `sw.js`.
+
 ## Free and paid
 The free side shows what everything **is** (positions, gates, runes, mansions, the rave, the clock,
 transits, definitions of every term). What it **means** for a person is only in the paid reading,

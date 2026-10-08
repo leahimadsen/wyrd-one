@@ -76,7 +76,7 @@ function calendar(host, X){
         events = j.events.concat(clockEvents(start, end)).sort((a, b) => a.jd - b.jd);
         paint();
       })
-      .catch(x => { body.innerHTML = `<p class="err">${esc(x.message)} <button type="button" class="link-btn" data-retry>Try again</button></p>`; });
+      .catch(x => { body.innerHTML = `<p class="err">${x instanceof TypeError ? "You're offline. The calendar needs a connection to work out the coming months." : esc(x.message)} <button type="button" class="link-btn" data-retry>Try again</button></p>`; });
   }
   load();
 }
@@ -108,7 +108,7 @@ function compare(host, X){
                  place_id: place.id, lat: place.lat, lon: place.lon, tz: place.tz, place_label: place.label };
     const btn = f.querySelector("button[type=submit]"); btn.disabled = true; btn.textContent = "Casting…";
     try { const j = await cast(b2); show(j.chart, b2); }
-    catch (x) { err.textContent = x.message; }
+    catch (x) { err.textContent = x instanceof TypeError ? "You're offline. Comparing needs a connection." : x.message; }
     finally { btn.disabled = false; btn.textContent = "Compare"; }
   });
 

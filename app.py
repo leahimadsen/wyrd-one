@@ -84,6 +84,26 @@ def cast_for(b):
 def home():
     return send_from_directory(app.static_folder, "index.html")
 
+# ---------------- the installable app ----------------
+@app.get("/sw.js")
+def service_worker():
+    r = send_from_directory(app.static_folder, "sw.js", mimetype="text/javascript")
+    r.headers["Cache-Control"] = "no-cache"             # browsers must always see the newest worker
+    r.headers["Service-Worker-Allowed"] = "/"
+    return r
+
+@app.get("/manifest.webmanifest")
+def manifest():
+    return send_from_directory(app.static_folder, "manifest.webmanifest", mimetype="application/manifest+json")
+
+@app.get("/offline")
+def offline():
+    return send_from_directory(app.static_folder, "offline.html")
+
+@app.get("/favicon.ico")
+def favicon():
+    return send_from_directory(os.path.join(app.static_folder, "icons"), "favicon-32.png", mimetype="image/png")
+
 @app.get("/chart")
 def chart_page():
     return send_from_directory(app.static_folder, "chart.html")

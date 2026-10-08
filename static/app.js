@@ -2,7 +2,7 @@
 /* The landing page: the high seat, the birth form and the charts this browser has saved. */
 (() => {
 const $ = id => document.getElementById(id);
-const { esc, placeSearch, cast, keep, current, savedList, removeSaved } = WyrdCommon;
+const { esc, placeSearch, cast, keep, current, savedList, removeSaved, refreshSaved } = WyrdCommon;
 let place = null;
 /* /consultation is where a paid 1:1 client lands from Stripe: same form, but it unlocks their reading */
 const consultSid = location.pathname === "/consultation" ? new URLSearchParams(location.search).get("session_id") : null;
@@ -47,13 +47,22 @@ function birthFromForm(){
            unknown_time: unk.checked || undefined, place_id: place.id, lat: place.lat, lon: place.lon, tz: place.tz,
            place_label: place.label };
 }
-async function open(birth, button){
-  const was = button.textContent; button.disabled = true; button.textContent = "Casting…"; err.textContent = "";
+async function open(birth, button, savedResult){
+  const was = button.innerHTML; button.disabled = true; button.textContent = "Casting…"; err.textContent = "";
   try {
-    const j = await cast(birth);
+    let j;
+    try { j = await cast(birth); if (savedResult) refreshSaved(birth, j); }
+    catch (x) {
+      /* no connection: a saved chart opens from what was kept when it was saved */
+      if (!savedResult || (navigator.onLine && !(x instanceof TypeError))) throw x;
+      j = { ...savedResult, offlineSince: savedResult.castAt || true };
+    }
     if (!keep(birth, j)) throw new Error("Your browser blocked this page from keeping your chart. Allow site data and try again.");
     location.href = "/chart";
-  } catch (x) { err.textContent = x.message; button.disabled = false; button.textContent = was; }
+  } catch (x) {
+    err.textContent = x instanceof TypeError ? "You're offline. Charts you've saved still open; new ones need a connection." : x.message;
+    button.disabled = false; button.innerHTML = was;
+  }
 }
 
 f.addEventListener("submit", async e => {
@@ -83,7 +92,7 @@ function drawSaved(){
 }
 $("savedList").addEventListener("click", e => {
   const o = e.target.closest(".sv-open"), x = e.target.closest(".sv-x");
-  if (o){ const b = savedList()[+o.dataset.i]; if (b){ const { savedAt, ...birth } = b; open(birth, o); } }
+  if (o){ const b = savedList()[+o.dataset.i]; if (b){ const { savedAt, castAt, result, ...birth } = b; open(birth, o, result && { ...result, castAt: castAt || savedAt }); } }
   if (x){ removeSaved(+x.dataset.x); drawSaved(); }
 });
 drawSaved();

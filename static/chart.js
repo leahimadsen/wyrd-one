@@ -6,7 +6,7 @@
 (async () => {
 const $ = id => document.getElementById(id);
 const { signOf, degIn, nakIndex, houseOf, norm, GLYPH, NAKSHATRA } = Wyrd.helpers;
-const { esc, cast, keep, current, shareLink, fromLink, isSaved, toggleSaved } = WyrdCommon;
+const { esc, cast, keep, current, shareLink, fromLink, isSaved, toggleSaved, refreshSaved } = WyrdCommon;
 const g = (k, l) => Wyrd.gloss(k, l);
 
 /* ---------- which chart: a shared link, or the one cast in this tab ---------- */
@@ -73,25 +73,32 @@ const ORDER = [LEARN, ...LANDS];
 /* ---------- the header: who, the tools, the path ---------- */
 $("who").textContent = birth.name ? `${birth.name}'s chart` : "Your chart";
 $("chartMeta").textContent = `${birth.date}${unknown ? " · time unknown" : ` at ${birth.time} (${J.utc})`} · ${J.place.label}`;
+if (J.offlineSince){
+  const when = typeof J.offlineSince === "number" ? ` on ${new Date(J.offlineSince).toLocaleDateString()}` : "";
+  $("unknownNote").hidden = false;
+  $("unknownNote").textContent = `You're offline, so this is the chart as it was saved${when}. Your placements don't change, but "The sky now" and "What's coming" need a connection.`;
+}
 if (unknown){
   const span = C.moonSpan && C.moonSpan.length > 1 ? ` Your Moon may have been in ${C.moonSpan.join(" or ")}.` : "";
   $("unknownNote").hidden = false;
-  $("unknownNote").textContent = `Birth time unknown: the chart is cast for noon, houses are counted from your Sun's sign, and the rising sign and angles are left out.${span}`;
+  $("unknownNote").textContent = ($("unknownNote").textContent ? $("unknownNote").textContent + " " : "") + `Birth time unknown: the chart is cast for noon, houses are counted from your Sun's sign, and the rising sign and angles are left out.${span}`;
   $("readingUnknown").hidden = false;
 }
 function drawTools(){
   const sv = isSaved(birth);
   const html = short => `<a class="ctool" href="/?edit=1" ${short ? `aria-label="Edit birth details" title="Edit birth details"` : ""}>✎${short ? "" : " Edit details"}</a>
     <button type="button" class="ctool" data-tool="save" aria-pressed="${sv}" ${short ? `aria-label="${sv ? "Saved" : "Save chart"}" title="${sv ? "Saved" : "Save chart"}"` : ""}>${sv ? "★" : "☆"}${short ? "" : sv ? " Saved" : " Save chart"}</button>
-    <button type="button" class="ctool" data-tool="share" ${short ? `aria-label="Copy link" title="Copy link"` : ""}>⤴${short ? "" : " Copy link"}</button>`;
+    <button type="button" class="ctool" data-tool="share" ${short ? `aria-label="Copy link" title="Copy link"` : ""}>⤴${short ? "" : " Copy link"}</button>
+    ${short ? "" : `<button type="button" class="ctool" data-install hidden>⬇ Install the app</button>`}`;
   $("tools").innerHTML = html(false);
   $("tabTools").innerHTML = html(true);
+  WyrdCommon.syncInstall();
 }
 drawTools();
 function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2600); }
 document.addEventListener("click", async e => {
   const t = e.target.closest("[data-tool]"); if (!t) return;
-  if (t.dataset.tool === "save"){ const on = toggleSaved(birth); drawTools(); toast(on ? "Saved in this browser. It's listed on the first page." : "Removed from this browser."); }
+  if (t.dataset.tool === "save"){ const { offlineSince, ...fresh } = J; const on = toggleSaved(birth, fresh); drawTools(); toast(on ? "Saved in this browser. It's listed on the first page." : "Removed from this browser."); }
   if (t.dataset.tool === "share"){
     const url = shareLink(birth);
     try { await navigator.clipboard.writeText(url); toast("Link copied. Anyone with it can open this chart."); }
