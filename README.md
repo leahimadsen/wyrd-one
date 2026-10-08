@@ -138,6 +138,10 @@ Prices are made inside each Stripe Checkout, so no products need creating in the
 
 Body Weather's centre lines are drafts in `lib/body_weather.json` for Saga Devi to rewrite; everything else in it comes from `lib/corpus.json`.
 
+## The full reading
+
+Twelve sections, about 34 printed pages: the Seat, the Engine (Moon), **the Planets** (all twelve, each read sidereally for karma and reality and tropically for experience, with dignity, rune and gates), the Soul-Planet, **the Runes** (the lit runes ranked, and the dasha periods that wake each one), the Work, **the Body** (all nine centres, every channel and the mansion and pada that feeds each gate), **Where You Thrive** (culture, places, work), the Dharma Weave, the Path of Dharma, the Clock (with the whole life by period) and the Questions. The new sections draw on `lib/register_ext.json`, drafted for Saga Devi to edit.
+
 ## Gifts (admin only)
 
 At `/admin/gifts` give anyone a Membership or Professional plan for 1, 3, 6 or 12 months or for good. Nothing is charged: the gift is kept on their Stripe customer, they get an email inviting them to sign in, and you can end it any time. To gift a reading, fill in their birth details at `/admin` and press **Make a gift link**: the link opens their full reading, free, for two years.

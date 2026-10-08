@@ -1,0 +1,464 @@
+{
+  "_note": "DRAFT passages for Saga Devi to edit, in the register's manner. The reading uses these beside lib/corpus.json: planets, signs in both zodiacs, the 24 runes, the centres, the four aims of the padas, and where each mansion works best. Change any line here and every reading changes with it.",
+  "FRAMES": {
+    "sidereal": "Sidereal positions are measured against the fixed stars. They describe the karma you arrived with and the reality that forms around you: what happens, what is handed to you, what the world keeps returning. Read them as the terrain.",
+    "tropical": "Tropical positions are measured against the seasons, the Earth's own turning. They describe how you experience that terrain from inside: what it feels like, how you meet it, the weather of your inner life. Read them as the walking.",
+    "both": "Every planet below is read twice. First where it stands among the stars, which is what it brings into your life. Then where it stands in the seasons, which is how you live with it. When the two agree, the planet is simple to work. When they differ, you feel one thing while living another, and the reading names both so you can stop arguing with either."
+  },
+  "PLANETS": {
+    "Sun": {
+      "governs": "Purpose, vitality, the father and every authority you answer to.",
+      "sid": "Where your life asks you to stand in your own light, and where recognition comes from or is withheld.",
+      "trop": "How you feel most yourself, and what makes you feel alive enough to keep going.",
+      "light": "Steady warmth that lets others orient.",
+      "shadow": "Needing to be seen to feel real."
+    },
+    "Moon": {
+      "governs": "Mind, mood, the mother, nourishment and memory.",
+      "sid": "The emotional conditions you keep finding yourself in, and the people who mother you or need mothering.",
+      "trop": "How your feelings move: their speed, their tides, what soothes them.",
+      "light": "Responsiveness that keeps people fed.",
+      "shadow": "Moods mistaken for facts."
+    },
+    "Mercury": {
+      "governs": "Thought, speech, trade, learning and the hands.",
+      "sid": "The kind of work your mind is given, the deals and messages that shape your fortunes.",
+      "trop": "How you think in the moment: the pace of your words and how you take in what you hear.",
+      "light": "Precise naming that makes things workable.",
+      "shadow": "Clever talk that avoids the point."
+    },
+    "Venus": {
+      "governs": "Love, beauty, pleasure, money and agreements.",
+      "sid": "The partnerships, comforts and resources that come to you, and what they cost.",
+      "trop": "What you find beautiful, how you like to be loved, what pleasure feels like in your body.",
+      "light": "Grace that makes people want to stay.",
+      "shadow": "Choosing comfort over truth."
+    },
+    "Mars": {
+      "governs": "Will, courage, conflict, the body's force and siblings.",
+      "sid": "The fights you are handed, the work that demands strength, the places you must defend.",
+      "trop": "How anger and desire move through you, and how you act when you want something.",
+      "light": "Clean action at the right moment.",
+      "shadow": "Force spent on the wrong target."
+    },
+    "Jupiter": {
+      "governs": "Wisdom, teachers, children, faith and growth.",
+      "sid": "Where grace arrives in your life, the teachers who find you, and what multiplies when you tend it.",
+      "trop": "How you hope, what you believe in, and how generous you feel.",
+      "light": "Wisdom that grows other people.",
+      "shadow": "Excess dressed as faith."
+    },
+    "Saturn": {
+      "governs": "Time, duty, limits, work and old karma.",
+      "sid": "Where life is slow, where you are tested, and where effort builds something that lasts.",
+      "trop": "How you feel about responsibility, fear and the passage of time.",
+      "light": "Patience that builds the structure.",
+      "shadow": "Fear that calls itself caution."
+    },
+    "Uranus": {
+      "governs": "Awakening, disruption and the future arriving early.",
+      "sid": "Where your life breaks pattern without asking, and what you are made to reinvent.",
+      "trop": "How you feel about freedom and where you itch to break the mould.",
+      "light": "Insight that frees.",
+      "shadow": "Rebellion with no destination."
+    },
+    "Neptune": {
+      "governs": "Dream, devotion, dissolution and the unseen.",
+      "sid": "Where your life blurs, where you are asked to surrender, and where inspiration enters.",
+      "trop": "How you dream, long and escape, and how porous you feel.",
+      "light": "Compassion without edges.",
+      "shadow": "Fog you call faith."
+    },
+    "Pluto": {
+      "governs": "Power, death and rebirth, what is buried.",
+      "sid": "Where your life demands total change and hands you power you must learn to hold.",
+      "trop": "How you feel intensity, control and the pull to go to the bottom of things.",
+      "light": "Power used to regenerate.",
+      "shadow": "Control in place of trust."
+    },
+    "Rahu": {
+      "governs": "Appetite, the new, the foreign, the direction of growth.",
+      "sid": "Where your life pulls you toward the unfamiliar and the more, and what you are here to learn by hunger.",
+      "trop": "What you crave and how that craving feels: urgent, fascinating, never quite enough.",
+      "light": "Courage to go where your line has never been.",
+      "shadow": "Hunger that eats the meal and stays hungry."
+    },
+    "Ketu": {
+      "governs": "Release, past mastery, spirit and the cut.",
+      "sid": "What you already know from before, where life strips things away, and where you are free.",
+      "trop": "Where you feel detached, where nothing quite satisfies, and where peace comes easiest.",
+      "light": "Mastery held lightly.",
+      "shadow": "Withdrawal mistaken for wisdom."
+    }
+  },
+  "SIGNS": [
+    {
+      "sign": "Aries",
+      "element": "fire",
+      "mode": "moving",
+      "karma": "a life that hands you beginnings and asks you to go first",
+      "felt": "you experience it as impulse: quick, hot, now"
+    },
+    {
+      "sign": "Taurus",
+      "element": "earth",
+      "mode": "fixed",
+      "karma": "a life that tests what you keep and whether it is worth keeping",
+      "felt": "you experience it as appetite and steadiness: slow, sensory, loyal"
+    },
+    {
+      "sign": "Gemini",
+      "element": "air",
+      "mode": "dual",
+      "karma": "a life of messages, siblings, crossings and two of everything",
+      "felt": "you experience it as curiosity: restless, quick, talkative"
+    },
+    {
+      "sign": "Cancer",
+      "element": "water",
+      "mode": "moving",
+      "karma": "a life organised around home, family and who feeds whom",
+      "felt": "you experience it as feeling first: protective, tidal, remembering"
+    },
+    {
+      "sign": "Leo",
+      "element": "fire",
+      "mode": "fixed",
+      "karma": "a life that puts you at the centre and asks what you will do there",
+      "felt": "you experience it as pride and warmth: generous, dramatic, wanting to shine"
+    },
+    {
+      "sign": "Virgo",
+      "element": "earth",
+      "mode": "dual",
+      "karma": "a life of service, repair and work that must be done well",
+      "felt": "you experience it as discernment: careful, useful, quick to see the flaw"
+    },
+    {
+      "sign": "Libra",
+      "element": "air",
+      "mode": "moving",
+      "karma": "a life shaped by partners, trade and the balance between people",
+      "felt": "you experience it as relation: fair-minded, graceful, weighing everything"
+    },
+    {
+      "sign": "Scorpio",
+      "element": "water",
+      "mode": "fixed",
+      "karma": "a life of depths, shared resources, crisis and renewal",
+      "felt": "you experience it as intensity: private, loyal, all or nothing"
+    },
+    {
+      "sign": "Sagittarius",
+      "element": "fire",
+      "mode": "dual",
+      "karma": "a life of teachers, travel, law and the search for meaning",
+      "felt": "you experience it as faith and range: frank, roaming, aiming high"
+    },
+    {
+      "sign": "Capricorn",
+      "element": "earth",
+      "mode": "moving",
+      "karma": "a life of duty, rank, long climbs and earned authority",
+      "felt": "you experience it as ambition and restraint: dry, patient, responsible"
+    },
+    {
+      "sign": "Aquarius",
+      "element": "air",
+      "mode": "fixed",
+      "karma": "a life tied to groups, networks, causes and the future",
+      "felt": "you experience it as detachment and vision: principled, unusual, cool"
+    },
+    {
+      "sign": "Pisces",
+      "element": "water",
+      "mode": "dual",
+      "karma": "a life of surrender, service, retreat and the unseen",
+      "felt": "you experience it as merging: dreamy, porous, compassionate"
+    }
+  ],
+  "HOUSE_LIFE": [
+    "your body, your name and how you arrive in a room",
+    "money, food, family and the voice",
+    "effort, skill, siblings, short journeys and courage",
+    "home, mother, land, inner peace",
+    "creativity, children, romance, past merit and intelligence",
+    "daily work, health, service, debts and opponents",
+    "marriage, partners, contracts and the public",
+    "crisis, inheritance, other people's money, the occult and transformation",
+    "teachers, father, faith, long journeys and luck",
+    "career, reputation, authority and what you are known for",
+    "gains, friends, networks and fulfilled wishes",
+    "loss, solitude, foreign lands, sleep, spiritual release"
+  ],
+  "RUNES": {
+    "Fehu": {
+      "means": "Moveable wealth, energy that must circulate.",
+      "light": "Abundance kept moving: earning, giving, investing.",
+      "shadow": "Hoarding, or wealth that burns through you.",
+      "call": "Let what comes to you move on."
+    },
+    "Uruz": {
+      "means": "Raw strength, health, the wild ox.",
+      "light": "Vitality, endurance, a body you can trust.",
+      "shadow": "Brute force, or strength left unused.",
+      "call": "Train the strength you have."
+    },
+    "Thurisaz": {
+      "means": "The thorn, defence, the force that protects.",
+      "light": "Boundaries that hold.",
+      "shadow": "Hostility, striking first.",
+      "call": "Defend, and don't attack."
+    },
+    "Ansuz": {
+      "means": "The god-voice, breath, inspired speech.",
+      "light": "Words that carry truth and teach.",
+      "shadow": "Talk that manipulates.",
+      "call": "Say what is true."
+    },
+    "Raidho": {
+      "means": "The road, the ride, right rhythm.",
+      "light": "Travel and effort in good order.",
+      "shadow": "Restlessness, the wrong road.",
+      "call": "Keep the pace that gets you there."
+    },
+    "Kenaz": {
+      "means": "The torch, craft, knowledge made visible.",
+      "light": "Skill, insight, making things.",
+      "shadow": "Burning out, or a lit room you hide in.",
+      "call": "Bring your craft to the light."
+    },
+    "Gebo": {
+      "means": "The gift, exchange, the bond it makes.",
+      "light": "Generous partnership, fair trade.",
+      "shadow": "Gifts with hooks, debt.",
+      "call": "Give so that both are freer."
+    },
+    "Wunjo": {
+      "means": "Joy, belonging, the shared table.",
+      "light": "Contentment, harmony in the group.",
+      "shadow": "Joy dependent on others agreeing.",
+      "call": "Make the joy, don't wait for it."
+    },
+    "Hagalaz": {
+      "means": "Hail, disruption that clears the field.",
+      "light": "Crisis that resets what was stuck.",
+      "shadow": "Chaos, damage, resisting the storm.",
+      "call": "Let it fall; plant after."
+    },
+    "Nauthiz": {
+      "means": "Need, friction, the fire made by rubbing.",
+      "light": "Discipline, resourcefulness under pressure.",
+      "shadow": "Scarcity, grinding want.",
+      "call": "Use the need as fuel."
+    },
+    "Isa": {
+      "means": "Ice, stillness, the pause.",
+      "light": "Focus, concentration, waiting well.",
+      "shadow": "Frozen, cut off, stuck.",
+      "call": "Be still on purpose."
+    },
+    "Jera": {
+      "means": "The year, the harvest, cycles.",
+      "light": "Patience rewarded, things ripening.",
+      "shadow": "Forcing the season.",
+      "call": "Do the season's work."
+    },
+    "Eihwaz": {
+      "means": "The yew, the axis between life and death.",
+      "light": "Endurance, a spine through change.",
+      "shadow": "Fear of endings.",
+      "call": "Hold the axis through the turn."
+    },
+    "Perthro": {
+      "means": "The lot-cup, fate, chance and mystery.",
+      "light": "Trust in what unfolds, intuition.",
+      "shadow": "Gambling, superstition.",
+      "call": "Play the hand honestly."
+    },
+    "Algiz": {
+      "means": "The elk, protection, the sacred guard.",
+      "light": "Spiritual protection, instinct.",
+      "shadow": "Guardedness that shuts love out.",
+      "call": "Guard what is sacred, open the rest."
+    },
+    "Sowilo": {
+      "means": "The sun, victory, wholeness.",
+      "light": "Success, health, clear purpose.",
+      "shadow": "Glare, pride.",
+      "call": "Shine toward the goal."
+    },
+    "Tiwaz": {
+      "means": "The god of justice, the oath.",
+      "light": "Honour, fair fight, sacrifice for right.",
+      "shadow": "Rigid righteousness.",
+      "call": "Keep your word at cost."
+    },
+    "Berkano": {
+      "means": "The birch, birth, growth, care.",
+      "light": "Renewal, mothering, new beginnings.",
+      "shadow": "Smothering, stagnation.",
+      "call": "Tend what is growing."
+    },
+    "Ehwaz": {
+      "means": "The horse, partnership in motion.",
+      "light": "Trust, teamwork, progress.",
+      "shadow": "Mismatched partners pulling apart.",
+      "call": "Move with your ally."
+    },
+    "Mannaz": {
+      "means": "Humankind, the self among others.",
+      "light": "Self-knowledge, community, reason.",
+      "shadow": "Isolation or losing yourself in the crowd.",
+      "call": "Know yourself through others."
+    },
+    "Laguz": {
+      "means": "Water, flow, the unconscious.",
+      "light": "Intuition, emotional depth, adaptability.",
+      "shadow": "Drowning in feeling.",
+      "call": "Follow the current, steer it."
+    },
+    "Ingwaz": {
+      "means": "The seed, gestation, stored potential.",
+      "light": "Completion, fertility, rest before growth.",
+      "shadow": "Potential never planted.",
+      "call": "Finish, then rest."
+    },
+    "Dagaz": {
+      "means": "Daybreak, breakthrough, transformation.",
+      "light": "Awakening, the turn toward light.",
+      "shadow": "Waiting for a dawn you won't walk toward.",
+      "call": "Step through the threshold."
+    },
+    "Othala": {
+      "means": "Inheritance, ancestral home, legacy.",
+      "light": "Belonging, heritage, what lasts.",
+      "shadow": "Clinging to the old estate.",
+      "call": "Keep what serves, release the rest."
+    }
+  },
+  "CENTRES": {
+    "Head": {
+      "does": "Pressure to know, inspiration, the questions.",
+      "body": "Crown of the head; the pineal.",
+      "defined": "You carry steady mental pressure of your own. Ideas arrive on schedule; let them be yours to sort, not to act on at once.",
+      "open": "Other people's questions fill your head. You are wise about which questions matter when you stop trying to answer all of them."
+    },
+    "Ajna": {
+      "does": "Thinking, concepts, certainty.",
+      "body": "The brow, the eyes, the mind.",
+      "defined": "You think in a fixed, reliable way. Your opinions are consistent; let others have theirs.",
+      "open": "You can see many sides. Your strength is not having to be certain."
+    },
+    "Throat": {
+      "does": "Speech, action, manifestation.",
+      "body": "The throat and thyroid.",
+      "defined": "Your voice has a consistent way of coming out. Wait for the right moment and it lands.",
+      "open": "You speak in many voices. Wait to be invited and you are heard."
+    },
+    "G": {
+      "does": "Identity, love, direction.",
+      "body": "The heart region and liver; the magnetic centre of the chest.",
+      "defined": "You have a fixed sense of who you are and where you are going. Others orient around you.",
+      "open": "Your direction comes from your surroundings. The right place and the right people are your compass."
+    },
+    "Heart": {
+      "does": "Will, worth, promises, material world.",
+      "body": "The physical heart, stomach, gall bladder.",
+      "defined": "You have reliable willpower. Make promises sparingly and keep them, and rest after effort.",
+      "open": "You have nothing to prove. Don't make promises to feel worthy."
+    },
+    "Spleen": {
+      "does": "Instinct, health, survival, time.",
+      "body": "The spleen and lymph; the immune system.",
+      "defined": "Your instincts speak once, in the moment. Your body knows; trust it quickly.",
+      "open": "You sense other people's health and fear. Learn to let go of what is no longer good for you."
+    },
+    "Solar": {
+      "does": "Emotion, desire, sensitivity.",
+      "body": "Solar plexus; kidneys, pancreas, the nervous system.",
+      "defined": "You run on an emotional wave. Clarity comes over time; sleep on big decisions.",
+      "open": "You amplify other people's feelings. Not every emotion in you is yours."
+    },
+    "Sacral": {
+      "does": "Life force, work, sexuality, response.",
+      "body": "The sacrum, ovaries and testes; the gut's yes and no.",
+      "defined": "You have sustainable energy for what you love. Your gut answers before your mind does.",
+      "open": "You borrow energy from others. Know when enough is enough and stop before you're spent."
+    },
+    "Root": {
+      "does": "Pressure, adrenaline, drive to move.",
+      "body": "The adrenals and the base of the spine.",
+      "defined": "You handle pressure in a steady rhythm. Use it to start, not to rush.",
+      "open": "You feel other people's urgency. You don't have to be free of the pressure to act well."
+    }
+  },
+  "AIMS": [
+    {
+      "aim": "Dharma",
+      "says": "This pada works through purpose and right action. Energy here is fed by meaning: it flows when you are doing what is yours to do."
+    },
+    {
+      "aim": "Artha",
+      "says": "This pada works through resources and building. Energy here is fed by results: it flows when effort becomes something real you can hold."
+    },
+    {
+      "aim": "Kama",
+      "says": "This pada works through desire and relationship. Energy here is fed by connection and pleasure: it flows when you want what you are doing."
+    },
+    {
+      "aim": "Moksha",
+      "says": "This pada works through release. Energy here is fed by letting go: it flows when you stop holding on."
+    }
+  ],
+  "GANA": {
+    "Deva": "You do best in cultures that value kindness, ideals and refinement: places of learning, healing, art or devotion, with gentle manners and shared values.",
+    "Manushya": "You do best in human-scale, practical cultures: places of trade, family, community and getting things done, where people are judged by what they contribute.",
+    "Rakshasa": "You do best in intense, independent cultures: places with edge, risk or depth, where directness is respected and nobody needs you to be nice."
+  },
+  "ELEMENTS": {
+    "fire": "Places with light, movement and challenge: warm climates, open spaces, competitive or pioneering workplaces.",
+    "earth": "Places with structure and substance: land, gardens, workshops, established institutions, cities that build things.",
+    "air": "Places with exchange and ideas: cities, crossroads, media, networks, anywhere people meet and talk.",
+    "water": "Places near water or with emotional depth: coasts, sanctuaries, healing spaces, close-knit and private settings."
+  },
+  "SETTING": [
+    "Emergency rooms, start-ups, first responders, anywhere speed saves something.",
+    "Places of birth and death, transformation, creative studios with deadlines, work with high stakes.",
+    "Kitchens, forges, editing rooms, anywhere things are cut, refined and purified.",
+    "Gardens, farms, beauty, food and comfort businesses, settled communities with pleasure in them.",
+    "Research, travel, search and discovery, roles that let you keep looking.",
+    "Labs, crisis work, technology, storms of change, places that need someone who can bear the hard truth.",
+    "Homes, schools, renovation, second chances, anywhere things are restored and returned.",
+    "Teaching, caregiving, nourishing institutions, faith communities, the steady keepers.",
+    "Psychology, medicine, strategy, secrets, anywhere you have to read what lies under the surface.",
+    "Lineage, leadership, heritage institutions, ancestral work, places with ceremony and rank.",
+    "Hospitality, the arts, celebration, rest and pleasure trades.",
+    "Contracts, partnership, patronage, organisations that bind people in fair agreements.",
+    "Crafts, handwork, healing hands, comedy and skill trades.",
+    "Design, architecture, fashion, jewellery, anywhere beauty is built.",
+    "Independent trade, travel, wind-blown work, freelance, diplomacy.",
+    "Goal-driven organisations, campaigns, competition, anywhere a target must be reached.",
+    "Friendship networks, devotional groups, organisations that run on loyalty across distance.",
+    "Leadership in hard places, protection, senior roles that carry responsibility for others.",
+    "Root-level research, deconstruction, investigation, ecology, anywhere things are pulled up to see what is underneath.",
+    "Persuasion, purification, water and cleansing trades, advocacy.",
+    "Long projects, institutions, law, anywhere an undefeatable victory takes time.",
+    "Listening professions, teaching, media, learning and oral tradition.",
+    "Music, rhythm, wealth, collective celebration and performance.",
+    "Healing, research, secrecy, technology, hundred-cure work done alone.",
+    "Fierce causes, reform, ritual, intense transformation work.",
+    "Depths, counselling, long retreats, deep-water wisdom and patient institutions.",
+    "Travel, safe passage, care for animals, endings done kindly, completing work."
+  ],
+  "DIGNITY": {
+    "exalted": "It stands exalted here, at its strongest: what it gives comes easily and goes far. Your work is not to coast on it.",
+    "own": "It stands in its own sign, at home: it acts as itself, reliably. Lean on it.",
+    "debilitated": "It stands in its fall, at its weakest: what it governs comes slowly and costs effort. That effort, made honestly, becomes your mastery here."
+  },
+  "AGREE": {
+    "same": "Both zodiacs put it in {sign}. What happens and how it feels are the same thing: this planet is straightforward for you.",
+    "element": "The stars put it in {sid}, the seasons in {trop}. Both are {element}, so the life and the feeling pull the same way, in different keys.",
+    "differ": "The stars put it in {sid} ({e1}); the seasons put it in {trop} ({e2}). You live in {e1} circumstances with {e2} in your temperament. When it feels wrong, check which of the two you are listening to."
+  }
+}
