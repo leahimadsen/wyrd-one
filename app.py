@@ -492,6 +492,26 @@ def learn_nakshatra(s):
     if not p: abort(404)
     return page(*p)
 
+@app.get("/learn/runes")
+def learn_runes():
+    return page(*pages.runes_index(config.BASE_URL))
+
+@app.get("/learn/runes/<s>")
+def learn_rune(s):
+    p = pages.rune(config.BASE_URL, s)
+    if not p: abort(404)
+    return page(*p)
+
+@app.get("/learn/dharma")
+def learn_dharma():
+    return page(*pages.dharma_index(config.BASE_URL))
+
+@app.get("/learn/dharma/gates/<int:g>")
+def learn_dharma_gate(g):
+    p = pages.dharma_gate(config.BASE_URL, g)
+    if not p: abort(404)
+    return page(*p)
+
 @app.get("/learn/signs/<s>")
 def learn_sign(s):
     p = pages.sign(config.BASE_URL, s)
