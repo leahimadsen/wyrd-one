@@ -114,3 +114,9 @@ main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
   .blk h2 { font-size: 26px; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+#posTable td.des, .mini td.des { color: #8fcab5; }
+.mini { border-collapse: collapse; width: 100%; margin-top: 12px; font-size: 14.5px; }
+.mini th, .mini td { text-align: left; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--rule); font-weight: 400; }
+.mini tr:first-child th { color: var(--ivory-dim); font-size: 13px; }
+.fact-h2 { margin-top: 24px !important; }
+.asp li { gap: 10px; } .asp li span:first-child { color: var(--ivory); flex: 1; }

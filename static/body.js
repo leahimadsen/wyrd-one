@@ -571,5 +571,5 @@ document.addEventListener("keydown", e => {
   if (el){ e.preventDefault(); el.dispatchEvent(new MouseEvent("click", { bubbles: true })); }
 });
 
-window.WyrdBody = { mount };
+window.WyrdBody = { mount, centres: HB_CENTRES, channels: HB_CHANNELS };
 })();

@@ -193,7 +193,7 @@ def cast(eph, y, mo, d, h_ut, lat, lon_e, now_jd=None):
 
     nav = {b: varga(sid[b], 9) for b in RAVE}
     return {
-        "jd": jd, "jdDes": jd_des, "ay": ay,
+        "jd": jd, "jdDes": jd_des, "ay": ay, "tropDes": trop_des,
         "trop": trop, "sid": sid, "nav": nav, "navAsc": varga(ascS, 9),
         "ascT": ascT, "ascS": ascS, "mcT": mcT, "mcS": mcS,
         "natal": natal, "dharma": dharma,

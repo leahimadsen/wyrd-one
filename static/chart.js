@@ -26,30 +26,6 @@ const LANDS = [
   { id: "bench",     name: "The bench",             mark: "♪", teaser: "Hear two of your planets together" },
 ];
 
-/* ---------- the hub: a small wheel of the chart itself ---------- */
-function wheel(){
-  const SG = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"].map(g => g + "︎");
-  const pt = (lon, r) => { const t = Math.PI + (lon - C.ascS) * Math.PI / 180; return [r * Math.cos(t), -r * Math.sin(t)]; };
-  const f = n => n.toFixed(2);
-  let s = `<circle r="96" class="w-ring"/><circle r="74" class="w-ring"/><circle r="40" class="w-ring w-in"/>`;
-  for (let i = 0; i < 12; i++){
-    const [x1, y1] = pt(i * 30, 74), [x2, y2] = pt(i * 30, 96), [gx, gy] = pt(i * 30 + 15, 85);
-    s += `<line x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}" class="w-div"/><text x="${f(gx)}" y="${f(gy)}" class="w-sign">${SG[i]}</text>`;
-  }
-  const [ax, ay] = pt(C.ascS, 96), [dx, dy] = pt(C.ascS + 180, 96);
-  s += `<line x1="${f(ax)}" y1="${f(ay)}" x2="${f(dx)}" y2="${f(dy)}" class="w-hor"/>`;
-  /* spread the bodies so glyphs don't sit on each other */
-  const bodies = ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Rahu","Ketu"]
-    .map(b => ({ b, lon: norm(C.sid[b] - C.ascS) })).sort((a, b) => a.lon - b.lon);
-  bodies.forEach((p, i) => { p.at = p.lon; if (i && p.at - bodies[i - 1].at < 13) p.at = bodies[i - 1].at + 13; });
-  for (const p of bodies){
-    const [x, y] = pt(p.at + C.ascS, 59), [tx, ty] = pt(p.lon + C.ascS, 74);
-    s += `<circle cx="${f(tx)}" cy="${f(ty)}" r="1.6" class="w-tick"/><text x="${f(x)}" y="${f(y)}" class="w-body">${GLYPH[p.b]}</text>`;
-  }
-  s += `<text y="-13" class="w-core">☉ ${sid("Sun")}</text><text y="1" class="w-core">☽ ${sid("Moon")}</text><text y="15" class="w-core">↑ ${signOf(C.ascS)}</text>`;
-  return `<svg viewBox="-100 -100 200 200" role="img" aria-label="Your chart: Sun in ${sid("Sun")}, Moon in ${sid("Moon")}, ${signOf(C.ascS)} rising">${s}</svg>`;
-}
-
 function drawMap(){
   const pos = LANDS.map((l, i) => {
     const a = i * Math.PI / 4;
@@ -59,7 +35,7 @@ function drawMap(){
   $("map").innerHTML = `
     <svg class="map-paths" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
       <circle cx="50" cy="50" r="40" class="rail"/>${paths}</svg>
-    <a class="map-core" href="#chart" aria-label="Open your chart">${wheel()}</a>
+    <a class="map-core" href="#chart" aria-label="Open your chart">${WyrdWheel.svg(C, { compact: true })}</a>
     ${pos.map(p => `<a class="land${p.gold ? " gold" : ""}" href="#${p.id}" style="--x:${p.x.toFixed(2)}%;--y:${p.y.toFixed(2)}%">
       <span class="land-mark" aria-hidden="true">${p.mark}</span><b>${p.name}</b><small>${p.teaser}</small></a>`).join("")}`;
   $("tabsIn").innerHTML = `<a href="#map" class="tab tab-map">◎ Map</a>` +
@@ -73,27 +49,50 @@ function fmt(l){
 }
 function chartTable(){
   const pada = l => Math.floor((norm(l) % (360/27)) / (360/108)) + 1;
+  const NP = C.natal.personality, ND = C.natal.design, DP = C.dharma.personality, DD = C.dharma.design;
+  const gl = g => g ? `${g.gate}.${g.line}` : "—";
+  $("chartWheel").innerHTML = WyrdWheel.svg(C, { name: birth.name || "Your chart", place: J.place.label.split(",")[0],
+    when: `${birth.date} ${birth.time}` });
+
   const order = ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Rahu","Ketu","Uranus","Neptune","Pluto"];
   const rows = order.map(b => {
-    const g = C.natal.personality[b];
-    return `<tr><th scope="row">${GLYPH[b] || ""} ${b}</th><td>${fmt(C.sid[b])}</td><td>${fmt(C.trop[b])}</td>
-      <td>${NAKSHATRA[nakIndex(C.sid[b])][0]} ${pada(C.sid[b])}</td><td>${houseOf(C.sid[b], C.ascS)}</td>
-      <td>${g.gate}.${g.line}</td></tr>`;
+    const l = C.sid[b], ru = WyrdWheel.runeAt(C, l);
+    return `<tr><th scope="row">${GLYPH[b] || ""} ${b}</th><td>${fmt(l)}</td><td>${fmt(C.trop[b])}</td>
+      <td>${NAKSHATRA[nakIndex(l)][0]} ${pada(l)}</td><td>${houseOf(l, C.ascS)}</td><td>${ru.glyph} ${ru.name}</td>
+      <td>${C.nav && C.nav[b] != null ? signOf(C.nav[b]) : "—"}</td><td>${gl(NP[b])}</td><td class="des">${gl(ND[b])}</td></tr>`;
   }).join("");
-  $("posTable").innerHTML = `<caption>Sidereal is Lahiri; the gates run on the tropical wheel.</caption>
-    <tr><th scope="col">Body</th><th scope="col">Sidereal</th><th scope="col">Tropical</th><th scope="col">Mansion · pada</th><th scope="col">House</th><th scope="col">Gate</th></tr>
+  const angRow = (n, l, mansion) => { const ru = WyrdWheel.runeAt(C, l);
+    return `<tr class="ang"><th scope="row">${n}</th><td>${fmt(l)}</td><td>${fmt(n === "Ascendant" ? C.ascT : C.mcT)}</td><td>${mansion}</td>
+      <td>${houseOf(l, C.ascS)}</td><td>${ru.glyph} ${ru.name}</td><td>${n === "Ascendant" && C.navAsc != null ? signOf(C.navAsc) : "—"}</td><td>—</td><td>—</td></tr>`; };
+  $("posTable").innerHTML = `<caption>Sidereal is Lahiri; the gates run on the tropical wheel. Design is the moment the Sun stood 88° earlier.</caption>
+    <tr><th scope="col">Body</th><th scope="col">Sidereal</th><th scope="col">Tropical</th><th scope="col">Mansion · pada</th><th scope="col">House</th><th scope="col">Rune</th><th scope="col">Navamsa</th><th scope="col">Gate</th><th scope="col">Design gate</th></tr>
     ${rows}
-    <tr class="ang"><th scope="row">Ascendant</th><td>${fmt(C.ascS)}</td><td>${fmt(C.ascT)}</td><td>${NAKSHATRA[nakIndex(C.ascS)][0]} ${pada(C.ascS)}</td><td>1</td><td>—</td></tr>
-    <tr class="ang"><th scope="row">Midheaven</th><td>${fmt(C.mcS)}</td><td>${fmt(C.mcT)}</td><td>${NAKSHATRA[nakIndex(C.mcS)][0]}</td><td>${houseOf(C.mcS, C.ascS)}</td><td>—</td></tr>`;
-  const D = C.dharma;
+    <tr><th scope="row">⊕ Earth</th><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>${gl(NP.Earth)}</td><td class="des">${gl(ND.Earth)}</td></tr>
+    ${angRow("Ascendant", C.ascS, `${NAKSHATRA[nakIndex(C.ascS)][0]} ${pada(C.ascS)}`)}
+    ${angRow("Midheaven", C.mcS, NAKSHATRA[nakIndex(C.mcS)][0])}`;
+
+  const rv = WyrdWheel.rave(C), D = C.dharma;
   const kar = Object.entries(C.karaka).map(([k, b]) => `<li><span>${k.replace("karaka", "")}</span>${GLYPH[b]} ${b}</li>`).join("");
+  const weave = WyrdWheel.RAVE_BODIES.map(b => `<tr><th scope="row">${GLYPH[b] || "⊕"} ${b}</th><td>${gl(DP[b])}</td><td class="des">${gl(DD[b])}</td></tr>`).join("");
+  const bodies = ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Rahu","Ketu","Uranus","Neptune","Pluto"], asp = [];
+  for (let i = 0; i < bodies.length; i++) for (let k = i + 1; k < bodies.length; k++){
+    const [a, b] = [bodies[i], bodies[k]];
+    if ((a === "Rahu" && b === "Ketu")) continue;
+    const x = aspectBetween(C.sid[a], C.sid[b]);
+    if (x) asp.push(`<li><span>${GLYPH[a]} ${a} · ${GLYPH[b]} ${b}</span><span style="color:${x.col}">${x.name}</span><span>${x.orb.toFixed(1)}°</span></li>`);
+  }
   $("facts").innerHTML = `
+    <div class="fact"><h3>The rave</h3>
+      <dl><dt>Type</dt><dd>${rv.type}</dd><dt>Strategy</dt><dd>${rv.strategy}</dd><dt>Authority</dt><dd>${rv.authority}</dd>
+      <dt>Definition</dt><dd>${rv.definition}</dd><dt>Profile</dt><dd>${rv.profile}</dd><dt>Cross gates</dt><dd>${rv.cross}</dd>
+      <dt>Defined</dt><dd>${rv.centres.join(", ") || "—"}</dd><dt>Open</dt><dd>${rv.open.join(", ") || "—"}</dd>
+      <dt>Channels</dt><dd>${rv.channels.join(", ") || "—"}</dd></dl></div>
     <div class="fact"><h3>The Dharma Weave</h3>
       <dl><dt>Dharma profile</dt><dd>${D.profile} · ${D.band}${D.mauve ? " · the magenta point" : ""}</dd>
-      <dt>Birth profile</dt><dd>${C.natal.profile}</dd>
-      <dt>Pentagram Cross</dt><dd>${D.suns.gap.toFixed(4)}° ${D.suns.holds ? "✓ holds" : "✗"}</dd>
-      <dt>Dharma Sun</dt><dd>gate ${D.personality.Sun.gate}.${D.personality.Sun.line}</dd></dl></div>
-    <div class="fact"><h3>The seven karakas</h3><ul class="kar">${kar}</ul></div>`;
+      <dt>Pentagram Cross</dt><dd>${D.suns.gap.toFixed(4)}° ${D.suns.holds ? "✓ holds" : "✗"}</dd></dl>
+      <table class="mini"><tr><th scope="col">Body</th><th scope="col">Personality</th><th scope="col">Design</th></tr>${weave}</table></div>
+    <div class="fact"><h3>The seven karakas</h3><ul class="kar">${kar}</ul>
+      <h3 class="fact-h2">Aspects</h3><ul class="kar asp">${asp.join("") || "<li>None within orb</li>"}</ul></div>`;
 }
 const BUILD = {
   chart: chartTable,

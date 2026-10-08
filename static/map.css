@@ -22,7 +22,7 @@
 .map-paths line.gold { stroke: rgba(184,146,74,.6); }
 .map-paths .rail { fill: none; stroke: rgba(150,130,230,.18); stroke-width: 6; vector-effect: non-scaling-stroke; }
 
-.map-core { position: absolute; left: 50%; top: 50%; width: 42%; aspect-ratio: 1 / 1; transform: translate(-50%, -50%);
+.map-core { position: absolute; left: 50%; top: 50%; width: 47%; aspect-ratio: 1 / 1; transform: translate(-50%, -50%);
   border-radius: 50%; background: radial-gradient(circle, rgba(10,12,26,.95) 55%, rgba(10,12,26,.6) 72%, transparent 74%);
   box-shadow: 0 0 60px rgba(150,120,255,.18); transition: box-shadow 300ms var(--ease); }
 .map-core:hover, .map-core:focus-visible { box-shadow: 0 0 80px rgba(150,120,255,.38); outline: none; }
@@ -90,3 +90,52 @@
   .land-nav { justify-content: center; text-align: center; }
   .land-nav .to-map { order: -1; flex-basis: 100%; }
 }
+
+/* ---- the wheel ---- */
+.wwheel { width: 100%; height: auto; display: block; font-family: var(--serif); }
+.wwheel text { text-anchor: middle; dominant-baseline: central; }
+.wh-back { fill: #121417; }
+.wh-cell { stroke: rgba(217,212,196,.09); stroke-width: 1; }
+.wh-tro { fill: #2a221c; } .wh-tro.alt { fill: #2f2720; }
+.wh-sid { fill: #24231c; } .wh-sid.alt { fill: #29281f; }
+.wh-run { fill: #1d2024; } .wh-run.lit { fill: #3b3e43; stroke: rgba(217,212,196,.8); stroke-width: 2; }
+.wh-gate { fill: #1a1c1f; } .wh-gate.pers { fill: #3a3c40; } .wh-gate.des { fill: #1e3a39; }
+.wh-gate.both { fill: #3a3c40; stroke: var(--jade); stroke-width: 2; }
+.wh-nak { fill: #17191c; } .wh-nak.alt { fill: #1b1d21; } .wh-nak.moon { fill: #24302c; }
+.wh-house { opacity: .62; stroke: rgba(0,0,0,.35); stroke-width: 1; }
+.wh-badge { fill: #5b3d8a; stroke: rgba(200,170,255,.35); }
+.wh-badge-g { fill: #f1eaff; font-size: 17px; }
+.wwheel.compact .wh-badge-g { font-size: 26px; }
+.wh-abbr { fill: #c9a25b; font-family: var(--mono); font-size: 12px; letter-spacing: .12em; }
+.wh-tiny { fill: rgba(217,212,196,.42); font-family: var(--mono); font-size: 10px; letter-spacing: .06em; }
+.wh-rune { fill: rgba(217,212,196,.5); font-size: 19px; }
+.wh-rune.lit { fill: #f3efe4; }
+.wwheel.compact .wh-rune { font-size: 30px; }
+.wh-gn { fill: rgba(217,212,196,.32); font-family: var(--mono); font-size: 11.5px; }
+.wh-gn.pers, .wh-gn.both { fill: #f3efe4; font-weight: 600; } .wh-gn.des { fill: #a8d8c6; font-weight: 600; }
+.wh-nk { fill: rgba(217,212,196,.45); font-size: 10px; } .wh-nk.moon { fill: var(--celadon); }
+.wh-hn { fill: #fff; font-family: var(--mono); font-size: 15px; font-weight: 600; }
+.wwheel.compact .wh-hn { font-size: 22px; }
+.wh-ang { stroke: rgba(217,212,196,.45); stroke-width: 1.4; stroke-dasharray: 6 5; }
+.wh-ang.main { stroke: #eee8d8; stroke-dasharray: none; stroke-width: 2; }
+.wh-angn { fill: #eee8d8; font-family: var(--mono); font-size: 14px; }
+.wh-star { fill: rgba(95,156,134,.08); stroke: var(--jade); stroke-width: 1.6; }
+.wh-sun { fill: #e8e2d0; } .wh-sun.D { fill: var(--jade); }
+.wh-sunl { fill: var(--celadon); font-size: 11px; }
+.wh-tick { stroke: rgba(217,212,196,.8); stroke-width: 1.5; }
+.wh-lead { stroke: rgba(217,212,196,.22); stroke-width: 1; }
+.wh-glyph { fill: #f1ece0; font-size: 25px; }
+.wwheel.compact .wh-glyph { font-size: 38px; }
+.wh-glyph.des { fill: #6fb7a0; font-size: 21px; }
+.wh-deg { fill: rgba(217,212,196,.55); font-family: var(--mono); font-size: 10px; }
+.wh-core { fill: #15171b; stroke: rgba(217,212,196,.25); stroke-width: 1.2; }
+.wh-c0 { fill: rgba(217,212,196,.4); font-family: var(--mono); font-size: 12px; letter-spacing: .1em; }
+.wh-c1 { fill: #f1ece0; font-size: 26px; }
+.wh-c2 { fill: rgba(217,212,196,.62); font-family: var(--mono); font-size: 13px; }
+.wh-c3 { fill: var(--jade); font-size: 19px; }
+.wh-c4 { fill: var(--celadon); font-family: var(--mono); font-size: 13px; }
+.wh-cc { fill: var(--celadon); font-size: 34px; }
+.wh-pl { cursor: default; }
+.chart-wheel { max-width: 860px; margin: 0 auto 30px; }
+.wh-key { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 20px; font-size: 13.5px; color: var(--ivory-dim); margin: 0 0 30px; }
+.wh-key i { display: inline-block; width: .9em; height: .9em; vertical-align: -.1em; margin-right: .4em; border: 1px solid rgba(217,212,196,.4); }
