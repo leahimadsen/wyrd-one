@@ -317,3 +317,70 @@ def rising(C):
       <div class="dark"><h5>What the world hands you · sidereal {E.SIGNS[si]} rising</h5><p>{PL["SIGN_SID"][si]}</p></div></div>
       <div class="rd-repair"><h5>{"The shift · " + E.SIGNS[ti] + " into " + E.SIGNS[si] if si != ti else "One sign in both zodiacs"}</h5><p>{shift}</p></div>
       {woven(C, "Ascendant", s)}"""
+
+
+# ---------------- the Engine, fleshed out ----------------
+MX = json.load(open(os.path.join(HERE, "lib", "matrix.json"), encoding="utf-8"))
+ENG = C0["ENGINE"]
+
+
+def engine_more(C, dasha):
+    """More of the Moon's mansion: its full profile, the Moon's phase, what feeds it, the life's first period, the nine-star cycle."""
+    m = C["sid"]["Moon"]; mi = E.nak_index(m); D = DEEP[mi]; n = NAKS[mi]; aim = aim_of(m); h = E.house_of(m, C["ascS"])
+    phase = MX["PHASE"][int(E.norm(m - C["sid"]["Sun"]) // 45)]
+    first_p = dasha["maha"][0]
+    groups = {}
+    for k in range(27): groups.setdefault(((k - mi) % 27) % 9, []).append(NAKS[k][0])
+    taras = "".join(f'<tr{" class=hi" if i in (1, 3, 5, 7, 8) else ""}><td>{t["name"]} <small>({t["means"]})</small></td><td>{", ".join(groups[i])}</td><td>{t["says"]}</td></tr>'
+                    for i, t in enumerate(MX["TARA"]))
+    return f"""
+      <h3 class="rd-tier">The star in full</h3>
+      {pair("Stars", D[1])}{pair("Temperament", D[2])}{pair("Animal", D[3])}{pair("Qualities", D[4])}
+      {pair("Constitution", D[5])}{pair("Class", D[6])}{pair("Aim of the mansion", D[7])}{pair("Motion", D[8])}
+      {pair("Sounds", D[9])}{pair("The body", n[5])}
+      <h3 class="rd-tier">Where the engine runs</h3>
+      <p>Your Moon is in pada {pada_of(m)} of {n[0]}. {aim["says"]}</p>
+      <p>It works in your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}. {MX["MOON_HOUSE"][h - 1]}</p>
+      <div class="rd-body"><h5>The Moon you were born under · {phase["name"]}</h5><p>{phase["says"]}</p></div>
+      {woven(C, "Moon", m)}
+      <h3 class="rd-tier">The clock it starts</h3>
+      <p>Your Moon's mansion sets the order of your whole life's periods. You were born in the <b>{first_p["lord"]}</b> period,
+      with {dasha["balance"]:.1f} of its {first_p["years"]} years still to run, because the Moon had already crossed
+      {dasha["through"] * 100:.0f}% of {n[0]}. Every period after follows from that.</p>
+      <h3 class="rd-tier">The nine kinds of star</h3><p>{MX["TARA_INTRO"]}</p>
+      <div class="rd-tw"><table><tr><th>Kind</th><th>Mansions</th><th>For you</th></tr>{taras}</table></div>"""
+
+
+# ---------------- the Matrix: Saturn and the Moon ----------------
+def matrix(C, dasha):
+    asc = C["ascS"]; s = C["sid"]["Saturn"]; m = C["sid"]["Moon"]
+    si = sign_i(s); h = E.house_of(s, asc); ni = E.nak_index(s); n = NAKS[ni]; e = ENG[ni]
+    mh = E.house_of(m, asc); from_moon = (sign_i(s) - sign_i(m)) % 12
+    looks = [((h - 1 + k) % 12) + 1 for k in (2, 6, 9)]
+    born = C["jd"]
+    sat = [x for x in dasha["maha"] if x["lord"] == "Saturn"]
+    sat_rows = "".join(f'<li>Saturn period: {E_year(x["from"])}–{E_year(x["to"])}, age {max(0, int((x["from"] - born) / E.YEAR))} to {int((x["to"] - born) / E.YEAR)}'
+                       f'{" (running now)" if x["now"] else ""}</li>' for x in sat)
+    sat_sub = [a for a in dasha["antars"] if a["lord"] == "Saturn"]
+    by = E_year(born)
+    returns = ", ".join(f"{by + round(29.46 * k)} (age {round(29.46 * k)})" for k in (1, 2, 3))
+    return f"""
+      <p>{MX["INTRO"]}</p>
+      <h3 class="rd-tier">How your matrix is built · Saturn in {E.SIGNS[si]}, {ORD(h)} house</h3>
+      <p><b>{MX["SATURN_SIGN"][si]}</b></p>
+      <p>{MX["SATURN_HOUSE"][h - 1]}</p>
+      <div class="rd-body"><h5>Its star · {n[0]}, pada {pada_of(s)}</h5>
+        <p>{n[6]} The power of this star is {e[1]}, {e[2]}. {e[6]}</p><p>{aim_of(s)["says"]}</p></div>
+      {woven(C, "Saturn", s)}
+      <h3 class="rd-tier">Where it presses</h3>
+      <p>{MX["SATURN_LOOKS"]}</p>
+      <ul>{"".join(f"<li>Your {ORD(x)} house: {X['HOUSE_LIFE'][x - 1]}.</li>" for x in looks)}</ul>
+      <h3 class="rd-tier">The world from the Moon</h3><p>{MX["MOON_INTRO"]}</p>
+      <p>{MX["MOON_HOUSE"][mh - 1]}</p>
+      <p>Your Moon is in {NAKS[E.nak_index(m)][0]} in sidereal {E.SIGNS[sign_i(m)]}: {X["SIGNS"][sign_i(m)]["karma"]}; {X["SIGNS"][sign_i(m)]["felt"]}.</p>
+      <h3 class="rd-tier">Saturn and the Moon together</h3>
+      <p><b>{MX["SATURN_FROM_MOON"][from_moon]}</b></p>
+      <h3 class="rd-tier">When the matrix is rebuilt</h3>
+      <p>{MX["RETURNS"]} Your Saturn returns fall around {returns}.</p>
+      <ul>{sat_rows or "<li>No Saturn period falls in the 120-year cycle shown.</li>"}</ul>
+      {f'<p>Inside your current period, the Saturn sub-period runs {E_year(sat_sub[0]["from"])}–{E_year(sat_sub[0]["to"])}{" and is running now" if sat_sub[0]["now"] else ""}: the matrix is reviewed then.</p>' if sat_sub else ""}"""

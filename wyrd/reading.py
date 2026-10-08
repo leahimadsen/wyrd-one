@@ -5,16 +5,17 @@ which passages a chart calls for and lays them out.
 
   I    The Seat            rising sign and mansion: frame, bearing, features
   II   The Engine          the Moon's mansion, worked in full
-  III  The Planets         every planet: sidereal (karma, reality) and tropical (experience)
-  IV   The Soul-Planet     the Atmakaraka and its cabinet of seven
-  V    The Runes           the runes the chart lights, ranked, and the periods that wake them
-  VI   The Work            personality and design Suns and Earths, from the register
-  VII  The Body            centres, channels, and the mansions and padas that feed them
-  VIII Where You Thrive    culture, places and work
-  IX   The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
-  X    The Path of Dharma  Mission, Illuminations, the Diamond
-  XI   The Clock           the periods running now, and the whole life by period
-  XII  The Questions       every question the chart asked, gathered
+  III  The Matrix          Saturn as the builder of your reality, and the world seen from the Moon
+  IV   The Planets         every planet: sidereal (karma, reality) and tropical (experience)
+  V    The Soul-Planet     the Atmakaraka and its cabinet of seven
+  VI   The Runes           the runes the chart lights, ranked, and the periods that wake them
+  VII  The Work            personality and design Suns and Earths, from the register
+  VIII The Body            centres, channels, and the mansions and padas that feed them
+  IX   Where You Thrive    culture, places and work
+  X    The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
+  XI   The Path of Dharma  Mission, Illuminations, the Diamond
+  XII  The Clock           the periods running now, and the whole life by period
+  XIII The Questions       every question the chart asked, gathered
 
 The planets, runes, body and thriving sections draw on lib/register_ext.json too.
 """
@@ -32,7 +33,7 @@ GATE_NAME, KGLOSS, SEQ = CORPUS["GATE_NAME"], CORPUS["KARAKA_GLOSS"], CORPUS["SE
 
 GLYPH = {"Sun": "☉", "Moon": "☽", "Mercury": "☿", "Venus": "♀", "Mars": "♂", "Jupiter": "♃",
          "Saturn": "♄", "Uranus": "♅", "Neptune": "♆", "Pluto": "♇", "Rahu": "☊", "Ketu": "☋", "Earth": "⊕"}
-ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
+ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII"]
 
 esc = html.escape
 
@@ -173,7 +174,11 @@ def build(chart, dasha, who):
       <div class="rd-repair"><h5>Distortion</h5><p>{e[9]}</p></div>
       {pair("Lord · deity · symbol", f"{nkm[1]} · {nkm[2]} · {nkm[3]}")}
       {pair("Does well", Dm[12])}{pair("Goes wrong", Dm[13])}
+      {MORE.engine_more(C, dasha)}
       <div class="rd-ask">{e[10]}</div>"""))
+
+    # ---------- the Matrix ----------
+    out.append(section(0, "The Matrix", f"♄ Saturn in {E.SIGNS[math.floor(E.norm(C['sid']['Saturn']) / 30)]} · the world you live within", MORE.matrix(C, dasha)))
 
     # ---------- the planets, both zodiacs ----------
     out.append(section(0, "The Planets", "every planet, among the stars and in the seasons", MORE.planets(C)))
@@ -231,7 +236,7 @@ def build(chart, dasha, who):
       {f'<p class="rd-kenning">The dharma repeats {" and ".join(repeats)} of the birth chart. The repetition is load-bearing — that is a thing the life does not get to outgrow.</p>' if repeats else ''}
       <h3 class="rd-tier">The dharma cross</h3>
       <p>The four positions that carry the dharma rave, as the four Suns and Earths carry the birth one: the dharma Sun and its Earth,
-      and the dharma design Sun and its Earth. Read them as you read section VI, conscious side first.</p>
+      and the dharma design Sun and its Earth. Read them as you read section VII, conscious side first.</p>
       {register_entry(dps['gate'], dps['line'], 'personality', 'Dharma Sun', asks)}
       {register_entry(Dh['personality']['Earth']['gate'], Dh['personality']['Earth']['line'], 'personality', 'Dharma Earth', asks)}
       {register_entry(dds['gate'], dds['line'], 'design', 'Dharma design Sun', asks)}
@@ -254,7 +259,7 @@ def build(chart, dasha, who):
                 t = R.get("t", GATE_NAME.get(str(g["gate"]), ""))
                 act = activation(g["gate"], g["line"], C, dasha, n)
                 if col == "design":
-                    q = '<p class="rd-step-q held">This is design-side. Read the gate\'s engine in section VI or IX first; its question waits in section XII.</p>'
+                    q = '<p class="rd-step-q held">This is design-side. Read the gate\'s engine in section VII or X first; its question waits in section XIII.</p>'
                 else:
                     q = f'<p class="rd-step-q">The question to carry: <em>{R.get("a", "")}</em></p>' if R.get("a") else ""
                 out.append(f"""<div class="rd-step"><div class="rd-sn">Step {k}</div>
