@@ -1,0 +1,93 @@
+{
+  "_note": "DRAFT for Saga Devi to edit. The Matrix section (Saturn as the builder of a person's reality, and the world seen from the Moon) and the extra Engine material (the Moon's phase and the nine-star cycle).",
+
+  "INTRO": "Saturn is the slowest of the visible planets and the keeper of time, limits and consequence. It builds the matrix you live inside: the rules your world runs on, what takes effort, what is delayed, what lasts. You don't choose the matrix, but you can learn its rules, and once you do, Saturn stops being a wall and becomes the structure that holds your life up.",
+  "MOON_INTRO": "The Moon is the other half of the picture. Saturn builds the world; the Moon is how that world feels to live in. Read together, they show the room you were born into and the mood you carry through it.",
+
+  "SATURN_SIGN": [
+    "In Aries the matrix runs on conflict and beginnings: nothing starts easily, and you learn to act without waiting for permission.",
+    "In Taurus the matrix runs on resources: money, land and the body are slow to build and must be kept with care.",
+    "In Gemini the matrix runs on information: words, contracts and learning carry weight, and careless speech has consequences.",
+    "In Cancer the matrix runs on family: home and the past set the rules, and emotional security has to be built by hand.",
+    "In Leo the matrix runs on authority: recognition comes late, and you must earn the right to lead.",
+    "In Virgo the matrix runs on work: daily effort, health and precision are the price of everything.",
+    "In Libra Saturn is exalted and the matrix runs on fairness: agreements are binding, and justice is the law of your world.",
+    "In Scorpio the matrix runs on crisis: what is hidden surfaces, and power is gained by going through, never around.",
+    "In Sagittarius the matrix runs on belief: teachers, law and faith are tested, and conviction must be earned.",
+    "In Capricorn Saturn is at home and the matrix runs on rank: structure is natural to you, and patience is rewarded.",
+    "In Aquarius Saturn is at home and the matrix runs on the collective: duty to the group and the long view shape your world.",
+    "In Pisces the matrix runs on surrender: solitude, loss and service teach you where your boundaries truly are."
+  ],
+
+  "SATURN_HOUSE": [
+    "Saturn in the 1st house builds the matrix around your body and self: you carry weight from early on, mature young, and become more yourself with age.",
+    "Saturn in the 2nd house builds it around money, food and speech: wealth comes slowly, words are measured, and family duty is real.",
+    "Saturn in the 3rd house builds it around effort and courage: persistence is your gift, and what you build with your hands lasts.",
+    "Saturn in the 4th house builds it around home and mother: inner peace has to be built, and property and roots come late but stay.",
+    "Saturn in the 5th house builds it around creativity, children and romance: joy is earned, and what you create matures slowly.",
+    "Saturn in the 6th house builds it around work and opponents: you outlast every rival, and service is how you rise.",
+    "Saturn in the 7th house builds it around partnership: commitment is serious, partners may be older or bring duty, and marriage strengthens with time.",
+    "Saturn in the 8th house builds it around crisis and endurance: long life, deep research, and transformation that comes slowly and completely.",
+    "Saturn in the 9th house builds it around faith and teachers: belief must be tested, and you become the teacher you looked for.",
+    "Saturn in the 10th house builds it around career and reputation: you rise through steady work, and authority arrives late and lasts.",
+    "Saturn in the 11th house builds it around networks and gains: income grows steadily, friendships are few and long, and wishes come true late.",
+    "Saturn in the 12th house builds it around solitude and release: retreat, foreign lands and spiritual discipline shape your world."
+  ],
+
+  "MOON_HOUSE": [
+    "From the Moon in your 1st house, the world feels personal: you live in your own moods, and people read your feelings on your face.",
+    "From the Moon in your 2nd house, the world feels like family and nourishment: security comes from food, money and the people at your table.",
+    "From the Moon in your 3rd house, the world feels busy and near: siblings, neighbours, messages and short journeys fill your days.",
+    "From the Moon in your 4th house, the world feels like home: you need a refuge, and your peace depends on the house you keep.",
+    "From the Moon in your 5th house, the world feels creative and playful: romance, children and self-expression keep you alive.",
+    "From the Moon in your 6th house, the world feels like work to be done: routines, health and helping others steady you.",
+    "From the Moon in your 7th house, the world feels like other people: you know yourself through partners and the public.",
+    "From the Moon in your 8th house, the world feels intense and hidden: you sense undercurrents, secrets and changes before they happen.",
+    "From the Moon in your 9th house, the world feels like a search: travel, teachers and belief give your life its meaning.",
+    "From the Moon in your 10th house, the world feels like a stage: your feelings show in your work, and the public responds to your moods.",
+    "From the Moon in your 11th house, the world feels like a network: friends, groups and hopes carry you.",
+    "From the Moon in your 12th house, the world feels like a dream: you need solitude, sleep and inner life to stay whole."
+  ],
+
+  "SATURN_FROM_MOON": [
+    "Saturn sits with your Moon. The matrix and your mood are fused: you feel the weight of the world personally, carry responsibility early, and build an unusually steady heart over time.",
+    "Saturn sits in the 2nd from your Moon. The world's demands land on family, money and speech: you learn to provide and to measure your words.",
+    "Saturn sits in the 3rd from your Moon. The world rewards effort: you feel strongest when you are working hard at something you chose.",
+    "Saturn sits in the 4th from your Moon. The world presses on your inner peace and home: you have to build the refuge yourself.",
+    "Saturn sits in the 5th from your Moon. The world slows your joy and creativity: what you love matures late and lasts.",
+    "Saturn sits in the 6th from your Moon. The world hands you obstacles you can beat: you feel capable against difficulty.",
+    "Saturn sits opposite your Moon. The world reaches you through others: partners and the public bring both duty and steadiness.",
+    "Saturn sits in the 8th from your Moon. The world tests you through crisis and change: endurance is the gift, fear the cost.",
+    "Saturn sits in the 9th from your Moon. The world tests your faith: you trust what you have proven, not what you are told.",
+    "Saturn sits in the 10th from your Moon. The world demands achievement: you feel your worth through work and reputation.",
+    "Saturn sits in the 11th from your Moon. The world rewards patience: gains and good friends come slowly and stay.",
+    "Saturn sits in the 12th from your Moon. The world asks for solitude and release: your feelings need private space and quiet."
+  ],
+
+  "SATURN_LOOKS": "Saturn also looks at three houses: the 3rd, 7th and 10th counted from where it stands. Those parts of your life feel its weight: they are slower, more serious, and built to last.",
+  "RETURNS": "Saturn takes about twenty-nine and a half years to come back to where it was when you were born. Each return rebuilds the matrix: what was built on sand falls, what was built honestly is confirmed.",
+
+  "PHASE": [
+    {"name": "New Moon", "says": "You were born in the dark of the Moon: an inward, seed-like temperament. You start things quietly and grow them out of sight."},
+    {"name": "Waxing crescent", "says": "You were born as the Moon began to grow: a temperament of effort and hope, pushing something new into the light."},
+    {"name": "First quarter", "says": "You were born at the waxing half Moon: a temperament of crisis and action, at your best making decisions under pressure."},
+    {"name": "Waxing gibbous", "says": "You were born as the Moon swelled toward full: a temperament of refinement, always improving what is almost ready."},
+    {"name": "Full Moon", "says": "You were born under the full Moon: a temperament of illumination and relationship, seeing yourself most clearly in others."},
+    {"name": "Waning gibbous", "says": "You were born as the full Moon began to wane: a temperament of sharing, passing on what you have learned."},
+    {"name": "Last quarter", "says": "You were born at the waning half Moon: a temperament of reorientation, letting go of what no longer fits."},
+    {"name": "Waning crescent", "says": "You were born as the Moon thinned toward dark: a temperament of release and vision, closing one cycle and dreaming the next."}
+  ],
+
+  "TARA": [
+    {"name": "Janma", "means": "birth", "says": "Your own star family: familiar, but it can bring strain on the body. Rest more on these days."},
+    {"name": "Sampat", "means": "wealth", "says": "Stars of gain. Good for money, starting work, asking for what you need."},
+    {"name": "Vipat", "means": "danger", "says": "Stars of obstacles. Avoid big starts; expect friction."},
+    {"name": "Kshema", "means": "wellbeing", "says": "Stars of safety and comfort. Good for health, home and repair."},
+    {"name": "Pratyak", "means": "obstruction", "says": "Stars that push back. Expect resistance; don't force."},
+    {"name": "Sadhana", "means": "achievement", "says": "Stars of accomplishment. Good for effort, practice and finishing."},
+    {"name": "Naidhana", "means": "ending", "says": "The hardest stars for you. Keep things simple; let endings be endings."},
+    {"name": "Mitra", "means": "friend", "says": "Friendly stars. Good for people, partnership and help."},
+    {"name": "Parama Mitra", "means": "great friend", "says": "Your most supportive stars. Good for anything that matters."}
+  ],
+  "TARA_INTRO": "Counting from your birth star, the twenty-seven mansions fall into nine kinds, three stars each. People born in those stars, and days when the Moon passes through them, meet you in that way. Use it to choose your days and to understand who feels easy and who feels hard."
+}
