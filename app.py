@@ -127,7 +127,7 @@ def consult_offer(slug):
     link = html.escape(config.CONSULTATION_PAYMENT_LINK_URL or "")
     return Response(page.replace("{{PAY_LINK}}", link).replace("{{AUTHOR}}", config.AUTHOR), mimetype="text/html")
 
-PRIVATE_PATHS = ("/c/", "/admin", "/gift/", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/")
+PRIVATE_PATHS = ("/c/", "/admin", "/gift/", "/welcome", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/")
 
 @app.after_request
 def private_reading_headers(response):
@@ -637,9 +637,17 @@ def subscribe():
     if not plan or not same_origin(): abort(400)
     if not selling(): return redirect("/membership")
     email = signed_in()
-    if not email: return redirect("/signin?" + urlencode({"next": "/membership"}))
     if limited(10): return private("Wait a minute", "<h1>Wait a minute</h1><p>Too many tries. Try again shortly.</p>", status=429)
     tier, name, cents, interval, price_id = plan
+    if not email:                                   # not signed in: straight to Stripe, which asks for the email
+        try:
+            s = stripe_api.subscription_checkout(config.STRIPE_SECRET, base_url=config.BASE_URL, customer=None, tier=tier, name=name,
+                                                 cents=cents(), interval=interval, success="/welcome?session_id={CHECKOUT_SESSION_ID}",
+                                                 cancel="/membership", price_id=price_id or None)
+        except stripe_api.StripeError as e:
+            app.logger.error("stripe: %s", e)
+            return private("Try again", '<h1>Payment couldn\'t start</h1><p>Please <a href="/membership">try again</a>.</p>', status=502)
+        return redirect(s["url"], code=303)
     try:
         st = billing.status(config.STRIPE_SECRET, email, fresh=True)
         if st[tier]: return redirect("/account")                       # already has it
@@ -657,6 +665,39 @@ def subscribe():
         return private("Try again", '<h1>Payment couldn\'t start</h1><p>Please <a href="/membership">try again</a>.</p>', status=502)
     billing.forget(email)
     return redirect(s["url"], code=303)
+
+@app.get("/welcome")
+def welcome():
+    """Back from Stripe after joining. Stripe has checked the email by taking the payment; if this checkout
+    made a brand-new customer, sign them straight in. If the email already belonged to someone, send a
+    sign-in link instead, so typing another person's email at checkout opens nothing of theirs."""
+    try:
+        cs = stripe_api.checkout_session(config.STRIPE_SECRET, request.args.get("session_id", "")) if config.STRIPE_SECRET else None
+    except stripe_api.StripeError:
+        cs = None
+    if not cs or cs.get("mode") != "subscription" or cs.get("status") != "complete": return redirect("/membership")
+    cust = cs.get("customer") if isinstance(cs.get("customer"), dict) else {}
+    email = accounts.clean_email((cs.get("customer_details") or {}).get("email") or cust.get("email"))
+    if not email: return redirect("/signin")
+    billing.forget(email)
+    fresh = time.time() - (cs.get("created") or 0) < 3600
+    others = [c for c in stripe_api.find_customers(config.STRIPE_SECRET, email) if c.get("id") != cust.get("id")]
+    if fresh and (not others or signed_in() == email):
+        admin = {k: session[k] for k in ("admin", "admin_at") if k in session}
+        session.clear(); session.update(admin); session["email"] = email; session.permanent = True
+        try: stripe_api.update_customer_metadata(config.STRIPE_SECRET, cust["id"], {"wyrd": "1"})
+        except (stripe_api.StripeError, KeyError): pass
+        # a page, not a redirect: the sign-in cookie is only sent on a navigation that starts on this site
+        return private("Welcome", f"""<meta http-equiv="refresh" content="1;url=/account?joined=1">
+<h1>Welcome</h1><p class="lede">Your payment went through and you're signed in as {esc(email)}.</p>
+<p><a class="btn-cast" href="/account?joined=1">Go to your account</a></p>""")
+    token = accounts.make_token(config.SECRET_KEY, email, "/account?joined=1")
+    link = f"{config.BASE_URL}/auth/{token}"
+    mailer.send(email, "Your Wyrd Membership: sign in",
+        f'<p>Your membership is active. <a href="{esc(link)}">Sign in to your account</a> (this link works for {accounts.LINK_MINUTES} minutes).</p>',
+        f"Your membership is active. Sign in: {link}")
+    return private("Welcome", f"""<h1>Welcome</h1><p class="lede">Your payment went through.</p>
+<p>We've sent a sign-in link to {esc(email)}. Open it to reach your account.</p>""")
 
 @app.post("/billing/portal")
 def billing_portal():
