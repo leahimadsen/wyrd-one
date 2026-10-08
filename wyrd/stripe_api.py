@@ -99,3 +99,13 @@ def subscription_checkout(secret, *, base_url, customer, tier, name, cents, inte
 
 def portal(secret, customer, return_url):
     return _call(secret, "POST", "/billing_portal/sessions", {"customer": customer, "return_url": return_url})
+
+def search_customers(secret, query):
+    out, page = [], None
+    while True:
+        q = {"query": query, "limit": 100}
+        if page: q["page"] = page
+        r = _call(secret, "GET", "/customers/search?" + urllib.parse.urlencode(q))
+        out += r.get("data") or []
+        if not r.get("has_more") or not r.get("next_page"): return out
+        page = r["next_page"]

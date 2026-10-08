@@ -24,10 +24,11 @@
       <ul id="placeList" class="adm-list" role="listbox" hidden></ul></label>
     <input type="hidden" name="place_id"><input type="hidden" name="lat"><input type="hidden" name="lon"><input type="hidden" name="tz"><input type="hidden" name="place_label">
     <button type="submit" class="btn-cast">Generate the reading</button>
+    <button type="submit" class="btn-cast" formaction="/admin/gift/reading">Make a gift link</button>
     <p class="err" id="admErr" role="alert"></p>
   </form>
   <section class="saved" id="recentBox" hidden aria-labelledby="recentH"><h2 id="recentH">Recent, in this browser</h2><ul id="recentList"></ul></section>
-  <p class="seat-links"><a href="/admin/insights">Insights: what visitors use →</a></p>
+  <p class="seat-links"><a href="/admin/gifts">Gifts: give a membership or a reading →</a> <a href="/admin/insights">Insights: what visitors use →</a></p>
   <form method="post" action="/admin/logout" class="adm-out"><button type="submit" class="link-btn">Sign out</button></form>
 </div></header>
 <script src="/static/common.js"></script>

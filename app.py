@@ -127,7 +127,7 @@ def consult_offer(slug):
     link = html.escape(config.CONSULTATION_PAYMENT_LINK_URL or "")
     return Response(page.replace("{{PAY_LINK}}", link).replace("{{AUTHOR}}", config.AUTHOR), mimetype="text/html")
 
-PRIVATE_PATHS = ("/c/", "/admin", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/")
+PRIVATE_PATHS = ("/c/", "/admin", "/gift/", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/")
 
 @app.after_request
 def private_reading_headers(response):
@@ -653,7 +653,11 @@ def account_page():
         rows.append(f'<li>{"Professional" if p["tier"] == "pro" else "Membership"} ({p.get("interval") or "month"}ly) '
                     f'<span class="status {"on" if live else "off"}">{esc(p["status"].replace("_", " "))}</span>{when}</li>')
     joined = '<p class="note-box">Welcome. Your payment went through.</p>' if request.args.get("joined") else ""
-    plans = f'<ul>{"".join(rows)}</ul><form method="post" action="/billing/portal"><button class="alt" type="submit">Manage or cancel, change card, see receipts</button></form>' if rows else \
+    g = st.get("gift")
+    if g and g["live"]:
+        rows.insert(0, f'<li>{"Professional" if g["tier"] == "pro" else "Membership"}, a gift from {esc(config.AUTHOR)}, {nice_until(g["until"])} <span class="status on">active</span></li>')
+    portal_btn = '<form method="post" action="/billing/portal"><button class="alt" type="submit">Manage or cancel, change card, see receipts</button></form>' if st["plans"] else ""
+    plans = f'<ul>{"".join(rows)}</ul>{portal_btn}' if rows else \
             '<p>You have no membership yet. <a href="/membership">See the membership</a>.</p>'
     member = st["member"] or st["pro"]
     chart = ""
@@ -749,6 +753,116 @@ def pro_reading():
         return private("Practice desk", f'<h1>Check the details</h1><p>{esc(str(e) or BAD_BIRTH)} <a href="/pro">Back</a></p>', status=400)
     except stripe_api.StripeError:
         return private("Practice desk", '<h1>Try again</h1><p>We couldn\'t reach the payment system. <a href="/pro">Back</a></p>', status=502)
+
+# ---------------- gifts, from the admin only ----------------
+from itsdangerous import URLSafeTimedSerializer, BadSignature as _BadSig
+GIFT_READING_DAYS = 730
+GIFT_LENGTHS = {"1": 1, "3": 3, "6": 6, "12": 12, "forever": None}
+
+def gift_signer():
+    return URLSafeTimedSerializer(config.SECRET_KEY, salt="wyrd-gift-reading")
+
+def admin_only():
+    if not is_admin(): abort(404)
+    if request.method == "POST" and not same_origin(): abort(403)
+
+def gift_until(choice):
+    months = GIFT_LENGTHS.get(choice, 12)
+    if months is None: return "forever"
+    d = datetime.now(timezone.utc).date()
+    y, m = divmod(d.month - 1 + months, 12)
+    import calendar as _cal
+    return f"{d.year + y:04d}-{m + 1:02d}-{min(d.day, _cal.monthrange(d.year + y, m + 1)[1]):02d}"
+
+def nice_until(u):
+    return "for good" if u == "forever" else "until " + datetime.strptime(u, "%Y-%m-%d").strftime("%-d %B %Y")
+
+@app.get("/admin/gifts")
+def admin_gifts():
+    admin_only()
+    msg = esc(request.args.get("done", ""))
+    rows, problem = [], ""
+    if config.STRIPE_SECRET:
+        try:
+            for c in billing.gifted(config.STRIPE_SECRET):
+                g = billing.gift_of(c.get("metadata") or {})
+                rows.append(f'<li>{esc(c.get("email"))} · {"Professional" if g["tier"] == "pro" else "Membership"} {nice_until(g["until"])} '
+                            f'<span class="status {"on" if g["live"] else "off"}">{"active" if g["live"] else "ended"}</span> '
+                            f'<form method="post" action="/admin/gift/end" style="display:inline"><input type="hidden" name="email" value="{esc(c.get("email"))}">'
+                            f'<button class="alt" type="submit">End</button></form></li>')
+        except stripe_api.StripeError as e:
+            problem = f'<p class="err">Couldn\'t load the list from Stripe: {esc(e)}</p>'
+    else:
+        problem = '<p class="muted">Gifted memberships work once your Stripe key is set.</p>'
+    lengths = "".join(f'<option value="{k}"{" selected" if k == "12" else ""}>{"For good" if v is None else f"{v} month" + ("s" if v > 1 else "")}</option>' for k, v in GIFT_LENGTHS.items())
+    return private("Gifts", f"""<p class="crumbs"><a href="/admin">Admin</a></p><h1>Gifts</h1>
+{f'<p class="note-box">{msg}</p>' if msg else ""}
+<h2>Give a membership</h2>
+<p class="muted">Nothing is charged. They get an email inviting them to sign in, and everything the plan includes works straight away.</p>
+<form class="pg-form" method="post" action="/admin/gift/membership">
+<label>Their email <input name="email" type="email" required maxlength="254"></label>
+<label>Plan <select name="tier"><option value="member">Membership</option><option value="pro">Professional</option></select></label>
+<label>For <select name="length">{lengths}</select></label>
+<label>A note from you (optional) <input name="note" maxlength="300"></label>
+<button class="btn-cast" type="submit">Give it</button></form>
+<h2>Given so far</h2>{problem}<ul>{"".join(rows) or ("<li class='muted'>None yet.</li>" if not problem else "")}</ul>
+<h2>Give a reading</h2><p>Use <a href="/admin">Generate a reading</a> and press <b>Make a gift link</b>. You get a private link to their full reading to send however you like.</p>""")
+
+@app.post("/admin/gift/membership")
+def admin_gift_membership():
+    admin_only()
+    email = accounts.clean_email(request.form.get("email"))
+    tier = request.form.get("tier") if request.form.get("tier") in ("member", "pro") else "member"
+    if not email: return redirect("/admin/gifts?" + urlencode({"done": "That email address doesn't look right."}))
+    until = gift_until(request.form.get("length", "12"))
+    try:
+        billing.give(config.STRIPE_SECRET, email, tier, until)
+    except stripe_api.StripeError as e:
+        return redirect("/admin/gifts?" + urlencode({"done": f"Stripe said: {e}"}))
+    plan = "Wyrd Console Professional" if tier == "pro" else "a Wyrd Membership"
+    note = request.form.get("note", "").strip()[:300]
+    link = f"{config.BASE_URL}/auth/{accounts.make_token(config.SECRET_KEY, email, '/account')}"
+    sent = mailer.send(email, f"A gift from {config.AUTHOR}: {plan}",
+        f"<p>{esc(config.AUTHOR)} has given you {plan}, {nice_until(until)}.</p>" + (f"<p><i>{esc(note)}</i></p>" if note else "") +
+        f'<p><a href="{esc(link)}">Sign in to start</a> (this link works for {accounts.LINK_MINUTES} minutes; after that, sign in at {esc(config.BASE_URL)}/signin with this email).</p>',
+        f"{config.AUTHOR} has given you {plan}, {nice_until(until)}.\n\n{note}\n\nSign in: {config.BASE_URL}/signin with this email address.")
+    return redirect("/admin/gifts?" + urlencode({"done": f"Given to {email}, {nice_until(until)}." + ("" if sent else " Email isn't set up, so tell them to sign in with this address.")}))
+
+@app.post("/admin/gift/end")
+def admin_gift_end():
+    admin_only()
+    email = accounts.clean_email(request.form.get("email"))
+    if email:
+        try: billing.end_gift(config.STRIPE_SECRET, email)
+        except stripe_api.StripeError as e: return redirect("/admin/gifts?" + urlencode({"done": f"Stripe said: {e}"}))
+    return redirect("/admin/gifts?" + urlencode({"done": f"Ended the gift for {email}."}))
+
+@app.post("/admin/gift/reading")
+def admin_gift_reading():
+    admin_only()
+    meta = {k: request.form.get(k, "") for k in BIRTH_KEYS}
+    if not meta["lat"]: meta.pop("lat"); meta.pop("lon"); meta.pop("tz")
+    try: birth_from(meta)
+    except (BadInput, ValueError) as e:
+        return private("Gift link", f'<h1>Check the details</h1><p>{esc(str(e) or BAD_BIRTH)} <a href="/admin">Back</a></p>', status=400)
+    link = f"{config.BASE_URL}/gift/{gift_signer().dumps(meta)}"
+    who = esc(meta.get("name") or "them")
+    return private("Gift link", f"""<p class="crumbs"><a href="/admin">Admin</a></p><h1>A reading for {who}</h1>
+<p>Send them this link. It opens their full reading, free, for the next two years.</p>
+<p class="note-box" style="word-break:break-all"><a href="{esc(link)}">{esc(link)}</a></p>
+<p><button class="btn-cast" type="button" id="copy">Copy the link</button></p>""",
+        script=f"""<script>document.getElementById("copy").onclick = e => navigator.clipboard.writeText({json.dumps(link)}).then(() => e.target.textContent = "Copied", () => {{}});</script>""")
+
+@app.get("/gift/<token>")
+def gift_reading(token):
+    if not config.SECRET_KEY or len(token) > 1500: abort(404)
+    try: meta = gift_signer().loads(token, max_age=GIFT_READING_DAYS * 86400)
+    except _BadSig: abort(404)
+    if not isinstance(meta, dict): abort(404)
+    try:
+        return render_reading({k: str(v) for k, v in meta.items() if k in BIRTH_KEYS}, f"A gift from {config.AUTHOR}.")
+    except (BadInput, ValueError):
+        abort(404)
 
 # ---------------- the weekly job: Body Weather to every member ----------------
 @app.post("/jobs/weekly")

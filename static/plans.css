@@ -29,9 +29,9 @@ body.pg { background: var(--void); color: var(--ivory); font-family: var(--serif
 .alt { font: inherit; font-size: 14.5px; background: none; border: 0; padding: 4px 0; color: var(--celadon); text-decoration: underline; cursor: pointer; }
 .pg-form { display: grid; gap: 12px; max-width: 420px; margin: 18px 0; }
 .pg-form label { display: grid; gap: 6px; font-size: 14px; color: var(--celadon); }
-.pg-form input { font: inherit; font-size: 16px; color: var(--ivory); background: rgba(2,2,10,.7); border: 1px solid rgba(156,180,166,.25);
+.pg-form input, .pg-form select { font: inherit; font-size: 16px; color: var(--ivory); background: rgba(2,2,10,.7); border: 1px solid rgba(156,180,166,.25);
   border-radius: 2px; padding: 11px 12px; width: 100%; color-scheme: dark; }
-.pg-form input:focus { outline: 1px solid var(--jade); border-color: var(--jade); }
+.pg-form input:focus, .pg-form select:focus { outline: 1px solid var(--jade); border-color: var(--jade); }
 .note-box { border: 1px solid var(--jade-dim); border-radius: 3px; padding: 16px 18px; background: var(--void-lift); margin: 18px 0; }
 .status { display: inline-block; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; border: 1px solid currentColor; border-radius: 99px; padding: 1px 9px; }
 .status.on { color: var(--jade); } .status.off { color: var(--ivory-dim); }

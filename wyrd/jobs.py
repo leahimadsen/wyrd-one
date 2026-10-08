@@ -31,8 +31,12 @@ def weekly(eph, cast_for, birth_from, config):
     sent = skipped = failed = 0
     seen = set()
     subs = _live_subscriptions(secret)
-    for s in subs:
-        c = s.get("customer") or {}
+    from .billing import gifted, gift_of
+    try:
+        gifts = [c for c in gifted(secret) if gift_of(c.get("metadata") or {})["live"]]
+    except stripe_api.StripeError as e:
+        log.error("gift search: %s", e); gifts = []
+    for c in [s.get("customer") or {} for s in subs] + gifts:
         if not isinstance(c, dict) or c.get("id") in seen: continue
         seen.add(c["id"])
         meta = c.get("metadata") or {}
@@ -54,7 +58,7 @@ def weekly(eph, cast_for, birth_from, config):
         tiers = {}
         for s in subs: tiers[s["metadata"]["tier"]] = tiers.get(s["metadata"]["tier"], 0) + 1
         rows = "".join(f"<tr><td>{html.escape(k)}</td><td>{html.escape(str(v))}</td></tr>" for k, v in
-                       [("Members", tiers.get("member", 0)), ("Professionals", tiers.get("pro", 0)),
+                       [("Members", tiers.get("member", 0)), ("Professionals", tiers.get("pro", 0)), ("Gifted", len(gifts)),
                         ("Readings sold, last 7 days", summary["readings"]), ("Sales, last 7 days", f'${summary["revenue"] / 100:.2f}'),
                         ("Body Weather sent", sent), ("Body Weather failed", failed)])
         mailer.send(config.OWNER_EMAIL, f"Wyrd Console: your week ({week})",

@@ -42,6 +42,13 @@ check("stranger has nothing", not billing.status("sk", "who@x.co")["member"])
 billing.count_pro_reading("sk", "m@x.co"); billing.count_pro_reading("sk", "m@x.co")
 check("pro readings counted this month", billing.status("sk", "m@x.co", fresh=True)["proUse"] == 2)
 
+# ---- gifts ----
+CUST["cus_2"] = {"id": "cus_2", "email": "g@x.co", "metadata": {"wyrd_gift": "1", "wyrd_gift_tier": "pro", "wyrd_gift_until": "forever"}}
+CUST["cus_3"] = {"id": "cus_3", "email": "old@x.co", "metadata": {"wyrd_gift": "1", "wyrd_gift_tier": "member", "wyrd_gift_until": "2020-01-01"}}
+check("gift for good gives Professional", billing.status("sk", "g@x.co")["pro"])
+check("ended gift gives nothing", not billing.status("sk", "old@x.co")["member"])
+stripe_api.search_customers = lambda s, q: [c for c in CUST.values() if c["metadata"].get("wyrd_gift") == "1"]
+
 # ---- Body Weather and the weekly job ----
 eph = Ephemeris(config.DATA_DIR, config.EPHEMERIS_FILE)
 from datetime import date
@@ -64,7 +71,7 @@ def birth_from(b):
 cast_for = lambda b: engine.cast(eph, b["ut"]["y"], b["ut"]["mo"], b["ut"]["d"], b["ut"]["h"], b["place"]["lat"], b["place"]["lon"])
 r1 = jobs.weekly(eph, cast_for, birth_from, cfg)
 r2 = jobs.weekly(eph, cast_for, birth_from, cfg)
-check("weekly job sends once", r1["sent"] == 1 and r2["sent"] == 0 and r2["skipped"] == 1)
+check("weekly job sends once, gifts included", r1["sent"] == 1 and r1["members"] == 2 and r2["sent"] == 0 and r2["skipped"] == 2)
 check("owner summary sent", any(m["to"] == "owner@x.co" for m in mailer.OUTBOX))
 
 # ---- pages for search ----

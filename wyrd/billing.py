@@ -27,6 +27,10 @@ def status(secret, email, fresh=False):
             try: out["birth"] = json.loads(meta["wyrd_birth"]) if meta.get("wyrd_birth") else None
             except ValueError: out["birth"] = None
             out["proUse"] = _use(meta)
+            g = gift_of(meta)
+            if g:
+                out["gift"] = g
+                if g["live"]: out[g["tier"]] = True
             for s in stripe_api.subscriptions(secret, c["id"]):
                 tier = (s.get("metadata") or {}).get("tier")
                 if tier not in ("member", "pro"): continue
@@ -84,4 +88,32 @@ def count_pro_reading(secret, email):
 
 
 def _empty():
-    return {"customer": None, "member": False, "pro": False, "plans": [], "birth": None, "proUse": 0}
+    return {"customer": None, "member": False, "pro": False, "plans": [], "birth": None, "proUse": 0, "gift": None}
+
+
+# ---------------- gifts: a membership or Professional plan given by Saga Devi ----------------
+# Kept on the Stripe customer as metadata, so nothing is charged and no
+# subscription exists. wyrd_gift_until is a date (YYYY-MM-DD) or "forever".
+def gift_of(meta):
+    tier, until = meta.get("wyrd_gift_tier"), meta.get("wyrd_gift_until")
+    if meta.get("wyrd_gift") != "1" or tier not in ("member", "pro") or not until: return None
+    live = until == "forever" or until >= time.strftime("%Y-%m-%d", time.gmtime())
+    return {"tier": tier, "until": until, "live": live}
+
+
+def give(secret, email, tier, until):
+    cid = customer_for(secret, email)
+    stripe_api.update_customer_metadata(secret, cid, {"wyrd_gift": "1", "wyrd_gift_tier": tier, "wyrd_gift_until": until})
+    forget(email)
+
+
+def end_gift(secret, email):
+    st = status(secret, email, fresh=True)
+    if st["customer"]:
+        stripe_api.update_customer_metadata(secret, st["customer"], {"wyrd_gift": "0", "wyrd_gift_until": ""})
+    forget(email)
+
+
+def gifted(secret):
+    """Every customer holding a gift, live or ended, for the admin list and the weekly job."""
+    return [c for c in stripe_api.search_customers(secret, "metadata['wyrd_gift']:'1'") if gift_of(c.get("metadata") or {})]

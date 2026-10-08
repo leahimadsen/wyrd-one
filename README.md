@@ -138,6 +138,10 @@ Prices are made inside each Stripe Checkout, so no products need creating in the
 
 Body Weather's centre lines are drafts in `lib/body_weather.json` for Saga Devi to rewrite; everything else in it comes from `lib/corpus.json`.
 
+## Gifts (admin only)
+
+At `/admin/gifts` give anyone a Membership or Professional plan for 1, 3, 6 or 12 months or for good. Nothing is charged: the gift is kept on their Stripe customer, they get an email inviting them to sign in, and you can end it any time. To gift a reading, fill in their birth details at `/admin` and press **Make a gift link**: the link opens their full reading, free, for two years.
+
 ## Search
 
 `/reports`, `/membership`, `/learn` and a page for every gate, nakshatra and sign are server-rendered with titles, descriptions, share previews and structured data (price, FAQ). `/sitemap.xml` and `/robots.txt` tell Google what to read; private pages send noindex. Add the site to Google Search Console and submit the sitemap.
