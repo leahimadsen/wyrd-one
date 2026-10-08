@@ -72,12 +72,51 @@ const sameBirth = (a, b) => a.date === b.date && a.time === b.time && String(a.p
 function savedList(){ try { return JSON.parse(localStorage.getItem(SAVE_KEY) || "[]"); } catch (_) { return []; } }
 function writeSaved(list){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(list.slice(0, 40))); return true; } catch (_) { return false; } }
 const isSaved = birth => savedList().some(s => sameBirth(s, birth));
-function toggleSaved(birth){
+/* a saved chart keeps its last cast too, so it can open without a connection */
+function toggleSaved(birth, result){
   const list = savedList(), i = list.findIndex(s => sameBirth(s, birth));
-  if (i >= 0) list.splice(i, 1); else list.unshift({ ...birth, savedAt: Date.now() });
-  writeSaved(list); return i < 0;
+  if (i >= 0) list.splice(i, 1); else list.unshift({ ...birth, savedAt: Date.now(), result });
+  if (!writeSaved(list) && i < 0){ list[0].result = undefined; writeSaved(list); }   // storage full: keep the details at least
+  return i < 0;
+}
+function refreshSaved(birth, result){
+  const list = savedList(), i = list.findIndex(s => sameBirth(s, birth));
+  if (i >= 0){ list[i].result = result; list[i].castAt = Date.now(); writeSaved(list); }
 }
 function removeSaved(i){ const list = savedList(); list.splice(i, 1); writeSaved(list); }
 
-window.WyrdCommon = { esc, placeSearch, cast, keep, current, shareLink, fromLink, savedList, isSaved, toggleSaved, removeSaved };
+/* ---------- the installable app ---------- */
+if ("serviceWorker" in navigator && location.protocol !== "file:")
+  addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+const standalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+let deferred = null;
+function syncInstall(){
+  const can = !standalone() && (deferred || isIOS);
+  document.querySelectorAll("[data-install]").forEach(b => { b.hidden = !can; });
+}
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; syncInstall(); });
+addEventListener("appinstalled", () => { deferred = null; syncInstall(); });
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-install]"); if (!b) return;
+  e.preventDefault();
+  if (deferred){ deferred.prompt(); await deferred.userChoice.catch(() => {}); deferred = null; syncInstall(); return; }
+  if (isIOS) iosHelp();
+});
+function iosHelp(){
+  if (document.getElementById("iosHelp")) return;
+  const d = document.createElement("div");
+  d.id = "iosHelp"; d.className = "ios-help"; d.setAttribute("role", "dialog"); d.setAttribute("aria-label", "Add to Home Screen");
+  d.innerHTML = `<p><b>Add The Wyrd Console to your Home Screen</b></p>
+    <ol><li>Tap the Share button in Safari (the square with an arrow pointing up).</li><li>Choose <b>Add to Home Screen</b>, then <b>Add</b>.</li></ol>
+    <p class="fine">It opens full screen with its own icon, and your saved charts open even offline.</p>
+    <button type="button" class="ios-x">Got it</button>`;
+  document.body.appendChild(d);
+  d.querySelector(".ios-x").addEventListener("click", () => d.remove());
+  d.querySelector(".ios-x").focus();
+}
+document.addEventListener("DOMContentLoaded", syncInstall);
+if (document.readyState !== "loading") syncInstall();
+
+window.WyrdCommon = { esc, placeSearch, cast, keep, current, shareLink, fromLink, savedList, isSaved, toggleSaved, refreshSaved, removeSaved, standalone, syncInstall };
 })();

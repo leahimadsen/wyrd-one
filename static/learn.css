@@ -120,3 +120,11 @@
 .tabs .tabs-in { flex: 1; min-width: 0; margin: 0; width: auto; padding-left: max(8px, calc((100% - 980px) / 2)); }
 .tab-tools { display: flex; gap: 4px; padding: 0 8px; flex: none; }
 .tab-tools .ctool { padding: 5px 11px; font-size: 15px; }
+
+/* ---- the installable app ---- */
+.ios-help { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 70; width: min(420px, calc(100% - 32px));
+  background: #0d1018; border: 1px solid var(--jade); border-radius: 6px; padding: 18px 20px; box-shadow: 0 12px 40px rgba(0,0,0,.6); font-size: 15.5px; }
+.ios-help p { margin: 0 0 8px; } .ios-help ol { margin: 0 0 10px; padding-left: 1.2em; } .ios-help li { margin: 4px 0; }
+.ios-x { font: inherit; color: #eef3ef; background: var(--jade-deep); border: 1px solid var(--jade); padding: 8px 16px; border-radius: 2px; cursor: pointer; }
+/* installed: the status bar sits over the page, so leave it room */
+@media (display-mode: standalone) { .hub-in, .seat-in { padding-top: max(28px, env(safe-area-inset-top)); } }
