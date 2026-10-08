@@ -13,6 +13,9 @@ CONSULTATION_PAYMENT_LINK_IDS = frozenset(
 )
 # Alternatively paste the public link you already send customers.
 CONSULTATION_PAYMENT_LINK_URL = os.environ.get("CONSULTATION_PAYMENT_LINK_URL", "").strip()
+# The unlisted 1:1 consultation page lives at /c/<CONSULT_PATH>. Pick something
+# nobody would guess (e.g. "inner-room-7k2q"). Leave it empty to switch the page off.
+CONSULT_PATH = os.environ.get("CONSULT_PATH", "").strip()
 PRICE_CENTS     = 4400
 PRODUCT_NAME    = "Your Wyrd Reading"
 # With no Stripe key set, "Buy" opens a free preview so you can proof readings locally.

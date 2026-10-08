@@ -389,60 +389,33 @@ const $ = id => document.getElementById(id);
 
 /* ---- the 27 nakshatras ---- */
 const NAKSHATRA = [
-  ["Ashwini","Ketu","Ashwini Kumaras","Horse's head","Deva","Knees",
-   "A jolt of starting. Speed before deliberation; the body moves first."],
-  ["Bharani","Venus","Yama","Yoni","Manushya","Head",
-   "Bearing and containment. Pressure held until it ripens or breaks."],
-  ["Krittika","Sun","Agni","Razor, flame","Rakshasa","Waist",
-   "Cutting heat. The clean separation that hurts and clarifies at once."],
-  ["Rohini","Moon","Brahma","Ox-cart, chariot","Manushya","Shins, forehead",
-   "Fertile density. Sap rising; the pleasure of accumulating substance."],
-  ["Mrigashira","Mars","Soma","Deer's head","Deva","Eyebrows",
-   "Restless seeking. The scent of something not yet found."],
-  ["Ardra","Rahu","Rudra","Teardrop, diamond","Manushya","Eyes",
-   "Storm and clearing. Grief that scours rather than settles."],
-  ["Punarvasu","Jupiter","Aditi","Quiver of arrows","Deva","Fingers, nose",
-   "Return. The safety of coming back to a place already known."],
-  ["Pushya","Saturn","Brihaspati","Cow's udder, lotus","Deva","Mouth, face",
-   "Nourishment given. Steady milk; the most sheltering ground there is."],
-  ["Ashlesha","Mercury","Nagas","Coiled serpent","Rakshasa","Ears, joints",
-   "Coiled interior pressure. Wound tight, watching, capable of strike."],
-  ["Magha","Ketu","Pitris","Throne, palanquin","Rakshasa","Lips, chin",
-   "The weight of the dead behind the seat. Borrowed authority."],
-  ["Purva Phalguni","Venus","Bhaga","Front legs of a bed","Manushya","Right hand",
-   "Rest and pleasure taken deliberately. The interval before work resumes."],
-  ["Uttara Phalguni","Sun","Aryaman","Back legs of a bed","Manushya","Left hand",
-   "Contract and patronage. Warmth that comes with an obligation attached."],
-  ["Hasta","Moon","Savitar","Open hand","Deva","Hands",
-   "Dexterity. What the hand can hold, it can also conceal."],
-  ["Chitra","Mars","Tvashtar","Bright jewel","Rakshasa","Neck, forehead",
-   "Made brilliance. Form worked until it gleams."],
-  ["Swati","Rahu","Vayu","Young shoot in wind","Deva","Chest",
-   "Independent motion. Bending without breaking, and without anchor."],
-  ["Vishakha","Jupiter","Indra-Agni","Triumphal arch","Rakshasa","Arms, breasts",
-   "Forked purpose. Two goals held until one must be chosen."],
-  ["Anuradha","Saturn","Mitra","Lotus, staff","Deva","Stomach, bowels",
-   "Devotion that survives distance. Friendship as a discipline."],
-  ["Jyeshtha","Mercury","Indra","Circular amulet, umbrella","Rakshasa","Neck, right side",
-   "Seniority and its cost. Protection given from a position that isolates."],
-  ["Mula","Ketu","Nirriti","Tied roots","Rakshasa","Feet",
-   "Root exposure. The ground pulled up to see what is actually holding."],
-  ["Purva Ashadha","Venus","Apas","Fan, winnowing basket","Manushya","Thighs",
-   "Invincible conviction. Water that will not be argued with."],
-  ["Uttara Ashadha","Sun","Vishvadevas","Elephant tusk, planks","Manushya","Thighs",
-   "Late and permanent victory. Slow ground that does not give back."],
-  ["Shravana","Moon","Vishnu","Ear, three footprints","Deva","Ears",
-   "Listening as a practice. Learning by transmission, not by invention."],
-  ["Dhanishta","Mars","Vasus","Drum","Rakshasa","Back",
-   "Rhythm and wealth. The body kept in time by an external beat."],
-  ["Shatabhisha","Rahu","Varuna","Empty circle, hundred healers","Rakshasa","Jaw, thighs",
-   "Enclosure and remedy. Healing that happens in isolation."],
-  ["Purva Bhadrapada","Jupiter","Aja Ekapada","Front of funeral cot","Manushya","Sides, feet",
-   "Burning idealism. Fire at the edge of the world, not warming anything."],
-  ["Uttara Bhadrapada","Saturn","Ahir Budhnya","Back of funeral cot","Manushya","Shins",
-   "Depth kept still. The serpent at the bottom, holding."],
-  ["Revati","Mercury","Pushan","Fish, drum","Deva","Ankles, feet",
-   "Safe passage and ending. Being carried across the last stretch."]
+  ["Ashwini","Ketu","Ashwini Kumaras","Horse's head","Deva","Knees"],
+  ["Bharani","Venus","Yama","Yoni","Manushya","Head"],
+  ["Krittika","Sun","Agni","Razor, flame","Rakshasa","Waist"],
+  ["Rohini","Moon","Brahma","Ox-cart, chariot","Manushya","Shins, forehead"],
+  ["Mrigashira","Mars","Soma","Deer's head","Deva","Eyebrows"],
+  ["Ardra","Rahu","Rudra","Teardrop, diamond","Manushya","Eyes"],
+  ["Punarvasu","Jupiter","Aditi","Quiver of arrows","Deva","Fingers, nose"],
+  ["Pushya","Saturn","Brihaspati","Cow's udder, lotus","Deva","Mouth, face"],
+  ["Ashlesha","Mercury","Nagas","Coiled serpent","Rakshasa","Ears, joints"],
+  ["Magha","Ketu","Pitris","Throne, palanquin","Rakshasa","Lips, chin"],
+  ["Purva Phalguni","Venus","Bhaga","Front legs of a bed","Manushya","Right hand"],
+  ["Uttara Phalguni","Sun","Aryaman","Back legs of a bed","Manushya","Left hand"],
+  ["Hasta","Moon","Savitar","Open hand","Deva","Hands"],
+  ["Chitra","Mars","Tvashtar","Bright jewel","Rakshasa","Neck, forehead"],
+  ["Swati","Rahu","Vayu","Young shoot in wind","Deva","Chest"],
+  ["Vishakha","Jupiter","Indra-Agni","Triumphal arch","Rakshasa","Arms, breasts"],
+  ["Anuradha","Saturn","Mitra","Lotus, staff","Deva","Stomach, bowels"],
+  ["Jyeshtha","Mercury","Indra","Circular amulet, umbrella","Rakshasa","Neck, right side"],
+  ["Mula","Ketu","Nirriti","Tied roots","Rakshasa","Feet"],
+  ["Purva Ashadha","Venus","Apas","Fan, winnowing basket","Manushya","Thighs"],
+  ["Uttara Ashadha","Sun","Vishvadevas","Elephant tusk, planks","Manushya","Thighs"],
+  ["Shravana","Moon","Vishnu","Ear, three footprints","Deva","Ears"],
+  ["Dhanishta","Mars","Vasus","Drum","Rakshasa","Back"],
+  ["Shatabhisha","Rahu","Varuna","Empty circle, hundred healers","Rakshasa","Jaw, thighs"],
+  ["Purva Bhadrapada","Jupiter","Aja Ekapada","Front of funeral cot","Manushya","Sides, feet"],
+  ["Uttara Bhadrapada","Saturn","Ahir Budhnya","Back of funeral cot","Manushya","Shins"],
+  ["Revati","Mercury","Pushan","Fish, drum","Deva","Ankles, feet"]
 ];
 
 /* ---- Human Design gate names ---- */
@@ -533,45 +506,7 @@ const VED_WORLD = [
   { k:8, world:"Niflheimr",     opens:"20° Aquarius",    triad:"air",   well:"Pisces" }
 ];
 
-/* Schedule B — the nine pledges */
-const VED_PLEDGE = [
-  { stake:"The right to burn now — immediacy, all-at-once intensity.",
-    sight:"Directed force; heat that lasts the winter.",
-    grip:"A life that feels pre-cooled; passion experienced as confiscated, erupting on its own schedule.",
-    walk:"Chosen contact with fire — urgency, exertion, and heat taken on deliberately." },
-  { stake:"Unbounded scale — the giant's appetite and reach.",
-    sight:"Proportion; strength that fits through doorways.",
-    grip:"Shame at being too much, felt as a verdict passed by others.",
-    walk:"Raw magnitude on purpose — wilderness, heavy labour, big weather." },
-  { stake:"Effortless plenty — being provided for without asking.",
-    sight:"Cultivated abundance; the craft of exchange and increase.",
-    grip:"Scarcity felt as betrayal; the grief that the world stopped feeding you.",
-    walk:"Through the well — tend something until it yields, and let receiving be earned and felt." },
-  { stake:"The crown-right — command without accountability.",
-    sight:"Order, oath-craft, rule as discipline.",
-    grip:"Chronic non-recognition; hunger for authority felt as a due denied.",
-    walk:"Take a seat of real responsibility and keep its oaths where they can be seen." },
-  { stake:"The unexamined common life — belonging without witness.",
-    sight:"The middle view; the witness-position among one's own kind.",
-    grip:"Alienation felt as exile — the conviction of never having belonged anywhere.",
-    walk:"Deliberate participation in the ordinary — wood, water, neighbours, the shared table." },
-  { stake:"Something surrendered to the dead — a life not lived, a self laid down.",
-    sight:"Depth-vision; the capacity to accompany endings without flinching.",
-    grip:"Grief experienced as theft; hauntedness; endings arriving as ambushes.",
-    walk:"Through the well — descent work, ancestor tending, funerals attended in full." },
-  { stake:"Effortless shine — being the radiant one without craft.",
-    sight:"Made light; precision of aim; beauty as workmanship.",
-    grip:"Invisibility felt as injustice; hunger for glamour.",
-    walk:"Make beautiful things slowly, and sign them." },
-  { stake:"Rest and raw ore — unshaped time, the unmined self.",
-    sight:"Mastery; the smith's hand; things that hold.",
-    grip:"Toil felt as sentence — the conviction of never having been allowed to rest.",
-    walk:"Return to the forge by choice, and honour fallow time as material rather than waste." },
-  { stake:"The mercy of formlessness — oblivion, the right to dissolve.",
-    sight:"Form; a distinct self; memory that holds its shape.",
-    grip:"Overwhelm felt as drowning; the pull toward dissolution experienced as undertow rather than pledge.",
-    walk:"Through the well — chosen dissolution with a rope tied on: nidra, fast, and silence, followed by return." }
-];
+
 
 /** A doorpost carries no veð: nothing was staked; it is the threshold. */
 function onDoorpost(lon){
@@ -588,7 +523,7 @@ function vedOf(siderealLon){
   const post = onDoorpost(siderealLon);
   if (post !== null) return { doorpost: post };
   const k = Math.floor(norm(siderealLon) / SEGMENT_ARC);
-  return { k, ...VED_WORLD[k], pledge: VED_PLEDGE[k],
+  return { k, ...VED_WORLD[k],
            into: norm(siderealLon) - k * SEGMENT_ARC };
 }
 
@@ -1096,7 +1031,6 @@ function bodyGlossary(b){
   const h = houseOf(sid, CHART.ascS), hh = HOUSES[h-1];
   const nk = nakIndex(sid), pada = Math.floor((norm(sid) % NAK_ARC) / (NAK_ARC/4)) + 1;
   const gN = CHART.natal.personality[b], gD = CHART.natal.design[b];
-  const dN = CHART.dharma.personality[b];
   const v = vedOf(sid);
   const half = degIn(sid) < 15 ? "ingress" : "egress";
   const rune = half === "ingress" ? hh.ingress : hh.egress;
@@ -1131,8 +1065,6 @@ function bodyGlossary(b){
         <div class="gr"><dt>Rave gate</dt><dd>${gN ? gN.gate + "." + gN.line + " " +
           (GATE_NAME[gN.gate]||"") : "—"}${gD ? `<br><span style="font-size:11.5px;
           color:rgba(217,212,196,.5)">design ${gD.gate}.${gD.line}</span>` : ""}</dd></div>
-        <div class="gr"><dt>Dharma gate</dt><dd>${dN ? dN.gate + "." + dN.line + " " +
-          (GATE_NAME[dN.gate]||"") : "—"}</dd></div>
         <div class="gr"><dt>Veð</dt><dd>${v.doorpost !== undefined
           ? `Doorpost ${v.doorpost}° — no pledge` : `${v.world} · k=${v.k}`}</dd></div>
         ${kar ? `<div class="gr"><dt>Karaka</dt><dd>${kar.replace("karaka","")}</dd></div>` : ""}

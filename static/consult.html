@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>A 1:1 consultation · The Wyrd Console</title>
+<link rel="stylesheet" href="/static/console.css">
+<link rel="stylesheet" href="/static/site.css">
+<style>
+.consult { width: min(760px, 100% - 32px); margin: 0 auto; padding: 9vh 0 40px; }
+.consult h1 { font-weight: 300; font-size: clamp(38px, 8vw, 62px); line-height: 1; margin: 0 0 14px; color: #e6e1f4;
+  text-shadow: 0 0 40px rgba(150,120,255,.35); }
+.consult .seat-sub { margin-bottom: 26px; }
+.c-table { width: 100%; border-collapse: collapse; margin: 0 0 28px; font-size: 15.5px; background: rgba(8,8,22,.62);
+  border: 1px solid rgba(150,130,230,.22); }
+.c-table th, .c-table td { text-align: left; vertical-align: top; padding: 13px 16px; border-bottom: 1px solid var(--rule); font-weight: 400; }
+.c-table th { color: var(--celadon); width: 34%; }
+.c-steps { padding-left: 1.2em; color: rgba(217,212,196,.85); }
+.c-steps li { margin: 0 0 8px; }
+.btn-buy { display: inline-block; text-decoration: none; }
+[hidden] { display: none !important; }
+@media (max-width: 560px) { .c-table th, .c-table td { display: block; width: auto; border: 0; padding: 4px 14px; }
+  .c-table tr { display: block; padding: 10px 0; border-bottom: 1px solid var(--rule); } }
+</style>
+</head>
+<body>
+<!-- The unlisted 1:1 page. Only people you send the link to will find it:
+     it is not linked from anywhere on the site and search engines are told to skip it.
+     Edit the wording and the rows of the table freely. -->
+<header class="seat" id="skyHost" style="min-height:auto">
+  <div class="consult">
+    <h1>A 1:1 consultation</h1>
+    <p class="seat-sub">For those I've invited to sit with me. Your chart is read in full, then we talk it through together.</p>
+
+    <table class="c-table">
+      <tr><th scope="row">What you receive</th><td>Your full written reading, opened the moment you give your birth details, plus a one-to-one session with {{AUTHOR}}.</td></tr>
+      <tr><th scope="row">The session</th><td>We work through the reading and the questions your chart asks. Times are arranged by email after booking.</td></tr>
+      <tr><th scope="row">What I need from you</th><td>Your date, time and place of birth (the time from your birth certificate if you can).</td></tr>
+      <tr><th scope="row">Payment</th><td>Secure checkout by Stripe.</td></tr>
+    </table>
+
+    <ol class="c-steps">
+      <li>Pay through the secure Stripe page.</li>
+      <li>You come straight back here and give your birth details.</li>
+      <li>Your reading opens. Bookmark it, it's yours to keep.</li>
+    </ol>
+
+    <a class="btn-buy" id="payLink" href="{{PAY_LINK}}">Book my consultation</a>
+    <p class="err" id="payErr" role="alert"></p>
+  </div>
+</header>
+<footer class="foot">
+  <p>The Wyrd Console · by {{AUTHOR}} · <a href="https://webofwyrd.substack.com">Web of Wyrd</a></p>
+</footer>
+<script src="/static/viz.js"></script>
+<script>
+Wyrd.sky.start();
+if (!document.getElementById("payLink").getAttribute("href")){
+  document.getElementById("payLink").hidden = true;
+  document.getElementById("payErr").textContent = "Booking isn't open yet. Please contact {{AUTHOR}}.";
+}
+</script>
+</body>
+</html>

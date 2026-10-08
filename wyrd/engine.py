@@ -171,10 +171,10 @@ def cast(eph, y, mo, d, h_ut, lat, lon_e, now_jd=None):
     natal["design"]["Earth"]      = gate_of(norm(trop_des["Sun"] + 180))
     natal["profile"] = f'{natal["personality"]["Sun"]["line"]}/{natal["design"]["Sun"]["line"]}'
 
-    # dharma rave: sidereal D9 of both moments, one ayanamsa for both, restored
-    ay_des = ay
-    d9p = {b: norm(D9(norm(trop[b] - ay)) + ay) for b in RAVE}
-    d9d = {b: norm(D9(norm(trop_des[b] - ay_des)) + ay_des) for b in RAVE}
+    # dharma rave: the D9 of the TROPICAL positions at both moments, as the current console
+    # casts it. The two Suns sit 88 deg apart, x9 = 792 deg, less two circles = 72 deg exactly.
+    d9p = {b: D9(trop[b]) for b in RAVE}
+    d9d = {b: D9(trop_des[b]) for b in RAVE}
     dharma = {"personality": {b: gate_of(l) for b, l in d9p.items()},
               "design":      {b: gate_of(l) for b, l in d9d.items()},
               "lonP": d9p, "lonD": d9d}
@@ -193,7 +193,7 @@ def cast(eph, y, mo, d, h_ut, lat, lon_e, now_jd=None):
 
     nav = {b: varga(sid[b], 9) for b in RAVE}
     return {
-        "jd": jd, "jdDes": jd_des, "ay": ay,
+        "jd": jd, "jdDes": jd_des, "ay": ay, "tropDes": trop_des,
         "trop": trop, "sid": sid, "nav": nav, "navAsc": varga(ascS, 9),
         "ascT": ascT, "ascS": ascS, "mcT": mcT, "mcS": mcS,
         "natal": natal, "dharma": dharma,

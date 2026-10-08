@@ -26,7 +26,7 @@ def create_checkout(secret, *, base_url, price_id, price_cents, product_name, me
     f = {
         "mode": "payment",
         "success_url": f"{base_url}/reading?session_id={{CHECKOUT_SESSION_ID}}",
-        "cancel_url": f"{base_url}/?cancelled=1",
+        "cancel_url": f"{base_url}/chart?cancelled=1#reading",
         "allow_promotion_codes": "true",          # Substack discount codes work
         "line_items[0][quantity]": "1",
     }

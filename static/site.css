@@ -40,7 +40,7 @@ a { color: var(--celadon); }
 
 /* ---- results ---- */
 main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
-.blk { padding: 46px 0; border-top: 1px solid var(--rule); }
+.blk { padding: 46px 0; border-top: 1px solid var(--rule); overflow-x: clip; }
 .blk h2 { font-weight: 400; font-size: 30px; color: var(--celadon); margin: 0 0 6px; }
 .meta { color: var(--ivory-dim); margin: 0 0 20px; }
 .tw { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -67,8 +67,8 @@ main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
 .fine { font-size: 13.5px; color: var(--ivory-dim); }
 
 /* the console's panels were sized for a fixed room; let them breathe on a page */
-#armBlk svg { max-width: 100%; height: auto; }
-#colourBlk svg { max-width: min(100%, 560px); height: auto; display: block; margin: 0 auto; }
+#p-armillary svg { max-width: 100%; height: auto; }
+#p-colour svg { max-width: min(100%, 560px); height: auto; display: block; margin: 0 auto; }
 .arm-wrap { max-width: 100%; }
 
 /* ---- the sky now ---- */
@@ -114,3 +114,9 @@ main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
   .blk h2 { font-size: 26px; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+#posTable td.des, .mini td.des { color: #8fcab5; }
+.mini { border-collapse: collapse; width: 100%; margin-top: 12px; font-size: 14.5px; }
+.mini th, .mini td { text-align: left; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--rule); font-weight: 400; }
+.mini tr:first-child th { color: var(--ivory-dim); font-size: 13px; }
+.fact-h2 { margin-top: 24px !important; }
+.asp li { gap: 10px; } .asp li span:first-child { color: var(--ivory); flex: 1; }
