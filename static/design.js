@@ -76,7 +76,8 @@ function graph(A, B){                          // A: birth, B: dharma (either ma
     /* the current runs toward the throat: from the centre farther from it to the nearer */
     let [x1, y1, x2, y2] = [g.x1, g.y1, g.x2, g.y2];
     const d1 = ref.dist[g.c1] ?? 99, d2 = ref.dist[g.c2] ?? 99;
-    if (d1 < d2 || (d1 === d2 && y1 < y2)) [x1, y1, x2, y2] = [x2, y2, x1, y1];
+    const ty = POS.throat[1];                  /* along the circuit to the throat, else toward its place in the body */
+    if (d1 < d2 || (d1 === d2 && Math.abs(POS[g.c1][1] - ty) < Math.abs(POS[g.c2][1] - ty))) [x1, y1, x2, y2] = [x2, y2, x1, y1];
     lines += `<line class="dg-ch ${cls}" x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"><title>Channel ${g.ch[0]}–${g.ch[1]}</title></line>`;
     if (cls !== "idle" && !reduce){
       const dur = (Math.hypot(x2 - x1, y2 - y1) / 38).toFixed(2);

@@ -220,11 +220,30 @@ def E_year(jd):
 
 
 # ---------------- the body: centres, channels, and what feeds them ----------------
+def diagrams(C):
+    """Both bodygraphs side by side: the birth design and the Dharma design, with how the energy runs in each."""
+    from . import bodygraph as BG
+    A = BG.analyse(C["natal"]); D = BG.analyse(C["dharma"]) if C.get("dharma") else None
+    name = lambda k: RV.CENTRES[k][0]
+    def route(R):
+        if "throat" not in R["defined"]: return "Your throat is open: energy reaches expression through others and through the moment."
+        if R["motors"]: return f'Energy rises from your {" and ".join(name(m) for m in R["motors"])} and surfaces at your throat as voice and action.'
+        return "Your throat is defined, but no motor reaches it: what you say and do is moved by the energy around you."
+    figs = BG.svg(A, "birth", "Your birth design") + (BG.svg(D, "dharma", "Your Dharma design") if D else "")
+    return f"""<h3 class="rd-tier">Your two bodygraphs</h3>
+      <p>The same nine centres, drawn twice: as you were born, and as your Dharma design ripens. Filled centres are defined.
+      Lit lines are your live channels, and the arrows show which way the energy runs along each one: up from the motors
+      toward the throat, where it becomes voice and action.</p>
+      <div class="bg-pair">{figs}</div>
+      <p><b>Birth design:</b> {route(A)}</p>{f"<p><b>Dharma design:</b> {route(D)}</p>" if D else ""}"""
+
+
 def body(C):
     N = C["natal"]; sid, sid_des = positions(C)
     live, centres = RV.defines(N)
     out = ["""<p>Your body has nine centres. A defined centre runs on its own steady energy; an open centre takes in and
       amplifies the energy around it. Neither is better. Knowing which is which tells you what is yours and what you are carrying for others.</p>"""]
+    out.append(diagrams(C))
     rows = []
     for k in CENTRE_KEYS:
         name = RV.CENTRES[k][0]; c = X["CENTRES"][name]; on = name in centres
