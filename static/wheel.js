@@ -73,14 +73,14 @@ function raveOf(R){
   else type = motorToThroat ? "Manifestor" : "Projector";
   const authority = !def.size ? "Lunar" : def.has("solar") ? "Emotional" : def.has("sacral") ? "Sacral"
     : def.has("spleen") ? "Splenic" : def.has("heart") ? (reach("heart", "throat") ? "Ego manifested" : "Ego projected")
-    : def.has("g") && reach("g", "throat") ? "Self-projected" : "Mental (none)";
+    : def.has("g") && reach("g", "throat") ? "Self-projected" : "Outer";
   /* definition: how many separate islands the defined centres make */
   const seen = new Set(); let islands = 0;
   for (const c of def) if (!seen.has(c)){ islands++; const q = [c]; seen.add(c);
     while (q.length){ for (const n of adj[q.shift()] || []) if (!seen.has(n)){ seen.add(n); q.push(n); } } }
-  const definition = ["No definition","Single","Split","Triple split","Quadruple split"][islands] || `${islands}-way split`;
-  const strategy = { "Generator":"To respond", "Manifesting Generator":"To respond, then inform", "Manifestor":"To inform",
-    "Projector":"To wait for the invitation", "Reflector":"To wait a lunar cycle" }[type];
+  const definition = ["No definition","Single definition","Split definition","Triple split","Quadruple split"][islands] || "Quadruple split";
+  const strategy = { "Generator":"By response", "Manifesting Generator":"By response, then fast", "Manifestor":"By initiating",
+    "Projector":"By recognition", "Reflector":"Over a lunar cycle" }[type];
   const P_ = R.personality, D_ = R.design;
   return { type, strategy, authority, definition, profile: R.profile, defined: def,
     cross: `${P_.Sun.gate}/${P_.Earth.gate} | ${D_.Sun.gate}/${D_.Earth.gate}`,

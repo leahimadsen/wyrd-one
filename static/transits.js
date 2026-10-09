@@ -52,7 +52,7 @@ function wheel(){
     .map(b => ({ b, lon: C.sid[b] })), 9);
   const moving = spread(T.rows.map(r => ({ b: r.body, lon: r.sid, r })), 9);
   const natalAt = {}; natal.forEach(n => natalAt[n.b] = n.at);
-  natalAt.Ascendant = C.ascS; natalAt.Midheaven = C.mcS;
+  if (!C.unknownTime){ natalAt.Ascendant = C.ascS; natalAt.Midheaven = C.mcS; }
 
   /* threads first, so glyphs sit on top */
   moving.forEach(m => m.r.on.forEach(h => {

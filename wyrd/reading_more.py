@@ -19,8 +19,10 @@ GLYPH = {"Sun": "☉", "Moon": "☽", "Mercury": "☿", "Venus": "♀", "Mars": 
          "Uranus": "♅", "Neptune": "♆", "Pluto": "♇", "Rahu": "☊", "Ketu": "☋", "Earth": "⊕", "Ascendant": "↑"}
 ORDER = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Rahu", "Ketu", "Uranus", "Neptune", "Pluto"]
 LORD_OF_SIGN = ["Mars", "Venus", "Mercury", "Moon", "Sun", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Saturn", "Jupiter"]
-EXALT = {"Sun": 0, "Moon": 1, "Mercury": 5, "Venus": 11, "Mars": 9, "Jupiter": 3, "Saturn": 6, "Rahu": 1, "Ketu": 7}
+# dignities: the same rules as chart.js dignity(), named in English (the root sign is the moolatrikona)
+EXALT = {"Sun": 0, "Moon": 1, "Mercury": 5, "Venus": 11, "Mars": 9, "Jupiter": 3, "Saturn": 6}
 OWN = {"Sun": {4}, "Moon": {3}, "Mercury": {2, 5}, "Venus": {1, 6}, "Mars": {0, 7}, "Jupiter": {8, 11}, "Saturn": {9, 10}}
+ROOT = {"Sun": (4, 0, 20), "Moon": (1, 3, 30), "Mars": (0, 0, 12), "Mercury": (5, 15, 20), "Jupiter": (8, 0, 10), "Venus": (6, 0, 15), "Saturn": (10, 0, 20)}
 CENTRE_KEYS = list(RV.CENTRES)
 ORD = lambda n: f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
 
@@ -48,10 +50,14 @@ def rune_at(l, asc):
     return {"glyph": g, "name": name, "gloss": gloss, "house": h, "half": half}
 
 
-def dignity(b, s):
-    if b in EXALT and EXALT[b] == s: return "exalted"
-    if b in EXALT and (EXALT[b] + 6) % 12 == s: return "debilitated"
-    if s in OWN.get(b, ()): return "own"
+def dignity(b, l):
+    if b not in EXALT: return None
+    s, d = sign_i(l), E.norm(l) % 30
+    if s == EXALT[b] and not (b == "Mercury" and d >= 15) and not (b == "Moon" and d >= 3): return "exalted"
+    if s == (EXALT[b] + 6) % 12: return "debilitated"
+    r = ROOT[b]
+    if s == r[0] and r[1] <= d < r[2]: return "root"
+    if s in OWN[b]: return "own"
     return None
 
 
@@ -129,7 +135,7 @@ def planets(C):
         si, ti = sign_i(s), sign_i(t)
         S, T, P = X["SIGNS"][si], X["SIGNS"][ti], X["PLANETS"][b]
         h = E.house_of(s, C["ascS"]); nk = E.nak_index(s); nak = NAKS[nk]; aim = aim_of(s); r = rune_at(s, C["ascS"])
-        dg = dignity(b, si)
+        dg = dignity(b, s)
         shift = PL["SAME"] if si == ti else PL["SHIFT"][ti]
         tail = lambda line: line.split(": ", 1)[-1]
         felt = "" if si == ti else (f'<p><b>Your {b}, felt:</b> {tail(PL["PIS"][b][ti])}<br>'
@@ -161,13 +167,14 @@ def planets(C):
 def runes(C, dasha):
     asc = C["ascS"]
     holders = {}
-    for b in ORDER + ["Ascendant"]:
+    for b in ([] if C.get("unknownTime") else ["Ascendant"]) + ORDER:
         l = asc if b == "Ascendant" else C["sid"][b]
         holders.setdefault(rune_at(l, asc)["name"], []).append(b)
-    ak = C["karaka"]["Atmakaraka"]; cur, curA = dasha["cur"]["lord"], dasha["curA"]["lord"]
-    weight = {"Ascendant": 3, ak: 3, "Moon": 2, "Sun": 2}
+    ak = C["karaka"]["Atmakaraka"]; cur = dasha["cur"]["lord"]
+    def weight(b):     # the same rule as runes.js lit(), so the free page and the reading agree
+        return 1 + (3 if b == "Ascendant" else 0) + (3 if b == ak else 0) + (2 if b in ("Sun", "Moon") else 0) + (2 if b == cur else 0)
     def score(name):
-        return sum(weight.get(b, 1) + (2 if b == cur else 0) + (1 if b == curA else 0) for b in holders[name])
+        return sum(weight(b) for b in holders[name])
     ranked = sorted(holders, key=lambda n: -score(n))
     born = C["jd"]
     def wakes(name):

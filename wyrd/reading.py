@@ -149,8 +149,10 @@ def build(chart, dasha, who):
     asc = C["ascS"]; si = math.floor(E.norm(asc) / 30); nk = E.nak_index(asc); D = DEEP[nk]
     h1 = HOUSES[0]; half = "ingress" if E.deg_in(asc) < 15 else "egress"; rune = h1[half]
     d9 = math.floor(E.norm(9 * asc) / 30)
-    out.append(section(0, "The Seat", f"{fmt_lon(asc)} rising · {D[0]} pada {pada(asc)}", f"""
-      <p><b>{FRAME[si][0]}</b> rising gives {FRAME[si][1]}</p>
+    unknown = bool(C.get("unknownTime"))
+    out.append(section(0, "The Seat", f"{fmt_lon(asc)} {'Sun, read as the Seat' if unknown else 'rising'} · {D[0]} pada {pada(asc)}", f"""
+      {'<p class="rd-note">Your birth time is unknown, so the rising sign can’t be known. As on your free chart, the houses are counted from your Sun’s sign (solar houses), and the Seat is read from your Sun. Your Moon may have stood in a neighbouring mansion: ' + ' or '.join(C.get("moonSpan") or []) + '.</p>' if unknown else ''}
+      <p><b>{FRAME[si][0]}</b> {'as your Seat' if unknown else 'rising'} gives {FRAME[si][1]}</p>
       {MORE.rising(C)}
       <div class="rd-body"><h5>Bearing</h5><p>{D[10]}</p></div>
       <div class="rd-body"><h5>Features</h5><p>{D[11]}</p></div>

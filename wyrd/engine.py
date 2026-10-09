@@ -171,10 +171,11 @@ def cast(eph, y, mo, d, h_ut, lat, lon_e, now_jd=None):
     natal["design"]["Earth"]      = gate_of(norm(trop_des["Sun"] + 180))
     natal["profile"] = f'{natal["personality"]["Sun"]["line"]}/{natal["design"]["Sun"]["line"]}'
 
-    # dharma rave: the D9 of the TROPICAL positions at both moments, as the current console
-    # casts it. The two Suns sit 88 deg apart, x9 = 792 deg, less two circles = 72 deg exactly.
-    d9p = {b: D9(trop[b]) for b in RAVE}
-    d9d = {b: D9(trop_des[b]) for b in RAVE}
+    # Dharma Design: the D9 of the SIDEREAL positions at both moments (sidereal is the karmic,
+    # lived frame). Both moments are read in the birth's sidereal frame (one ayanamsa), so the
+    # 88 deg between the Suns stays 88: x9 = 792 deg, less two circles = 72 deg exactly.
+    d9p = {b: D9(sid[b]) for b in RAVE}
+    d9d = {b: D9(norm(trop_des[b] - ay)) for b in RAVE}
     dharma = {"personality": {b: gate_of(l) for b, l in d9p.items()},
               "design":      {b: gate_of(l) for b, l in d9d.items()},
               "lonP": d9p, "lonD": d9d}

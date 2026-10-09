@@ -24,7 +24,8 @@ def transits(eph, chart, now_jd):
         for body, g in chart["natal"][side].items():
             carried.setdefault(g["gate"], []).append(f"{side} {body}")
 
-    points = dict(chart["sid"]); points["Ascendant"] = chart["ascS"]; points["Midheaven"] = chart["mcS"]
+    points = dict(chart["sid"])
+    if not chart.get("unknownTime"): points["Ascendant"], points["Midheaven"] = chart["ascS"], chart["mcS"]
     natal_moon_sign = int(E.norm(chart["sid"]["Moon"]) // 30)
     moon_nak = E.nak_index(chart["sid"]["Moon"])
 
