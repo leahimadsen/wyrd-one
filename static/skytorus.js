@@ -116,16 +116,28 @@ function mount(host, opts){
       ctx.fillStyle = `rgba(120,140,230,${(m * (n[2] > 0 ? .05 : .025)).toFixed(3)})`;
       ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); ctx.closePath(); ctx.fill();
     }
-    /* the layers, as light */
+    /* the layers, as light. With depth, the half of the ring nearer than the Earth is painted after it,
+       over a veil, so the Earth sits inside the ring rather than on top of its near edge */
+    const zE = proj(rot([0, 0, 0]))[2], nearer = [];
+    const paint = (q, veil) => {
+      const [a, b, c, d] = q.pts;
+      const path = () => { ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); ctx.closePath(); };
+      if (veil){ ctx.globalCompositeOperation = "source-over"; ctx.fillStyle = `rgba(8,12,28,${(.55 * m).toFixed(3)})`; path(); ctx.fill(); ctx.globalCompositeOperation = "lighter"; }
+      ctx.fillStyle = q.fill; path(); ctx.fill();
+    };
     for (let i = 0; i < NU; i++) for (let j = 0; j < NV; j++){
       const k = Math.floor(j / PER), a = P[i][j], b = P[i + 1][j], c = P[i + 1][j + 1], d = P[i][j + 1];
       const n = normal(uOf(i + .5), vOf(j + .5)), col = COL[i][k], front = n[2] > 0, fres = 1 - Math.abs(n[2]);
       const alpha = (front ? 1 : .5) * ((col.lit ? .36 : .1) + .2 * fres * fres * m);
       const [r_, g_, b_] = glow(col.rgb, col.lit ? .35 : .22);
-      ctx.fillStyle = `rgba(${r_},${g_},${b_},${alpha.toFixed(3)})`;
-      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); ctx.closePath(); ctx.fill();
-      if (front) quads.push({ pts: [a, b, c, d], z: (a[2] + b[2] + c[2] + d[2]) / 4, col, i, k });
+      const q = { pts: [a, b, c, d], z: (a[2] + b[2] + c[2] + d[2]) / 4, col, i, k, fill: `rgba(${r_},${g_},${b_},${alpha.toFixed(3)})` };
+      if (m > .3 && q.z > zE) nearer.push(q); else paint(q, false);
+      if (front) quads.push(q);
     }
+    ctx.globalCompositeOperation = "source-over";
+    earth();
+    ctx.globalCompositeOperation = "lighter";
+    for (const q of nearer) paint(q, true);
     /* threads: the layer edges and every sign */
     ctx.lineWidth = 1;
     for (let k = 0; k <= LAYERS.length; k++){
@@ -137,17 +149,17 @@ function mount(host, opts){
       for (let j = 0; j <= NV; j++){ const q = P[i][j]; j ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.stroke();
     }
     ctx.globalCompositeOperation = "source-over";
-    earth();
     /* the sign glyphs, written on the sidereal band and the tropical band */
     const R0 = Math.min(W, H), fs = Math.max(11, R0 * .036);
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     const write = (k, lon, text, a0) => {
       const u = lon * D2R, v = vOf(k * PER + PER / 2), nz = m < .35 ? 1 : normal(u, v)[2]; if (nz < .05) return;
       const p = P3(u, v, .004), a = a0 * Math.min(1, (nz - .05) * 3);
-      ctx.font = `${Math.round(fs * (k ? .8 : 1))}px Texturina, serif`; ctx.shadowColor = "rgba(180,220,255,.7)"; ctx.shadowBlur = 6;
+      ctx.font = `${Math.round(fs * (k ? .62 : .72))}px Texturina, serif`; ctx.shadowColor = "rgba(180,220,255,.7)"; ctx.shadowBlur = 6;
       ctx.fillStyle = `rgba(236,240,255,${a})`; ctx.fillText(text, p[0], p[1]);
     };
-    for (let s = 0; s < 12; s++){ write(0, s * 30 + 15, SG[s], .95); write(3, norm(s * 30 + 15 - ay), SG[s], .55); }
+    /* each sign named on both bands: sidereal on the outer, tropical on the inner */
+    for (let s = 0; s < 12; s++){ write(0, s * 30 + 15, `${SG[s]} ${SIGNS_[s].slice(0, 3)}`, .95); write(3, norm(s * 30 + 15 - ay), `${SG[s]} ${SIGNS_[s].slice(0, 3)}`, .7); }
     ctx.shadowBlur = 0;
     /* the planets: today's on the outer edge, the birth chart's on the inner */
     const place = (lon, v, lift) => { const u = lon * D2R; return { p: P3(u, v, lift), z: normal(u, v)[2] }; };
@@ -206,8 +218,8 @@ function mount(host, opts){
     if (near){
       const p = near.p; pick = null;
       const card = tarot ? ` · ${WyrdTarot.minor(WyrdTarot.at(tarot, p.sid))}` : "";
-      cap.textContent = near.sky ? `${p.body} today · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}° sidereal · ${NAKSHATRA[nakIndex(p.sid)][0]} · gate ${p.gate}.${p.line}${card}${p.retro ? " · retrograde" : ""}`
-        : `Your ${p.body} at birth · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}°${card}${rows.filter(t => at(t.sid, p.sid) < 3).map(t => ` · ${t.body} is crossing it now`).join("")}`;
+      cap.textContent = near.sky ? `${p.body} today · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}° sidereal · ${SIGNS_[Math.floor(norm(p.sid + ay) / 30)]} ${Math.floor(norm(p.sid + ay) % 30)}° tropical · ${NAKSHATRA[nakIndex(p.sid)][0]} · gate ${p.gate}.${p.line}${card}${p.retro ? " · retrograde" : ""}`
+        : `Your ${p.body} at birth · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}° sidereal · ${SIGNS_[Math.floor(norm(p.sid + ay) / 30)]} ${Math.floor(norm(p.sid + ay) % 30)}° tropical${card}${rows.filter(t => at(t.sid, p.sid) < 3).map(t => ` · ${t.body} is crossing it now`).join("")}`;
       kick(); return;
     }
     const inside = pts => { let c = false; for (let a = 0, b = pts.length - 1; a < pts.length; b = a++){
