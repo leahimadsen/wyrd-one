@@ -1,13 +1,13 @@
 'use strict';
 /* ============================================================
    COMPARE
-   You and up to three more people.
+   You and up to eight more people.
    Two people: the pair, in full (Sukuyō, the Jyotish eight-fold match,
    every planet in the other's houses, the aspects in words, the bond's
    higher and lower paths, how the two bodygraphs meet, the runes between
    you, the two charts on one wheel, the data). The deeper writing is in
    synastry.js.
-   Three or four: the unit (every pair's Sukuyō bond in one grid, what
+   Three to nine: the unit (every pair's Sukuyō bond in one grid, what
    the group completes together, the elements between you), and any
    pair can be opened in full.
    The words come from dynamics.js.
@@ -22,7 +22,8 @@ const WEIGHT = { Sun: 3, Moon: 3, Venus: 2.5, Mars: 2, Mercury: 1.5, Saturn: 2, 
 const OVERLAY = ["Sun", "Moon", "Venus", "Mars", "Saturn"];
 const ELEMENTS = ["Fire", "Earth", "Air", "Water"];
 const ORD = n => n + (["th", "st", "nd", "rd"][(n % 100 - 20) % 10] || ["th", "st", "nd", "rd"][n % 100] || "th");
-const MAX = 4;
+const MAX = 9;
+const NTH = ["", "", "a second", "a third", "a fourth", "a fifth", "a sixth", "a seventh", "an eighth", "a ninth"];
 
 /* ---------- the arithmetic of two charts ---------- */
 const flavour = x => x.n === 1 ? "conj" : (x.n === 3 || x.n === 6) ? "soft" : "hard";
@@ -113,9 +114,9 @@ function unitView(P){
   const pairs = []; for (let i = 0; i < P.length; i++) for (let k = i + 1; k < P.length; k++) pairs.push([i, k, relation(P[i], P[k])]);
   const cell = (i, k) => { if (i === k) return `<td class="sk-self">${P[i].C.extras && P[i].C.extras.sukuyo ? `${P[i].C.extras.sukuyo.kanji}<small>${P[i].C.extras.sukuyo.read}</small>` : "—"}</td>`;
     const R = relation(P[i], P[k]); if (!R) return "<td>—</td>";
-    return `<td><button type="button" class="sk-cell sk-${R.pair}" data-pair="${Math.min(i, k)}-${Math.max(i, k)}"><span>${R.toB}</span><small>${D.NAMES[R.toB]}${R.distance ? " · " + R.distance : ""}</small></button></td>`; };
-  const grid = `<div class="tw"><table class="sk-grid"><tr><th></th>${P.map(p => `<th scope="col">${esc(p.name)}</th>`).join("")}</tr>
-    ${P.map((p, i) => `<tr><th scope="row">${esc(p.name)}</th>${P.map((_, k) => cell(i, k)).join("")}</tr>`).join("")}</table></div>
+    return `<td><button type="button" class="sk-cell sk-${R.pair}" data-pair="${Math.min(i, k)}-${Math.max(i, k)}"><span>${R.toB}</span><small>${D.NAMES[R.toB]}${R.distance && P.length <= 4 ? " · " + R.distance : ""}</small></button></td>`; };
+  const grid = `<div class="tw"><table class="sk-grid${P.length > 4 ? " dense" : ""}"><tr><th></th>${P.map(p => `<th scope="col" title="${esc(p.name)}">${esc(p.name)}</th>`).join("")}</tr>
+    ${P.map((p, i) => `<tr><th scope="row" title="${esc(p.name)}">${esc(p.name)}</th>${P.map((_, k) => cell(i, k)).join("")}</tr>`).join("")}</table></div>
     <p class="fine">Read across: each cell is what the column's person is to the row's person. The diagonal is each person's own shuku. Tap a cell to open that pair below.</p>`;
   const groups = {}; pairs.forEach(([i, k, R]) => { if (R) (groups[R.pair] ||= []).push(`${esc(P[i].name)} & ${esc(P[k].name)}`); });
   const summary = Object.entries(groups).map(([pair, list]) => `<li><b>${pair} ${D.SUKUYO[pair].title.split(" · ")[1]}</b> — ${list.join("; ")}. <span class="fine">${D.SUKUYO[pair].short}.</span></li>`).join("");
@@ -136,8 +137,9 @@ function unitView(P){
     <h3 class="sec-h">Your unit of ${P.length}</h3>
     <h4 class="cp-h">${g("sukuyo", "Sukuyō")} · every bond at once</h4>${grid}
     <ul class="cp-sk-sum">${summary}</ul>
-    ${window.WyrdKuta ? `<h4 class="cp-h">Jyotish · every pair's match</h4><ul class="kar">${pairs.map(([i, k]) => { const x = WyrdKuta.read(P[i].C.sid.Moon, P[k].C.sid.Moon), y = WyrdKuta.read(P[k].C.sid.Moon, P[i].C.sid.Moon);
-      return `<li><span>${esc(P[i].name)} · ${esc(P[k].name)}</span><span>${x.total === y.total ? x.total : `${x.total} / ${y.total}`} of 36</span></li>`; }).join("")}</ul>` : ""}
+    ${window.WyrdKuta ? `<h4 class="cp-h">Jyotish · every pair's match</h4>${P.length > 4 ? `<p class="fine">Strongest match first.</p>` : ""}<ul class="kar">${pairs.map(([i, k]) => { const x = WyrdKuta.read(P[i].C.sid.Moon, P[k].C.sid.Moon), y = WyrdKuta.read(P[k].C.sid.Moon, P[i].C.sid.Moon);
+      return [Math.max(x.total, y.total), `<li><span>${esc(P[i].name)} · ${esc(P[k].name)}</span><span>${x.total === y.total ? x.total : `${x.total} / ${y.total}`} of 36</span></li>`]; })
+      .sort((a, b) => P.length > 4 ? b[0] - a[0] : 0).map(r => r[1]).join("")}</ul>` : ""}
     <h4 class="cp-h">What you complete together</h4>
     <p>${unitOnly.length ? `The unit completes <b>${unitOnly.length}</b> ${g("channel", unitOnly.length > 1 ? "channels" : "channel")} no one of you has alone:` : "No channel needs the whole unit: each one the group completes, someone already carries."}</p>
     ${unitOnly.length ? `<ul class="ln-list">${unitOnly.map(ch => `<li>${ch[0]}–${ch[1]}: ${brings(ch)}${pairOnly.includes(ch) ? "" : " <small>(only with three or more of you)</small>"}</li>`).join("")}</ul>` : ""}
@@ -164,7 +166,7 @@ function mount(host, X){
     peopleEl.innerHTML = people.map((p, i) => `<span class="cp-chip${p.self ? " self" : ""}"><b>${esc(p.name)}</b>
       <small>${esc(p.birth.date)}${p.C.extras && p.C.extras.sukuyo ? ` · ${p.C.extras.sukuyo.kanji}` : ""}</small>
       ${p.self ? "" : `<button type="button" class="cp-x" data-remove="${i}" aria-label="Remove ${esc(p.name)}">×</button>`}</span>`).join("")
-      + (people.length < MAX && !adding ? `<button type="button" class="cp-addbtn">＋ ${people.length === 1 ? "Add a person" : people.length === 2 ? "Add a third person" : "Add a fourth person"}</button>` : "");
+      + (people.length < MAX && !adding ? `<button type="button" class="cp-addbtn">＋ ${people.length === 1 ? "Add a person" : `Add ${NTH[people.length + 1]} person`}</button>` : "");
   }
   function drawForm(){
     const saved = savedList().filter(s => !(s.date === X.birth.date && s.time === X.birth.time && (s.name || "") === (X.birth.name || "")));
@@ -219,7 +221,7 @@ function mount(host, X){
   }
   function draw(){
     drawPeople(); drawForm();
-    if (people.length < 2){ out.innerHTML = `<p class="cp-empty">Add someone to see how you meet: by ${g("sukuyo", "Sukuyō")}, by the contacts between your planets, and by where each of you lands in the other's houses. Add a third or fourth person to see your unit.</p>`; return; }
+    if (people.length < 2){ out.innerHTML = `<p class="cp-empty">Add someone to see how you meet: by ${g("sukuyo", "Sukuyō")}, by the contacts between your planets, and by where each of you lands in the other's houses. Add more people, up to nine in all, to see your unit.</p>`; return; }
     if (people.length === 2){ out.innerHTML = `<div class="cp-pair-host"></div>`; pairSel = "0-1"; showPair(out.querySelector(".cp-pair-host")); return; }
     out.innerHTML = unitView(people); showPair(out.querySelector(".cp-pair-host"));
   }

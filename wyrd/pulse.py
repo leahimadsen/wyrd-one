@@ -26,7 +26,7 @@ EVENTS = {
     "learn": lambda d: d.isdigit() and 1 <= int(d) <= 40,
     "gloss": lambda d: re.fullmatch(r"[a-z0-9]{1,24}", d) is not None,
     "tap": lambda d: d in {"body", "des", "sign", "trop", "rune", "gate", "nak", "house"},
-    "compare": lambda d: d in {"2", "3", "4"},
+    "compare": lambda d: d in {str(n) for n in range(2, 10)},
     "cast": lambda d: d in {"known", "unknown"},
     "calendar": lambda d: d in {"all", "you", "clock", "ingress", "station"},
     "act": lambda d: d in {"buy", "share", "save", "download", "install", "sample", "today", "edit", "level"},

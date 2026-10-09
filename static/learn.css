@@ -191,6 +191,10 @@
 .sk-cell span { display: block; font-size: 22px; } .sk-cell small { display: block; font-size: 12px; color: var(--ivory-dim); }
 .sk-cell[aria-pressed="true"] { border-color: var(--gold); }
 .sk-栄親 { border-color: rgba(95,156,134,.6); } .sk-安壊 { border-color: rgba(224,160,144,.6); } .sk-業胎 { border-color: rgba(184,146,74,.6); }
+.sk-grid th[scope] { max-width: 9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sk-grid.dense { font-size: 13px; } .sk-grid.dense td { padding: 2px; } .sk-grid.dense th { padding: 4px 6px; }
+.sk-grid.dense .sk-cell { min-width: 58px; padding: 5px 3px; } .sk-grid.dense .sk-cell span { font-size: 18px; } .sk-grid.dense .sk-cell small { font-size: 11px; }
+.sk-grid.dense th[scope="row"] { position: sticky; left: 0; background: var(--void); z-index: 1; max-width: 7em; }
 .cp-sk-sum { margin: 14px 0 0; padding-left: 1.1em; max-width: 72ch; } .cp-sk-sum li { margin: 6px 0; }
 .cp-pairs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
 .cal-chip { font: inherit; font-size: 14.5px; color: var(--ivory-dim); background: none; border: 1px solid rgba(156,180,166,.3); border-radius: 18px; padding: 6px 14px; cursor: pointer; }
