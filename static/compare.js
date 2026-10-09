@@ -3,8 +3,10 @@
    COMPARE
    You and up to three more people.
    Two people: the pair, in full (Sukuyō, the Jyotish eight-fold match,
-   the aspects in words, the bind runes the two charts make, houses both
-   ways, the two charts on one wheel, the data).
+   every planet in the other's houses, the aspects in words, the bond's
+   higher and lower paths, how the two bodygraphs meet, the runes between
+   you, the two charts on one wheel, the data). The deeper writing is in
+   synastry.js.
    Three or four: the unit (every pair's Sukuyō bond in one grid, what
    the group completes together, the elements between you), and any
    pair can be opened in full.
@@ -90,12 +92,12 @@ function pairView(A, B){
     <h3 class="sec-h">${esc(A.name)} and ${esc(B.name)}</h3>
     <h4 class="cp-h">${g("sukuyo", "Sukuyō")} · the bond by the lunar mansions</h4>${sukuyoBlock(R, A, B)}
     <h4 class="cp-h">Jyotish · the eight-fold match</h4>${window.WyrdKuta ? WyrdKuta.html(A, B) : ""}
+    <h4 class="cp-h">Your planets in each other's houses</h4>${window.WyrdSynastry ? WyrdSynastry.houses(A, B) : `<ul class="cp-over">${over(B, A)}</ul><ul class="cp-over">${over(A, B)}</ul>`}
     <h4 class="cp-h">Traditional synastry · the aspects between you</h4>${overview(cs, R, together)}
     ${top ? `<ol class="cp-contacts">${top}</ol>` : `<p>No close contacts between the main planets: a bond that works through the houses rather than the aspects.</p>`}
-    <h4 class="cp-h">${g("rune", "Runes")} · the bind runes you make together</h4>${window.WyrdRunes ? WyrdRunes.pairHTML(A, B) : ""}
-    <h4 class="cp-h">Where you land in each other's lives</h4>
-    ${A.C.unknownTime || B.C.unknownTime ? `<p class="unknown-note">A birth time is unknown, so that chart's houses are counted from its Sun.</p>` : ""}
-    <ul class="cp-over">${over(B, A)}</ul><ul class="cp-over">${over(A, B)}</ul>
+    ${window.WyrdSynastry ? `<h4 class="cp-h">The bond's purpose, its higher and lower paths</h4>${WyrdSynastry.paths(A, B, { cs, R, together, kuta: window.WyrdKuta ? WyrdKuta.read(A.C.sid.Moon, B.C.sid.Moon) : null })}
+    <h4 class="cp-h">${g("design", "Human Design")} · how your bodies meet</h4>${WyrdSynastry.design(A, B)}` : ""}
+    <h4 class="cp-h">${g("rune", "Runes")} · the runes between you</h4>${window.WyrdRunes ? WyrdRunes.pairHTML(A, B) : ""}
     <h4 class="cp-h">${esc(A.name)} inside, ${esc(B.name)} outside</h4><div class="cmp-wheel" data-pair-wheel></div>
     <details class="cp-data"><summary>All the data</summary><div class="facts">
       <div class="fact"><h3>${esc(B.name)} in ${esc(A.name)}'s houses</h3><table class="mini"><tr><th>Planet</th><th>Sign</th><th>House</th></tr>${rows(B, A)}</table></div>

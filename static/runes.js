@@ -3,10 +3,10 @@
    RUNES
    The twenty-four runes drawn as strokes on a stave, so they can be
    bound: a bind rune is several runes sharing one upright.
-   - WyrdRunes.mount(host, C): your rune stave. Every rune your planets
-     and Ascendant light, ranked; a bind rune of all of them and of the
-     strongest three; and how to make your own.
-   - WyrdRunes.pairHTML(A, B): the binds two charts make together, for Compare.
+   - WyrdRunes.mount(host, C): your activated runes. Every rune your planets
+     and Ascendant light, ranked, and how each plays out through the lunar
+     mansion of the planet that lights it.
+   - WyrdRunes.pairHTML(A, B): the runes between two charts, for Compare.
    The words here are drafts for The Völva to edit.
    ============================================================ */
 (() => {
@@ -91,52 +91,40 @@ function lit(C){
   return Object.values(by).sort((a, b) => b.score - a.score);
 }
 
-const CRAFT = [
-  "Choose by intent first. A bind rune works best holding one purpose; pick the two or three runes whose meanings serve it, and leave the rest out.",
-  "Share the stave. Stand the runes on a single upright so they become one sign, not a row of letters. Runes without an upright (Kenaz, Gebo, Jera, Sowilo, Ingwaz, Dagaz, Othala) sit across or around it.",
-  "Mirror to balance. A rune may be turned to face the other way so its branches spread to both sides. Turning it does not reverse its meaning when it is bound.",
-  "Keep it to three or four. Beyond that, the strokes start to form runes you did not choose. Look at the finished sign and name every rune you can see in it; if one appears that you would not invite, redraw.",
-  "Read it back aloud. Say each rune's name as you trace its stroke. A bind rune is finished when you can find every rune in it and say why it is there.",
-  "Make it by hand. Carve, burn, paint or draw it in one sitting, with the intent held. A printed sign is a map; the made one is the working.",
-];
-
-function mount(host, C){
-  const L = lit(C), top = L.slice(0, 3).map(r => r.name), all = L.map(r => r.name);
-  const row = r => `<li class="rn-row">${svg([r.name], { size: 64 })}<div><b>${r.glyph} ${r.name}</b> <span class="fine">house ${r.house}, ${r.opening ? "opening" : "closing"} rune</span>
-    <p>${MEANS[r.name]}. Lit by ${r.holders.map(b => b === "Ascendant" ? "your Ascendant" : `${GLYPH[b] || ""} ${b}`).join(", ")}.</p></div></li>`;
-  host.innerHTML = `
-    <div class="rn-staves">
-      <figure>${svg(top, { size: 220, title: "Your core bind rune" })}<figcaption><b>Your core bind rune</b><br>${top.map(n => `${GLYPHS[NAMES.indexOf(n)]} ${n}`).join(" · ")}<br><span class="fine">the three runes your chart lights most strongly</span></figcaption></figure>
-      <figure>${svg(all, { size: 220, title: "Every rune your chart lights, bound" })}<figcaption><b>Your whole stave</b><br>all ${all.length} lit runes on one upright<br><span class="fine">a sigil of the chart, not a working rune</span></figcaption></figure>
-    </div>
-    <h3>Your lit runes, strongest first</h3>
-    <p class="fine">A rune is lit when a planet or your Ascendant stands in it. It is strongest when it holds your Ascendant, your soul-planet, your Sun or Moon, or the lord of the period you are in.</p>
-    <ul class="rn-list">${L.map(row).join("")}</ul>
-    <h3>Making your own bind runes</h3>
-    <ol class="rn-craft">${CRAFT.map(t => `<li>${t}</li>`).join("")}</ol>
-    <p class="fine">To learn each rune in depth, see <a href="/learn/runes">Learn the runes</a>. Your full reading shows the years each lit rune wakes.</p>`;
+/* how a rune plays out through the mansion of the planet that lights it */
+function through(C, r, b){
+  const { NAKSHATRA, nakIndex } = Wyrd.helpers, L = C.lex || {};
+  const l = b === "Ascendant" ? C.ascS : C.sid[b], ni = nakIndex(l), nk = NAKSHATRA[ni], q = (L.nak || [])[ni] || "";
+  const R = (L.rune || {})[r.name] || {};
+  const who = b === "Ascendant" ? "your Ascendant" : `your ${GLYPH[b] || ""} ${b}`;
+  return `<li><b>Through ${who} in ${nk[0]}</b> <span class="fine">· ruled by ${nk[1]}, the ${nk[5].toLowerCase()}</span>
+    <p>${q} Here ${r.name} works in that manner.${R.light ? ` At its best: ${R.light.charAt(0).toLowerCase() + R.light.slice(1)}` : ""}
+    ${R.shadow ? ` When it goes wrong: ${R.shadow.charAt(0).toLowerCase() + R.shadow.slice(1)}` : ""}</p></li>`;
 }
 
-/* ---------- two charts: the runes you bind together ---------- */
-const PAIRINGS = [["Sun", "Sun", "your purposes"], ["Moon", "Moon", "your moods and needs"], ["Venus", "Mars", "attraction"], ["Mars", "Venus", "attraction, the other way"],
-  ["Sun", "Moon", "will meeting feeling"], ["Moon", "Sun", "feeling meeting will"], ["Ascendant", "Ascendant", "how you meet the world together"]];
+function mount(host, C){
+  const L = lit(C), R = (C.lex || {}).rune || {};
+  const card = (r, i) => `<div class="rn-card${i < 3 ? " lead" : ""}">
+    <h3><span class="rn-g" aria-hidden="true">${r.glyph}</span> ${r.name} <span class="fine">· house ${r.house}, ${r.opening ? "opening" : "closing"} rune${i < 3 ? " · one of your three strongest" : ""}</span></h3>
+    <p class="rn-means">${MEANS[r.name].charAt(0).toUpperCase() + MEANS[r.name].slice(1)}.</p>
+    <ul class="rn-thru">${r.holders.map(b => through(C, r, b)).join("")}</ul>
+    ${R[r.name] && R[r.name].call ? `<p class="rn-call">Its call: <em>${R[r.name].call}</em></p>` : ""}</div>`;
+  host.innerHTML = `
+    <p>Twenty-four runes ring your chart, two to each house, counted from your rising sign. A rune is activated when a planet or your Ascendant stands in it.
+    Each activated rune works through the lunar mansion of the planet that lights it, so the same rune reads differently in different charts. Strongest first:
+    a rune is strongest when it holds your Ascendant, your soul-planet, your Sun or Moon, or the lord of the period you are in.</p>
+    ${L.map(card).join("")}
+    <p class="fine">To learn each rune in depth, see <a href="/learn/runes">Learn the runes</a>. Your full reading shows the years each activated rune wakes.</p>`;
+}
+
+/* ---------- two charts: the runes between you ---------- */
 function pairHTML(A, B){
-  const lon = (C, b) => b === "Ascendant" ? (C.unknownTime ? null : C.ascS) : C.sid[b];
-  const binds = PAIRINGS.map(([p, q, what]) => {
-    const la = lon(A.C, p), lb = lon(B.C, q); if (la == null || lb == null) return null;
-    const ra = runeAt(A.C, la), rb = runeAt(B.C, lb);
-    return { p, q, what, ra, rb };
-  }).filter(Boolean);
-  const la = new Set(lit(A.C).map(r => r.name)), lb = new Set(lit(B.C).map(r => r.name));
-  const shared = [...la].filter(n => lb.has(n));
-  const card = x => `<li class="rn-pair">${svg(x.ra.name === x.rb.name ? [x.ra.name] : [x.ra.name, x.rb.name], { size: 92 })}
-    <div><b>${esc(A.name)}'s ${x.p} ${x.ra.glyph} ${x.ra.name} + ${esc(B.name)}'s ${x.q} ${x.rb.glyph} ${x.rb.name}</b>
-    <p>${x.what}: ${MEANS[x.ra.name]}${x.ra.name === x.rb.name ? ", doubled: you meet here in the same rune" : `, bound with ${MEANS[x.rb.name]}`}.</p></div></li>`;
-  return `<p>Each of you lights runes with your planets. Where your planets meet, their runes bind into one sign: the rune of that part of the bond.</p>
-    <ul class="rn-list">${binds.map(card).join("")}</ul>
-    ${shared.length ? `<p><b>Runes you both light:</b> ${shared.map(n => `${GLYPHS[NAMES.indexOf(n)]} ${n}`).join(", ")}. These are the bond's common ground.</p>
-      <figure class="rn-shared">${svg(shared.slice(0, 4), { size: 160, title: "The bind rune of the runes you share" })}<figcaption>The bind rune of the runes you share${shared.length > 4 ? " (the first four)" : ""}</figcaption></figure>`
-      : "<p>You light no rune in common: the bond is made where your different runes bind.</p>"}`;
+  const la = lit(A.C), lb = lit(B.C), nb = new Set(lb.map(r => r.name));
+  const shared = la.filter(r => nb.has(r.name));
+  const top = (P, L) => `<li><b>${esc(P.name)}</b>: ${L.slice(0, 3).map(r => `${r.glyph} ${r.name} (${MEANS[r.name]})`).join("; ")}</li>`;
+  return `<ul class="kar-plain">${top(A, la)}${top(B, lb)}</ul>
+    ${shared.length ? `<p><b>Runes you both activate:</b> ${shared.map(r => `${r.glyph} ${r.name}`).join(", ")}. This is the bond's common ground: where you recognise each other without explaining.</p>`
+      : `<p>You activate no rune in common: each of you brings the other a force they do not carry.</p>`}`;
 }
 
 window.WyrdRunes = { mount, pairHTML, svg, lit, runeAt, NAMES, GLYPHS, GEOM };

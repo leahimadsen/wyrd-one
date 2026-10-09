@@ -49,7 +49,7 @@ function analyse(rave){
   const authority = !defined.size ? "Lunar" : defined.has("solar") ? "Emotional" : defined.has("sacral") ? "Sacral" : defined.has("spleen") ? "Splenic"
     : defined.has("heart") ? (adj.heart.has("throat") ? "Ego manifested" : "Ego projected") : defined.has("g") && adj.g.has("throat") ? "Self-projected" : "Outer";
   const definition = ["No definition", "Single definition", "Split definition", "Triple split", "Quadruple split"][parts] || "Split definition";
-  return { gates, live, defined, dist, type, authority, definition, parts, motorToThroat, profile: rave.profile };
+  return { rave, gates, live, defined, dist, type, authority, definition, parts, motorToThroat, profile: rave.profile };
 }
 
 /* ---------- the drawing ---------- */
@@ -128,6 +128,79 @@ const CEN = {
   root: ["Pressure, adrenaline and the drive to move.", "The adrenals and the base of the spine"],
 };
 
+
+/* each channel as a current: what moves along it (drafts for The Völva to edit) */
+const CHANNEL = {
+  "1-8": "Your self-expression reaches the world as a contribution: what is uniquely yours wants to be shown, and showing it is the gift.",
+  "2-14": "The direction your higher self knows is powered by your gut's resources: you steer energy and money toward where life wants to go.",
+  "3-60": "Pressure to change meets the urge to order something new: energy that mutates, in pulses, and sometimes waits a long time to arrive.",
+  "4-63": "Doubt in the head becomes formulas in the mind: a current that questions, then answers, then questions the answer.",
+  "5-15": "Your rhythms run in time with the flow of life itself: energy that keeps habits and brings others into a natural tempo.",
+  "6-59": "Emotional friction meets the drive to bond: energy for intimacy that opens doors between people, closely and physically.",
+  "7-31": "Your sense of direction speaks as influence: energy that leads by being heard at the right moment.",
+  "9-52": "Root stillness feeds sacral focus: energy that can stay with one thing for a long time.",
+  "10-20": "The love of being yourself comes out in the present tense: awakeness, voiced now.",
+  "10-34": "Self-love is powered by sacral strength: you follow your own convictions and explore by doing.",
+  "10-57": "The body's instinct protects the way you live: intuition shaping a life worth living, in the moment.",
+  "11-56": "Ideas become stories: a current of curiosity that looks for things to say and teaches by telling.",
+  "12-22": "Feeling opens the voice: energy that speaks with grace when the mood is right, and should wait when it is not.",
+  "13-33": "What you listen to becomes memory and is retold later: energy that witnesses, keeps, and gives back the meaning of experience.",
+  "16-48": "Depth of understanding becomes skill: energy that practises until talent turns into mastery.",
+  "17-62": "Opinions are organised into detail: a current that sees patterns and explains them precisely.",
+  "18-58": "Joy in life pushes to correct what is not working: energy that improves things, and needs somewhere worthy to aim.",
+  "19-49": "Needs meet principles: energy that bonds people by what they need from each other and the terms they keep.",
+  "20-34": "Raw sacral power goes straight to the voice: a current that is busy, visible and acts in the now.",
+  "20-57": "Instant intuition speaks: energy that knows and says it in the same moment.",
+  "21-45": "Will and control meet the voice of having: energy for managing resources and the material life of a group.",
+  "23-43": "Inner insight becomes clear statement: a current that thinks differently and must find the right time to say it.",
+  "24-61": "Mystery in the head is turned over and over in the mind: energy that ponders until a knowing arrives.",
+  "25-51": "Innocent love meets the shock of initiation: energy that leaps, competes and wakes others up.",
+  "26-44": "Instinct for patterns feeds the will to persuade: energy that transmits, sells and brings the past's lessons forward.",
+  "27-50": "Caring is held by values: energy that nourishes and protects, and keeps others alive.",
+  "28-38": "The search for purpose meets the will to fight: energy that struggles for what makes life meaningful.",
+  "29-46": "Saying yes is carried by the body: energy that commits fully and discovers through what it agreed to.",
+  "30-41": "The fire of desire is fed from the root of contraction: energy for new experiences, felt fully before they begin.",
+  "32-54": "Ambition is tested against what lasts: energy that drives upward and transforms what it touches.",
+  "34-57": "Sacral power is guided by instinct: energy that survives, acts and knows how in the moment.",
+  "35-36": "Hunger for change passes through emotional crisis: energy that goes into experience to learn what it is.",
+  "37-40": "Friendship meets the will to be alone after work: energy for community, bargains and keeping one's word.",
+  "39-55": "Provocation stirs the spirit: energy of moods that rise and fall, and of feeling deeply moved.",
+  "42-53": "Beginnings are fed until they mature: energy that starts cycles and carries them through to completion.",
+  "47-64": "Images from the head are made sense of in the mind: a current that turns confusion into realisation over time.",
+};
+
+
+const LEX = () => (window.WyrdDesignChart && window.WyrdDesignChart.lex) || {};
+const gName = g => { const x = (LEX().gate || {})[g]; return x ? `${x.name}${x.title && x.title !== x.name ? ` · ${x.title}` : ""}` : ""; };
+function carriers(R, g){
+  const out = [];
+  for (const [side, col] of [["conscious", R.rave.personality], ["unconscious", R.rave.design]])
+    for (const [b, v] of Object.entries(col || {})) if (v && v.gate === g) out.push(`${side} ${b} (line ${v.line})`);
+  return out;
+}
+function chanItem(R, [a, b]){
+  /* the current runs from the centre farther from the throat toward the nearer */
+  const ca = CENTRE_OF[a], cb = CENTRE_OF[b], da = R.dist[ca] ?? 99, db = R.dist[cb] ?? 99, ty = POS.throat[1];
+  const fromA = da > db || (da === db && Math.abs(POS[ca][1] - ty) >= Math.abs(POS[cb][1] - ty));
+  const [g1, c1, g2, c2] = fromA ? [a, ca, b, cb] : [b, cb, a, ca];
+  return `<li><b>${a}–${b}</b> · ${CENTRES[c1].label} → ${CENTRES[c2].label}
+    <p>${CHANNEL[`${Math.min(a, b)}-${Math.max(a, b)}`] || ""}</p>
+    <p class="fine">The current leaves your ${CENTRES[c1].label} through gate ${g1}${gName(g1) ? ` (${gName(g1)})` : ""}, carried by your ${carriers(R, g1).join(" and ")},
+    and arrives in your ${CENTRES[c2].label} through gate ${g2}${gName(g2) ? ` (${gName(g2)})` : ""}, carried by your ${carriers(R, g2).join(" and ")}.</p></li>`;
+}
+function gatesList(R){
+  const order = ["head", "ajna", "throat", "g", "heart", "spleen", "solar", "sacral", "root"];
+  const inLive = new Set(R.live.flat());
+  return order.map(k => {
+    const gs = [...R.gates].filter(g => CENTRE_OF[g] === k).sort((x, y) => x - y);
+    if (!gs.length) return "";
+    return `<div class="dg-gates"><h5>${CENTRES[k].label}${R.defined.has(k) ? " · defined" : " · open"}</h5><ul>${gs.map(g => {
+      const x = (LEX().gate || {})[g];
+      return `<li><b>Gate ${g}${gName(g) ? ` · ${gName(g)}` : ""}</b>${inLive.has(g) ? ' <span class="dg-tag">in a channel</span>' : ' <span class="dg-tag open">open thread</span>'}
+        <br><span class="fine">${carriers(R, g).join(", ")}</span>${x && x.gist ? `<p>${x.gist}</p>` : ""}</li>`; }).join("")}</ul></div>`;
+  }).join("");
+}
+
 function readout(R, label){
   const order = ["head", "ajna", "throat", "g", "heart", "spleen", "solar", "sacral", "root"];
   const reached = MOTORS.filter(m => R.defined.has(m) && m in R.dist && R.dist[m] > 0);
@@ -141,12 +214,16 @@ function readout(R, label){
     <p>${TYPE[R.type]}</p><p>${AUTH[R.authority]}</p><p>${DEFN[R.definition] || ""}</p><p><b>How it flows:</b> ${route}</p>
     <h4>Your centres</h4>
     <ul class="dg-cen">${order.map(k => `<li class="${R.defined.has(k) ? "on" : ""}"><b>${CENTRES[k].label}</b> · ${R.defined.has(k) ? "defined, runs on its own current" : "open, takes in and amplifies the current around it"}<br><span class="fine">${CEN[k][0]} ${CEN[k][1]}.</span></li>`).join("")}</ul>
-    <h4>Your channels</h4>
-    ${R.live.length ? `<ul class="dg-chs">${R.live.map(([a, b]) => `<li>${a}–${b} · ${CENTRES[CENTRE_OF[a]].label} to ${CENTRES[CENTRE_OF[b]].label}</li>`).join("")}</ul>` : "<p>No complete channels: every gate in you is an open thread, waiting for its partner in someone else or in the sky.</p>"}
+    <h4>Your channels: the currents</h4>
+    ${R.live.length ? `<ul class="dg-chs">${R.live.map(ch => chanItem(R, ch)).join("")}</ul>` : "<p>No complete channels: every gate in you is an open thread, waiting for its partner in someone else or in the sky.</p>"}
+    <h4>Your gates</h4>
+    <p class="fine">Each gate is a single doorway of energy, switched on by a planet. Conscious gates (personality) you know as yourself; unconscious ones (design) run in the body whether you notice or not. A gate on its own is an open thread; two gates at either end of a channel make a current.</p>
+    ${gatesList(R)}
   </div>`;
 }
 
 function mount(host, { C }){
+  window.WyrdDesignChart = C;
   const birth = analyse(C.natal), dharma = C.dharma ? analyse(C.dharma) : null;
   let view = "birth";
   const draw = () => {

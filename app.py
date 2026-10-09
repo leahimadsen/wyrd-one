@@ -240,7 +240,23 @@ def chart():
     c["transits"] = transits(EPH, c, now)
     c["extras"] = extras(EPH, c, b)
     if c.get("unknownTime"): c["extras"]["placidus"] = None     # house cusps need a birth time
+    c["lex"] = lexicon(c)
     return jsonify(chart=plain(c), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME)
+
+def lexicon(c):
+    """The words the free pages need for this chart: each of its gates (name, title, a first line from the
+    register, as on the public learning pages), the quality of each mansion, and the rune meanings."""
+    from wyrd import pages as P
+    gates = set()
+    for rave in (c["natal"], c.get("dharma") or {}):
+        for side in ("personality", "design"):
+            for v in (rave.get(side) or {}).values():
+                if isinstance(v, dict) and "gate" in v: gates.add(v["gate"])
+    reg = P.C["REGISTER"]
+    return {"gate": {str(g): {"name": P.C["GATE_NAME"].get(str(g), ""), "title": reg.get(str(g), {}).get("t", ""),
+                              "gist": P.first(reg.get(str(g), {}).get("l"))} for g in sorted(gates)},
+            "nak": [n[6] for n in P.C["NAKSHATRA"]],
+            "rune": P.X["RUNES"]}
 
 # ---------------- what's coming, today, and the sample reading ----------------
 _cal_cache, _today_cache = {}, {}
