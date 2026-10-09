@@ -199,7 +199,7 @@ def build(chart, dasha, who):
       <p class="rd-kenning">{CORPUS['KARAKA_METHOD']}</p>
       <div class="rd-tw"><table><tr><th>Karaka</th><th>Body</th><th>Degree</th><th>Reads</th></tr>{rows}</table></div>
       {pair(f"{ak} across the divisions", " · ".join(f"D{n} {naks[i]}" for i, (n, _) in enumerate(stations)))}
-      {f'<p class="rd-kenning"><b>{", ".join(rep)}</b> repeats across divisions. A soul-planet that repeats a star, a house, or a rune is repeating the life\'s keynote.</p>' if rep else ''}      {MORE.karakas_more(C, dasha)}"""))
+      {f'<p class="rd-kenning"><b>{", ".join(rep)}</b> repeats across divisions. A soul-planet that repeats a star, a house, or a rune is repeating the life\'s keynote.</p>' if rep else ''}      {MORE.karakas_more(C, dasha, asks)}"""))
 
     # ---------- the runes ----------
     out.append(section(0, "The Runes", "which runes your chart lights, and when they wake", MORE.runes(C, dasha)))

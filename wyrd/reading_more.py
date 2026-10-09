@@ -4,7 +4,7 @@ works and lives best.
 
 Interpretive sentences come from lib/corpus.json (The Völva's register) and
 lib/register_ext.json (drafted for her to edit). This file chooses and lays out."""
-import html, json, math, os
+import html, json, math, os, re
 from . import engine as E
 from . import rave as RV
 
@@ -416,36 +416,92 @@ def matrix(C, dasha):
 KA = json.load(open(os.path.join(HERE, "lib", "karakas.json"), encoding="utf-8"))
 
 
-def karakas_more(C, dasha):
-    asc = C["ascS"]; K = C["karaka"]; born = C["jd"]
+def karakas_more(C, dasha, asks=None):
+    """The seven chara karakas, each developed in full: what the role holds, who holds it and where, how strong,
+    how it stands to the soul, what it ripens into, its light and dark wield, its question and its years; then the
+    cabinet at work. Words from lib/karakas.json."""
+    from . import vargas as VG
+    asc = C["ascS"]; K = C["karaka"]; born = C["jd"]; D = KA["DEEP"]
     nav = lambda l: sign_i(E.varga(l, 9))
+    fill = lambda t, **o: re.sub(r"\{(\w+)\}", lambda m: str(o.get(m.group(1), "")), t)
+    ak_s = sign_i(C["sid"][K["Atmakaraka"]])
+    cur, cur_a = dasha["cur"]["lord"], dasha["curA"]["lord"]
+    role_of = {b: r for r, b in K.items()}
+
+    def from_soul(role, l):
+        n = (sign_i(l) - ak_s) % 12 + 1
+        kind = ("together" if n == 1 else "trine" if n in (5, 9) else "opposite" if n == 7 else "angle" if n in (4, 10)
+                else "hidden" if n in (6, 8, 12) else "feeds" if n in (2, 11) else "effort")
+        return fill(KA["FROM_SOUL"][kind], role=role.replace("karaka", "karaka"), n=ORD(n))
+
+    def strength(b, l):
+        out = []; dg = dignity(b, l); s9 = nav(l); d9 = VG.dignity_in(b, s9)
+        if dg == "exalted": out.append(KA["STRENGTH"]["exalted"])
+        elif dg in ("own", "root"): out.append(KA["STRENGTH"]["own"])
+        elif dg == "debilitated": out.append(KA["STRENGTH"]["debilitated"])
+        if s9 == sign_i(l): out.append(KA["STRENGTH"]["vargottama"])
+        else:
+            r1 = VG.RANK[{"own": "own sign", "root": "own sign"}.get(dg, dg or "")]; r9 = VG.RANK[d9]
+            if r9 > r1: out.append(fill(KA["STRENGTH"]["nav_up"], d=d9))
+            elif r9 < r1: out.append(KA["STRENGTH"]["nav_down"])
+        return " ".join(out) or KA["STRENGTH"]["plain"]
+
     out = [f'<h3 class="rd-tier">Your cabinet, one by one</h3><p>{KA["INTRO"]}</p>']
     for role, b in K.items():
-        R = KA["ROLES"][role]; l = C["sid"][b]; si = sign_i(l); h = E.house_of(l, asc); ni = E.nak_index(l); n = NAKS[ni]
+        R = KA["ROLES"][role]; d = D[role]; l = C["sid"][b]; si = sign_i(l); s9 = nav(l)
+        h = E.house_of(l, asc); n = NAKS[E.nak_index(l)]
         periods = "; ".join(f'{E_year(m["from"])}–{E_year(m["to"])} ' + ("(from birth)" if m["from"] <= born else f'(age {int((m["from"] - born) / E.YEAR)})')
                             + (" · now" if m["now"] else "")
                             for m in dasha["maha"] if m["lord"] == b and (m["from"] - born) / E.YEAR < 100)
-        extra = ""
+        fruit = re.sub(r"^it ripens into ", "", VG.W["FRUIT"][s9])
+        ripen = fill(KA["RIPEN"], sign=E.SIGNS[s9]) + " "
         if role == "Atmakaraka":
-            extra = (f'<div class="rd-body"><h5>Karakamsa · {E.SIGNS[nav(l)]}</h5><p>{KA["KARAKAMSA_INTRO"]} {KA["KARAKAMSA"][nav(l)]}</p></div>'
-                     + woven(C, b, l))
+            ripen += f'This is your Karakamsa. {KA["KARAKAMSA_INTRO"]} {KA["KARAKAMSA"][s9]}'
         elif role == "Amatyakaraka":
-            extra = pair("The work", KA["WORK"][si] + (" It holds the same sign in the navamsa, so this is doubly true." if nav(l) == si
-                                                         else f' In the navamsa: {KA["WORK"][nav(l)].split(": ", 1)[-1]}'))
+            ripen += KA["WORK"][s9] + (" It keeps that sign from the Rashi, so the work it shows is doubly yours." if s9 == si else f' In the Rashi it stands in {E.SIGNS[si]}: {KA["WORK"][si].split(": ", 1)[-1]}')
         elif role == "Darakaraka":
-            extra = pair("The partner", KA["PARTNER"][si] + (" It holds the same sign in the navamsa, so this is doubly true." if nav(l) == si
-                                                               else f' In the navamsa, deeper in the bond: {KA["PARTNER"][nav(l)].split(": ", 1)[-1]}'))
-        out.append(f"""<div class="rd-entry"><h3>{role} · {GLYPH[b]} {b} <span class="rd-side p">{deg(l)} into {E.SIGNS[si]}</span></h3>
+            ripen += KA["PARTNER"][s9] + (" It keeps that sign from the Rashi, so the partner it shows is doubly so." if s9 == si else f' On the surface, in the Rashi: {KA["PARTNER"][si].split(": ", 1)[-1]}')
+        else:
+            ripen += KA["NAV"][role][s9]
+        ripen += f" Underneath, it ripens into {fruit}"
+        extra = woven(C, b, l) if role == "Atmakaraka" else ""
+        now = " · running now" if b == cur else ""
+        out.append(f"""<div class="rd-entry"><h3>{role} · {GLYPH[b]} {b} <span class="rd-side p">{deg(l)} into {E.SIGNS[si]}{now}</span></h3>
           <div class="rd-hdr">{R["rules"]}</div>
-          <p>{R["asks"]}</p>
+          <p>{d["body"]}</p>
           <p><b>{KA["ROLE_PLANET"][role][b]}</b></p>
-          <p>It stands in sidereal {E.SIGNS[si]}, your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}: this part of your life plays out there. Its star is {n[0]}, pada {pada_of(l)}: {n[6]}</p>
+          <div class="rd-body"><h5>Where it lives</h5><p>It stands in sidereal {E.SIGNS[si]}, your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}: this part of your life plays out there. Its star is {n[0]}, pada {pada_of(l)}: {n[6]}</p></div>
+          <div class="rd-body"><h5>Its strength</h5><p>{strength(b, l)}</p></div>
+          {"" if role == "Atmakaraka" else f'<div class="rd-body"><h5>How it stands to the soul</h5><p>{from_soul(role, l)}</p></div>'}
+          <div class="rd-body"><h5>What it ripens into</h5><p>{ripen}</p></div>
           {extra}
+          <div class="rd-gifts"><div class="light"><h5>Light wield</h5><p>{d["light"]}</p></div><div class="dark"><h5>Dark wield</h5><p>{d["dark"]}</p></div></div>
+          <div class="rd-repair"><h5>Distortion</h5><p>{d["distortion"]}</p></div>
           {pair("In your life", R["people"])}
-          {pair("Its periods", periods or "its period falls after age 100")}</div>""")
+          {pair("Its years", periods or "its period falls after age 100")}
+          <p class="rd-kenning">{d["ask"]}</p></div>""")
+        if asks is not None: asks.append((f"{role} · {b}", d["ask"], False))
+
+    # ---------- the cabinet at work ----------
+    cab = [f'<h3 class="rd-tier">{KA["CABINET_H"]}</h3><p>{KA["CABINET_INTRO"]}</p>']
+    if cur in role_of:
+        r = role_of[cur]; cab.append("<p>" + fill(KA["NOW_MAHA"], era=cur, glyph=GLYPH[cur], planet=cur, role=r, domain=D[r]["domain"]) + "</p>")
+    else:
+        cab.append("<p>" + fill(KA["NOW_NONE"], planet=cur) + "</p>")
+    if cur_a in role_of and cur_a != cur:
+        r = role_of[cur_a]; cab.append("<p>" + fill(KA["NOW_ANTAR"], glyph=GLYPH[cur_a], planet=cur_a, role=r, domain=D[r]["domain"]) + "</p>")
+    by_sign = {}
+    for role, b in K.items(): by_sign.setdefault(sign_i(C["sid"][b]), []).append(f"{GLYPH[b]} {b} ({role.replace('karaka', '')})")
+    shared = [f"{E.SIGNS[s]}: " + " and ".join(v) for s, v in by_sign.items() if len(v) > 1]
+    if shared: cab.append("<p>" + fill(KA["SHARED"], list="; ".join(shared)) + "</p>")
+    els = ["Fire", "Earth", "Air", "Water"]; cnt = [0] * 4
+    for b in K.values(): cnt[sign_i(C["sid"][b]) % 4] += 1
+    top = els[cnt.index(max(cnt))]
+    cab.append("<p>" + fill(KA["ELEMENT"], el=top, n=max(cnt), el_l=top.lower(), note=KA["ELEMENT_NOTE"][top]) + "</p>")
     ak, amk, dk = C["sid"][K["Atmakaraka"]], C["sid"][K["Amatyakaraka"]], C["sid"][K["Darakaraka"]]
     close = lambda a, b: (sign_i(a) - sign_i(b)) % 12 in (0, 6)
-    notes = [KA["PAIR_AK_AMK"]] if close(ak, amk) else []
-    if close(ak, dk): notes.append(KA["PAIR_AK_DK"])
-    if notes: out.append('<h3 class="rd-tier">How the cabinet works together</h3>' + "".join(f"<p>{x}</p>" for x in notes))
+    if close(ak, amk): cab.append(f'<p>{KA["PAIR_AK_AMK"]}</p>')
+    if close(ak, dk): cab.append(f'<p>{KA["PAIR_AK_DK"]}</p>')
+    cab.append(f'<p class="rd-note">{KA["CLOSE"]}</p>')
+    out += cab
     return "".join(out)
