@@ -25,6 +25,9 @@ def _call(secret, method, path, fields=None):
 # Stripe's tax category for what is sold here (digital, personal use). Required when the account
 # uses Managed Payments, where Stripe is the seller and handles sales tax; harmless otherwise.
 TAX_CODE = os.environ.get("STRIPE_TAX_CODE", "txcd_10103000")
+# Which list of payment methods checkout offers (Settings → Payment methods; crypto, Cash App, Klarna…).
+# Unset: Stripe picks the account's default.
+PM_CONFIG = os.environ.get("STRIPE_PAYMENT_METHOD_CONFIG", "")
 
 def create_checkout(secret, *, base_url, price_id, price_cents, product_name, metadata, email=None, customer=None):
     f = {
@@ -46,6 +49,7 @@ def create_checkout(secret, *, base_url, price_id, price_cents, product_name, me
     for k, v in metadata.items():
         f[f"metadata[{k}]"] = str(v)[:500]
         f[f"payment_intent_data[metadata][{k}]"] = str(v)[:500]
+    if PM_CONFIG: f["payment_method_configuration"] = PM_CONFIG
     return _call(secret, "POST", "/checkout/sessions", f)
 
 def paid_session(secret, session_id):
@@ -101,6 +105,7 @@ def subscription_checkout(secret, *, base_url, customer, tier, name, cents, inte
         "line_items[0][price_data][recurring][interval]": interval,
         "line_items[0][price_data][product_data][name]": name}
     if TAX_CODE and not price_id: f["line_items[0][price_data][product_data][tax_code]"] = TAX_CODE
+    if PM_CONFIG: f["payment_method_configuration"] = PM_CONFIG
     if customer: f["customer"] = customer          # signed in: their customer. Not signed in: Stripe asks for the email
     return _call(secret, "POST", "/checkout/sessions", {
         **f,
