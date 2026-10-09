@@ -32,7 +32,7 @@ const G = {
   exalted: ["Exalted", "The sign where a planet is classically at its strongest. Each planet has one, and its debilitation is the opposite sign."],
   debilitated: ["Debilitated", "The sign where a planet is classically at its weakest, opposite its exaltation."],
   ownsign: ["Own sign", "A sign the planet rules. The Sun and Moon rule one sign each; the other five classical planets rule two."],
-  moolatrikona: ["Moolatrikona", "A stretch of a planet's own sign where it works most like itself, in Jyotish. Between exaltation and own sign in strength."],
+  moolatrikona: ["Root sign", "A stretch of a planet's own sign where it works most purely as itself (in Sanskrit, moolatrikona). Between exalted and own sign in strength."],
   karaka: ["Karakas", "In Jyotish, the seven classical planets ranked by how far each has travelled through its sign. The furthest is the atmakaraka, the significator of the self; the rest follow in order."],
   atmakaraka: ["Atmakaraka", "The planet furthest through its sign. In Jyotish it is the significator of the soul."],
   /* the mansions */
@@ -51,7 +51,7 @@ const G = {
   design: ["Design", "The planets at the moment the Sun stood exactly 88° earlier than at birth, about three months before. In the rave these are the unconscious side, drawn in teal."],
   profile: ["Profile", "Two numbers: the line of the birth Sun and the line of the design Sun. There are twelve possible profiles."],
   type: ["Type", "One of five kinds of rave chart, worked out from which centres are defined and how they connect: Generator, Manifesting Generator, Manifestor, Projector or Reflector."],
-  strategy: ["Strategy", "The way of engaging that goes with each type, in the rave tradition."],
+  strategy: ["How it engages", "How each type's energy naturally meets the world: a description of the current, not a rule."],
   authority: ["Authority", "Which defined centre the rave tradition says to rely on when deciding. It follows from the centres: emotional first, then sacral, splenic, and so on."],
   definition: ["Definition", "Whether the defined centres form one connected whole (single), two separate groups (split), three, or four."],
   centre: ["Centres", "The nine hubs of the rave body: Head, Ajna, Throat, G, Heart, Spleen, Solar plexus, Sacral and Root. A centre is defined when a complete channel runs into it."],

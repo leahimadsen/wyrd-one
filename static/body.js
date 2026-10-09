@@ -182,6 +182,23 @@ function shape(g){
   }
 }
 const gatesOf = rave => [rave.personality, rave.design].flatMap(col => Object.values(col).map(v => v.gate));
+/* which way the current runs along a live channel, shared by every bodygraph on the site
+   (and by wyrd/bodygraph.py): toward the throat along the circuit, from the centre
+   farther from it to the nearer; where the circuit doesn't decide, toward the throat's
+   place in the body. */
+const THROAT_GAP = { throat: 0, ajna: 82, g: 92, heart: 122, head: 154, spleen: 182, solar: 182, sacral: 210, root: 300 };
+function throatDist(gates){
+  const have = new Set(gates), adj = {};
+  for (const k in HB_CENTRES) adj[k] = new Set();
+  for (const [a, b] of HB_CHANNELS) if (have.has(a) && have.has(b)){ adj[HB_GATE_CENTRE[a]].add(HB_GATE_CENTRE[b]); adj[HB_GATE_CENTRE[b]].add(HB_GATE_CENTRE[a]); }
+  const dist = { throat: 0 }, q = ["throat"];
+  while (q.length){ const c = q.shift(); for (const n of adj[c]) if (!(n in dist)){ dist[n] = dist[c] + 1; q.push(n); } }
+  return dist;
+}
+function runsFrom(dist, c1, c2){            // true when the current runs c1 → c2
+  const d1 = dist[c1] ?? 99, d2 = dist[c2] ?? 99;
+  return d1 > d2 || (d1 === d2 && THROAT_GAP[c1] >= THROAT_GAP[c2]);
+}
 function defined(gates){
   const have = new Set(gates), out = new Set();
   for (const [a, b] of HB_CHANNELS) if (have.has(a) && have.has(b)){ out.add(HB_GATE_CENTRE[a]); out.add(HB_GATE_CENTRE[b]); }
@@ -273,12 +290,13 @@ function flowSVG(){
   const lr = showRave ? liveChannels(gatesOf(C.natal)).map(c => c.join("-")) : [];
   const ld = showDharma && C.dharma ? liveChannels(gatesOf(C.dharma)).map(c => c.join("-")) : [];
   const keys = [...new Set([...lr, ...ld])], bundle = {};
+  const distR = throatDist(gatesOf(C.natal)), distD = C.dharma ? throatDist(gatesOf(C.dharma)) : {};
   let o = "";
   for (const k of keys){
     const [a, b] = k.split("-").map(Number), ca = HB_GATE_CENTRE[a], cb = HB_GATE_CENTRE[b];
     const pair = [ca, cb].sort().join("|"), i = (bundle[pair] = (bundle[pair] || 0) + 1) - 1;
-    /* rise: from the lower centre to the higher one (toward the throat), offset when several share a route */
-    let [p, q] = HB_GEOM[ca].y >= HB_GEOM[cb].y ? [HB_GEOM[ca], HB_GEOM[cb]] : [HB_GEOM[cb], HB_GEOM[ca]];
+    /* toward the throat (runsFrom), offset when several share a route */
+    const [p, q] = runsFrom(lr.includes(k) ? distR : distD, ca, cb) ? [HB_GEOM[ca], HB_GEOM[cb]] : [HB_GEOM[cb], HB_GEOM[ca]];
     const len = Math.hypot(q.x - p.x, q.y - p.y) || 1, off = (i % 2 ? -1 : 1) * Math.ceil(i / 2) * 4;
     const nx = -(q.y - p.y) / len * off, ny = (q.x - p.x) / len * off;
     const cls = lr.includes(k) && ld.includes(k) ? "both" : lr.includes(k) ? "rave" : "dharma";
@@ -620,5 +638,5 @@ document.addEventListener("keydown", e => {
   if (el){ e.preventDefault(); el.dispatchEvent(new MouseEvent("click", { bubbles: true })); }
 });
 
-window.WyrdBody = { mount, centres: HB_CENTRES, channels: HB_CHANNELS };
+window.WyrdBody = { mount, centres: HB_CENTRES, channels: HB_CHANNELS, runsFrom };
 })();

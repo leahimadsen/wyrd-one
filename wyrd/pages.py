@@ -66,12 +66,12 @@ def reports(base, price_cents, member_cents):
 </div>
 <h2>Questions</h2>
 <h3>What do I need for an astrology reading?</h3><p>Your date, time and place of birth. If you don't know the time, the free chart still works with solar houses, and the reading tells you which parts depend on the time.</p>
-<h3>Is this sidereal or tropical astrology?</h3><p>Both. Signs, nakshatras and houses are sidereal (Lahiri). The 64 gates use the tropical zodiac, as Human Design does. Your Dharma body is the D9 of the tropical positions.</p>
+<h3>Is this sidereal or tropical astrology?</h3><p>Both. Signs, nakshatras and houses are sidereal (Lahiri). The 64 gates use the tropical zodiac, as Human Design does. Your Dharma Design is the ninth harmonic (D9) of the sidereal positions.</p>
 <h3>How do I get my reading?</h3><p>Straight after payment it opens in your browser. Save it as a PDF from your browser's print menu.</p>
 <h3>Can astrologers use these tools with their clients?</h3><p>Yes. Astrologers and practitioners can use these tools with their own clients through <a href="/membership#pro">Wyrd Console Professional</a>.</p>
 """
     faq = [("What do I need for an astrology reading?", "Your date, time and place of birth. If you don't know the time, the free chart still works with solar houses."),
-           ("Is this sidereal or tropical astrology?", "Both. Signs, nakshatras and houses are sidereal (Lahiri). The 64 gates use the tropical zodiac. The Dharma body is the D9 of the tropical positions."),
+           ("Is this sidereal or tropical astrology?", "Both. Signs, nakshatras and houses are sidereal (Lahiri). The 64 gates use the tropical zodiac. The Dharma Design is the ninth harmonic (D9) of the sidereal positions."),
            ("How do I get my reading?", "Straight after payment it opens in your browser, and can be saved as a PDF.")]
     ld = _ld({"@context": "https://schema.org", "@graph": [
         {"@type": "Product", "name": "Natal astrology reading", "brand": {"@type": "Brand", "name": "The Wyrd Console"},

@@ -123,7 +123,7 @@ const LESSONS = [
       From which centres are defined, and how they connect, come your ${g("type")}, ${g("strategy")}, ${g("authority")} and ${g("definition")}. The two Sun lines make your ${g("profile")}.</p>`,
     yours: X => {
       const r = WyrdWheel.rave(X.C);
-      return `<dl class="ln-dl"><dt>Type</dt><dd>${r.type}</dd><dt>Strategy</dt><dd>${r.strategy}</dd><dt>Authority</dt><dd>${r.authority}</dd>
+      return `<dl class="ln-dl"><dt>Type</dt><dd>${r.type}</dd><dt>How it engages</dt><dd>${r.strategy}</dd><dt>Authority</dt><dd>${r.authority}</dd>
         <dt>Definition</dt><dd>${r.definition}</dd><dt>Profile</dt><dd>${r.profile}</dd><dt>Channels</dt><dd>${r.channels.join(", ") || "none"}</dd></dl>`;
     },
     tryIt: "The harmonic body shows the centres on a figure. Turn on \"Body Rave\" there.", deeper: "body" },

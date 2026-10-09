@@ -47,6 +47,9 @@ async function cast(birth){
   if (!r.ok) throw new Error(j.error || (r.status === 429 ? "Too many charts in a minute. Wait a moment and try again." : "The chart couldn't be cast."));
   return j;
 }
+/* charts cast before the engine last changed meaning are re-cast (app.py CHART_V) */
+const CHART_V = 2;
+const fresh = result => !!(result && result.chart && result.chart.v === CHART_V);
 function keep(birth, result){
   try { sessionStorage.setItem("wyrdChart", JSON.stringify({ birth, result })); return true; } catch (_) { return false; }
 }
@@ -119,5 +122,5 @@ function iosHelp(){
 document.addEventListener("DOMContentLoaded", syncInstall);
 if (document.readyState !== "loading") syncInstall();
 
-window.WyrdCommon = { esc, placeSearch, cast, keep, current, shareLink, fromLink, savedList, isSaved, toggleSaved, refreshSaved, removeSaved, standalone, syncInstall };
+window.WyrdCommon = { esc, placeSearch, cast, keep, current, fresh, shareLink, fromLink, savedList, isSaved, toggleSaved, refreshSaved, removeSaved, standalone, syncInstall };
 })();

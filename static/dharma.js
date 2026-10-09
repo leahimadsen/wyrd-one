@@ -36,7 +36,7 @@ function pentagram(C){
 function mount(host, X){
   const C = X.C, D = C.dharma, N = C.natal;
   if (!D){ host.innerHTML = `<p class="err">The dharma rave isn't available for this chart.</p>`; return; }
-  const bs = C.trop.Sun, ds = C.tropDes ? C.tropDes.Sun : norm(bs - 88);
+  const bs = C.sid.Sun, ds = C.tropDes ? norm(C.tropDes.Sun - C.ay) : norm(bs - 88);   // sidereal, in the birth's frame
   const step = (n, title, body) => `<div class="dw-step"><span>${n}</span><div><h3>${title}</h3>${body}</div></div>`;
   const times9 = (l, label) => {
     const raw = l * 9, circles = Math.floor(raw / 360), res = norm(raw);
@@ -64,7 +64,7 @@ function mount(host, X){
     </div>
     <h3 class="vd-h">How your dharma rave was made</h3>
     ${step(1, "Two moments", `<p>Your birth, and your design moment on <b>${day(C.jdDes)}</b>.
-      At birth your Sun stood at <b>${lon(bs)}</b> (tropical); at the design moment, 88° earlier, at <b>${lon(ds)}</b>.</p>`)}
+      At birth your Sun stood at <b>${lon(bs)}</b> (sidereal); at the design moment, 88° earlier, at <b>${lon(ds)}</b>.</p>`)}
     ${step(2, "Multiply by nine", `<p>Every position at both moments is multiplied by nine and taken around the circle, which is what the navamsa does. Your two Suns:</p>
       <div class="tw"><table class="dw-calc">${times9(bs, "☉ Sun at birth")}${times9(ds, "☉ Sun at design")}</table></div>
       <p>So your dharma Sun is gate <b>${D.personality.Sun.gate}.${D.personality.Sun.line}</b>, and your dharma design Sun gate <b>${D.design.Sun.gate}.${D.design.Sun.line}</b>.

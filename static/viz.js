@@ -1189,7 +1189,7 @@ function resonanceGame(){
   const r = pairResonance(benchRoot, benchIv);
   const G = CLASSICAL;
   const D = live.tree;
-  const span = { from: D.maha[0].from, to: D.maha[D.maha.length-1].to };
+  const span = { from: Math.max(D.maha[0].from, CHART.jd || D.maha[0].from), to: D.maha[D.maha.length-1].to };   // the clock runs from before birth; the scrub starts at birth
   const s = scrubRead(scrubJD ?? jdNow());
 
   const pick = (side, sel) => `<div class="gpick">${G.map(g => {

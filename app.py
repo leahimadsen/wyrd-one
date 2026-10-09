@@ -218,6 +218,7 @@ def unknown_time(c):
     travel, so report the mansions it may have stood in."""
     c["unknownTime"] = True
     c["ascS"], c["ascT"] = c["sid"]["Sun"], c["trop"]["Sun"]
+    c["navAsc"] = None                                    # the noon angles mean nothing: leave them out
     span = []
     for dt in (-0.5, 0, 0.5):
         jd = c["jd"] + dt
@@ -241,7 +242,10 @@ def chart():
     c["extras"] = extras(EPH, c, b)
     if c.get("unknownTime"): c["extras"]["placidus"] = None     # house cusps need a birth time
     c["lex"] = lexicon(c)
+    c["v"] = CHART_V
     return jsonify(chart=plain(c), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME)
+
+CHART_V = 2      # bump when a cast changes meaning (2: sidereal Dharma Design); common.js CHART_V must match
 
 def lexicon(c):
     """The words the free pages need for this chart: each of its gates (name, title, a first line from the
@@ -314,6 +318,7 @@ def checkout():
     meta = {"name": (d.get("name") or "").strip()[:80], "date": d["date"], "time": d["time"],
             "place_id": b["place"]["id"], "place_label": b["place"]["label"],
             "lat": b["place"]["lat"], "lon": b["place"]["lon"], "tz": b["place"]["tz"]}
+    if d.get("unknown_time"): meta["unknown_time"] = "1"
     if config.DEV_PREVIEW:
         from urllib.parse import urlencode
         return jsonify(url="/reading?" + urlencode({"preview": 1, **meta}))
@@ -359,6 +364,8 @@ def render_reading(meta, banner=""):
     the sample and the private admin, so all three are always the same reading."""
     b = birth_from(meta)
     c = cast_for(b)
+    if str(meta.get("unknown_time", "")) in ("1", "true", "True", "on"):
+        c = dict(c); c["sid"], c["trop"] = dict(c["sid"]), dict(c["trop"]); unknown_time(c)
     body = reading.build(c, engine.dasha_tree(c, jd_now()), meta)
     who = html.escape(meta.get("name") or "")
     born = f"{b['y']:04d}-{b['mo']:02d}-{b['d']:02d} · {b['hh']:02d}:{b['mi']:02d} ({b['ut']['label']}) · {html.escape(b['place']['label'])}"
@@ -553,8 +560,19 @@ def esc(v): return html.escape(str(v))
 
 @app.get("/api/me")
 def api_me():
-    r = jsonify(signedIn=bool(signed_in())); r.headers["Cache-Control"] = "no-store"
+    email, member = signed_in(), False
+    if email and config.STRIPE_SECRET:
+        try:
+            st = billing.status(config.STRIPE_SECRET, email); member = bool(st["member"] or st["pro"])
+        except stripe_api.StripeError:
+            pass
+    cents = config.MEMBER_READING_CENTS if member else config.PRICE_CENTS
+    r = jsonify(signedIn=bool(email), member=member, readingPrice=money(cents)); r.headers["Cache-Control"] = "no-store"
     return r
+
+def money(cents):
+    """$44, $35.20: whole dollars without the cents."""
+    return f"${cents // 100}" if cents % 100 == 0 else f"${cents / 100:.2f}"
 
 @app.get("/signin")
 def signin_page():

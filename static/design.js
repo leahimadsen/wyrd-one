@@ -47,7 +47,7 @@ function analyse(rave){
   const motorToThroat = defined.has("throat") && MOTORS.some(m => m in dist && dist[m] > 0);
   const type = !defined.size ? "Reflector" : defined.has("sacral") ? (motorToThroat ? "Manifesting Generator" : "Generator") : motorToThroat ? "Manifestor" : "Projector";
   const authority = !defined.size ? "Lunar" : defined.has("solar") ? "Emotional" : defined.has("sacral") ? "Sacral" : defined.has("spleen") ? "Splenic"
-    : defined.has("heart") ? (adj.heart.has("throat") ? "Ego manifested" : "Ego projected") : defined.has("g") && adj.g.has("throat") ? "Self-projected" : "Outer";
+    : defined.has("heart") ? ("heart" in dist ? "Ego manifested" : "Ego projected") : defined.has("g") && adj.g.has("throat") ? "Self-projected" : "Outer";
   const definition = ["No definition", "Single definition", "Split definition", "Triple split", "Quadruple split"][parts] || "Split definition";
   return { rave, gates, live, defined, dist, type, authority, definition, parts, motorToThroat, profile: rave.profile };
 }
@@ -68,16 +68,13 @@ function channelGeom(live, mode){
 function graph(A, B){                          // A: birth, B: dharma (either may be null)
   const key = ch => ch.join("-");
   const inA = new Set(A ? A.live.map(key) : []), inB = new Set(B ? B.live.map(key) : []);
-  const ref = A || B;
   let lines = "", flows = "";
   for (const g of channelGeom()){
     const k = key(g.ch), a = inA.has(k), b = inB.has(k);
     const cls = a && b ? "both" : a ? "birth" : b ? "dharma" : "idle";
-    /* the current runs toward the throat: from the centre farther from it to the nearer */
+    /* the current runs toward the throat, by the circuit of the chart the channel is live in */
     let [x1, y1, x2, y2] = [g.x1, g.y1, g.x2, g.y2];
-    const d1 = ref.dist[g.c1] ?? 99, d2 = ref.dist[g.c2] ?? 99;
-    const ty = POS.throat[1];                  /* along the circuit to the throat, else toward its place in the body */
-    if (d1 < d2 || (d1 === d2 && Math.abs(POS[g.c1][1] - ty) < Math.abs(POS[g.c2][1] - ty))) [x1, y1, x2, y2] = [x2, y2, x1, y1];
+    if (!WyrdBody.runsFrom((a || !B ? A || B : B).dist, g.c1, g.c2)) [x1, y1, x2, y2] = [x2, y2, x1, y1];
     lines += `<line class="dg-ch ${cls}" x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"><title>Channel ${g.ch[0]}–${g.ch[1]}</title></line>`;
     if (cls !== "idle" && !reduce){
       const dur = (Math.hypot(x2 - x1, y2 - y1) / 38).toFixed(2);

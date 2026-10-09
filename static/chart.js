@@ -6,7 +6,7 @@
 (async () => {
 const $ = id => document.getElementById(id);
 const { signOf, degIn, nakIndex, houseOf, norm, GLYPH, NAKSHATRA } = Wyrd.helpers;
-const { esc, cast, keep, current, shareLink, fromLink, isSaved, toggleSaved, refreshSaved } = WyrdCommon;
+const { esc, cast, keep, current, fresh, shareLink, fromLink, isSaved, toggleSaved, refreshSaved } = WyrdCommon;
 const g = (k, l) => Wyrd.gloss(k, l);
 
 /* ---------- which chart: a shared link, or the one cast in this tab ---------- */
@@ -21,6 +21,9 @@ if (linkParam){
   history.replaceState(null, "", "/chart" + location.hash);     // the details don't stay in the address bar
 }
 if (!saved || !saved.result || !saved.result.chart){ location.replace("/"); return; }
+if (!fresh(saved.result) && navigator.onLine !== false){       // cast by an older engine: bring it up to date
+  try { const j = await cast(saved.birth); keep(saved.birth, j); saved = { birth: saved.birth, result: j }; } catch (_) {}
+}
 const { birth, result: J } = saved, C = J.chart, T = C.dashaTree, unknown = !!C.unknownTime;
 const X = C.extras || {};
 Wyrd.setChart(C);
@@ -35,7 +38,7 @@ function dignity(b){
   const l = C.sid[b], s = Math.floor(norm(l) / 30), d = degIn(l), m = MOOLA[b];
   if (s === EXALT[b] && !(b === "Mercury" && d >= 15) && !(b === "Moon" && d >= 3)) return { k: "ex", label: "exalted", key: "exalted" };
   if (s === (EXALT[b] + 6) % 12) return { k: "deb", label: "debilitated", key: "debilitated" };
-  if (s === m[0] && d >= m[1] && d < m[2]) return { k: "mt", label: "moolatrikona", key: "moolatrikona" };
+  if (s === m[0] && d >= m[1] && d < m[2]) return { k: "mt", label: "root sign", key: "moolatrikona" };
   if (OWN[b].includes(s)) return { k: "own", label: "own sign", key: "ownsign" };
   return null;
 }
@@ -64,7 +67,7 @@ const LANDS = [
   { id: "armillary", name: "The armillary",         mark: "◎", teaser: "Your sky as a sphere you can open",
     terms: ["armillary", "ayanamsa", "gate", "rune"], prompt: "Your reading draws every frame of the sphere into one account of you." },
   { id: "reading",   name: "Your full reading",     mark: "✦", teaser: "Thirteen sections, written for you · $44", gold: true, terms: [] },
-  { id: "compare",   name: "Compare",               mark: "⚭", teaser: "You and another, or a unit of three or four",
+  { id: "compare",   name: "Compare",               mark: "⚭", teaser: "You and up to eight others",
     terms: [], prompt: "Your reading is about your chart alone, read in full: the ground every bond stands on." },
   { id: "sky",       name: "The sky now",           mark: "☾", teaser: "Today's planets crossing yours",
     terms: ["transit", "sadesati", "retro", "orb"], prompt: "Your reading names what your chart asks of you, whatever today's sky is doing." },
@@ -296,7 +299,10 @@ $("buyBtn").addEventListener("click", async () => {
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || "Checkout couldn't open.");
     location.href = j.url;
-  } catch (x) { err.textContent = x.message; btn.disabled = false; btn.textContent = "Get my reading — $44"; }
+  } catch (x) { err.textContent = x.message; btn.disabled = false; btn.textContent = buyLabel; }
 });
+/* members pay less: say so on the button before they click */
+let buyLabel = $("buyBtn").textContent;
+fetch("/api/me").then(r => r.json()).then(d => { if (d.member && d.readingPrice){ buyLabel = `Get my reading — ${d.readingPrice}, your member price`; $("buyBtn").textContent = buyLabel; } }).catch(() => {});
 if (new URLSearchParams(location.search).get("cancelled")) $("buyErr").textContent = "Checkout was cancelled — your chart is still here whenever you're ready.";
 })();
