@@ -5,7 +5,7 @@
    - Readings, checkout and the consultation pages are never cached: they are
      private and paid for.
    Bump VERSION to throw the old cache away. */
-const VERSION = "wyrd-v10";
+const VERSION = "wyrd-v11";
 const SHELL = ["/", "/chart", "/today", "/offline",
   "/static/console.css", "/static/site.css", "/static/map.css", "/static/learn.css", "/static/body.css", "/static/dasha.css", "/static/a11y.css", "/static/design.css",
   "/static/viz.js", "/static/glossary.js", "/static/common.js", "/static/body.js", "/static/design.js", "/static/runes.js", "/static/kuta.js", "/static/synastry.js", "/static/wheel.js", "/static/torus.js", "/static/dasha.js",
