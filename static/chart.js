@@ -57,7 +57,7 @@ const LEARN = { id: "learn", name: "Learn your chart", short: "Learn", mark: "�
 const LANDS = [
   { id: "chart",     name: "Your chart",             short: "Chart", mark: "☉", path: true,
     teaser: unknown ? `Sun in ${signOf(C.sid.Sun)} · Moon in ${signOf(C.sid.Moon)}` : `${signOf(C.ascS)} rising · Moon in ${NAKSHATRA[nakIndex(C.sid.Moon)][0]}`,
-    why: "Where everything was when you were born, in both zodiacs.",
+    why: "Where everything was when you were born, in both zodiacs, and every divisional chart from D1 to D60.",
     terms: ["sidereal", "tropical", "house", "nakshatra", "pada", "rune", "gate", "design", "retro", "dignity", "navamsa"],
     prompt: "Your reading reads these placements together: the Seat you rise from, the engine of your Moon, your Soul-Planet and its cabinet." },
   { id: "clock",     name: "The Vimshottari Clock",  short: "Clock", mark: "◷", path: true,
@@ -70,7 +70,7 @@ const LANDS = [
     teaser: "The runes your planets light, read through their mansions", why: "Your houses carry the 24 runes; your planets wake some of them.",
     terms: ["rune", "nakshatra"], prompt: "Your reading ranks your runes and names the years each one wakes." },
   { id: "design",    name: "Your design",            short: "Design", mark: "⬡", path: true,
-    teaser: `${designType ? designType + " · " : ""}your Birth and Dharma Designs`, why: "How energy moves through your body, and what it ripens into.",
+    teaser: `${designType ? designType + " · " : ""}your Birth and Dharma Designs`, why: "How your Rashi ripens into your navamsa, and how both move through your body.",
     terms: ["centre", "channel", "type", "authority", "station7", "dharmaweave"], prompt: "Your reading reads the gates of your work and your body's channels through both designs, and walks the Path of Dharma step by step." },
   { id: "compare",   name: "Compare",                short: "Compare", mark: "⚭", path: true,
     teaser: "You and up to eight others", why: "How your chart meets someone else's.",
@@ -253,6 +253,7 @@ function designLand(){
   const D = WyrdDesign.mount($("designHost"), { C });
   if (window.WyrdBody) WyrdBody.mount($("bodyHost"), C);
   if (has) WyrdDharma.mount($("dharmaHost"), { C, unknown }); else $("weave").hidden = true;
+  if (has) WyrdVargas.thread($("threadHost"), C, { unknown }); else { $("thread").hidden = true; }
   const set = v => { D.set(v); if (window.WyrdBody) WyrdBody.setDesign(v);
     $("designIntro").querySelectorAll("[data-dgv]").forEach(b => b.setAttribute("aria-pressed", b.dataset.dgv === v)); };
   $("designIntro").addEventListener("click", e => { const b = e.target.closest("[data-dgv]"); if (b) set(b.dataset.dgv); });
@@ -263,7 +264,7 @@ function designLand(){
 let learn = null;
 const BUILD = {
   learn: () => { learn = WyrdLearn.mount($("learnHost"), { C, birth, unknown, name: birth.name, dignity, retro, onStep: drawStart }); },
-  chart: chartLand,
+  chart: () => { chartLand(); WyrdVargas.mount($("vargaHost"), C, { unknown }); },
   clock: () => { window.WyrdDasha && WyrdDasha.mount($("dashaHost"));
     if (unknown) $("dashaHost").insertAdjacentHTML("afterbegin", `<p class="unknown-note">The clock is set by the Moon. Without a birth time your Moon could be anywhere in a day's travel, so these dates may be out by months.</p>`); },
   design: designLand,

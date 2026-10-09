@@ -60,3 +60,26 @@ table.kt td { vertical-align: top; } .kt-n { white-space: nowrap; font-variant-n
 .sy-two h5, .cp-pair h5 { font-weight: 400; color: var(--celadon); font-size: 16px; margin: 14px 0 6px; }
 .sy-houses, .sy-hd { padding-left: 18px; } .sy-houses li, .sy-hd li { margin: 7px 0; }
 .sy-asks li { margin: 5px 0; color: var(--celadon); }
+
+/* ---- the divisional charts and the thread from Rashi to Dharma ---- */
+.vg-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 16px; }
+.vg-chip { font: inherit; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; padding: 6px 10px; border-radius: 3px; cursor: pointer;
+  color: var(--ivory-dim); background: rgba(8,8,22,.6); border: 1px solid rgba(156,180,166,.28); }
+.vg-chip[aria-pressed="true"] { color: var(--ivory); border-color: var(--jade); background: rgba(38,81,74,.45); }
+.vg-one { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 22px; align-items: start; }
+@media (max-width: 720px) { .vg-one { grid-template-columns: 1fr; } }
+.vg-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, minmax(74px, auto)); border: 1px solid rgba(156,180,166,.35); }
+.vg-cell { position: relative; border: 1px solid rgba(156,180,166,.18); padding: 4px 5px 6px; min-width: 0; }
+.vg-cell small { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; color: var(--ivory-dim); }
+.vg-cell div { font-size: 19px; line-height: 1.35; color: var(--ivory); word-break: break-word; }
+.vg-cell.asc { background: rgba(184,146,74,.1); }
+.vg-asc { position: absolute; top: 3px; right: 5px; font-style: normal; font-family: var(--mono); font-size: 10px; color: var(--gold); }
+.vg-p.ex { color: #f3e3b0; text-shadow: 0 0 6px rgba(243,227,176,.55); } .vg-p.deb { opacity: .45; }
+.vg-mid { grid-row: 2 / 4; grid-column: 2 / 4; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--celadon); }
+.vg-mid b { font-weight: 400; font-size: 28px; } .vg-mid span { font-size: 14px; color: var(--ivory-dim); }
+.vg-say h4 { margin: 0 0 6px; font-weight: 400; font-size: 19px; color: var(--celadon); }
+table.vg-all { border-collapse: collapse; font-size: 13px; } .vg-all th, .vg-all td { padding: 4px 6px; border-bottom: 1px solid var(--rule); text-align: left; white-space: nowrap; font-weight: 400; }
+.vg-all td.same { font-weight: 700; color: var(--ivory); } .vg-all td.exalted { color: #f3e3b0; } .vg-all td.debilitated { opacity: .5; }
+table.vg-thread { border-collapse: collapse; } .vg-thread th, .vg-thread td { padding: 6px 10px; border-bottom: 1px solid var(--rule); text-align: left; font-weight: 400; vertical-align: top; }
+.vg-thread tr.same td, .vg-thread tr.same th { background: rgba(38,81,74,.22); }
+.vg-read li { margin: 8px 0; }
