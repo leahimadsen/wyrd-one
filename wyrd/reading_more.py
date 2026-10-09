@@ -42,6 +42,17 @@ def pair(k, v): return f'<div class="rd-pair"><em>{k}</em><span>{v}</span></div>
 def gate_title(g): return REG.get(str(g), {}).get("t") or GATE_NAME.get(str(g), "")
 
 
+MANDALA = json.load(open(os.path.join(HERE, "static", "mandala.json"), encoding="utf-8"))["padas"]
+
+def card_of(l):
+    """The Völva's mandala: the cards of the pada a sidereal longitude stands in."""
+    return MANDALA[int(E.norm(l) // (10 / 3)) % 108]
+
+def card_pair(l):
+    c = card_of(l)
+    return pair("Its card", f'{c["minor"]} · {c["minorInner"]}, ruled by {c["ruler"]}, under {c["trump"]} · {c["trumpInner"]}')
+
+
 def rune_at(l, asc):
     """The rune a sidereal longitude stands in: two to a whole-sign house, as on the console's wheel."""
     h = E.house_of(l, asc)
@@ -158,6 +169,7 @@ def planets(C):
           {woven(C, b, s)}
           {f'<p class="rd-kenning">{X["DIGNITY"][dg]}</p>' if dg else ""}
           {pair("Rune", f'{r["glyph"]} {r["name"]}, {r["gloss"]}. {X["RUNES"][r["name"]]["means"]}')}
+          {card_pair(s)}
           {gates}
           {pair("At its best", P["light"])}{pair("Watch for", P["shadow"])}</div>""")
     return "".join(out)

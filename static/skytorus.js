@@ -9,9 +9,10 @@
    planet and the natal one it crosses line up across the ring.
    One control folds it flat into a wheel seen from above (Aries at
    nine o'clock, as on the other wheels) and back out into three
-   dimensions. Drag to turn it; tap to see what is there.
+   dimensions. Drag to turn it; tap to see what is there. With the
+   mandala loaded (tarot.js), a fifth band carries its cards.
    Plain canvas, no library. Shares its look with torus.js.
-   - WyrdSkyTorus.mount(host, { rows, natal, ay, caption, mode })
+   - WyrdSkyTorus.mount(host, { rows, natal, ay, caption, mode, tarot })
        rows:  [{ body, sid, gate, line, retro }] (the sky now)
        natal: { sid: {Sun: lon, ...} } (optional)
    ============================================================ */
@@ -20,15 +21,18 @@ const { norm, nakIndex, GLYPH, NAKSHATRA } = Wyrd.helpers;
 const TAU = Math.PI * 2, D2R = Math.PI / 180;
 const SIGNS_ = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
 const SG = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"].map(g => g + "︎");
-const LAYERS = [                     /* outer edge → over the top → inner edge */
+const BASE = [                       /* outer edge → over the top → inner edge */
   { id: "signs", name: "Sidereal signs" }, { id: "mansions", name: "Mansions" },
   { id: "gates", name: "Gates" }, { id: "tropical", name: "Tropical signs" },
 ];
-const NU = 192, PER = 6, NV = LAYERS.length * PER, NB = 12, R = 1, r = 0.42;
+const TAROT_RGB = [[150, 120, 230], [110, 150, 230], [200, 120, 150], [120, 190, 170], [220, 170, 110], [150, 200, 120]];
+const NU = 216, PER = 6, NB = 12, R = 1, r = 0.42;
 const GATE_AT = trop => GATE_ORDER[Math.floor(norm(trop - 302) / 5.625)];
 
 function mount(host, opts){
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const tarot = opts.tarot || null;                                   // the 108 padas of the mandala, when loaded
+  const LAYERS = tarot ? [...BASE, { id: "tarot", name: "The mandala's cards" }] : BASE, NV = LAYERS.length * PER;
   const rows = opts.rows || [], natal = opts.natal && opts.natal.sid ? opts.natal.sid : null;
   const ay = opts.ay != null ? opts.ay : (rows[0] ? norm(rows[0].trop - rows[0].sid) : 24.2);
   const cap = opts.caption || { set textContent(v){} };
@@ -51,6 +55,9 @@ function mount(host, opts){
       case "gates": { const g = GATE_AT(trop), lit = skyGates.has(g), who = rows.filter(x => x.gate === g).map(x => x.body);
         return { lit, rgb: lit ? [240, 236, 225] : [70, 130, 150], label: `Gate ${g}${GATE_NAME[g] ? " · " + GATE_NAME[g] : ""}${who.length ? " · lit by " + who.join(", ") : ""}` }; }
       case "tropical": { const s = Math.floor(trop / 30); return { rgb: s % 2 ? [150, 110, 240] : [175, 140, 255], label: `${SIGNS_[s]} (tropical)` }; }
+      case "tarot": { const c = WyrdTarot.at(tarot, lon), who = rows.filter(x => Math.floor(norm(x.sid) / (10 / 3)) === c.idx).map(x => x.body), t = Math.floor(c.idx / 9);
+        return { lit: who.length > 0, rgb: who.length ? [255, 236, 200] : TAROT_RGB[t % TAROT_RGB.length].map(v => v - (c.idx % 2) * 18),
+          label: `${WyrdTarot.trump(c)} · ${WyrdTarot.minor(c)} (${c.ruler})${c.void ? " · void: " + c.void : ""}${who.length ? " · " + who.join(", ") : ""}` }; }
     }
   }
   const COL = [];
@@ -109,16 +116,28 @@ function mount(host, opts){
       ctx.fillStyle = `rgba(120,140,230,${(m * (n[2] > 0 ? .05 : .025)).toFixed(3)})`;
       ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); ctx.closePath(); ctx.fill();
     }
-    /* the layers, as light */
+    /* the layers, as light. With depth, the half of the ring nearer than the Earth is painted after it,
+       over a veil, so the Earth sits inside the ring rather than on top of its near edge */
+    const zE = proj(rot([0, 0, 0]))[2], nearer = [];
+    const paint = (q, veil) => {
+      const [a, b, c, d] = q.pts;
+      const path = () => { ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); ctx.closePath(); };
+      if (veil){ ctx.globalCompositeOperation = "source-over"; ctx.fillStyle = `rgba(8,12,28,${(.55 * m).toFixed(3)})`; path(); ctx.fill(); ctx.globalCompositeOperation = "lighter"; }
+      ctx.fillStyle = q.fill; path(); ctx.fill();
+    };
     for (let i = 0; i < NU; i++) for (let j = 0; j < NV; j++){
       const k = Math.floor(j / PER), a = P[i][j], b = P[i + 1][j], c = P[i + 1][j + 1], d = P[i][j + 1];
       const n = normal(uOf(i + .5), vOf(j + .5)), col = COL[i][k], front = n[2] > 0, fres = 1 - Math.abs(n[2]);
       const alpha = (front ? 1 : .5) * ((col.lit ? .36 : .1) + .2 * fres * fres * m);
       const [r_, g_, b_] = glow(col.rgb, col.lit ? .35 : .22);
-      ctx.fillStyle = `rgba(${r_},${g_},${b_},${alpha.toFixed(3)})`;
-      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); ctx.closePath(); ctx.fill();
-      if (front) quads.push({ pts: [a, b, c, d], z: (a[2] + b[2] + c[2] + d[2]) / 4, col, i, k });
+      const q = { pts: [a, b, c, d], z: (a[2] + b[2] + c[2] + d[2]) / 4, col, i, k, fill: `rgba(${r_},${g_},${b_},${alpha.toFixed(3)})` };
+      if (m > .3 && q.z > zE) nearer.push(q); else paint(q, false);
+      if (front) quads.push(q);
     }
+    ctx.globalCompositeOperation = "source-over";
+    earth();
+    ctx.globalCompositeOperation = "lighter";
+    for (const q of nearer) paint(q, true);
     /* threads: the layer edges and every sign */
     ctx.lineWidth = 1;
     for (let k = 0; k <= LAYERS.length; k++){
@@ -130,17 +149,17 @@ function mount(host, opts){
       for (let j = 0; j <= NV; j++){ const q = P[i][j]; j ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.stroke();
     }
     ctx.globalCompositeOperation = "source-over";
-    earth();
     /* the sign glyphs, written on the sidereal band and the tropical band */
     const R0 = Math.min(W, H), fs = Math.max(11, R0 * .036);
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     const write = (k, lon, text, a0) => {
       const u = lon * D2R, v = vOf(k * PER + PER / 2), nz = m < .35 ? 1 : normal(u, v)[2]; if (nz < .05) return;
       const p = P3(u, v, .004), a = a0 * Math.min(1, (nz - .05) * 3);
-      ctx.font = `${Math.round(fs * (k ? .8 : 1))}px Texturina, serif`; ctx.shadowColor = "rgba(180,220,255,.7)"; ctx.shadowBlur = 6;
+      ctx.font = `${Math.round(fs * (k ? .62 : .72))}px Texturina, serif`; ctx.shadowColor = "rgba(180,220,255,.7)"; ctx.shadowBlur = 6;
       ctx.fillStyle = `rgba(236,240,255,${a})`; ctx.fillText(text, p[0], p[1]);
     };
-    for (let s = 0; s < 12; s++){ write(0, s * 30 + 15, SG[s], .95); write(3, norm(s * 30 + 15 - ay), SG[s], .55); }
+    /* each sign named on both bands: sidereal on the outer, tropical on the inner */
+    for (let s = 0; s < 12; s++){ write(0, s * 30 + 15, `${SG[s]} ${SIGNS_[s].slice(0, 3)}`, .95); write(3, norm(s * 30 + 15 - ay), `${SG[s]} ${SIGNS_[s].slice(0, 3)}`, .7); }
     ctx.shadowBlur = 0;
     /* the planets: today's on the outer edge, the birth chart's on the inner */
     const place = (lon, v, lift) => { const u = lon * D2R; return { p: P3(u, v, lift), z: normal(u, v)[2] }; };
@@ -198,8 +217,9 @@ function mount(host, opts){
       .map(o => ({ ...o, q: P3(o.p.sid * D2R, o.v, .1) })).filter(o => Math.hypot(o.q[0] - x, o.q[1] - y) < Math.max(14, Math.min(W, H) * .03))[0];
     if (near){
       const p = near.p; pick = null;
-      cap.textContent = near.sky ? `${p.body} today · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}° sidereal · ${NAKSHATRA[nakIndex(p.sid)][0]} · gate ${p.gate}.${p.line}${p.retro ? " · retrograde" : ""}`
-        : `Your ${p.body} at birth · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}°${rows.filter(t => at(t.sid, p.sid) < 3).map(t => ` · ${t.body} is crossing it now`).join("")}`;
+      const card = tarot ? ` · ${WyrdTarot.minor(WyrdTarot.at(tarot, p.sid))}` : "";
+      cap.textContent = near.sky ? `${p.body} today · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}° sidereal · ${SIGNS_[Math.floor(norm(p.sid + ay) / 30)]} ${Math.floor(norm(p.sid + ay) % 30)}° tropical · ${NAKSHATRA[nakIndex(p.sid)][0]} · gate ${p.gate}.${p.line}${card}${p.retro ? " · retrograde" : ""}`
+        : `Your ${p.body} at birth · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}° sidereal · ${SIGNS_[Math.floor(norm(p.sid + ay) / 30)]} ${Math.floor(norm(p.sid + ay) % 30)}° tropical${card}${rows.filter(t => at(t.sid, p.sid) < 3).map(t => ` · ${t.body} is crossing it now`).join("")}`;
       kick(); return;
     }
     const inside = pts => { let c = false; for (let a = 0, b = pts.length - 1; a < pts.length; b = a++){

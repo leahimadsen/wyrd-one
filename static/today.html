@@ -33,7 +33,7 @@
         <button type="button" class="tz-chip" data-st="3d" aria-pressed="false">⤢ 3D, around the Earth</button>
       </div>
       <div class="td-wheel" id="tdWheel"></div>
-      <p class="tz-cap" id="tdCap" aria-live="polite">Tap a planet or a band to see what is there. Tap the empty sky to fold it in or out.</p>
+      <p class="tz-cap" id="tdCap" aria-live="polite">Outer band: the sidereal signs. Inner bands: the mansions, the gates, the tropical signs and the mandala’s cards. Tap a planet or a band to see what is there; tap the empty sky to fold it in or out.</p>
     </div>
   </div>
 </header>
@@ -55,6 +55,7 @@
 <script src="/static/pulse.js"></script>
 <script src="/static/glossary.js"></script>
 <script src="/static/common.js"></script>
+<script src="/static/tarot.js"></script>
 <script src="/static/skytorus.js"></script>
 <script src="/static/today.js"></script>
 <script>fetch("/api/me").then(r=>r.json()).then(d=>{if(d.signedIn)for(const a of document.querySelectorAll("[data-acct]"))a.textContent="Your account"}).catch(()=>{})</script>
