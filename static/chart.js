@@ -70,7 +70,7 @@ const LANDS = [
     teaser: "The runes your planets light, read through their mansions", why: "Your houses carry the 24 runes; your planets wake some of them.",
     terms: ["rune", "nakshatra"], prompt: "Your reading ranks your runes and names the years each one wakes." },
   { id: "design",    name: "Your design",            short: "Design", mark: "⬡", path: true,
-    teaser: `${designType ? designType + " · " : ""}your Birth and Dharma Designs`, why: "How your Rashi ripens into your navamsa, and how both move through your body.",
+    teaser: `${designType ? designType + " · " : ""}your Birth and Dharma Designs`, why: "How energy moves through your body, and how your Rashi ripens into your Dharma.",
     terms: ["centre", "channel", "type", "authority", "station7", "dharmaweave"], prompt: "Your reading reads the gates of your work and your body's channels through both designs, and walks the Path of Dharma step by step." },
   { id: "compare",   name: "Compare",                short: "Compare", mark: "⚭", path: true,
     teaser: "You and up to eight others", why: "How your chart meets someone else's.",
@@ -244,9 +244,7 @@ function downloadWheel(svgEl, kind){
 function designLand(){
   const has = !!C.dharma;
   $("designIntro").innerHTML = `
-    <p>Two designs are read from your chart. Your <b>Birth Design</b> is the Human Design bodygraph: the gates your planets switch on at birth and at the design moment about three months before it.
-    Your <b>Dharma Design</b> takes the same two moments in the sidereal zodiac and passes them through the ninth harmonic (the navamsa), the chart of what a life ripens into.
-    The first is how your energy runs; the second is where it is heading. Both are read as energy moving, never as rules.</p>
+    <p>Your <b>Birth Design</b> is how your energy runs; your <b>Dharma Design</b> is where it is heading. Switch between them, or see both at once.</p>
     ${unknown ? `<p class="unknown-note">Without a birth time your Moon's gate and line may be off, and the Dharma Sun moves about 9° a day, so read the details lightly.</p>` : ""}
     ${has ? `<div class="dg-ctl dg-master" role="group" aria-label="Which design to show">
       <button class="hb-btn" data-dgv="birth" aria-pressed="true">Birth Design</button><button class="hb-btn" data-dgv="dharma" aria-pressed="false">Dharma Design</button><button class="hb-btn" data-dgv="both" aria-pressed="false">Both together</button></div>` : ""}`;

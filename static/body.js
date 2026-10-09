@@ -562,7 +562,6 @@ function mount(host, chart){
   C = chart; root = host; woken = new Set(); last = null; nkFocus = null; stopScan();
   host.classList.add("hb");
   host.innerHTML = `
-    <p class="hb-intro">The same body seen another way. The Harmonic Body is a proportional figure with seven stations from crown to root, each fed by one of your planets, standing beside it on its own thread; the label under each planet is the house it stands in, which gives that station its colour. Your design's centres and live channels sit on the figure too, following the Birth / Dharma switch above. The seven stations and the nine design centres are different maps: the Heart station is not the Heart centre. Around the figure is its torus field, and the two zodiacs: tropical outside, sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on the inner ring.</p>
     <div class="hb-ctl">
       <button class="hb-btn on" data-hb-view="up">Upright</button>
       <button class="hb-btn" data-hb-view="tilt">Tilted</button>
@@ -582,6 +581,7 @@ function mount(host, chart){
       </div>
     </div>
     <p class="hb-hint">Drag to turn the figure${matchMedia("(pointer:fine)").matches ? " and tip it back" : ""}. The rings, the body and the stations sit at different depths.</p>
+    <p class="hb-intro">The same body seen another way. The Harmonic Body is a proportional figure with seven stations from crown to root, each fed by one of your planets, standing beside it on its own thread; the label under each planet is the house it stands in, which gives that station its colour. Your design's centres and live channels sit on the figure too, following the Birth / Dharma switch above. The seven stations and the nine design centres are different maps: the Heart station is not the Heart centre. Around the figure is its torus field, and the two zodiacs: tropical outside, sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on the inner ring.</p>
     <div class="hb-strip" role="group" aria-label="The seven stations">${STATIONS.map(s =>
       `<button class="hb-chipbtn" data-hb-station="${s.id}" style="--band:${s.band}"><i></i>${s.roman} · ${s.station}<span>${GLYPH[s.feeder]} ${s.feeder}</span></button>`).join("")}</div>
     <div class="hb-read" id="hbRead" aria-live="polite">${idleRead()}</div>`;

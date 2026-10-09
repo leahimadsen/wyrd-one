@@ -230,8 +230,8 @@ function mount(host, { C }){
       : readout(view === "birth" ? birth : dharma, view === "birth" ? "Your Birth Design" : "Your Dharma Design");
   };
   host.innerHTML = `
-    <p>Your Human Design chart, read as energy. Each defined centre runs on its own steady current; each open centre takes in and amplifies the current around it. The lit channels are the routes your energy travels, and the moving light shows which way it runs: up from the motors toward the throat, where it becomes voice and action.</p>
     <div class="dg-wrap"><div class="dg-graph" id="dgGraph"></div><div id="dgRead"></div></div>
+    <p class="fine">Filled centres run on their own steady current; open ones take in and amplify the current around them. The moving light shows which way it runs: up from the motors toward the throat, where it becomes voice and action.</p>
     <p class="dg-key"><span class="k birth"></span> Birth Design <span class="k dharma"></span> Dharma Design <span class="k both"></span> both <span class="k open"></span> open</p>
     <p class="fine">To read the Dharma design in depth, see <a href="/learn/dharma">Learn the Dharma Design</a>.</p>`;
   draw();
