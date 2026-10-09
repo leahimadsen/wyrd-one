@@ -13,6 +13,12 @@ a { color: var(--celadon); }
 .seat-in { width: min(560px, 100% - 40px); padding: 9vh 0 7vh; }
 .seat h1 { font-weight: 300; font-size: clamp(46px, 11vw, 92px); line-height: .95; letter-spacing: .01em;
   margin: 0 0 18px; color: #e6e1f4; text-shadow: 0 0 40px rgba(150,120,255,.35); }
+.seat h1 .seat-mark { display: block; }
+.seat h1 .seat-h { display: block; font-size: clamp(19px, 3.4vw, 26px); letter-spacing: .02em; line-height: 1.3; margin-top: 14px; color: var(--celadon, #9cb4a6); font-weight: 400; }
+.seat-what { list-style: none; padding: 0; margin: -18px 0 18px; max-width: 40em; display: grid; gap: 6px; font-size: 15.5px; color: rgba(225,222,240,.82); }
+.seat-what li { padding-left: 1.1em; position: relative; } .seat-what li::before { content: "✦"; position: absolute; left: 0; color: var(--gold, #b8924a); font-size: 11px; top: .35em; }
+.seat-what b { font-weight: 500; color: #ece7f6; }
+.seat-how { font-size: 14.5px; color: rgba(225,222,240,.66); margin: 0 0 22px; }
 .seat-sub { font-size: 18px; color: rgba(225,222,240,.78); max-width: 34em; margin: 0 0 34px; font-style: italic; }
 
 .cast { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 14px;

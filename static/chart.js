@@ -47,37 +47,47 @@ const dm = l => { const d = degIn(l); let a = Math.floor(d), m = Math.round((d -
 const fmt = l => `${signOf(l)} ${dm(l)}`;
 const pada = l => Math.floor((norm(l) % (360/27)) / (360/108)) + 1;
 
-/* ---------- the lands ---------- */
+/* ---------- the lands ----------
+   One path, in order, each step building on the last: learn the parts, see the whole chart,
+   its timing, today and the year ahead, the runes it lights, the body it moves through, and
+   how it meets other people. The reading comes after the path; three rooms to explore sit beside it. */
+const designType = (() => { try { return WyrdDesign.analyse(C.natal).type; } catch (_) { return ""; } })();
+const LEARN = { id: "learn", name: "Learn your chart", short: "Learn", mark: "✧", path: true,
+  teaser: "The parts of a chart, taught on yours, in short steps", why: "Start here if charts are new to you." };
 const LANDS = [
-  { id: "chart",     name: "Your chart",            mark: "☉", teaser: unknown ? `Sun in ${signOf(C.sid.Sun)} · Moon in ${signOf(C.sid.Moon)}` : `${signOf(C.ascS)} rising · Moon in ${NAKSHATRA[nakIndex(C.sid.Moon)][0]}`,
+  { id: "chart",     name: "Your chart",             short: "Chart", mark: "☉", path: true,
+    teaser: unknown ? `Sun in ${signOf(C.sid.Sun)} · Moon in ${signOf(C.sid.Moon)}` : `${signOf(C.ascS)} rising · Moon in ${NAKSHATRA[nakIndex(C.sid.Moon)][0]}`,
+    why: "Where everything was when you were born, in both zodiacs.",
     terms: ["sidereal", "tropical", "house", "nakshatra", "pada", "rune", "gate", "design", "retro", "dignity", "navamsa"],
-    prompt: "Your reading reads these placements together: the Seat you rise from, the engine of your Moon, your soul-planet and its cabinet." },
-  { id: "body",      name: "The harmonic body",     mark: "✶", teaser: "Seven stations, each fed by one of your planets",
-    terms: ["station7", "centre", "channel", "type"], prompt: "Your reading reads the gates of your work and what your defined centres carry." },
-  { id: "design",    name: "Your design",           mark: "⬡", teaser: (() => { try { return `${WyrdDesign.analyse(C.natal).type} · energy in motion`; } catch (_) { return "Your energy in motion"; } })(),
-    terms: ["centre", "channel", "type"], prompt: "Your reading reads the gates of your work and what your body's channels carry, through both your birth and Dharma designs." },
-  { id: "runes",     name: "Your activated runes",  mark: "ᛉ", teaser: "Your lit runes, read through your mansions",
-    terms: ["rune"], prompt: "Your reading ranks your runes and names the years each one wakes." },
-  { id: "dharma",    name: "The Dharma Weave",      mark: "⛤", teaser: C.dharma ? `Dharma profile ${C.dharma.profile} · the Pentagram Cross` : "What the chart ripens into",
-    terms: [], prompt: "Your reading reads your dharma Suns and Earths from the register, and walks the Path of Dharma step by step, with when each step opens in your life." },
-  { id: "clock",     name: "The Vimshottari clock", mark: "◷", teaser: `${T.cur.lord} era · ${T.curA.lord} chapter, running now`,
-    terms: ["vimshottari", "mahadasha", "antardasha", "pratyantar", "moonmansion"], prompt: "Your reading reads the periods running now: what this era and this chapter ask of you." },
-  { id: "calendar",  name: "What's coming",         mark: "☷", teaser: "The next twelve months, dated",
-    terms: [], prompt: "Your reading reads the periods running now, and the questions your chart keeps asking whatever the sky does." },
-  { id: "armillary", name: "The armillary",         mark: "◎", teaser: "Your sky as a sphere you can open",
-    terms: ["armillary", "ayanamsa", "gate", "rune"], prompt: "Your reading draws every frame of the sphere into one account of you." },
-  { id: "reading",   name: "Your full reading",     mark: "✦", teaser: "Thirteen sections, written for you · $44", gold: true, terms: [] },
-  { id: "compare",   name: "Compare",               mark: "⚭", teaser: "You and up to eight others",
+    prompt: "Your reading reads these placements together: the Seat you rise from, the engine of your Moon, your Soul-Planet and its cabinet." },
+  { id: "clock",     name: "The Vimshottari Clock",  short: "Clock", mark: "◷", path: true,
+    teaser: `${T.cur.lord} era · ${T.curA.lord} chapter, running now`, why: "Your Moon sets a clock of planetary eras. Which one you're in now.",
+    terms: ["vimshottari", "mahadasha", "antardasha", "pratyantar", "moonmansion"], prompt: "Your reading reads every era of your life, and what this era and this chapter ask of you." },
+  { id: "sky",       name: "Now and next",           short: "Now & next", mark: "☾", path: true,
+    teaser: "Today's sky on your chart, and the next twelve months", why: "The planets moving now, crossing the chart you were born with.",
+    terms: ["transit", "sadesati", "retro", "orb", "ingressT", "station"], prompt: "Your reading names what your chart asks of you, whatever today's sky is doing." },
+  { id: "runes",     name: "Your activated runes",   short: "Runes", mark: "ᛉ", path: true,
+    teaser: "The runes your planets light, read through their mansions", why: "Your houses carry the 24 runes; your planets wake some of them.",
+    terms: ["rune", "nakshatra"], prompt: "Your reading ranks your runes and names the years each one wakes." },
+  { id: "design",    name: "Your design",            short: "Design", mark: "⬡", path: true,
+    teaser: `${designType ? designType + " · " : ""}your Birth and Dharma Designs`, why: "How energy moves through your body, and what it ripens into.",
+    terms: ["centre", "channel", "type", "authority", "station7", "dharmaweave"], prompt: "Your reading reads the gates of your work and your body's channels through both designs, and walks the Path of Dharma step by step." },
+  { id: "compare",   name: "Compare",                short: "Compare", mark: "⚭", path: true,
+    teaser: "You and up to eight others", why: "How your chart meets someone else's.",
     terms: [], prompt: "Your reading is about your chart alone, read in full: the ground every bond stands on." },
-  { id: "sky",       name: "The sky now",           mark: "☾", teaser: "Today's planets crossing yours",
-    terms: ["transit", "sadesati", "retro", "orb"], prompt: "Your reading names what your chart asks of you, whatever today's sky is doing." },
-  { id: "colour",    name: "The colour room",       mark: "◐", teaser: "Your twelve houses as a colour wheel",
+  { id: "reading",   name: "The Wyrd Reading",           short: "Reading", mark: "✦", gold: true,
+    teaser: "Everything on the path, read in thirteen sections, written for you", terms: [] },
+  { id: "armillary", name: "The armillary",          short: "Armillary", mark: "◎", explore: true, teaser: "Your sky as a sphere you can open",
+    terms: ["armillary", "ayanamsa", "gate", "rune"], prompt: "Your reading draws every frame of the sphere into one account of you." },
+  { id: "colour",    name: "The colour room",        short: "Colour", mark: "◐", explore: true, teaser: "Your twelve houses as a colour wheel",
     terms: ["house", "sign"], prompt: "Your reading reads the houses your planets light, one by one." },
-  { id: "bench",     name: "The bench",             mark: "♪", teaser: "Hear two of your planets together",
-    terms: ["graha", "aspect"], prompt: "Your reading reads how your planets work together, as a cabinet around your soul-planet." },
+  { id: "bench",     name: "The bench",              short: "Bench", mark: "♪", explore: true, teaser: "Hear two of your planets together",
+    terms: ["graha", "aspect"], prompt: "Your reading reads how your planets work together, as a cabinet around your Soul-Planet." },
 ];
-const LEARN = { id: "learn", name: "Learn your chart", mark: "✧" };
 const ORDER = [LEARN, ...LANDS];
+const PATH = ORDER.filter(l => l.path);
+/* old addresses still land in the right place */
+const ALIAS = { body: "design/harmonic", dharma: "design/weave", calendar: "sky/coming", map: "" };
 
 /* ---------- the header: who, the tools, the path ---------- */
 $("who").textContent = birth.name ? `${birth.name}'s chart` : "Your chart";
@@ -124,19 +134,19 @@ function drawStart(){
 }
 drawStart();
 
-/* ---------- the map ---------- */
+/* ---------- the map: the path, the reading, the rooms beside it ---------- */
 function drawMap(){
-  const n = LANDS.length;
-  const pos = LANDS.map((l, i) => { const a = i * 2 * Math.PI / n; return { ...l, x: 50 + 40 * Math.sin(a), y: 50 - 40 * Math.cos(a) }; });
-  const paths = pos.map(p => `<line x1="50" y1="50" x2="${p.x.toFixed(2)}" y2="${p.y.toFixed(2)}"${p.gold ? ` class="gold"` : ""}/>`).join("");
+  const step = (l, i) => `<a class="path-step" href="#${l.id}"><span class="path-n">${i + 1}</span>
+    <span class="land-mark" aria-hidden="true">${l.mark}</span><b>${l.name}</b><small>${l.teaser}</small><em>${l.why}</em></a>`;
+  const R = LANDS.find(l => l.gold), ex = LANDS.filter(l => l.explore);
   $("map").innerHTML = `
-    <svg class="map-paths" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <circle cx="50" cy="50" r="40" class="rail"/>${paths}</svg>
-    <div class="map-core tz-core"></div>
-    ${pos.map(p => `<a class="land${p.gold ? " gold" : ""}" href="#${p.id}" style="--x:${p.x.toFixed(2)}%;--y:${p.y.toFixed(2)}%">
-      <span class="land-mark" aria-hidden="true">${p.mark}</span><b>${p.name}</b><small>${p.teaser}</small></a>`).join("")}`;
-  $("tabsIn").innerHTML = `<a href="#map" class="tab tab-map">◎ Map</a><a href="#learn" class="tab tab-learn" data-tab="learn">✧ Learn</a>` +
-    LANDS.map(l => `<a href="#${l.id}" class="tab${l.gold ? " gold" : ""}" data-tab="${l.id}">${l.name.replace(/^The |^Your /, "")}</a>`).join("");
+    <h2 class="path-h">Your chart, step by step</h2>
+    <ol class="path-list">${PATH.map((l, i) => `<li>${step(l, i)}</li>`).join("")}</ol>
+    <a class="path-reading" href="#reading"><span class="land-mark" aria-hidden="true">${R.mark}</span><b>${R.name}</b><small>${R.teaser}</small></a>
+    <h2 class="path-h">Rooms to explore</h2>
+    <div class="path-explore">${ex.map(l => `<a class="land" href="#${l.id}"><span class="land-mark" aria-hidden="true">${l.mark}</span><b>${l.name}</b><small>${l.teaser}</small></a>`).join("")}</div>`;
+  $("tabsIn").innerHTML = `<a href="#" class="tab tab-map">◎ Map</a>` +
+    ORDER.map(l => `<a href="#${l.id}" class="tab${l.gold ? " gold" : ""}${l.explore ? " ex" : ""}" data-tab="${l.id}">${l.path ? PATH.indexOf(l) + 1 + " · " : ""}${l.short}</a>`).join("");
 }
 
 /* the torus at the map's centre, and its layer switches */
@@ -192,7 +202,7 @@ function chartLand(){
     if (x) asp.push(`<li><span>${GLYPH[a]} ${a} · ${GLYPH[b]} ${b}</span><span style="color:${x.col}">${x.name}</span><span>${x.orb.toFixed(1)}°</span></li>`);
   }
   $("facts").innerHTML = `
-    <div class="fact"><h3>The rave</h3>
+    <div class="fact"><h3>Your Birth Design</h3>
       <dl><dt>${g("type")}</dt><dd>${rv.type}</dd><dt>${g("strategy")}</dt><dd>${rv.strategy}</dd><dt>${g("authority")}</dt><dd>${rv.authority}</dd>
       <dt>${g("definition")}</dt><dd>${rv.definition}</dd><dt>${g("profile")}</dt><dd>${rv.profile}</dd><dt>${g("cross", "Cross gates")}</dt><dd>${rv.cross}</dd>
       <dt>${g("centre", "Defined")}</dt><dd>${rv.centres.join(", ") || "—"}</dd><dt>Open</dt><dd>${rv.open.join(", ") || "—"}</dd>
@@ -230,20 +240,36 @@ function downloadWheel(svgEl, kind){
   img.src = url;
 }
 
+/* ---------- Your design: the Birth Design and the Dharma Design, one switch for the whole land ---------- */
+function designLand(){
+  const has = !!C.dharma;
+  $("designIntro").innerHTML = `
+    <p>Two designs are read from your chart. Your <b>Birth Design</b> is the Human Design bodygraph: the gates your planets switch on at birth and at the design moment about three months before it.
+    Your <b>Dharma Design</b> takes the same two moments in the sidereal zodiac and passes them through the ninth harmonic (the navamsa), the chart of what a life ripens into.
+    The first is how your energy runs; the second is where it is heading. Both are read as energy moving, never as rules.</p>
+    ${unknown ? `<p class="unknown-note">Without a birth time your Moon's gate and line may be off, and the Dharma Sun moves about 9° a day, so read the details lightly.</p>` : ""}
+    ${has ? `<div class="dg-ctl dg-master" role="group" aria-label="Which design to show">
+      <button class="hb-btn" data-dgv="birth" aria-pressed="true">Birth Design</button><button class="hb-btn" data-dgv="dharma" aria-pressed="false">Dharma Design</button><button class="hb-btn" data-dgv="both" aria-pressed="false">Both together</button></div>` : ""}`;
+  const D = WyrdDesign.mount($("designHost"), { C });
+  if (window.WyrdBody) WyrdBody.mount($("bodyHost"), C);
+  if (has) WyrdDharma.mount($("dharmaHost"), { C, unknown }); else $("weave").hidden = true;
+  const set = v => { D.set(v); if (window.WyrdBody) WyrdBody.setDesign(v);
+    $("designIntro").querySelectorAll("[data-dgv]").forEach(b => b.setAttribute("aria-pressed", b.dataset.dgv === v)); };
+  $("designIntro").addEventListener("click", e => { const b = e.target.closest("[data-dgv]"); if (b) set(b.dataset.dgv); });
+  set("birth");
+}
+
 /* ---------- each land, built on first visit ---------- */
 let learn = null;
 const BUILD = {
   learn: () => { learn = WyrdLearn.mount($("learnHost"), { C, birth, unknown, name: birth.name, dignity, retro, onStep: drawStart }); },
   chart: chartLand,
-  body: () => window.WyrdBody && WyrdBody.mount($("bodyHost"), C),
   clock: () => { window.WyrdDasha && WyrdDasha.mount($("dashaHost"));
     if (unknown) $("dashaHost").insertAdjacentHTML("afterbegin", `<p class="unknown-note">The clock is set by the Moon. Without a birth time your Moon could be anywhere in a day's travel, so these dates may be out by months.</p>`); },
-  calendar: () => WyrdLands.calendar($("calHost"), { C, birth, unknown }),
-  dharma: () => WyrdDharma.mount($("dharmaHost"), { C, unknown }),
-  design: () => WyrdDesign.mount($("designHost"), { C }),
+  design: designLand,
   runes: () => WyrdRunes.mount($("runesHost"), C),
   armillary: () => { $("armHostWrap").innerHTML = Wyrd.armillary(); watchArmillary($("p-armillary")); },
-  sky: () => renderTransits(C),
+  sky: () => { renderTransits(C); WyrdLands.calendar($("calHost"), { C, birth, unknown }); },
   colour: () => { $("colourHost").innerHTML = Wyrd.colour(); setTimeout(() => Wyrd.afterColour(), 0); },
   bench: () => { $("benchHost").innerHTML = Wyrd.bench(); },
   compare: () => WyrdCompare.mount($("cmpHost"), { C, birth, unknown }),
@@ -261,6 +287,8 @@ function decorate(L){
 let NEXT = {}, prevLand = null;
 fetch("/api/pulse/next").then(r => r.ok ? r.json() : {}).then(j => { NEXT = j || {}; }).catch(() => {});
 function go(){
+  const raw = location.hash.slice(1).split("/")[0];
+  if (raw in ALIAS){ history.replaceState(null, "", "#" + ALIAS[raw]); }
   const [id, arg] = location.hash.slice(1).split("/");
   const here = ORDER.some(l => l.id === id) ? id : "map";
   if (Wyrd.pulse && here !== prevLand){ Wyrd.pulse("land", here); if (prevLand) Wyrd.pulse("move", `${prevLand}-${here}`); }
@@ -274,13 +302,16 @@ function go(){
   Wyrd.sky.stop(); if (TZ) TZ.stop();
   if (!built.has(id)){ built.add(id); if (land !== LEARN) decorate(land); BUILD[id](); }
   if (id === "learn" && arg && learn) learn.show(+arg - 1);
-  const i = ORDER.indexOf(land), prev = ORDER[(i + ORDER.length - 1) % ORDER.length], next = ORDER[(i + 1) % ORDER.length];
+  /* along the path: learn … compare, then the reading, then the rooms to explore; never wrapping round */
+  const SEQ = [...PATH, ...LANDS.filter(l => l.gold), ...LANDS.filter(l => l.explore)];
+  const i = SEQ.indexOf(land), prev = SEQ[i - 1], next = SEQ[i + 1];
   const often = (NEXT[id] || []).map(n => ORDER.find(l => l.id === n)).filter(l => l && l.id !== id);
   $("landNav").innerHTML = (often.length ? `<p class="often">People here often go on to ${often.map(l => `<a href="#${l.id}">${l.name}</a>`).join(" or ")}.</p>` : "")
-    + `<a href="#${prev.id}">← ${prev.name}</a><a href="#map" class="to-map">◎ Back to the map</a><a href="#${next.id}">${next.name} →</a>`;
+    + `${prev ? `<a href="#${prev.id}">← ${prev.path ? PATH.indexOf(prev) + 1 + ". " : ""}${prev.name}</a>` : "<span></span>"}<a href="#" class="to-map">◎ Back to the map</a>${next ? `<a href="#${next.id}">${next.path ? PATH.indexOf(next) + 1 + ". " : next.gold ? "Then: " : ""}${next.name} →</a>` : "<span></span>"}`;
   document.title = `${land.name} · The Wyrd Console`;
   const tab = document.querySelector(`[data-tab="${id}"]`); if (tab) tab.scrollIntoView({ block: "nearest", inline: "center" });
-  scrollTo(0, 0);
+  const sub = arg && id !== "learn" && document.getElementById(arg);
+  if (sub){ if (sub.tagName === "DETAILS") sub.open = true; setTimeout(() => sub.scrollIntoView({ block: "start" }), 60); } else scrollTo(0, 0);
   $("lands").focus({ preventScroll: true });
 }
 
@@ -303,6 +334,11 @@ $("buyBtn").addEventListener("click", async () => {
 });
 /* members pay less: say so on the button before they click */
 let buyLabel = $("buyBtn").textContent;
-fetch("/api/me").then(r => r.json()).then(d => { if (d.member && d.readingPrice){ buyLabel = `Get my reading — ${d.readingPrice}, your member price`; $("buyBtn").textContent = buyLabel; } }).catch(() => {});
+fetch("/api/me").then(r => r.json()).then(d => {
+  for (const el of document.querySelectorAll("[data-price]")) if (d.prices && d.prices[el.dataset.price]) el.textContent = d.prices[el.dataset.price];
+  if (d.readingPrice) buyLabel = d.member ? `Get my reading — ${d.readingPrice}, your member price` : `Get my reading — ${d.readingPrice}`;
+  $("buyBtn").textContent = buyLabel;
+  if (d.member) document.querySelector(".offer-member").hidden = true;
+}).catch(() => {});
 if (new URLSearchParams(location.search).get("cancelled")) $("buyErr").textContent = "Checkout was cancelled — your chart is still here whenever you're ready.";
 })();

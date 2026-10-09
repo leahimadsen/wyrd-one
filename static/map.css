@@ -15,13 +15,37 @@
 .hub .meta { margin: 0 0 10px; }
 .map-hint { color: var(--ivory-dim); font-style: italic; font-size: 14.5px; margin: 8px 0 0; }
 
-/* ---- the map ---- */
-.map { position: relative; width: min(100%, 800px); aspect-ratio: 1 / 1; margin: 0 auto; }
-.map-paths { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.map-paths line { stroke: rgba(156,180,166,.28); stroke-width: 1.2; stroke-dasharray: 2 5; vector-effect: non-scaling-stroke; }
-.map-paths line.gold { stroke: rgba(184,146,74,.6); }
-.map-paths .rail { fill: none; stroke: rgba(150,130,230,.18); stroke-width: 6; vector-effect: non-scaling-stroke; }
-
+/* ---- the map: the torus, then the path in order ---- */
+.hub-torus { width: min(100%, 520px); margin: 22px auto 0; }
+.hub-torus .map-core.tz-core { position: relative; left: auto; top: auto; transform: none; width: 100%; }
+.map { width: min(100%, 980px); margin: 26px auto 0; text-align: left; }
+.path-h { font-weight: 400; font-size: 22px; color: var(--celadon); margin: 30px 0 12px; text-align: center; }
+.path-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 12px; counter-reset: none; }
+.path-step { position: relative; display: block; height: 100%; box-sizing: border-box; padding: 14px 14px 15px 14px; text-decoration: none;
+  background: rgba(8,8,22,.82); border: 1px solid rgba(150,130,230,.26); border-radius: 4px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  transition: border-color 260ms var(--ease), background 260ms var(--ease); }
+.path-step:hover, .path-step:focus-visible { border-color: var(--jade); background: rgba(14,24,26,.92); outline: none; }
+.path-n { position: absolute; top: 10px; right: 12px; font-family: var(--mono); font-size: 12px; color: var(--jade); letter-spacing: .1em; }
+.path-step b { display: block; font-weight: 400; font-size: 16.5px; color: var(--ivory); margin-top: 2px; }
+.path-step small { display: block; margin-top: 4px; font-size: 13px; line-height: 1.35; color: var(--celadon); }
+.path-step em { display: block; margin-top: 6px; font-size: 13px; line-height: 1.4; color: var(--ivory-dim); }
+.path-reading { display: block; margin: 14px 0 0; padding: 16px 18px; text-align: center; text-decoration: none; border-radius: 4px;
+  border: 1px solid rgba(184,146,74,.55); background: rgba(28,20,8,.85); }
+.path-reading .land-mark, .path-reading b { color: var(--gold); }
+.path-reading b { display: block; font-weight: 400; font-size: 18px; }
+.path-reading small { display: block; margin-top: 4px; font-size: 13.5px; color: var(--ivory-dim); }
+.path-reading:hover, .path-reading:focus-visible { border-color: var(--gold); outline: none; }
+.path-explore { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.path-explore .land { position: static; transform: none; width: auto; }
+.path-explore .land:hover, .path-explore .land:focus-visible { transform: none; }
+.land-panel .sec-h, .land-panel details.dg-more { scroll-margin-top: 64px; }
+details.dg-more { margin-top: 28px; } details.dg-more > summary { cursor: pointer; list-style: none; }
+details.dg-more > summary::-webkit-details-marker { display: none; }
+details.dg-more > summary h3 { display: inline; } details.dg-more > summary::after { content: " ▾"; color: var(--jade); }
+details.dg-more[open] > summary::after { content: " ▴"; }
+.dg-master { margin: 6px 0 22px; }
+details.dg-fold { margin: 14px 0; } details.dg-fold > summary { cursor: pointer; color: var(--celadon); font-size: 16px; }
+.tab.ex { opacity: .75; }
 .map-core { position: absolute; left: 50%; top: 50%; width: 47%; aspect-ratio: 1 / 1; transform: translate(-50%, -50%);
   border-radius: 50%; background: radial-gradient(circle, rgba(10,12,26,.95) 55%, rgba(10,12,26,.6) 72%, transparent 74%);
   box-shadow: 0 0 60px rgba(150,120,255,.18); transition: box-shadow 300ms var(--ease); }
@@ -50,17 +74,6 @@
 .land.gold { border-color: rgba(184,146,74,.55); background: rgba(28,20,8,.85); }
 .land.gold .land-mark, .land.gold b { color: var(--gold); }
 .land.gold:hover, .land.gold:focus-visible { border-color: var(--gold); }
-
-/* on a phone the ring won't fit: the wheel sits on top and the lands line up beneath it */
-@media (max-width: 720px) {
-  .map { aspect-ratio: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .map-paths { display: none; }
-  .map-core { position: relative; left: auto; top: auto; transform: none; width: min(78%, 320px);
-    grid-column: 1 / -1; margin: 6px auto 14px; }
-  .land { position: static; transform: none; width: auto; }
-  .land:hover, .land:focus-visible { transform: none; }
-  .land.gold { grid-column: 1 / -1; order: 1; }
-}
 
 /* ---- the tabs ---- */
 .tabs { position: sticky; top: 0; margin: 0; z-index: 15; background: rgba(5,8,10,.92); border-bottom: 1px solid var(--rule);

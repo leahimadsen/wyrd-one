@@ -140,7 +140,7 @@ const CHANNEL = {
   "10-34": "Self-love is powered by sacral strength: you follow your own convictions and explore by doing.",
   "10-57": "The body's instinct protects the way you live: intuition shaping a life worth living, in the moment.",
   "11-56": "Ideas become stories: a current of curiosity that looks for things to say and teaches by telling.",
-  "12-22": "Feeling opens the voice: energy that speaks with grace when the mood is right, and should wait when it is not.",
+  "12-22": "Feeling opens the voice: energy that speaks with grace when the mood is right, and goes quiet when it is not.",
   "13-33": "What you listen to becomes memory and is retold later: energy that witnesses, keeps, and gives back the meaning of experience.",
   "16-48": "Depth of understanding becomes skill: energy that practises until talent turns into mastery.",
   "17-62": "Opinions are organised into detail: a current that sees patterns and explains them precisely.",
@@ -149,7 +149,7 @@ const CHANNEL = {
   "20-34": "Raw sacral power goes straight to the voice: a current that is busy, visible and acts in the now.",
   "20-57": "Instant intuition speaks: energy that knows and says it in the same moment.",
   "21-45": "Will and control meet the voice of having: energy for managing resources and the material life of a group.",
-  "23-43": "Inner insight becomes clear statement: a current that thinks differently and must find the right time to say it.",
+  "23-43": "Inner insight becomes clear statement: a current that thinks differently, and lands when the moment is ripe.",
   "24-61": "Mystery in the head is turned over and over in the mind: energy that ponders until a knowing arrives.",
   "25-51": "Innocent love meets the shock of initiation: energy that leaps, competes and wakes others up.",
   "26-44": "Instinct for patterns feeds the will to persuade: energy that transmits, sells and brings the past's lessons forward.",
@@ -177,8 +177,7 @@ function carriers(R, g){
 }
 function chanItem(R, [a, b]){
   /* the current runs from the centre farther from the throat toward the nearer */
-  const ca = CENTRE_OF[a], cb = CENTRE_OF[b], da = R.dist[ca] ?? 99, db = R.dist[cb] ?? 99, ty = POS.throat[1];
-  const fromA = da > db || (da === db && Math.abs(POS[ca][1] - ty) >= Math.abs(POS[cb][1] - ty));
+  const ca = CENTRE_OF[a], cb = CENTRE_OF[b], fromA = WyrdBody.runsFrom(R.dist, ca, cb);
   const [g1, c1, g2, c2] = fromA ? [a, ca, b, cb] : [b, cb, a, ca];
   return `<li><b>${a}–${b}</b> · ${CENTRES[c1].label} → ${CENTRES[c2].label}
     <p>${CHANNEL[`${Math.min(a, b)}-${Math.max(a, b)}`] || ""}</p>
@@ -209,13 +208,13 @@ function readout(R, label){
     <h3>${label}</h3>
     <dl class="dg-facts"><dt>Type</dt><dd>${R.type}</dd><dt>Authority</dt><dd>${R.authority}</dd><dt>Definition</dt><dd>${R.definition}</dd><dt>Profile</dt><dd>${esc(R.profile || "")}</dd></dl>
     <p>${TYPE[R.type]}</p><p>${AUTH[R.authority]}</p><p>${DEFN[R.definition] || ""}</p><p><b>How it flows:</b> ${route}</p>
-    <h4>Your centres</h4>
-    <ul class="dg-cen">${order.map(k => `<li class="${R.defined.has(k) ? "on" : ""}"><b>${CENTRES[k].label}</b> · ${R.defined.has(k) ? "defined, runs on its own current" : "open, takes in and amplifies the current around it"}<br><span class="fine">${CEN[k][0]} ${CEN[k][1]}.</span></li>`).join("")}</ul>
+    <details class="dg-fold"><summary>Your nine centres: ${R.defined.size} defined, ${9 - R.defined.size} open</summary>
+    <ul class="dg-cen">${order.map(k => `<li class="${R.defined.has(k) ? "on" : ""}"><b>${CENTRES[k].label}</b> · ${R.defined.has(k) ? "defined, runs on its own current" : "open, takes in and amplifies the current around it"}<br><span class="fine">${CEN[k][0]} ${CEN[k][1]}.</span></li>`).join("")}</ul></details>
     <h4>Your channels: the currents</h4>
     ${R.live.length ? `<ul class="dg-chs">${R.live.map(ch => chanItem(R, ch)).join("")}</ul>` : "<p>No complete channels: every gate in you is an open thread, waiting for its partner in someone else or in the sky.</p>"}
-    <h4>Your gates</h4>
+    <details class="dg-fold"><summary>Your ${R.gates.size} gates, centre by centre</summary>
     <p class="fine">Each gate is a single doorway of energy, switched on by a planet. Conscious gates (personality) you know as yourself; unconscious ones (design) run in the body whether you notice or not. A gate on its own is an open thread; two gates at either end of a channel make a current.</p>
-    ${gatesList(R)}
+    ${gatesList(R)}</details>
   </div>`;
 }
 
@@ -227,21 +226,16 @@ function mount(host, { C }){
     const A = view !== "dharma" ? birth : null, B = view !== "birth" ? dharma : null;
     host.querySelector("#dgGraph").innerHTML = graph(A, B);
     host.querySelector("#dgRead").innerHTML = view === "both"
-      ? `<div class="dg-two">${readout(birth, "Your birth design")}${readout(dharma, "Your Dharma design")}</div>`
-      : readout(view === "birth" ? birth : dharma, view === "birth" ? "Your birth design" : "Your Dharma design");
-    host.querySelectorAll("[data-dg]").forEach(b => b.setAttribute("aria-pressed", b.dataset.dg === view));
+      ? `<div class="dg-two">${readout(birth, "Your Birth Design")}${readout(dharma, "Your Dharma Design")}</div>`
+      : readout(view === "birth" ? birth : dharma, view === "birth" ? "Your Birth Design" : "Your Dharma Design");
   };
   host.innerHTML = `
     <p>Your Human Design chart, read as energy. Each defined centre runs on its own steady current; each open centre takes in and amplifies the current around it. The lit channels are the routes your energy travels, and the moving light shows which way it runs: up from the motors toward the throat, where it becomes voice and action.</p>
-    <div class="dg-ctl" role="group" aria-label="Which design">
-      <button class="hb-btn" data-dg="birth" aria-pressed="true">Birth design</button>
-      ${dharma ? `<button class="hb-btn" data-dg="dharma" aria-pressed="false">Dharma design</button><button class="hb-btn" data-dg="both" aria-pressed="false">Both together</button>` : ""}
-    </div>
     <div class="dg-wrap"><div class="dg-graph" id="dgGraph"></div><div id="dgRead"></div></div>
-    <p class="dg-key"><span class="k birth"></span> birth design <span class="k dharma"></span> Dharma design <span class="k both"></span> both <span class="k open"></span> open</p>
+    <p class="dg-key"><span class="k birth"></span> Birth Design <span class="k dharma"></span> Dharma Design <span class="k both"></span> both <span class="k open"></span> open</p>
     <p class="fine">To read the Dharma design in depth, see <a href="/learn/dharma">Learn the Dharma Design</a>.</p>`;
-  host.addEventListener("click", e => { const b = e.target.closest("[data-dg]"); if (b){ view = b.dataset.dg; draw(); } });
   draw();
+  return { set(v){ view = dharma || v === "birth" ? v : "birth"; draw(); } };
 }
 
 window.WyrdDesign = { mount, analyse, graph };

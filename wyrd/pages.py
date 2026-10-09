@@ -38,32 +38,43 @@ def _crumbs(base, trail):
     return _ld({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items})
 
 
+PRICE = "$44"      # the one-off reading's price; app.py sets it from config.PRICE_CENTS
+
 def _cta():
     return ('<div class="cta"><p>See where this sits in your own chart. The birth chart is free: sidereal and tropical '
-            'positions, the 27 nakshatras, the 64 gates and the runes. The full written astrology reading is $44.</p>'
+            'positions, the 27 nakshatras, the 64 gates and the runes. The full written reading is ' + PRICE + '.</p>'
             '<p><a class="btn-cast" href="/">Cast your free birth chart</a></p>'
             '<p><a href="/reports">See the astrology readings →</a></p></div>')
 
 
 # ---------------- the readings ----------------
-def reports(base, price_cents, member_cents):
+def reports(base, price_cents, member_cents, month_cents=1100, year_cents=11100, pro_cents=4400, pro_n=30):
     p = price_cents / 100
+    m = lambda c: f"${c // 100}" if c % 100 == 0 else f"${c / 100:.2f}"
     body = f"""
 <h1>Astrology readings by The Völva</h1>
-<p class="lede">A personal astrology report written from your exact birth chart: sidereal and tropical, the lunar mansions, the 64 gates, the runes, your Vimshottari periods and your Dharma body.</p>
+<p class="lede">Start with the free birth chart: the whole path, in both zodiacs, with your design, runes and timing. When you want it read, there are three ways in.</p>
 <div class="plans">
-  <section class="plan lead"><h2>Natal astrology reading</h2><div class="price">${p:.0f}<small> once</small></div>
-    <ul><li>Your full birth chart reading, written from The Völva's register</li><li>Sidereal signs, nakshatras and houses</li>
-    <li>Your harmonic body and Dharma body</li><li>Your current Vimshottari period</li><li>Questions to work with, gathered at the end</li></ul>
-    <a class="btn-buy" href="/chart#reading">Cast your chart, then buy the reading</a>
+  <section class="plan lead"><h2>The Wyrd Reading</h2><div class="price">{m(price_cents)}<small> once</small></div>
+    <p class="muted">A natal astrology reading in thirteen sections, written for your placements and nobody else's.</p>
+    <ul><li>The Seat you rise from, the engine of your Moon, and the Matrix your Saturn builds</li>
+    <li>Every planet in both zodiacs, and how they feed each other; your Soul-Planet and its cabinet</li>
+    <li>Your runes and the years each one wakes</li>
+    <li>Your Birth Design and Dharma Design, drawn and read, and the Path of Dharma step by step</li>
+    <li>Your whole life by Vimshottari era, and every question your chart asks</li></ul>
+    <a class="btn-buy" href="/">Cast your chart, then get the reading</a>
     <a class="alt" href="/sample">Read a sample reading first</a></section>
-  <section class="plan"><h2>Membership</h2><div class="price">$11<small> a month</small></div>
-    <ul><li>Body Weather every Monday: how the week's sky lands in your birth body and your Dharma body</li>
-    <li>Your chart kept on your account</li><li>The natal reading for ${member_cents / 100:.2f} instead of ${p:.0f}</li></ul>
+  <section class="plan"><h2>Membership</h2><div class="price">{m(month_cents)}<small> a month</small></div>
+    <p class="muted">or {m(year_cents)} a year</p>
+    <ul><li>Body Weather by email every Monday: how the week's sky moves through your Birth Design and your Dharma Design</li>
+    <li>The Wyrd Reading for {m(member_cents)} instead of {m(price_cents)}</li></ul>
     <a class="btn-cast" href="/membership">See the membership</a></section>
-  <section class="plan"><h2>1:1 consultation</h2><div class="price">$100<small> an hour</small></div>
-    <ul><li>A session with The Völva on your chart</li><li>Ask through <a href="https://thewebofwyrd.substack.com">The Web of Wyrd</a></li></ul></section>
+  <section class="plan"><h2>Professional</h2><div class="price">{m(pro_cents)}<small> a month</small></div>
+    <ul><li>For astrologers and practitioners: The Wyrd Reading for your clients, {pro_n} a month</li>
+    <li>This week's Body Weather for any client</li><li>Everything in the membership</li></ul>
+    <a class="btn-cast" href="/membership#pro">See Professional</a></section>
 </div>
+<p class="muted">A 1:1 consultation with The Völva on your chart: ask through <a href="https://thewebofwyrd.substack.com">The Web of Wyrd</a>.</p>
 <h2>Questions</h2>
 <h3>What do I need for an astrology reading?</h3><p>Your date, time and place of birth. If you don't know the time, the free chart still works with solar houses, and the reading tells you which parts depend on the time.</p>
 <h3>Is this sidereal or tropical astrology?</h3><p>Both. Signs, nakshatras and houses are sidereal (Lahiri). The 64 gates use the tropical zodiac, as Human Design does. Your Dharma Design is the ninth harmonic (D9) of the sidereal positions.</p>
@@ -74,13 +85,13 @@ def reports(base, price_cents, member_cents):
            ("Is this sidereal or tropical astrology?", "Both. Signs, nakshatras and houses are sidereal (Lahiri). The 64 gates use the tropical zodiac. The Dharma Design is the ninth harmonic (D9) of the sidereal positions."),
            ("How do I get my reading?", "Straight after payment it opens in your browser, and can be saved as a PDF.")]
     ld = _ld({"@context": "https://schema.org", "@graph": [
-        {"@type": "Product", "name": "Natal astrology reading", "brand": {"@type": "Brand", "name": "The Wyrd Console"},
-         "description": "A personal astrology report written from your birth chart by The Völva: sidereal signs, nakshatras, the 64 gates, the harmonic and Dharma bodies, and Vimshottari periods.",
+        {"@type": "Product", "name": "The Wyrd Reading: a natal astrology reading", "brand": {"@type": "Brand", "name": "The Wyrd Console"},
+         "description": "A personal astrology report written from your birth chart by The Völva: sidereal signs, nakshatras, the 64 gates, the Birth and Dharma Designs, the runes, and the Vimshottari eras of a life.",
          "url": base + "/reports", "image": base + "/static/icons/icon-512.png",
          "offers": {"@type": "Offer", "price": f"{p:.2f}", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": base + "/reports"}},
         {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}]})
     return ("Astrology Readings & Birth Chart Reports · The Wyrd Console",
-            f"Personal astrology readings by The Völva, written from your exact birth chart: sidereal signs, nakshatras, the 64 gates and your Dharma body. ${p:.0f}, ready the moment you pay.",
+            f"Personal astrology readings by The Völva, written from your exact birth chart: sidereal and tropical signs, nakshatras, your design and Dharma Design, runes and timing. ${p:.0f}, ready the moment you pay.",
             body, ld)
 
 
@@ -90,13 +101,15 @@ def learn_index(base):
     naks = "".join(f'<li><a href="/learn/nakshatras/{s}">{e(C["NAKSHATRA"][i][0])}</a></li>' for s, i in NAKS)
     signs = "".join(f'<li><a href="/learn/signs/{s}">{e(C["SIGN_FRAME"][i][0])}</a></li>' for s, i in SIGNS)
     body = f"""<h1>Learn astrology with the Wyrd Console</h1>
-<p class="lede">The building blocks of your birth chart: the twelve sidereal signs, the twenty-seven nakshatras, and the sixty-four gates, each in The Völva's words.</p>
-<h2>The 12 sidereal signs</h2><ul class="terms">{signs}</ul>
-<h2>The 27 nakshatras (lunar mansions)</h2><ul class="terms">{naks}</ul>
-<h2>The 64 gates</h2><ul class="terms">{gates}</ul>
+<p class="lede">The building blocks of your birth chart: the twelve sidereal signs, the twenty-seven nakshatras, the sixty-four gates and the twenty-four runes, each in The Völva's words.</p>
+<div class="cta"><p><b>New to charts?</b> The quickest way in is your own: cast it, then walk it in short steps, one ring at a time.</p>
+<p><a class="btn-cast" href="/">Cast your chart and start the walk</a></p></div>
+<h2 id="signs">The 12 sidereal signs</h2><ul class="terms">{signs}</ul>
+<h2 id="nakshatras">The 27 nakshatras (lunar mansions)</h2><ul class="terms">{naks}</ul>
+<h2 id="gates">The 64 gates</h2><ul class="terms">{gates}</ul>
 <h2>Go further</h2><ul class="terms"><li><a href="/learn/runes">Learn the runes: the 24 runes of the Elder Futhark</a></li>
 <li><a href="/learn/dharma">Learn the Dharma Design: the 64 gates of dharma</a></li></ul>{_cta()}"""
-    return ("Learn Astrology: Signs, Nakshatras & the 64 Gates · The Wyrd Console",
+    return ("Learn Astrology: Signs, Nakshatras, the 64 Gates, Runes & Dharma · The Wyrd Console",
             "A free guide to the twelve sidereal signs, the twenty-seven nakshatras and the sixty-four gates, written by The Völva.",
             body, _crumbs(base, [("Learn", "/learn")]))
 

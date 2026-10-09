@@ -350,20 +350,20 @@
     "Head": {
       "does": "Pressure to know, inspiration, the questions.",
       "body": "Crown of the head; the pineal.",
-      "defined": "You carry steady mental pressure of your own. Ideas arrive on schedule; let them be yours to sort, not to act on at once.",
-      "open": "Other people's questions fill your head. You are wise about which questions matter when you stop trying to answer all of them."
+      "defined": "You carry steady mental pressure of your own. Ideas arrive on schedule; they settle and sort themselves before they ask for action.",
+      "open": "Other people's questions fill your head. Your wisdom shows in sensing which questions matter, and which can simply pass through."
     },
     "Ajna": {
       "does": "Thinking, concepts, certainty.",
       "body": "The brow, the eyes, the mind.",
-      "defined": "You think in a fixed, reliable way. Your opinions are consistent; let others have theirs.",
+      "defined": "You think in a fixed, reliable way. Your opinions are consistent, and sit easily beside other people's.",
       "open": "You can see many sides. Your strength is not having to be certain."
     },
     "Throat": {
       "does": "Speech, action, manifestation.",
       "body": "The throat and thyroid.",
-      "defined": "Your voice has a consistent way of coming out. Wait for the right moment and it lands.",
-      "open": "You speak in many voices. Wait to be invited and you are heard."
+      "defined": "Your voice has a consistent way of coming out. It lands most fully when the moment opens for it.",
+      "open": "You speak in many voices. Your words carry furthest when the room has already turned toward you."
     },
     "G": {
       "does": "Identity, love, direction.",
@@ -374,32 +374,32 @@
     "Heart": {
       "does": "Will, worth, promises, material world.",
       "body": "The physical heart, stomach, gall bladder.",
-      "defined": "You have reliable willpower. Make promises sparingly and keep them, and rest after effort.",
-      "open": "You have nothing to prove. Don't make promises to feel worthy."
+      "defined": "You have reliable willpower. It runs in bursts: a few promises held well, then a natural ebb after effort.",
+      "open": "You have nothing to prove. Worth here is not earned through promises; it is already in place."
     },
     "Spleen": {
       "does": "Instinct, health, survival, time.",
       "body": "The spleen and lymph; the immune system.",
-      "defined": "Your instincts speak once, in the moment. Your body knows; trust it quickly.",
-      "open": "You sense other people's health and fear. Learn to let go of what is no longer good for you."
+      "defined": "Your instincts speak once, in the moment. Your body knows, quietly and quickly.",
+      "open": "You sense other people's health and fear. What is no longer good for you loosens its hold over time."
     },
     "Solar": {
       "does": "Emotion, desire, sensitivity.",
       "body": "Solar plexus; kidneys, pancreas, the nervous system.",
-      "defined": "You run on an emotional wave. Clarity comes over time; sleep on big decisions.",
+      "defined": "You run on an emotional wave. Clarity comes over time, settling after the high and low have passed.",
       "open": "You amplify other people's feelings. Not every emotion in you is yours."
     },
     "Sacral": {
       "does": "Life force, work, sexuality, response.",
       "body": "The sacrum, ovaries and testes; the gut's yes and no.",
       "defined": "You have sustainable energy for what you love. Your gut answers before your mind does.",
-      "open": "You borrow energy from others. Know when enough is enough and stop before you're spent."
+      "open": "You borrow energy from others. It runs high in company and drains fast when it is gone."
     },
     "Root": {
       "does": "Pressure, adrenaline, drive to move.",
       "body": "The adrenals and the base of the spine.",
-      "defined": "You handle pressure in a steady rhythm. Use it to start, not to rush.",
-      "open": "You feel other people's urgency. You don't have to be free of the pressure to act well."
+      "defined": "You handle pressure in a steady rhythm. It moves you to begin rather than to rush.",
+      "open": "You feel other people's urgency. The pressure passes through you, and you can act well with it present."
     }
   },
   "AIMS": [

@@ -304,7 +304,7 @@ _sample_page = {}
 def sample_reading():
     if "page" not in _sample_page:
         _sample_page["page"] = render_reading(SAMPLE, "SAMPLE READING — this is a made-up chart, so you can see what a reading looks like. "
-                                                      "<a href=\"/\" style=\"color:#fff\">Cast yours →</a>").get_data(as_text=True)
+                                                      "<a href=\"/\" style=\"color:#fff\">Cast yours →</a>", sample=True).get_data(as_text=True)
     return Response(_sample_page["page"], mimetype="text/html")
 
 @app.post("/api/checkout")
@@ -359,7 +359,7 @@ def paid_reading():
     except BadInput:
         abort(400)
 
-def render_reading(meta, banner=""):
+def render_reading(meta, banner="", sample=False):
     """The full reading page for a set of birth details. Used by the paid flow,
     the sample and the private admin, so all three are always the same reading."""
     b = birth_from(meta)
@@ -373,7 +373,13 @@ def render_reading(meta, banner=""):
     return Response(page.replace("{{TITLE}}", config.SITE_TITLE).replace("{{WHO}}", who or "Your reading")
                         .replace("{{BORN}}", born).replace("{{OPENING}}", config.READING_OPENING)
                         .replace("{{CLOSING}}", config.READING_CLOSING).replace("{{AUTHOR}}", config.AUTHOR)
-                        .replace("{{PREVIEW}}", banner).replace("{{BODY}}", body), mimetype="text/html")
+                        .replace("{{PREVIEW}}", banner).replace("{{BODY}}", body)
+                        .replace("{{FOOTER}}", SAMPLE_FOOT if sample else f"<footer>Written by {config.AUTHOR} · The Web of Wyrd. This page is your reading; it stays at this address.</footer>"),
+                    mimetype="text/html")
+
+SAMPLE_FOOT = f"""<footer class="sample-cta"><p><b>That was a sample, cast for a made-up birth.</b> Yours is written for your own placements, every section of it.</p>
+  <p><a href="/">Cast your free chart →</a> · <a href="/reports">Get your reading, {"$" + str(config.PRICE_CENTS // 100)} →</a> · <a href="/membership">Membership →</a></p>
+  <p>Written by {config.AUTHOR} · The Web of Wyrd</p></footer>"""
 
 # ---------------- the private admin ----------------
 _login_tries = defaultdict(deque)
@@ -477,6 +483,13 @@ def page(title, desc, body, ld="", robots="index, follow", script="", status=200
     for k, v in fill.items(): t = t.replace("{{" + k + "}}", v)
     return Response(t, status=status, mimetype="text/html")
 
+@app.errorhandler(404)
+def not_found(_e):
+    return private("Not found", """<h1>This page isn't here</h1>
+<p class="lede">The address may have changed, or the link was cut short.</p>
+<p><a class="btn-cast" href="/">Cast your free chart</a></p>
+<p><a href="/reports">Readings</a> · <a href="/learn">Learn</a> · <a href="/today">Today's sky</a></p>""", status=404)
+
 def private(title, body, script="", status=200):
     return page(title + " · The Wyrd Console", title, body, robots="noindex, nofollow", script=script, status=status)
 
@@ -497,7 +510,8 @@ def sitemap():
 
 @app.get("/reports")
 def reports_page():
-    return page(*pages.reports(config.BASE_URL, config.PRICE_CENTS, config.MEMBER_READING_CENTS))
+    return page(*pages.reports(config.BASE_URL, config.PRICE_CENTS, config.MEMBER_READING_CENTS,
+                               config.MEMBER_MONTHLY_CENTS, config.MEMBER_YEARLY_CENTS, config.PRO_MONTHLY_CENTS, config.PRO_READINGS_A_MONTH))
 
 @app.get("/learn")
 def learn_page():
@@ -567,12 +581,11 @@ def api_me():
         except stripe_api.StripeError:
             pass
     cents = config.MEMBER_READING_CENTS if member else config.PRICE_CENTS
-    r = jsonify(signedIn=bool(email), member=member, readingPrice=money(cents)); r.headers["Cache-Control"] = "no-store"
+    r = jsonify(signedIn=bool(email), member=member, readingPrice=money(cents),
+                prices={"reading": money(config.PRICE_CENTS), "member": money(config.MEMBER_READING_CENTS),
+                        "month": money(config.MEMBER_MONTHLY_CENTS), "year": money(config.MEMBER_YEARLY_CENTS)})
+    r.headers["Cache-Control"] = "no-store"
     return r
-
-def money(cents):
-    """$44, $35.20: whole dollars without the cents."""
-    return f"${cents // 100}" if cents % 100 == 0 else f"${cents / 100:.2f}"
 
 @app.get("/signin")
 def signin_page():
@@ -630,6 +643,7 @@ PLANS = {
 }
 
 def money(c): return f"${c / 100:.0f}" if c % 100 == 0 else f"${c / 100:.2f}"
+pages.PRICE = money(config.PRICE_CENTS)
 
 @app.get("/membership")
 def membership_page():
@@ -640,29 +654,32 @@ def membership_page():
                 f'<button class="{"btn-buy" if lead else "btn-cast"}" type="submit">{label}</button></form>')
     m, y, pr = config.MEMBER_MONTHLY_CENTS, config.MEMBER_YEARLY_CENTS, config.PRO_MONTHLY_CENTS
     body = f"""<h1>Wyrd Membership</h1>
-<p class="lede">Your body's weather, every week. How the planets land in the body you were born with and in your Dharma body, written in The Völva's words.</p>
+<p class="lede">Your design's weather, every week: a letter by email each Monday on how the planets move through your Birth Design and your Dharma Design, written in The Völva's words.</p>
 <div class="plans">
   <section class="plan lead"><h2>Membership</h2><div class="price">{money(m)}<small> a month</small></div>
-    <ul><li><b>Body Weather every Monday:</b> which centres the week's sky switches on in your birth body and your Dharma body, which stay open, and which of your gates it lights</li>
-      <li>The Moon's mansion day by day, the week's stations and sign changes, and your Vimshottari period</li>
-      <li>Your chart kept on your account, on any device</li>
-      <li>The natal astrology reading for {money(config.MEMBER_READING_CENTS)} instead of {money(config.PRICE_CENTS)}</li></ul>
+    <p class="muted">or {money(y)} a year, two months free</p>
+    <ul><li><b>Body Weather by email every Monday:</b> which centres the week's sky switches on in your Birth Design and your Dharma Design, which stay open, and which of your gates it lights</li>
+      <li>The Moon's mansion day by day, the week's stations and sign changes, and the Vimshottari era and chapter you're in</li>
+      <li>One chart saved to your account, for your weekly letter</li>
+      <li>The Wyrd Reading for {money(config.MEMBER_READING_CENTS)} instead of {money(config.PRICE_CENTS)}</li></ul>
     {buy("member-month", f"Join for {money(m)} a month", True)}
     {buy("member-year", f"Or {money(y)} a year") if on else ""}</section>
   <section class="plan" id="pro"><h2>Professional</h2><div class="price">{money(pr)}<small> a month</small></div>
     <ul><li>For astrologers, coaches and practitioners working with clients</li>
-      <li>Generate the full Wyrd reading for your clients: {config.PRO_READINGS_A_MONTH} a month included</li>
-      <li>Body Weather for any client, any week</li>
+      <li>Generate The Wyrd Reading for your clients: {config.PRO_READINGS_A_MONTH} a month included</li>
+      <li>This week's Body Weather for any client, as often as you like</li>
       <li>Everything in the membership</li></ul>
-    {buy("pro-month", f"Subscribe for {money(pr)} a month")}</section>
+    {buy("pro-month", f"Subscribe for {money(pr)} a month")}
+    <p class="muted">Already a Professional? <a href="/signin?next=/pro">Sign in to your practice desk</a>.</p></section>
 </div>
-<p class="muted">Cancel any time from your account. Payments are handled by Stripe. Prefer one reading? <a href="/reports">The natal reading is {money(config.PRICE_CENTS)}, once.</a></p>"""
+<p class="muted">The free chart stays free, with or without a membership: the whole path, Compare for up to nine people, today's sky and the year ahead.
+Cancel any time from your account. Payments are handled by Stripe. Prefer one reading? <a href="/reports">The Wyrd Reading is {money(config.PRICE_CENTS)}, once.</a></p>"""
     ld = pages._ld({"@context": "https://schema.org", "@type": "Product", "name": config.MEMBER_NAME,
-                    "description": "Weekly Body Weather astrology report for your birth body and Dharma body.",
+                    "description": "Weekly Body Weather astrology letter for your Birth Design and Dharma Design.",
                     "brand": {"@type": "Brand", "name": "The Wyrd Console"},
                     "offers": {"@type": "Offer", "price": f"{m / 100:.2f}", "priceCurrency": "USD", "url": config.BASE_URL + "/membership"}})
-    return page("Weekly Astrology Membership: Body Weather · The Wyrd Console",
-                f"A weekly astrology report for your own chart: how the week's planets land in your birth body and Dharma body. {money(m)} a month from The Völva.",
+    return page("Weekly Astrology Membership & Professional Plan · The Wyrd Console",
+                f"A weekly astrology letter for your own chart: how the week's planets move through your Birth Design and Dharma Design. {money(m)} a month or {money(y)} a year from The Völva; Professional for practitioners.",
                 body, ld)
 
 @app.post("/api/subscribe")
@@ -828,7 +845,7 @@ BAD_BIRTH = "Those birth details don't work."
 
 def pro_or_redirect():
     email = signed_in()
-    if not email: return None, redirect("/signin?next=/pro")
+    if not email: return None, redirect("/membership#pro")       # what Professional is, with a sign-in link for those who have it
     st = account_status(email)
     if not st or not st["pro"]: return None, redirect("/membership#pro")
     return (email, st), None
@@ -840,7 +857,7 @@ def pro_desk():
     left = max(0, config.PRO_READINGS_A_MONTH - who[1]["proUse"])
     form = open(os.path.join(HERE, "static", "pro-form.html"), encoding="utf-8").read()
     return private("Practice desk", f"""<h1>Your practice desk</h1>
-<p class="lede">Generate the full Wyrd reading or a week's Body Weather for a client.</p>
+<p class="lede">Generate The Wyrd Reading or a week's Body Weather for a client.</p>
 <p class="muted">{left} of {config.PRO_READINGS_A_MONTH} client readings left this month. Body Weather is unlimited.</p>{form}""",
                    script='<script src="/static/common.js"></script><script src="/static/pro.js"></script>')
 

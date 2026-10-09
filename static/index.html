@@ -4,12 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Free Birth Chart & Astrology Readings · The Wyrd Console</title>
-<meta name="description" content="Cast your free birth chart: sidereal and tropical positions, the 27 nakshatras, the 64 gates, the runes and your Dharma body. Personal astrology readings by The Völva.">
+<meta name="description" content="Cast your free birth chart: sidereal and tropical positions, the 27 nakshatras, the 64 gates, the runes, your Human Design and your Dharma Design. Personal astrology readings by The Völva.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Wyrd Console">
 <meta property="og:title" content="Free Birth Chart & Astrology Readings · The Wyrd Console">
-<meta property="og:description" content="Cast your free birth chart, then read it in The Völva's words: sidereal astrology, nakshatras, the 64 gates and your Dharma body.">
-<meta property="og:image" content="/static/icons/icon-512.png">
+<meta property="og:description" content="Cast your free birth chart, then read it in The Völva's words: sidereal astrology, nakshatras, the 64 gates and your Dharma Design.">
+<link rel="canonical" href="https://wyrdconsole.com/">
+<meta property="og:url" content="https://wyrdconsole.com/">
+<meta property="og:image" content="https://wyrdconsole.com/static/icons/icon-512.png">
 <meta name="twitter:card" content="summary">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"The Wyrd Console","alternateName":"Wyrd Console astrology"},{"@type":"Organization","name":"The Wyrd Console","founder":{"@type":"Person","name":"The Völva"},"sameAs":["https://thewebofwyrd.substack.com"]},{"@type":"WebApplication","name":"The Wyrd Console birth chart calculator","applicationCategory":"LifestyleApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}]}</script>
 <link rel="manifest" href="/manifest.webmanifest">
@@ -25,11 +27,18 @@
 <link rel="stylesheet" href="/static/a11y.css">
 </head>
 <body>
-<nav class="topbar" aria-label="Site"><a href="/" class="tb-home">The Wyrd Console</a><span class="tb-links"><a href="/reports">Readings</a><a href="/membership">Membership</a><a href="/learn">Learn</a><a href="/today">Today</a><a href="/account" class="tb-acct" data-acct>Sign in</a></span></nav>
+<a class="skip" href="#castForm">Skip to the chart form</a>
+<nav class="topbar" aria-label="Site"><a href="/" class="tb-home">The Wyrd Console</a><span class="tb-links"><a href="/reports">Readings</a><a href="/membership">Membership</a><a href="/learn">Learn</a><a href="/today">Today's sky</a><a href="/account" class="tb-acct" data-acct>Sign in</a></span></nav>
 <header class="seat" id="skyHost">
   <div class="seat-in">
-    <h1>Hliðskjálf</h1>
+    <h1><span class="seat-mark">Hliðskjálf</span><span class="seat-h">Your free birth chart, read in every frame</span></h1>
     <p class="seat-sub" id="seatSub">The high seat, from which all worlds are seen. Give the moment and place of your birth and the console casts it.</p>
+    <ul class="seat-what" aria-label="What your chart shows">
+      <li><b>Astrology</b> in both zodiacs: sidereal for what life hands you, tropical for how it feels</li>
+      <li><b>Your design</b>: how energy moves through your body (Human Design), and your Dharma Design</li>
+      <li><b>Runes and timing</b>: the runes your planets light, and the Vimshottari Clock of your life's eras</li>
+    </ul>
+    <p class="seat-how">Free, no sign-up. Your chart opens as a short path, one layer at a time.</p>
 
     <form id="castForm" class="cast" autocomplete="off" novalidate>
       <label class="f-name">Name <span id="nameNote">optional — it goes on your reading</span>

@@ -126,7 +126,7 @@ const LESSONS = [
       return `<dl class="ln-dl"><dt>Type</dt><dd>${r.type}</dd><dt>How it engages</dt><dd>${r.strategy}</dd><dt>Authority</dt><dd>${r.authority}</dd>
         <dt>Definition</dt><dd>${r.definition}</dd><dt>Profile</dt><dd>${r.profile}</dd><dt>Channels</dt><dd>${r.channels.join(", ") || "none"}</dd></dl>`;
     },
-    tryIt: "The harmonic body shows the centres on a figure. Turn on \"Body Rave\" there.", deeper: "body" },
+    tryIt: "Your design shows these centres on a bodygraph, with the current moving along your channels.", deeper: "design" },
 
   { id: "day", t: "Your birth day", q: "What kind of day were you born on?", level: "simple", focus: ["nak"],
     body: () => `<p>The Vedic calendar describes every day by its ${g("panchanga")}, five limbs: the weekday (${g("vara")}), the lunar day (${g("tithi")}),
@@ -164,7 +164,7 @@ const LESSONS = [
     tryIt: "What's coming lists the next twelve months of these, with dates.", deeper: "calendar" },
 
   { id: "next", t: "Where to go next", q: "What have I learned, and what's left?", level: "simple", focus: null,
-    body: () => `<p>You can now read the map: two zodiacs, the houses, the planets and their aspects, the mansions, the runes, the gates and the rave,
+    body: () => `<p>You can now read the map: two zodiacs, the houses, the planets and their aspects, the mansions, the runes, the gates and your design,
       your birth day, your clock and today's sky. Every land on the map goes deeper into one of these.</p>
       <p>What none of them do is say what your placements <em>mean</em> together. That is the reading: eight movements written for your chart and nobody else's.</p>`,
     yours: () => `<p><a class="btn-buy ln-cta" href="#reading">See your full reading</a></p>

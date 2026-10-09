@@ -114,7 +114,7 @@ function mount(host, C){
     Each activated rune works through the lunar mansion of the planet that lights it, so the same rune reads differently in different charts. Strongest first:
     a rune is strongest when it holds your Ascendant, your soul-planet, your Sun or Moon, or the lord of the period you are in.</p>
     ${L.map(card).join("")}
-    <p class="fine">To learn each rune in depth, see <a href="/learn/runes">Learn the runes</a>. Your full reading shows the years each activated rune wakes.</p>`;
+    <p class="fine">To learn each rune in depth, see <a href="/learn/runes">Learn the runes</a>. The Wyrd Reading shows the years each activated rune wakes.</p>`;
 }
 
 /* ---------- two charts: the runes between you ---------- */

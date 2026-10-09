@@ -1,7 +1,7 @@
 """Body Weather: one week of sky read through a person's two bodies.
 
 For each day of the week (sampled at noon UT) the transiting planets' gates are
-laid over the birth body and the Dharma body. A channel the chart can't close
+laid over the Birth Design and the Dharma Design. A channel the chart can't close
 alone, closed by the sky, switches its centres on for as long as it holds.
 Gates the sky lights that the person already carries are named with their
 register passage and question. The Moon's mansion for each day, the week's
@@ -162,8 +162,8 @@ def render(w, name=""):
     parts = [f'<div style="font:16px/1.6 Georgia,serif;color:#1d1a2b;max-width:620px">',
              f'<p style="font:600 12px sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#9a6a12;margin:0">Body Weather · week of {e(start)}</p>',
              f'<h1 style="font:600 30px Georgia,serif;margin:6px 0 14px">{e(name) + ", your" if name else "Your"} week in the body</h1>',
-             _section("Your birth body", w["natal"], "How this week's planets land in the body you were born with."),
-             _section("Your Dharma body", w["dharma"], "The same week through the D9 Dharma body: where it carries the path and where it pulls."),
+             _section("Your Birth Design", w["natal"], "How this week's planets move through the design you were born with."),
+             _section("Your Dharma Design", w["dharma"], "The same week through your Dharma Design: where it carries the path and where it pulls."),
              '<h2 style="font:600 22px Georgia,serif;margin:28px 0 6px">The thread through the week</h2>']
     d = w["dasha"]
     parts.append(f'<p>You are in the {e(d["maha"])} period, {e(d["antar"])} sub-period.</p><ul style="padding-left:18px">')

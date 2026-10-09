@@ -44,3 +44,5 @@
 
 /* containers that receive focus only so screen readers land in the right place */
 [tabindex="-1"]:focus, [tabindex="-1"]:focus-visible { outline: none; }
+.skip { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--jade-deep, #26514a); color: #fff; padding: 10px 14px; }
+.skip:focus { left: 8px; }

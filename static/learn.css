@@ -1,8 +1,6 @@
 /* The learning path, the chart page's tools, and the two newer lands. */
 
 /* ---- skip link, notes, toast ---- */
-.skip { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--jade-deep); color: #fff; padding: 10px 14px; }
-.skip:focus { left: 8px; }
 .unknown-note { border-left: 3px solid var(--gold); padding: 8px 12px; margin: 10px 0 16px; background: rgba(184,146,74,.08);
   font-size: 15px; color: var(--ivory); text-align: left; }
 .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 30px); opacity: 0; pointer-events: none; z-index: 60;
