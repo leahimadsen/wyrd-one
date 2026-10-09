@@ -83,3 +83,6 @@ table.vg-all { border-collapse: collapse; font-size: 13px; } .vg-all th, .vg-all
 table.vg-thread { border-collapse: collapse; } .vg-thread th, .vg-thread td { padding: 6px 10px; border-bottom: 1px solid var(--rule); text-align: left; font-weight: 400; vertical-align: top; }
 .vg-thread tr.same td, .vg-thread tr.same th { background: rgba(38,81,74,.22); }
 .vg-read li { margin: 8px 0; }
+.vg-dom { font-style: italic; color: var(--celadon); margin: 0 0 8px; }
+.vg-ask { font-style: italic; color: var(--gold, #b8924a); border-left: 2px solid rgba(184,146,74,.5); padding-left: 12px; }
+.vg-close { margin-top: 18px; color: var(--ivory); }
