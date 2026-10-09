@@ -201,3 +201,13 @@
 .often a { color: var(--celadon) !important; }
 .cp-ask { display: block; margin-top: 8px; font-style: italic; color: var(--gold); }
 p.cp-ask { margin: 10px 0 0; }
+
+/* ---- the sky around the Earth (skytorus.js) ---- */
+.st-wrap { margin: 14px auto 0; max-width: 520px; transition: max-width 340ms var(--ease, ease); }
+.st-wrap.big { max-width: 880px; }
+.st-wrap .td-wheel { max-width: none; margin: 8px auto 0; }
+.st-ctl { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.st-cv { display: block; width: 100%; cursor: pointer; touch-action: none; border-radius: 50%; }
+.st-cv:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+.big .st-cv { cursor: grab; }
+.st-open { text-align: center; margin: 4px 0 14px; }

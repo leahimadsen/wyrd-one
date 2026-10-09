@@ -27,7 +27,14 @@
     <h1>Today's sky</h1>
     <p class="meta" id="when"></p>
     <p class="seat-links" style="justify-content:center"><a href="#" data-install hidden>Install the app →</a></p>
-    <div class="td-wheel" id="tdWheel"></div>
+    <div class="st-wrap" id="tdSky">
+      <div class="st-ctl" role="group" aria-label="How to show the sky">
+        <button type="button" class="tz-chip" data-st="flat" aria-pressed="true">◎ Flat wheel</button>
+        <button type="button" class="tz-chip" data-st="3d" aria-pressed="false">⤢ 3D, around the Earth</button>
+      </div>
+      <div class="td-wheel" id="tdWheel"></div>
+      <p class="tz-cap" id="tdCap" aria-live="polite">Tap a planet or a band to see what is there. Tap the empty sky to fold it in or out.</p>
+    </div>
   </div>
 </header>
 <main id="today" class="td" tabindex="-1">
@@ -48,6 +55,7 @@
 <script src="/static/pulse.js"></script>
 <script src="/static/glossary.js"></script>
 <script src="/static/common.js"></script>
+<script src="/static/skytorus.js"></script>
 <script src="/static/today.js"></script>
 <script>fetch("/api/me").then(r=>r.json()).then(d=>{if(d.signedIn)for(const a of document.querySelectorAll("[data-acct]"))a.textContent="Your account"}).catch(()=>{})</script>
 </body>
