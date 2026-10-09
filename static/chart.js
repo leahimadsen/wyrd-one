@@ -53,7 +53,7 @@ const LANDS = [
     terms: ["station7", "centre", "channel", "type"], prompt: "Your reading reads the gates of your work and what your defined centres carry." },
   { id: "design",    name: "Your design",           mark: "⬡", teaser: (() => { try { return `${WyrdDesign.analyse(C.natal).type} · energy in motion`; } catch (_) { return "Your energy in motion"; } })(),
     terms: ["centre", "channel", "type"], prompt: "Your reading reads the gates of your work and what your body's channels carry, through both your birth and Dharma designs." },
-  { id: "runes",     name: "Your rune stave",       mark: "ᛉ", teaser: "Your lit runes, bound into one sign",
+  { id: "runes",     name: "Your activated runes",  mark: "ᛉ", teaser: "Your lit runes, read through your mansions",
     terms: ["rune"], prompt: "Your reading ranks your runes and names the years each one wakes." },
   { id: "dharma",    name: "The Dharma Weave",      mark: "⛤", teaser: C.dharma ? `Dharma profile ${C.dharma.profile} · the Pentagram Cross` : "What the chart ripens into",
     terms: [], prompt: "Your reading reads your dharma Suns and Earths from the register, and walks the Path of Dharma step by step, with when each step opens in your life." },

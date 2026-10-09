@@ -44,3 +44,19 @@
 .kt-big { font-size: 34px; color: #f2d48a; } .kt-or { color: var(--ivory-dim); font-size: 14px; margin-right: 12px; }
 table.kt td { vertical-align: top; } .kt-n { white-space: nowrap; font-variant-numeric: tabular-nums; } .kt-f { color: var(--ivory-dim); }
 .dg-c.birth text, .dg-c.both text, .dg-c.dharma text { fill: #120f1c; font-weight: 600; }
+
+.rn-card { border-bottom: 1px solid var(--rule); padding: 14px 0 10px; }
+.rn-card h3 { margin: 0 0 6px; font-weight: 400; } .rn-card.lead h3 { color: #f2d48a; }
+.rn-g { font-family: var(--rune); font-size: 1.3em; margin-right: 4px; }
+.rn-means { margin: 4px 0 8px; } .rn-thru { padding-left: 18px; } .rn-thru li { margin: 8px 0; } .rn-thru p { margin: 2px 0 0; }
+.rn-call { color: var(--celadon); } .kar-plain { padding-left: 18px; }
+.dg-chs li { margin: 10px 0; } .dg-chs p { margin: 3px 0; }
+.dg-gates h5 { margin: 14px 0 4px; color: var(--celadon); font-weight: 400; font-size: 15px; }
+.dg-gates ul { padding-left: 18px; margin: 0; } .dg-gates li { margin: 8px 0; } .dg-gates p { margin: 2px 0 0; }
+.dg-tag { font-size: 11.5px; border: 1px solid var(--gold-dim); color: #e6c47e; border-radius: 99px; padding: 0 7px; }
+.dg-tag.open { border-color: var(--rule); color: var(--ivory-dim); }
+
+.sy-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.sy-two h5, .cp-pair h5 { font-weight: 400; color: var(--celadon); font-size: 16px; margin: 14px 0 6px; }
+.sy-houses, .sy-hd { padding-left: 18px; } .sy-houses li, .sy-hd li { margin: 7px 0; }
+.sy-asks li { margin: 5px 0; color: var(--celadon); }
