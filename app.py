@@ -242,7 +242,10 @@ def chart():
     c["extras"] = extras(EPH, c, b)
     if c.get("unknownTime"): c["extras"]["placidus"] = None     # house cusps need a birth time
     c["lex"] = lexicon(c)
+    c["v"] = CHART_V
     return jsonify(chart=plain(c), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME)
+
+CHART_V = 2      # bump when a cast changes meaning (2: sidereal Dharma Design); common.js CHART_V must match
 
 def lexicon(c):
     """The words the free pages need for this chart: each of its gates (name, title, a first line from the

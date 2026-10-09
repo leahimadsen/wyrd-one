@@ -6,7 +6,7 @@
 (async () => {
 const $ = id => document.getElementById(id);
 const { signOf, degIn, nakIndex, houseOf, norm, GLYPH, NAKSHATRA } = Wyrd.helpers;
-const { esc, cast, keep, current, shareLink, fromLink, isSaved, toggleSaved, refreshSaved } = WyrdCommon;
+const { esc, cast, keep, current, fresh, shareLink, fromLink, isSaved, toggleSaved, refreshSaved } = WyrdCommon;
 const g = (k, l) => Wyrd.gloss(k, l);
 
 /* ---------- which chart: a shared link, or the one cast in this tab ---------- */
@@ -21,6 +21,9 @@ if (linkParam){
   history.replaceState(null, "", "/chart" + location.hash);     // the details don't stay in the address bar
 }
 if (!saved || !saved.result || !saved.result.chart){ location.replace("/"); return; }
+if (!fresh(saved.result) && navigator.onLine !== false){       // cast by an older engine: bring it up to date
+  try { const j = await cast(saved.birth); keep(saved.birth, j); saved = { birth: saved.birth, result: j }; } catch (_) {}
+}
 const { birth, result: J } = saved, C = J.chart, T = C.dashaTree, unknown = !!C.unknownTime;
 const X = C.extras || {};
 Wyrd.setChart(C);
