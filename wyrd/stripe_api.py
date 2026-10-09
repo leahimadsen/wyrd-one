@@ -1,7 +1,7 @@
 """Stripe Checkout over plain HTTPS — no SDK needed.
 The birth data rides in the session's metadata, so a paid reading can be
 rebuilt from its session id alone: no database, nothing to lose."""
-import json, urllib.parse, urllib.request, urllib.error
+import json, os, urllib.parse, urllib.request, urllib.error
 
 API = "https://api.stripe.com/v1"
 
@@ -22,6 +22,10 @@ def _call(secret, method, path, fields=None):
     except (urllib.error.URLError, TimeoutError, ValueError) as e:
         raise StripeError("Stripe could not be reached.") from e
 
+# Stripe's tax category for what is sold here (digital, personal use). Required when the account
+# uses Managed Payments, where Stripe is the seller and handles sales tax; harmless otherwise.
+TAX_CODE = os.environ.get("STRIPE_TAX_CODE", "txcd_10103000")
+
 def create_checkout(secret, *, base_url, price_id, price_cents, product_name, metadata, email=None, customer=None):
     f = {
         "mode": "payment",
@@ -36,6 +40,7 @@ def create_checkout(secret, *, base_url, price_id, price_cents, product_name, me
         f["line_items[0][price_data][currency]"] = "usd"
         f["line_items[0][price_data][unit_amount]"] = str(price_cents)
         f["line_items[0][price_data][product_data][name]"] = product_name
+        if TAX_CODE: f["line_items[0][price_data][product_data][tax_code]"] = TAX_CODE
     if customer: f["customer"] = customer
     elif email: f["customer_email"] = email
     for k, v in metadata.items():
@@ -95,6 +100,7 @@ def subscription_checkout(secret, *, base_url, customer, tier, name, cents, inte
         "line_items[0][price_data][unit_amount]": str(cents),
         "line_items[0][price_data][recurring][interval]": interval,
         "line_items[0][price_data][product_data][name]": name}
+    if TAX_CODE and not price_id: f["line_items[0][price_data][product_data][tax_code]"] = TAX_CODE
     if customer: f["customer"] = customer          # signed in: their customer. Not signed in: Stripe asks for the email
     return _call(secret, "POST", "/checkout/sessions", {
         **f,
