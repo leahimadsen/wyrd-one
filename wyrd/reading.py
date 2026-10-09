@@ -23,6 +23,7 @@ import html, json, math, os
 from datetime import datetime, timedelta
 
 from . import engine as E
+from . import vargas as VG
 from . import rave as RV
 from . import reading_more as MORE
 
@@ -237,14 +238,15 @@ def build(chart, dasha, who):
       <p class="rd-kenning">The body is written under the messenger's number, the dharma under the lover's.</p>
       {f'<p class="rd-kenning">The dharma repeats {" and ".join(repeats)} of the birth chart. The repetition is load-bearing — that is a thing the life does not get to outgrow.</p>' if repeats else ''}
       <h3 class="rd-tier">The dharma cross</h3>
-      <p>The four positions that carry the dharma rave, as the four Suns and Earths carry the birth one: the dharma Sun and its Earth,
+      <p>The four positions that carry the Dharma Design, as the four Suns and Earths carry the Birth Design: the dharma Sun and its Earth,
       and the dharma design Sun and its Earth. Read them as you read section VII, conscious side first.</p>
       {register_entry(dps['gate'], dps['line'], 'personality', 'Dharma Sun', asks)}
       {register_entry(Dh['personality']['Earth']['gate'], Dh['personality']['Earth']['line'], 'personality', 'Dharma Earth', asks)}
       {register_entry(dds['gate'], dds['line'], 'design', 'Dharma design Sun', asks)}
       {register_entry(Dh['design']['Earth']['gate'], Dh['design']['Earth']['line'], 'design', 'Dharma design Earth', asks)}
       {dharma_defines(N, Dh)}
-      {dharma_table(N, Dh)}"""))
+      {dharma_table(N, Dh)}
+      {VG.thread(C)}"""))
 
     # ---------- VI · the Path of Dharma ----------
     def steps(rave):
