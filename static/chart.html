@@ -97,6 +97,16 @@
     <h2 id="h-sky">Now and next</h2>
     <p class="lede">Which of my planets is the sky touching today, and what happens over the next twelve months?</p>
     <h3 class="sec-h">The sky now</h3>
+    <div class="st-wrap" id="chSky" hidden>
+      <div class="st-ctl" role="group" aria-label="How to show the sky">
+        <button type="button" class="tz-chip" data-st="flat" aria-pressed="false">◎ Flat wheel</button>
+        <button type="button" class="tz-chip" data-st="3d" aria-pressed="true">⤢ 3D, around the Earth</button>
+        <button type="button" class="tz-chip" data-st="close">× Close</button>
+      </div>
+      <div class="td-wheel" id="chSkyHost"></div>
+      <p class="tz-cap" id="chSkyCap" aria-live="polite">Today's planets ride the outer edge, yours from birth the inner edge. Tap one to see what it is crossing.</p>
+    </div>
+    <p class="st-open"><button type="button" class="tz-chip" id="chSkyOpen">⤢ See today's sky around the Earth, with your birth planets inside</button></p>
     <div id="trHost"></div>
     <h3 class="sec-h" id="coming">What's coming</h3>
     <div id="calHost"></div>
@@ -160,6 +170,7 @@
 <script src="/static/torus.js"></script>
 <script src="/static/dasha.js"></script>
 <script src="/static/dharma.js"></script>
+<script src="/static/skytorus.js"></script>
 <script src="/static/transits.js"></script>
 <script src="/static/learn.js"></script>
 <script src="/static/lands.js"></script>

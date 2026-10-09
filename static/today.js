@@ -35,7 +35,16 @@ for (const p of placed){
 }
 s += `<circle cx="500" cy="500" r="190" class="wh-core"/><text x="500" y="470" class="wh-c2">the Moon in</text><text x="500" y="508" class="wh-c1">${moon.nak}</text>
   <text x="500" y="548" class="wh-c4">${P.paksha} ${P.tithiName}</text>`;
-$("tdWheel").innerHTML = `<svg class="wwheel" viewBox="0 0 1000 1000" role="img" aria-label="Today's planets on the sidereal zodiac">${s}</svg>`;
+const flatSVG = `<svg class="wwheel" viewBox="0 0 1000 1000" role="img" aria-label="Today's planets on the sidereal zodiac">${s}</svg>`;
+/* the sky around the Earth: flat as a wheel, or opened out into three dimensions; the plain wheel stays as the fallback */
+try {
+  const ST = WyrdSkyTorus.mount($("tdWheel"), { rows: D.rows, caption: $("tdCap"), onMode: v => {
+    document.querySelectorAll("[data-st]").forEach(b => b.setAttribute("aria-pressed", b.dataset.st === v));
+    $("tdSky").classList.toggle("big", v === "3d"); setTimeout(() => ST.resize(), 360);
+    if (Wyrd.pulse) Wyrd.pulse("act", "sky-" + v);
+  } });
+  document.querySelector(".st-ctl").addEventListener("click", e => { const b = e.target.closest("[data-st]"); if (b) ST.setMode(b.dataset.st); });
+} catch (_) { $("tdWheel").innerHTML = flatSVG; document.querySelector(".st-ctl").hidden = true; $("tdCap").hidden = true; }
 
 $("tdFacts").innerHTML = `
   <div class="fact"><h3>The Moon today</h3><dl><dt>${g("sidereal", "Sign")}</dt><dd>${signOf(moon.sid)} ${dm(moon.sid)}</dd>

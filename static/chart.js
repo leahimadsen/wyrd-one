@@ -258,6 +258,25 @@ function designLand(){
   set("birth");
 }
 
+/* ---------- Now and next: today's sky around the Earth, the birth chart inside it ---------- */
+function skyTorus(){
+  if (!window.WyrdSkyTorus || !C.transits || !C.transits.rows){ $("chSkyOpen").hidden = true; return; }
+  let ST = null;
+  const open = () => {
+    $("chSky").hidden = false; $("chSkyOpen").parentNode.hidden = true;
+    if (!ST) ST = WyrdSkyTorus.mount($("chSkyHost"), { rows: C.transits.rows, natal: { sid: C.sid }, ay: C.ay, caption: $("chSkyCap"), mode: "3d",
+      onMode: v => document.querySelectorAll("#chSky [data-st]").forEach(b => b.setAttribute("aria-pressed", b.dataset.st === v)) });
+    else ST.resize();
+    $("chSky").classList.add("big"); setTimeout(() => ST.setMode("3d"), 60);
+  };
+  $("chSkyOpen").addEventListener("click", open);
+  $("chSky").querySelector(".st-ctl").addEventListener("click", e => {
+    const b = e.target.closest("[data-st]"); if (!b || !ST) return;
+    if (b.dataset.st === "close"){ $("chSky").hidden = true; $("chSkyOpen").parentNode.hidden = false; ST.stop(); return; }
+    ST.setMode(b.dataset.st);
+  });
+}
+
 /* ---------- each land, built on first visit ---------- */
 let learn = null;
 const BUILD = {
@@ -268,7 +287,7 @@ const BUILD = {
   design: designLand,
   runes: () => WyrdRunes.mount($("runesHost"), C),
   armillary: () => { $("armHostWrap").innerHTML = Wyrd.armillary(); watchArmillary($("p-armillary")); },
-  sky: () => { renderTransits(C); WyrdLands.calendar($("calHost"), { C, birth, unknown }); },
+  sky: () => { renderTransits(C); WyrdLands.calendar($("calHost"), { C, birth, unknown }); skyTorus(); },
   colour: () => { $("colourHost").innerHTML = Wyrd.colour(); setTimeout(() => Wyrd.afterColour(), 0); },
   bench: () => { $("benchHost").innerHTML = Wyrd.bench(); },
   compare: () => WyrdCompare.mount($("cmpHost"), { C, birth, unknown }),

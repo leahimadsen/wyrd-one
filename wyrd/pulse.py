@@ -29,7 +29,7 @@ EVENTS = {
     "compare": lambda d: d in {str(n) for n in range(2, 10)},
     "cast": lambda d: d in {"known", "unknown"},
     "calendar": lambda d: d in {"all", "you", "clock", "ingress", "station"},
-    "act": lambda d: d in {"buy", "share", "save", "download", "install", "sample", "today", "edit", "level"},
+    "act": lambda d: d in {"buy", "share", "save", "download", "install", "sample", "today", "edit", "level", "sky-flat", "sky-3d"},
 }
 
 _lock = threading.Lock()
