@@ -9,7 +9,7 @@
    - WyrdVargas.sign(lon, n): the sign index (0 = Aries) of a sidereal longitude in Dn
    - WyrdVargas.mount(host, C, { unknown }): the chart viewer, for Your chart
    - WyrdVargas.thread(host, C, { unknown }): from Rashi to Dharma, for Your design
-   The words are drafts for The Völva to edit.
+   The words live in lib/vargas.json (drafts for The Völva to edit), sent with the chart.
    ============================================================ */
 (() => {
 const { norm, GLYPH } = Wyrd.helpers;
@@ -25,23 +25,23 @@ const VARGAS = [
   [1,  "Rashi",          "the body and the whole life as it is lived"],
   [2,  "Hora",           "wealth, resources and what sustains you"],
   [3,  "Drekkana",       "siblings, courage and the will to begin"],
-  [4,  "Chaturthamsa",   "home, land and settled fortune"],
-  [5,  "Panchamsa",      "power, standing and recognition", "cyclical"],
-  [6,  "Shashthamsa",    "health, illness and what you struggle against", "cyclical"],
-  [7,  "Saptamsa",       "children, creation and what you pass on"],
-  [8,  "Ashtamsa",       "sudden events, the hidden and long life", "cyclical"],
-  [9,  "Navamsa",        "dharma, partnership and what the life ripens into"],
-  [10, "Dasamsa",        "work, career and action in the world"],
+  [4,  "Chaturthamsha",   "home, land and settled fortune"],
+  [5,  "Panchamsha",      "power, standing and recognition", "cyclical"],
+  [6,  "Shashthamsha",    "health, illness and what you struggle against", "cyclical"],
+  [7,  "Saptamsha",       "children, creation and what you pass on"],
+  [8,  "Ashtamsha",       "sudden events, the hidden and long life", "cyclical"],
+  [9,  "Navamsha",        "dharma, partnership and what the life ripens into"],
+  [10, "Dashamsha",        "work, career and action in the world"],
   [11, "Rudramsa",       "gains, and the endings that make room for them", "cyclical"],
-  [12, "Dwadasamsa",     "parents and lineage"],
-  [16, "Shodasamsa",     "comforts, vehicles and ease"],
-  [20, "Vimsamsa",       "spiritual practice and devotion"],
-  [24, "Chaturvimsamsa", "learning and knowledge"],
-  [27, "Bhamsa",         "strength, stamina and weak points"],
-  [30, "Trimsamsa",      "misfortune and the shadow of character"],
-  [40, "Khavedamsa",     "the mother's line and what it hands down"],
-  [45, "Akshavedamsa",   "the father's line and character"],
-  [60, "Shashtyamsa",    "past karma, the finest grain of the chart"],
+  [12, "Dvadashamsha",     "parents and lineage"],
+  [16, "Shodashamsha",     "comforts, vehicles and ease"],
+  [20, "Vimshamsha",       "spiritual practice and devotion"],
+  [24, "Chaturvimshamsha", "learning and knowledge"],
+  [27, "Bhamsha",         "strength, stamina and weak points"],
+  [30, "Trimshamsha",      "misfortune and the shadow of character"],
+  [40, "Khavedamsha",     "the mother's line and what it hands down"],
+  [45, "Akshavedamsha",   "the father's line and character"],
+  [60, "Shashtyamsha",    "past karma, the finest grain of the chart"],
 ];
 
 /* ---------- the arithmetic ---------- */
@@ -100,32 +100,37 @@ function grid(C, n, unknown){
     ${cells}<div class="vg-mid"><b>D${n}</b><span>${V[1]}</span></div></div>`;
 }
 
+/* the words: lib/vargas.json, sent with the chart (lex.vargas) */
+const W = C => (C.lex && C.lex.vargas) || {};
+const fill = (t, o) => String(t || "").replace(/\{(\w+)\}/g, (_, k) => o[k] ?? "");
+const list = (C, bs) => bs.map(b => `${GLYPH[b] || ""} ${b}`).join(", ");
+
 function mount(host, C, { unknown } = {}){
-  let n = 9;
+  const w = W(C); let n = 9;
   const draw = () => {
-    const V = VARGAS.find(v => v[0] === n);
-    const varg = BODIES.filter(b => sign(C.sid[b], n) === sign(C.sid[b], 1));
+    const V = VARGAS.find(v => v[0] === n), T = (w.VARGAS || {})[n] || {};
+    const kept = BODIES.filter(b => sign(C.sid[b], n) === sign(C.sid[b], 1));
     const strong = BODIES.filter(b => ["exalted", "own sign"].includes(dignityIn(b, sign(C.sid[b], n))));
     host.querySelector(".vg-one").innerHTML = `${grid(C, n, unknown)}
-      <div class="vg-say"><h4>D${n} · ${V[1]}</h4><p>The chart of ${V[2]}.${V[3] ? ` <span class="fine">Counted cyclically: Parashara gives no rule for D${n}, so each part follows the last around the zodiac.</span>` : ""}</p>
-      ${n > 1 ? `<p>${varg.length ? `<b>Same sign as in your Rashi</b> (${n === 9 ? "vargottama" : "steady across the division"}): ${varg.map(b => `${GLYPH[b]} ${b}`).join(", ")}. What these are at birth, they stay in this part of life.` : "No planet keeps its Rashi sign here."}</p>` : ""}
-      <p>${strong.length ? `<b>Strong here</b> (exalted or in its own sign): ${strong.map(b => `${GLYPH[b]} ${b} <small>(${dignityIn(b, sign(C.sid[b], n))})</small>`).join(", ")}.` : "No planet is exalted or in its own sign here."}</p>
-      <p class="fine">Bright glyphs are exalted, dim ones debilitated.</p></div>`;
+      <div class="vg-say"><h4>D${n} · ${V[1]}</h4><p class="vg-dom">${esc(T.domain || V[2])}</p>
+      <p>${T.read || ""}${V[3] ? ` <span class="fine">${esc(w.CYCLICAL || "")}</span>` : ""}</p>
+      ${n > 1 ? `<p>${kept.length ? fill(n === 9 ? w.KEPT_D9 : w.KEPT, { list: list(C, kept) }) : w.KEPT_NONE || ""}</p>` : ""}
+      <p>${strong.length ? fill(w.STRONG, { list: strong.map(b => `${GLYPH[b]} ${b} <small>(${dignityIn(b, sign(C.sid[b], n))})</small>`).join(", ") }) : w.STRONG_NONE || ""}</p>
+      ${T.ask ? `<p class="vg-ask">${esc(T.ask)}</p>` : ""}
+      <p class="fine">${w.KEY || ""}</p></div>`;
     host.querySelectorAll("[data-vg]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.vg === n));
   };
-  const all = `<div class="tw"><table class="vg-all"><caption>Every planet in every division. Bold: the same sign as in the Rashi.</caption>
-    <tr><th></th>${VARGAS.map(v => `<th scope="col" title="${v[1]}: ${v[2]}">D${v[0]}</th>`).join("")}</tr>
+  const all = `<div class="tw"><table class="vg-all"><caption>Every planet in every body. Bold: the same sign as in the Rashi.</caption>
+    <tr><th></th>${VARGAS.map(v => `<th scope="col" title="${v[1]}: ${esc(((w.VARGAS || {})[v[0]] || {}).domain || v[2])}">D${v[0]}</th>`).join("")}</tr>
     ${BODIES.map(b => `<tr><th scope="row">${GLYPH[b]} ${b}</th>${VARGAS.map(v => { const s = sign(C.sid[b], v[0]), dg = dignityIn(b, s);
       return `<td class="${s === sign(C.sid[b], 1) && v[0] > 1 ? "same" : ""}${dg ? " " + dg.replace(" ", "-") : ""}">${AB[s]}</td>`; }).join("")}</tr>`).join("")}
     ${unknown ? "" : `<tr><th scope="row">↑ Asc</th>${VARGAS.map(v => `<td>${AB[sign(C.ascS, v[0])]}</td>`).join("")}</tr>`}</table></div>`;
   host.innerHTML = `
-    <p>The Rashi (D1) is your chart as you know it. Jyotish divides every sign again, into 2, 3, 4… up to 60 parts, and maps each part to a sign of its own. Each division is a chart of one part of life, read from the same moment.
-    The navamsa (D9) matters most after the Rashi: it shows what the chart ripens into, and it is the chart your Dharma Design is built from.</p>
-    ${unknown ? `<p class="unknown-note">Without a birth time there is no Ascendant in any of these, and the Moon's divisions may be off: it moves about 13° a day.</p>`
-      : `<p class="fine">The higher the division, the more an exact birth time matters: the Ascendant crosses a D60 part in a few minutes.</p>`}
-    <div class="vg-chips" role="group" aria-label="Choose a divisional chart">${VARGAS.map(v => `<button type="button" class="vg-chip" data-vg="${v[0]}" title="${v[1]}: ${v[2]}">D${v[0]}</button>`).join("")}</div>
+    <p>${w.VIEW_INTRO || ""}</p>
+    ${unknown ? `<p class="unknown-note">${w.VIEW_UNKNOWN || ""}</p>` : `<p class="fine">${w.VIEW_TIME || ""}</p>`}
+    <div class="vg-chips" role="group" aria-label="Choose a divisional chart">${VARGAS.map(v => `<button type="button" class="vg-chip" data-vg="${v[0]}" title="${v[1]}: ${esc(((w.VARGAS || {})[v[0]] || {}).domain || v[2])}">D${v[0]}</button>`).join("")}</div>
     <div class="vg-one"></div>
-    <details class="dg-fold"><summary>All twenty divisions at once</summary>${all}</details>`;
+    <details class="dg-fold"><summary>All twenty bodies at once</summary>${all}</details>`;
   host.addEventListener("click", e => { const b = e.target.closest("[data-vg]"); if (b){ n = +b.dataset.vg; draw(); } });
   draw();
 }
@@ -133,7 +138,7 @@ function mount(host, C, { unknown } = {}){
 /* ---------- from Rashi to Dharma: D1 → D9 → the Dharma Design → the body ---------- */
 function thread(host, C, { unknown } = {}){
   if (!C.dharma || !window.WyrdDesign) { host.innerHTML = ""; return; }
-  const DA = WyrdDesign.analyse(C.dharma), BA = WyrdDesign.analyse(C.natal);
+  const w = W(C), DA = WyrdDesign.analyse(C.dharma), BA = WyrdDesign.analyse(C.natal);
   const CEN = WyrdBody.centres, centreOf = {}; for (const k in CEN) for (const g of CEN[k].gates) centreOf[g] = k;
   const DP = C.dharma.personality, NP = C.natal.personality;
   const rows = BODIES.map(b => {
@@ -144,11 +149,10 @@ function thread(host, C, { unknown } = {}){
   });
   const house = s => unknown ? null : ((s - Math.floor(norm(C.ascS) / 30) + 12) % 12) + 1;
   const ord = n => n + (["th", "st", "nd", "rd"][(n % 100 - 20) % 10] || ["th", "st", "nd", "rd"][n % 100] || "th");
+  const step = r => `${GLYPH[r.b]} ${r.b} (${SIGNS[r.s1]} → ${SIGNS[r.s9]}${r.d9 ? ", " + r.d9 : ""})`;
   const vargo = rows.filter(r => r.s1 === r.s9), rise = rows.filter(r => r.move === "rises"), fall = rows.filter(r => r.move === "falls");
   const ak = C.karaka && C.karaka.Atmakaraka, kar = ak ? sign(C.sid[ak], 9) : null;
   const a9 = unknown ? null : sign(C.ascS, 9), l9 = a9 != null ? LORD[a9] : null;
-  /* which Rashi planets feed each centre the Dharma Design defines */
-  /* both sides: the birth moment's Rashi, and the design moment's (its sidereal positions, in the birth's frame) */
   /* every body the Dharma Design is cast from: the nine, the outer three, and the Earth opposite the Sun */
   const ALL = [...BODIES, "Uranus", "Neptune", "Pluto", "Earth"];
   const lonAt = (src, b) => b === "Earth" ? (src.Sun != null ? norm(src.Sun + 180) : null) : src[b] != null ? src[b] : null;
@@ -159,34 +163,37 @@ function thread(host, C, { unknown } = {}){
       sides.push({ b, side, s1: sign(l, 1), s9: sign(l, 9), g, k: centreOf[g.gate], live: DA.live.some(ch => ch.includes(g.gate)) }); }
   const feeds = ["head", "ajna", "throat", "g", "heart", "spleen", "solar", "sacral", "root"].filter(k => DA.defined.has(k)).map(k => {
     const from = sides.filter(r => r.k === k && r.live);
-    return from.length ? `<li><b>${CEN[k].label}</b> ← ${from.map(r => `${GLYPH[r.b] || "⊕"} ${r.side}${r.b} <small>(${SIGNS[r.s1]} → ${SIGNS[r.s9]}, gate ${r.g.gate}.${r.g.line})</small>`).join(", ")}${BA.defined.has(k) ? "" : " <span class=\"dg-tag\">open at birth</span>"}</li>` : "";
+    return from.length ? `<li><b>${CEN[k].label}</b> ← ${from.map(r => `${GLYPH[r.b] || "⊕"} ${r.side}${r.b} <small>(${SIGNS[r.s1]} → ${SIGNS[r.s9]}, gate ${r.g.gate}.${r.g.line})</small>`).join(", ")}${BA.defined.has(k) ? "" : ` <span class="dg-tag">${esc(w.OPEN_AT_BIRTH || "open at birth")}</span>`}</li>` : "";
   }).filter(Boolean);
   const el = rs => { const c = [0, 0, 0, 0]; rs.forEach(s => c[s % 4]++); return c; };
   const e1 = el(rows.map(r => r.s1)), e9 = el(rows.map(r => r.s9));
   const top = c => ELEMENT[c.indexOf(Math.max(...c))];
+  const counts = ELEMENT.map((x, i) => `${x} ${e1[i]}→${e9[i]}`).join(", ");
+  const wish = kar != null && C.lex && C.lex.karakamsa ? C.lex.karakamsa : "";
+  const lifeOf = h => ((C.lex && C.lex.houseLife) || [])[h - 1] || "";
   host.innerHTML = `
-    <p>Your Rashi (D1) is the life as it is lived, in the sidereal zodiac. Multiply every position by nine and you have the navamsa (D9): each sign split into nine, the chart of what the life ripens into.
-    Your Dharma Design is built from exactly these D9 positions, laid on the gate wheel. So one thread runs through all three:
-    <b>a planet in your Rashi → its navamsa sign → the gate it lights in your Dharma Design → the centre that gate feeds</b>.</p>
-    <div class="tw"><table class="vg-thread"><tr><th scope="col">Planet</th><th scope="col">Rashi (D1)</th><th scope="col">Navamsa (D9)</th><th scope="col">Dharma gate</th><th scope="col">Centre</th><th scope="col">Birth gate</th></tr>
+    <p>${w.THREAD_INTRO || ""} <b>${w.THREAD_CHAIN || ""}</b></p>
+    <div class="tw"><table class="vg-thread"><tr><th scope="col">Planet</th><th scope="col">Rashi (D1)</th><th scope="col">Navamsha (D9)</th><th scope="col">Dharma gate</th><th scope="col">Centre</th><th scope="col">Birth gate</th></tr>
       ${rows.map(r => `<tr${r.s1 === r.s9 ? ' class="same"' : ""}><th scope="row">${GLYPH[r.b]} ${r.b}</th>
         <td>${SIGNS[r.s1]}${house(r.s1) ? ` <small>${ord(house(r.s1))} house</small>` : ""}${r.d1 ? ` <small>· ${r.d1}</small>` : ""}</td>
         <td>${SIGNS[r.s9]}${r.d9 ? ` <small>· ${r.d9}</small>` : ""}${r.move === "rises" ? " ↑" : r.move === "falls" ? " ↓" : ""}</td>
         <td>${r.g.gate}.${r.g.line}</td><td>${CEN[r.k].label}${r.live ? " <small>· in a channel</small>" : ""}</td><td class="des">${NP[r.b].gate}.${NP[r.b].line}</td></tr>`).join("")}</table></div>
-    <p class="fine">These are the conscious (birth-moment) planets. The design side of your Dharma Design runs the same thread from the design moment, about three months before birth. ↑ the planet gains dignity in the navamsa; ↓ it loses it.</p>
-    <h4>How they interlock</h4>
+    <p class="fine">${w.THREAD_NOTE || ""}</p>
+    <h4>${w.RIPEN_H || ""}</h4>
+    <ul class="vg-read">${rows.map(r => `<li>${fill(w.RIPEN, { glyph: GLYPH[r.b], planet: r.b, matter: (w.PLANET || {})[r.b] || "", s1: SIGNS[r.s1], fruit: (r.s1 === r.s9 ? `stays in ${SIGNS[r.s9]} and deepens into ` : `ripens in ${SIGNS[r.s9]}, into `) + ((w.FRUIT || [])[r.s9] || "").replace(/^it ripens into /, "") })}</li>`).join("")}</ul>
+    <h4>${w.INTERLOCK_H || ""}</h4>
     <ul class="vg-read">
-      ${vargo.length ? `<li><b>Holding steady (vargottama):</b> ${vargo.map(r => `${GLYPH[r.b]} ${r.b} in ${SIGNS[r.s1]}`).join(", ")}. The same sign in the life and in its ripening: what these planets are at birth is what they become, and the gates they light in your Dharma Design are fed by that one sign twice over.</li>` : `<li>No planet holds its sign from Rashi to navamsa: every planet ripens into something other than what it starts as.</li>`}
-      ${rise.length ? `<li><b>Ripening upward:</b> ${rise.map(r => `${GLYPH[r.b]} ${r.b} (${SIGNS[r.s1]} → ${SIGNS[r.s9]}${r.d9 ? ", " + r.d9 : ""})`).join(", ")}. What is ordinary or hard-won in the life matures into strength.</li>` : ""}
-      ${fall.length ? `<li><b>Ripening slowly:</b> ${fall.map(r => `${GLYPH[r.b]} ${r.b} (${SIGNS[r.s1]} → ${SIGNS[r.s9]}${r.d9 ? ", " + r.d9 : ""})`).join(", ")}. Strong in the life, these take longer to bear their fruit; the work they ask comes later.</li>` : ""}
-      ${ak ? `<li><b>The soul's direction (karakamsa):</b> your Soul-Planet, ${GLYPH[ak]} ${ak}, ripens in <b>${SIGNS[kar]}</b>, ruled by ${LORD[kar]}. In Jyotish this is the sign the soul is travelling toward.</li>` : ""}
-      ${a9 != null ? `<li><b>The ripening's own rising:</b> your navamsa rises in <b>${SIGNS[a9]}</b>. Its lord, ${GLYPH[l9]} ${l9}, stands in your Rashi's ${ord(house(sign(C.sid[l9], 1)))} house: that is the part of life where the ripening is worked out.</li>` : ""}
-      <li>${top(e1) === top(e9) ? `<b>The element holds:</b> ${top(e1)} leads in both the Rashi and the navamsa` : `<b>The element shifts</b> from ${top(e1)} in the Rashi to ${top(e9)} in the navamsa`} (${ELEMENT.map((x, i) => `${x} ${e1[i]}→${e9[i]}`).join(", ")}).</li>
+      <li>${vargo.length ? fill(w.VARGOTTAMA, { list: vargo.map(r => `${GLYPH[r.b]} ${r.b} in ${SIGNS[r.s1]}`).join(", ") }) : w.VARGOTTAMA_NONE || ""}</li>
+      ${rise.length ? `<li>${fill(w.RISE, { list: rise.map(step).join(", ") })}</li>` : ""}
+      ${fall.length ? `<li>${fill(w.FALL, { list: fall.map(step).join(", ") })}</li>` : ""}
+      ${ak ? `<li>${fill(w.KARAKAMSA, { glyph: GLYPH[ak] || "", planet: ak, sign: SIGNS[kar], wish })}</li>` : ""}
+      ${a9 != null ? `<li>${fill(w.NAV_RISING, { sign: SIGNS[a9], glyph: GLYPH[l9], lord: l9, house: ord(house(sign(C.sid[l9], 1))), life: lifeOf(house(sign(C.sid[l9], 1))) })}</li>` : ""}
+      <li>${top(e1) === top(e9) ? fill(w.ELEMENT_HOLD, { el: top(e1), counts }) : fill(w.ELEMENT_SHIFT, { e1: top(e1), e9: top(e9), counts })}</li>
     </ul>
-    <h4>Where it culminates in the body</h4>
-    ${feeds.length ? `<p>Your Dharma Design defines ${DA.defined.size} centre${DA.defined.size === 1 ? "" : "s"}. Each is fed by planets whose navamsa gates sit in a live channel there. "Design" planets come from the design moment, about three months before birth, read the same way.</p><ul class="vg-read">${feeds.join("")}</ul>
-      <p class="fine">"Open at birth" marks a centre your Birth Design leaves open and your Dharma Design defines: a current the life grows into rather than starts with.</p>`
-      : `<p>Your Dharma Design completes no channel: its currents run through single gates, each one open-ended, met by other people and by the sky.</p>`}`;
+    <h4>${w.CULMINATE_H || ""}</h4>
+    ${feeds.length ? `<p>${fill(w.CULMINATE, { n: DA.defined.size, centres: DA.defined.size === 1 ? "centre" : "centres" })}</p><ul class="vg-read">${feeds.join("")}</ul>` : `<p>${w.CULMINATE_NONE || ""}</p>`}
+    <p class="vg-close">${w.CLOSE || ""}</p>
+    ${w.ASK ? `<p class="vg-ask">${esc(w.ASK)}</p>` : ""}`;
 }
 
 window.WyrdVargas = { sign, VARGAS, dignityIn, mount, thread, SIGNS };

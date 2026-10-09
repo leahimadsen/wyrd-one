@@ -1,7 +1,7 @@
 """The divisional charts (vargas), the same arithmetic as static/vargas.js (tests/vargas_check.py
 proves it), and the thread from Rashi to Dharma for the paid reading: a planet in the D1, its
 navamsa sign, the gate it lights in the Dharma Design, and the centre that gate feeds."""
-import math
+import json, math, os, re
 from . import engine as E, bodygraph as BG, rave as RV
 
 SIGNS = E.SIGNS
@@ -51,8 +51,18 @@ def dignity_in(b, s):
 def ordinal(n): return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
 
 
+HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+W = json.load(open(os.path.join(HERE, "lib", "vargas.json"), encoding="utf-8"))           # the words, shared with static/vargas.js
+KA = json.load(open(os.path.join(HERE, "lib", "karakas.json"), encoding="utf-8"))
+HOUSE_LIFE = json.load(open(os.path.join(HERE, "lib", "register_ext.json"), encoding="utf-8"))["HOUSE_LIFE"]
+
+
+def fill(t, **o):
+    return re.sub(r"\{(\w+)\}", lambda m: str(o.get(m.group(1), "")), t or "")
+
+
 def thread(C):
-    """From Rashi to Dharma: the reading's version of WyrdVargas.thread."""
+    """From Rashi to Dharma: the reading's version of WyrdVargas.thread, from the same words."""
     if not C.get("dharma"): return ""
     DA, BA = BG.analyse(C["dharma"]), BG.analyse(C["natal"])
     DP, NP = C["dharma"]["personality"], C["natal"]["personality"]
@@ -68,36 +78,31 @@ def thread(C):
         move = "rises" if RANK[d9] > RANK[d1] else "falls" if RANK[d9] < RANK[d1] else "holds" if s1 == s9 else ""
         rows.append(dict(b=b, s1=s1, s9=s9, d1=d1, d9=d9, g=g, k=k, live=g["gate"] in live_gates, move=move))
     lab = lambda k: RV.CENTRES[k][0]
+    step = lambda r: f'{GLYPH[r["b"]]} {r["b"]} ({SIGNS[r["s1"]]} → {SIGNS[r["s9"]]}' + (f', {r["d9"]}' if r["d9"] else "") + ")"
     tr = "".join(
         f'<tr{" class=hi" if r["s1"] == r["s9"] else ""}><td>{GLYPH[r["b"]]} {r["b"]}</td>'
         f'<td>{SIGNS[r["s1"]]}{(" · " + ordinal(house(r["s1"])) + " house") if house(r["s1"]) else ""}{" · " + r["d1"] if r["d1"] else ""}</td>'
         f'<td>{SIGNS[r["s9"]]}{" · " + r["d9"] if r["d9"] else ""}{" ↑" if r["move"] == "rises" else " ↓" if r["move"] == "falls" else ""}</td>'
         f'<td>{r["g"]["gate"]}.{r["g"]["line"]}</td><td>{lab(r["k"])}{" · in a channel" if r["live"] else ""}</td>'
         f'<td>{NP[r["b"]]["gate"]}.{NP[r["b"]]["line"]}</td></tr>' for r in rows)
+    ripen = "".join("<p>" + fill(W["RIPEN"], glyph=GLYPH[r["b"]], planet=r["b"], matter=W["PLANET"][r["b"]], s1=SIGNS[r["s1"]],
+                                 fruit=(f'stays in {SIGNS[r["s9"]]} and deepens into ' if r["s1"] == r["s9"] else f'ripens in {SIGNS[r["s9"]]}, into ')
+                                 + re.sub(r"^it ripens into ", "", W["FRUIT"][r["s9"]])) + "</p>" for r in rows)
     vargo = [r for r in rows if r["s1"] == r["s9"]]
     rise = [r for r in rows if r["move"] == "rises"]; fall = [r for r in rows if r["move"] == "falls"]
+    lines = [fill(W["VARGOTTAMA"], list=", ".join(f'{GLYPH[r["b"]]} {r["b"]} in {SIGNS[r["s1"]]}' for r in vargo)) if vargo else W["VARGOTTAMA_NONE"]]
+    if rise: lines.append(fill(W["RISE"], list=", ".join(step(r) for r in rise)))
+    if fall: lines.append(fill(W["FALL"], list=", ".join(step(r) for r in fall)))
     ak = C["karaka"]["Atmakaraka"]; kar = sign(C["sid"][ak], 9)
-    lines = []
-    lines.append(f'<p><b>Holding steady (vargottama):</b> {", ".join(GLYPH[r["b"]] + " " + r["b"] + " in " + SIGNS[r["s1"]] for r in vargo)}. '
-                 "The same sign in the life and in its ripening: what these planets are at birth is what they become, and the gates they light "
-                 "in your Dharma Design are fed by that one sign twice over.</p>" if vargo else
-                 "<p>No planet holds its sign from Rashi to navamsa: every planet ripens into something other than what it starts as.</p>")
-    if rise: lines.append(f'<p><b>Ripening upward:</b> {", ".join(GLYPH[r["b"]] + " " + r["b"] + " (" + SIGNS[r["s1"]] + " → " + SIGNS[r["s9"]] + (", " + r["d9"] if r["d9"] else "") + ")" for r in rise)}. '
-                          "What is ordinary or hard-won in the life matures into strength.</p>")
-    if fall: lines.append(f'<p><b>Ripening slowly:</b> {", ".join(GLYPH[r["b"]] + " " + r["b"] + " (" + SIGNS[r["s1"]] + " → " + SIGNS[r["s9"]] + (", " + r["d9"] if r["d9"] else "") + ")" for r in fall)}. '
-                          "Strong in the life, these take longer to bear their fruit; the work they ask comes later.</p>")
-    lines.append(f"<p><b>The soul's direction (karakamsa):</b> your Soul-Planet, {GLYPH.get(ak, '')} {ak}, ripens in <b>{SIGNS[kar]}</b>, ruled by {LORD[kar]}. "
-                 "In Jyotish this is the sign the soul is travelling toward.</p>")
+    lines.append(fill(W["KARAKAMSA"], glyph=GLYPH.get(ak, ""), planet=ak, sign=SIGNS[kar], wish=(lambda w: w[:1].upper() + w[1:])(KA["KARAKAMSA"][kar].split(": ", 1)[-1])))
     if not unknown:
-        a9 = sign(C["ascS"], 9); l9 = LORD[a9]
-        lines.append(f"<p><b>The ripening's own rising:</b> your navamsa rises in <b>{SIGNS[a9]}</b>. Its lord, {GLYPH[l9]} {l9}, stands in your Rashi's "
-                     f"{ordinal(house(sign(C['sid'][l9], 1)))} house: that is the part of life where the ripening is worked out.</p>")
+        a9 = sign(C["ascS"], 9); l9 = LORD[a9]; h = house(sign(C["sid"][l9], 1))
+        lines.append(fill(W["NAV_RISING"], sign=SIGNS[a9], glyph=GLYPH[l9], lord=l9, house=ordinal(h), life=HOUSE_LIFE[h - 1]))
     e1, e9 = [0] * 4, [0] * 4
     for r in rows: e1[r["s1"] % 4] += 1; e9[r["s9"] % 4] += 1
     t1, t9 = ELEMENT[e1.index(max(e1))], ELEMENT[e9.index(max(e9))]
-    lines.append((f"<p><b>The element holds:</b> {t1} leads in both the Rashi and the navamsa " if t1 == t9 else
-                  f"<p><b>The element shifts</b> from {t1} in the Rashi to {t9} in the navamsa ")
-                 + f"({', '.join(f'{x} {e1[i]}→{e9[i]}' for i, x in enumerate(ELEMENT))}).</p>")
+    counts = ", ".join(f"{x} {e1[i]}→{e9[i]}" for i, x in enumerate(ELEMENT))
+    lines.append(fill(W["ELEMENT_HOLD"], el=t1, counts=counts) if t1 == t9 else fill(W["ELEMENT_SHIFT"], e1=t1, e9=t9, counts=counts))
     # every body the Dharma Design is cast from (the nine, the outer three, the Earth), at birth and at the design moment
     des = {b: E.norm(l - C["ay"]) for b, l in C["tropDes"].items()}
     sides = []
@@ -113,15 +118,14 @@ def thread(C):
         frm = [r for r in sides if r["k"] == k and r["live"]]
         if frm:
             feeds.append(f'<li><b>{lab(k)}</b> ← ' + ", ".join(f'{GLYPH.get(r["b"], "⊕")} {r["side"]}{r["b"]} ({SIGNS[r["s1"]]} → {SIGNS[r["s9"]]}, gate {r["g"]["gate"]}.{r["g"]["line"]})' for r in frm)
-                         + ("" if k in BA["defined"] else " · <em>open at birth: a current the life grows into</em>") + "</li>")
-    body = (f"<p>Your Dharma Design defines {len(DA['defined'])} centre{'s' if len(DA['defined']) != 1 else ''}. "
-            f"Each is fed by planets whose navamsa gates sit in a live channel there; “design” planets come from the design moment, read the same way.</p><ul>{''.join(feeds)}</ul>" if feeds else
-            "<p>Your Dharma Design completes no channel: its currents run through single gates, each one open-ended, met by other people and by the sky.</p>")
+                         + ("" if k in BA["defined"] else f' · <em>{W["OPEN_AT_BIRTH"]}</em>') + "</li>")
+    n = len(DA["defined"])
+    body = (f'<p>{fill(W["CULMINATE"], n=n, centres="centre" if n == 1 else "centres")}</p><ul>{"".join(feeds)}</ul>' if feeds else f'<p>{W["CULMINATE_NONE"]}</p>')
     return f"""<h3 class="rd-tier">From Rashi to Dharma</h3>
-      <p>Your Rashi (D1) is the life as it is lived, in the sidereal zodiac. Multiply every position by nine and you have the navamsa (D9), the chart of
-      what the life ripens into. Your Dharma Design is built from exactly these positions, laid on the gate wheel, so one thread runs through all three:
-      a planet in your Rashi, its navamsa sign, the gate it lights in your Dharma Design, and the centre that gate feeds.</p>
-      <div class="rd-tw"><table><tr><th>Planet</th><th>Rashi (D1)</th><th>Navamsa (D9)</th><th>Dharma gate</th><th>Centre</th><th>Birth gate</th></tr>{tr}</table></div>
-      <p class="rd-note">The birth-moment planets. The design side of the Dharma Design runs the same thread from the design moment. ↑ gains dignity in the navamsa; ↓ loses it.</p>
-      <h3 class="rd-tier">How they interlock</h3>{''.join(lines)}
-      <h3 class="rd-tier">Where it culminates in the body</h3>{body}"""
+      <p>{W["THREAD_INTRO"]} <b>{W["THREAD_CHAIN"]}</b></p>
+      <div class="rd-tw"><table><tr><th>Planet</th><th>Rashi (D1)</th><th>Navamsha (D9)</th><th>Dharma gate</th><th>Centre</th><th>Birth gate</th></tr>{tr}</table></div>
+      <p class="rd-note">{W["THREAD_NOTE"]}</p>
+      <h3 class="rd-tier">{W["RIPEN_H"]}</h3>{ripen}
+      <h3 class="rd-tier">{W["INTERLOCK_H"]}</h3>{"".join("<p>" + x + "</p>" for x in lines)}
+      <h3 class="rd-tier">{W["CULMINATE_H"]}</h3>{body}
+      <p class="rd-kenning">{W["CLOSE"]}</p>"""

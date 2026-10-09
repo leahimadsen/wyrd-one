@@ -245,7 +245,7 @@ def chart():
     c["v"] = CHART_V
     return jsonify(chart=plain(c), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME)
 
-CHART_V = 2      # bump when a cast changes meaning (2: sidereal Dharma Design); common.js CHART_V must match
+CHART_V = 3      # bump when a cast changes meaning (2: sidereal Dharma Design, 3: the vargas words); common.js CHART_V must match
 
 def lexicon(c):
     """The words the free pages need for this chart: each of its gates (name, title, a first line from the
@@ -260,7 +260,18 @@ def lexicon(c):
     return {"gate": {str(g): {"name": P.C["GATE_NAME"].get(str(g), ""), "title": reg.get(str(g), {}).get("t", ""),
                               "gist": P.first(reg.get(str(g), {}).get("l"))} for g in sorted(gates)},
             "nak": [n[6] for n in P.C["NAKSHATRA"]],
-            "rune": P.X["RUNES"]}
+            "rune": P.X["RUNES"],
+            "vargas": VARGA_WORDS, "houseLife": P.X["HOUSE_LIFE"],
+            "karakamsa": karakamsa_wish(c)}
+
+VARGA_WORDS = json.load(open(os.path.join(HERE, "lib", "vargas.json"), encoding="utf-8"))
+
+def karakamsa_wish(c):
+    """The soul's wish for this chart's karakamsa (the Atmakaraka's navamsa sign), from lib/karakas.json."""
+    from wyrd import reading_more as M
+    ak = c["karaka"]["Atmakaraka"]; s = int(engine.norm(9 * c["sid"][ak]) // 30)
+    w = M.KA["KARAKAMSA"][s].split(": ", 1)[-1]
+    return w[:1].upper() + w[1:]
 
 # ---------------- what's coming, today, and the sample reading ----------------
 _cal_cache, _today_cache = {}, {}

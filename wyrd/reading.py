@@ -247,6 +247,7 @@ def build(chart, dasha, who):
       {dharma_defines(N, Dh)}
       {dharma_table(N, Dh)}
       {VG.thread(C)}"""))
+    asks.append(("From Rashi to Dharma", VG.W["ASK"], False))
 
     # ---------- VI · the Path of Dharma ----------
     def steps(rave):

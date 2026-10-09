@@ -202,7 +202,7 @@ function mount(host, X){
       }
       btn.disabled = true; btn.textContent = "Casting…";
       try {
-        if (!chart || chart.v !== 2) chart = (await cast(b)).chart;
+        if (!chart || !WyrdCommon.fresh({ chart })) chart = (await cast(b)).chart;
         people.push({ name: b.name || `Person ${people.length + 1}`, C: chart, birth: b });
         adding = false; pairSel = `0-${people.length - 1}`; draw();
         if (Wyrd.pulse) Wyrd.pulse("compare", people.length);

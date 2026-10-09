@@ -1,0 +1,160 @@
+{
+ "_note": "DRAFT for The Völva to edit. The divisional charts and the thread from Rashi to Dharma. The free chart (static/vargas.js) and the paid reading (wyrd/vargas.py) both read from this file. {braces} are filled in for each chart; keep them.",
+ "VIEW_INTRO": "The Rashi is the life as issued. Jyotish cuts every sign again, into two, three, four, up to sixty parts, and gives each part a sign of its own. Each cut is a separate body of the same moment: the dharma body, the public body, the ancestral body. Read a division for its one part of life, and always beside the Rashi. The divisions refine the life as issued; they never overrule it.",
+ "VIEW_TIME": "The finer the cut, the more the birth time matters: the Ascendant crosses a sixtieth of a sign in a few minutes.",
+ "VIEW_UNKNOWN": "Without a birth time there is no Ascendant in any of these bodies, and the Moon's may be off: she travels about 13° in a day.",
+ "CYCLICAL": "Parashara gives no rule for this body, so its parts are counted straight round the zodiac. Read it lightly.",
+ "KEPT": "Same sign as in your Rashi: {list}. What these are at birth, they stay in this body.",
+ "KEPT_D9": "Vargottama, the same sign in the tree and the fruit: {list}.",
+ "KEPT_NONE": "No planet keeps its Rashi sign in this body.",
+ "STRONG": "Strong in this body, exalted or at home: {list}.",
+ "STRONG_NONE": "No planet is exalted or at home in this body.",
+ "KEY": "Bright glyphs are exalted, dim ones fallen.",
+ "VARGAS": {
+  "1": {
+   "domain": "The body and the life as issued",
+   "read": "Everything else is cut from this. The Rashi is the chart you were handed whole: the signs as the sky held them, the houses as the horizon cut them. Every division divides this one, and none of them overrules it.",
+   "ask": "What were you issued, before you made anything of it?"
+  },
+  "2": {
+   "domain": "Wealth; what is kept",
+   "read": "Each sign is cut in two, and every half belongs to one of the two lights. A planet in the Sun's half earns by being seen and spends outward; a planet in the Moon's half earns by feeding and holding. The Hora does not count your money. It shows which light your resources answer to.",
+   "ask": "Do you keep what comes to you by shining, or by holding?"
+  },
+  "3": {
+   "domain": "Siblings, courage, the hands",
+   "read": "Three parts to a sign, each a sign of the same element. This is the chart of the hands: what you reach for before you have decided, who stood beside you at the start, how much fight you carry. A planet strong here acts; weak here, it waits to be carried.",
+   "ask": "What do your hands do before you have decided?"
+  },
+  "4": {
+   "domain": "Home, fortune, the fixed property",
+   "read": "Four parts, counted round the four angles. The chart of what stays where you put it: land, house, and the inner room you go back to. Strong here, a planet gives you ground; troubled, it keeps you moving house, outward or inward.",
+   "ask": "Where is the ground that does not move under you?"
+  },
+  "5": {
+   "domain": "Fame, merit, authority",
+   "read": "Five parts. The chart of merit and the authority it buys: where the name you make is made from. It tells you what you will be recognised for, which is not always what you would choose.",
+   "ask": "What is your name made of?"
+  },
+  "6": {
+   "domain": "Health and affliction",
+   "read": "Six parts. The chart of the body under strain: where it gives first, and what it is built to withstand. It is not a diagnosis. It is the shape of your resistance.",
+   "ask": "Where does strain enter you first, and what holds?"
+  },
+  "7": {
+   "domain": "Children; what is generated",
+   "read": "Seven parts; an odd sign counts from itself, an even sign from its seventh. The chart of what leaves you and lives on: children, students, work that outgrows its maker. A strong planet here generates easily; a weak one late, or through other people.",
+   "ask": "What have you made that no longer needs you?"
+  },
+  "8": {
+   "domain": "Sudden turns; the inherited difficulty",
+   "read": "Eight parts. The chart of what arrives without warning and what you inherited without signing for it. Read it for the shape of the turn, never for its date.",
+   "ask": "What did you inherit that you did not sign for?"
+  },
+  "9": {
+   "domain": "The dharma body — marriage, maturity, the fruit",
+   "read": "Nine parts, and after the Rashi the body that matters most. The Rashi is the tree; the Navamsha is the fruit. It shows what each planet becomes once the life has worked on it, who you marry and why, and what you are by the end. Your Dharma Design is cast from these exact positions.",
+   "ask": "What are you ripening into, and are you letting it?"
+  },
+  "10": {
+   "domain": "The public body — career, contribution",
+   "read": "Ten parts; an odd sign counts from itself, an even sign from its ninth. The chart of the work the world sees. The Rashi's tenth house says where the work is; the Dashamsha says how it is done and what it is worth to others.",
+   "ask": "What do people come to you for, and is it what you came to give?"
+  },
+  "11": {
+   "domain": "Gains, and the manner of dissolution",
+   "read": "Eleven parts. Rudra is the howler, the one who clears the field. Gain and loss are read together here, because one makes room for the other: this body shows what comes in and how things end.",
+   "ask": "What has to end before the next thing can arrive?"
+  },
+  "12": {
+   "domain": "The ancestral body — parents, lineage",
+   "read": "Twelve parts, each counted from the sign itself. The chart of what came down the line: mother, father, and the lineage behind them. Strong planets here are inheritances. Weak ones are the unfinished business you were handed.",
+   "ask": "Which of your parents' unfinished work did you pick up?"
+  },
+  "16": {
+   "domain": "Comforts, vehicles, the pleasures of the senses",
+   "read": "Sixteen parts. The chart of ease: what carries you, what pleases the senses, and how much pleasure you can take without being taken by it.",
+   "ask": "What carries you, and do you let it?"
+  },
+  "20": {
+   "domain": "Spiritual practice; upasana",
+   "read": "Twenty parts. The chart of devotion: not belief but practice, the thing you return to. It shows which forms of worship hold you, and which you will keep starting and leaving.",
+   "ask": "What do you return to when nothing is asking you to?"
+  },
+  "24": {
+   "domain": "Learning and the acquisition of skill",
+   "read": "Twenty-four parts, counted from the two lights: odd signs from Leo, even from Cancer. The chart of study: how you learn, what stays, which subjects give themselves to you.",
+   "ask": "What did you learn without being taught?"
+  },
+  "27": {
+   "domain": "Strengths and weaknesses; the nakshatra body",
+   "read": "Twenty-seven parts, one for each mansion of the Moon. The mansions laid over the body: where you are robust, where you tire, and what refills you.",
+   "ask": "Where does your strength run out, and what refills it?"
+  },
+  "30": {
+   "domain": "Adversity, and the character under it",
+   "read": "Unequal parts, ruled by the five star-planets alone: no Sun, no Moon. The chart of trouble, read as test rather than fate. It shows what kind of difficulty finds you, and what your character does under it.",
+   "ask": "Who are you when it goes wrong?"
+  },
+  "40": {
+   "domain": "Auspicious and inauspicious inheritance, maternal",
+   "read": "Forty parts. The fine print of the mother's line: the blessings and the difficulties carried through her, older than either of you.",
+   "ask": "What did your mother's line carry that you are still carrying?"
+  },
+  "45": {
+   "domain": "Conduct; the paternal line",
+   "read": "Forty-five parts. The fine print of the father's line, and of conduct: how you behave when the rules are not watching.",
+   "ask": "What do you do when no one is keeping score?"
+  },
+  "60": {
+   "domain": "The sum of all karmas — the finest division",
+   "read": "Sixty parts, half a degree each. Parashara weighs it above every other division: the sum of what you carried in. It is also the most fragile. The Ascendant crosses a part in a few minutes, so trust it only with an exact birth time.",
+   "ask": "What did you bring with you that no one gave you here?"
+  }
+ },
+ "THREAD_INTRO": "The Rashi is the life as issued, in the stars as they stand: the tree. Multiply every position by nine and you have the Navamsha: the fruit. Your Dharma Design is cast from exactly those nine-fold positions, laid on the gate wheel. So one thread runs from the life you were handed to the body you are growing into:",
+ "THREAD_CHAIN": "a planet in your Rashi → the sign it ripens in → the gate that ripening lights in your Dharma Design → the centre that gate feeds.",
+ "THREAD_NOTE": "The birth-moment planets. The design side of your Dharma Design runs the same thread from the design moment, about three months before birth. ↑ gains dignity in the fruit; ↓ loses it.",
+ "PLANET": {
+  "Sun": "your purpose, and the authority you carry",
+  "Moon": "your mind, and what feeds it",
+  "Mercury": "how you think, speak and trade",
+  "Venus": "what you love, and how you value",
+  "Mars": "your drive, and where you fight",
+  "Jupiter": "your faith, and what you teach",
+  "Saturn": "your duty, and what you endure",
+  "Rahu": "your hunger, what you reach for and cannot yet hold",
+  "Ketu": "what you already know, and are letting go"
+ },
+ "FRUIT": [
+  "it ripens into initiative: first in, unafraid, leading by moving.",
+  "it ripens into steadiness: building something that lasts, and keeping it.",
+  "it ripens into exchange: talking, teaching, connecting, in two directions at once.",
+  "it ripens into care: holding others, and making home wherever it goes.",
+  "it ripens into radiance: at the centre, giving warmth and answering for it.",
+  "it ripens into skill: precise, useful, quietly mending what it touches.",
+  "it ripens into balance: weighing, partnering, making things fair.",
+  "it ripens into depth: going where others will not, changed and changing.",
+  "it ripens into meaning: teaching, travelling, keeping faith.",
+  "it ripens into structure: carrying weight, building the frame others lean on.",
+  "it ripens into the many: inventive, a little apart, serving the collective.",
+  "it ripens into surrender: edges dissolving, compassionate, devotional, wide."
+ ],
+ "RIPEN_H": "How each planet ripens",
+ "RIPEN": "{glyph} <b>{planet}</b>, {matter}: issued in {s1}, {fruit}",
+ "INTERLOCK_H": "How the tree and the fruit interlock",
+ "VARGOTTAMA": "<b>Holding steady (vargottama):</b> {list}. The same sign in the tree and in the fruit. What these planets are at birth is what they become: they do not change, they deepen. The gates they light in your Dharma Design are fed by one sign twice over, and that repetition is load-bearing.",
+ "VARGOTTAMA_NONE": "<b>No planet holds its sign</b> from tree to fruit. Everything in you ripens into something it did not start as: your life is a translation, not a deepening.",
+ "RISE": "<b>Ripening upward:</b> {list}. Ordinary or hard-won in the life, these mature into strength. Their best years are not their first.",
+ "FALL": "<b>Ripening slowly:</b> {list}. Strong in the life, these take their time to fruit. What came easily early asks for work later; the fruit is there, but it is not free.",
+ "KARAKAMSA": "<b>The soul's direction (karakamsa):</b> your Soul-Planet, {glyph} {planet}, ripens in <b>{sign}</b>. {wish}",
+ "NAV_RISING": "<b>The fruit's own rising:</b> your Navamsha rises in <b>{sign}</b>. Its lord, {glyph} {lord}, stands in your Rashi's {house} house: {life}. That is where the ripening is worked out, in the life as it is lived.",
+ "ELEMENT_HOLD": "<b>The element holds:</b> {el} leads in the tree and in the fruit. The life and its ripening speak one language. <small>({counts})</small>",
+ "ELEMENT_SHIFT": "<b>The element turns:</b> the tree is {e1}, the fruit is {e9}. You live in one element and ripen into another; expect the second half of life to feel different underfoot. <small>({counts})</small>",
+ "CULMINATE_H": "Where it comes to rest in the body",
+ "CULMINATE": "Your Dharma Design defines {n} {centres}. Each is fed by planets whose Navamsha gates close a live channel there; “design” planets come from the design moment, read the same way. This is where the thread comes to rest.",
+ "CULMINATE_NONE": "Your Dharma Design closes no channel. Its currents run through single gates, each one open-ended, met by other people and by the sky.",
+ "OPEN_AT_BIRTH": "open at birth: a current you grow into, not one you start with",
+ "CLOSE": "The Rashi is what you were given. The Navamsha is what it becomes. The body is where you find out.",
+ "ASK": "Which of these currents are you already living, and which are you still growing into?"
+}
