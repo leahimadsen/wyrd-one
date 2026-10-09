@@ -1,0 +1,109 @@
+pada,canvas_start,canvas_end,nakshatra,nak_pada,navamsha,tropical_under_chassis,gate,line,gate_name,rune,minor_card_outer,minor_card_inner,decan_ruler,trump_outer,trump_inner,asura_void
+1,0.0000,3.3333,Ashwini,1,Aries,"28°20′ Pisces",25,1,"The Spirit of the Self",Fehu,"10 of Cups","10 of Lotuses",Mars,"The Moon","Nirvana",
+2,3.3333,6.6667,Ashwini,2,Taurus,"25°00′ Pisces",36,3,"Crisis",Fehu,"10 of Cups","10 of Lotuses",Mars,"The Moon","Nirvana",
+3,6.6667,10.0000,Ashwini,3,Gemini,"21°40′ Pisces",22,5,"Openness",Fehu,"10 of Cups","10 of Lotuses",Mars,"The Moon","Nirvana",
+4,10.0000,13.3333,Ashwini,4,Cancer,"18°20′ Pisces",22,2,"Openness",Fehu,"9 of Cups","9 of Lotuses",Jupiter,"The Moon","Nirvana",Vritra
+5,13.3333,16.6667,Bharani,1,Leo,"15°00′ Pisces",63,4,"Doubt",Uruz,"9 of Cups","9 of Lotuses",Jupiter,"The Moon","Nirvana",
+6,16.6667,20.0000,Bharani,2,Virgo,"11°40′ Pisces",63,1,"Doubt",Uruz,"9 of Cups","9 of Lotuses",Jupiter,"The Moon","Nirvana",
+7,20.0000,23.3333,Bharani,3,Libra,"8°20′ Pisces",37,3,"Friendship",Uruz,"8 of Cups","8 of Lotuses",Saturn,"The Moon","Nirvana",Namuci
+8,23.3333,26.6667,Bharani,4,Scorpio,"5°00′ Pisces",55,6,"Spirit",Uruz,"8 of Cups","8 of Lotuses",Saturn,"The Moon","Nirvana",
+9,26.6667,30.0000,Krittika,1,Sagittarius,"1°40′ Pisces",55,2,"Spirit",Uruz,"8 of Cups","8 of Lotuses",Saturn,"The Moon","Nirvana",Rahu-Asura
+10,30.0000,33.3333,Krittika,2,Capricorn,"28°20′ Aquarius",30,5,"Recognition of Feelings",Thurisaz,"7 of Swords","7 of Vajras",Moon,"The Star","The Tara",
+11,33.3333,36.6667,Krittika,3,Aquarius,"25°00′ Aquarius",30,1,"Recognition of Feelings",Thurisaz,"7 of Swords","7 of Vajras",Moon,"The Star","The Tara",
+12,36.6667,40.0000,Krittika,4,Pisces,"21°40′ Aquarius",49,3,"Principles",Thurisaz,"7 of Swords","7 of Vajras",Moon,"The Star","The Tara",
+13,40.0000,43.3333,Rohini,1,Aries,"18°20′ Aquarius",13,6,"The Listener",Thurisaz,"6 of Swords","6 of Vajras",Mercury,"The Star","The Tara",Mayasura
+14,43.3333,46.6667,Rohini,2,Taurus,"15°00′ Aquarius",13,2,"The Listener",Ansuz,"6 of Swords","6 of Vajras",Mercury,"The Star","The Tara",
+15,46.6667,50.0000,Rohini,3,Gemini,"11°40′ Aquarius",19,5,"Wanting",Ansuz,"6 of Swords","6 of Vajras",Mercury,"The Star","The Tara",
+16,50.0000,53.3333,Rohini,4,Cancer,"8°20′ Aquarius",19,1,"Wanting",Ansuz,"5 of Swords","5 of Vajras",Venus,"The Star","The Tara",Bala
+17,53.3333,56.6667,Mrigashira,1,Leo,"5°00′ Aquarius",41,4,"Contraction",Ansuz,"5 of Swords","5 of Vajras",Venus,"The Star","The Tara",
+18,56.6667,60.0000,Mrigashira,2,Virgo,"1°40′ Aquarius",60,6,"Acceptance",Ansuz,"5 of Swords","5 of Vajras",Venus,"The Star","The Tara",Swarbhanu
+19,60.0000,63.3333,Mrigashira,3,Libra,"28°20′ Capricorn",60,3,"Acceptance",Raidho,"4 of Shields","4 of Jewels",Sun,"The Devil","Mara",
+20,63.3333,66.6667,Mrigashira,4,Scorpio,"25°00′ Capricorn",61,5,"Inner Truth",Raidho,"4 of Shields","4 of Jewels",Sun,"The Devil","Mara",
+21,66.6667,70.0000,Ardra,1,Sagittarius,"21°40′ Capricorn",61,1,"Inner Truth",Raidho,"4 of Shields","4 of Jewels",Sun,"The Devil","Mara",
+22,70.0000,73.3333,Ardra,2,Capricorn,"18°20′ Capricorn",54,4,"Ambition",Raidho,"3 of Shields","3 of Jewels",Mars,"The Devil","Mara",Hiranyaksha
+23,73.3333,76.6667,Ardra,3,Aquarius,"15°00′ Capricorn",38,6,"The Fighter",Kenaz,"3 of Shields","3 of Jewels",Mars,"The Devil","Mara",
+24,76.6667,80.0000,Ardra,4,Pisces,"11°40′ Capricorn",38,3,"The Fighter",Kenaz,"3 of Shields","3 of Jewels",Mars,"The Devil","Mara",
+25,80.0000,83.3333,Punarvasu,1,Aries,"8°20′ Capricorn",58,5,"Vitality",Kenaz,"2 of Shields","2 of Jewels",Jupiter,"The Devil","Mara",Prahlada
+26,83.3333,86.6667,Punarvasu,2,Taurus,"5°00′ Capricorn",58,2,"Vitality",Kenaz,"2 of Shields","2 of Jewels",Jupiter,"The Devil","Mara",
+27,86.6667,90.0000,Punarvasu,3,Gemini,"1°40′ Capricorn",10,4,"Behaviour of the Self",Kenaz,"2 of Shields","2 of Jewels",Jupiter,"The Devil","Mara",Ketu-Asura
+28,90.0000,93.3333,Punarvasu,4,Cancer,"28°20′ Sagittarius",10,1,"Behaviour of the Self",Gebo,"10 of Wands","10 of Double Vajras",Saturn,"Temperance","The Middle Way",
+29,93.3333,96.6667,Pushya,1,Leo,"25°00′ Sagittarius",11,3,"Ideas",Gebo,"10 of Wands","10 of Double Vajras",Saturn,"Temperance","The Middle Way",
+30,96.6667,100.0000,Pushya,2,Virgo,"21°40′ Sagittarius",26,5,"The Egoist",Gebo,"10 of Wands","10 of Double Vajras",Saturn,"Temperance","The Middle Way",
+31,100.0000,103.3333,Pushya,3,Libra,"18°20′ Sagittarius",26,2,"The Egoist",Gebo,"9 of Wands","9 of Double Vajras",Moon,"Temperance","The Middle Way",Puloman
+32,103.3333,106.6667,Pushya,4,Scorpio,"15°00′ Sagittarius",5,4,"Fixed Rhythms",Wunjo,"9 of Wands","9 of Double Vajras",Moon,"Temperance","The Middle Way",
+33,106.6667,110.0000,Ashlesha,1,Sagittarius,"11°40′ Sagittarius",5,1,"Fixed Rhythms",Wunjo,"9 of Wands","9 of Double Vajras",Moon,"Temperance","The Middle Way",
+34,110.0000,113.3333,Ashlesha,2,Capricorn,"8°20′ Sagittarius",9,3,"Focus",Wunjo,"8 of Wands","8 of Double Vajras",Mercury,"Temperance","The Middle Way",Viprachitti
+35,113.3333,116.6667,Ashlesha,3,Aquarius,"5°00′ Sagittarius",34,6,"Power",Wunjo,"8 of Wands","8 of Double Vajras",Mercury,"Temperance","The Middle Way",
+36,116.6667,120.0000,Ashlesha,4,Pisces,"1°40′ Sagittarius",34,2,"Power",Wunjo,"8 of Wands","8 of Double Vajras",Mercury,"Temperance","The Middle Way",Simhika
+37,120.0000,123.3333,Magha,1,Aries,"28°20′ Scorpio",14,5,"Power Skills",Hagalaz,"7 of Cups","7 of Lotuses",Venus,"Death","Impermanence",
+38,123.3333,126.6667,Magha,2,Taurus,"25°00′ Scorpio",14,1,"Power Skills",Hagalaz,"7 of Cups","7 of Lotuses",Venus,"Death","Impermanence",
+39,126.6667,130.0000,Magha,3,Gemini,"21°40′ Scorpio",43,3,"Insight",Hagalaz,"7 of Cups","7 of Lotuses",Venus,"Death","Impermanence",
+40,130.0000,133.3333,Magha,4,Cancer,"18°20′ Scorpio",1,6,"Self-Expression",Hagalaz,"6 of Cups","6 of Lotuses",Sun,"Death","Impermanence",Hiranyakashipu
+41,133.3333,136.6667,Purva Phalguni,1,Leo,"15°00′ Scorpio",1,2,"Self-Expression",Nauthiz,"6 of Cups","6 of Lotuses",Sun,"Death","Impermanence",
+42,136.6667,140.0000,Purva Phalguni,2,Virgo,"11°40′ Scorpio",44,5,"Alertness",Nauthiz,"6 of Cups","6 of Lotuses",Sun,"Death","Impermanence",
+43,140.0000,143.3333,Purva Phalguni,3,Libra,"8°20′ Scorpio",44,1,"Alertness",Nauthiz,"5 of Cups","5 of Lotuses",Mars,"Death","Impermanence",Mahishasura
+44,143.3333,146.6667,Purva Phalguni,4,Scorpio,"5°00′ Scorpio",28,4,"The Game Player",Nauthiz,"5 of Cups","5 of Lotuses",Mars,"Death","Impermanence",
+45,146.6667,150.0000,Uttara Phalguni,1,Sagittarius,"1°40′ Scorpio",50,6,"Values",Nauthiz,"5 of Cups","5 of Lotuses",Mars,"Death","Impermanence",Sumbha
+46,150.0000,153.3333,Uttara Phalguni,2,Capricorn,"28°20′ Libra",50,3,"Values",Isa,"4 of Swords","4 of Vajras",Jupiter,"Justice","Karma",
+47,153.3333,156.6667,Uttara Phalguni,3,Aquarius,"25°00′ Libra",32,5,"Continuity",Isa,"4 of Swords","4 of Vajras",Jupiter,"Justice","Karma",
+48,156.6667,160.0000,Uttara Phalguni,4,Pisces,"21°40′ Libra",32,1,"Continuity",Isa,"4 of Swords","4 of Vajras",Jupiter,"Justice","Karma",
+49,160.0000,163.3333,Hasta,1,Aries,"18°20′ Libra",57,4,"Intuitive Clarity",Isa,"3 of Swords","3 of Vajras",Saturn,"Justice","Karma",Nisumbha
+50,163.3333,166.6667,Hasta,2,Taurus,"15°00′ Libra",48,6,"Depth",Jera,"3 of Swords","3 of Vajras",Saturn,"Justice","Karma",
+51,166.6667,170.0000,Hasta,3,Gemini,"11°40′ Libra",48,3,"Depth",Jera,"3 of Swords","3 of Vajras",Saturn,"Justice","Karma",
+52,170.0000,173.3333,Hasta,4,Cancer,"8°20′ Libra",18,5,"Correction",Jera,"2 of Swords","2 of Vajras",Moon,"Justice","Karma",Diti-Mula
+53,173.3333,176.6667,Chitra,1,Leo,"5°00′ Libra",18,2,"Correction",Jera,"2 of Swords","2 of Vajras",Moon,"Justice","Karma",
+54,176.6667,180.0000,Chitra,2,Virgo,"1°40′ Libra",46,4,"Determination of the Self",Jera,"2 of Swords","2 of Vajras",Moon,"Justice","Karma",Danu-Garbha
+55,180.0000,183.3333,Chitra,3,Libra,"28°20′ Virgo",46,1,"Determination of the Self",Eihwaz,"10 of Shields","10 of Jewels",Mercury,"The Hermit","The Ascetic",
+56,183.3333,186.6667,Chitra,4,Scorpio,"25°00′ Virgo",6,3,"Friction",Eihwaz,"10 of Shields","10 of Jewels",Mercury,"The Hermit","The Ascetic",
+57,186.6667,190.0000,Swati,1,Sagittarius,"21°40′ Virgo",47,5,"Realisation",Eihwaz,"10 of Shields","10 of Jewels",Mercury,"The Hermit","The Ascetic",
+58,190.0000,193.3333,Swati,2,Capricorn,"18°20′ Virgo",47,2,"Realisation",Eihwaz,"9 of Shields","9 of Jewels",Venus,"The Hermit","The Ascetic",Tarakasura
+59,193.3333,196.6667,Swati,3,Aquarius,"15°00′ Virgo",64,4,"Confusion",Perthro,"9 of Shields","9 of Jewels",Venus,"The Hermit","The Ascetic",
+60,196.6667,200.0000,Swati,4,Pisces,"11°40′ Virgo",64,1,"Confusion",Perthro,"9 of Shields","9 of Jewels",Venus,"The Hermit","The Ascetic",
+61,200.0000,203.3333,Vishakha,1,Aries,"8°20′ Virgo",40,3,"Aloneness",Perthro,"8 of Shields","8 of Jewels",Sun,"The Hermit","The Ascetic",Madhu
+62,203.3333,206.6667,Vishakha,2,Taurus,"5°00′ Virgo",59,6,"Sexuality",Perthro,"8 of Shields","8 of Jewels",Sun,"The Hermit","The Ascetic",
+63,206.6667,210.0000,Vishakha,3,Gemini,"1°40′ Virgo",59,2,"Sexuality",Perthro,"8 of Shields","8 of Jewels",Sun,"The Hermit","The Ascetic",Kaitabha
+64,210.0000,213.3333,Vishakha,4,Cancer,"28°20′ Leo",29,5,"Saying Yes",Algiz,"7 of Wands","7 of Double Vajras",Mars,"Strength","The Lion's Roar",
+65,213.3333,216.6667,Anuradha,1,Leo,"25°00′ Leo",29,1,"Saying Yes",Algiz,"7 of Wands","7 of Double Vajras",Mars,"Strength","The Lion's Roar",
+66,216.6667,220.0000,Anuradha,2,Virgo,"21°40′ Leo",4,3,"Formulisation",Algiz,"7 of Wands","7 of Double Vajras",Mars,"Strength","The Lion's Roar",
+67,220.0000,223.3333,Anuradha,3,Libra,"18°20′ Leo",7,6,"The Role of the Self",Algiz,"6 of Wands","6 of Double Vajras",Jupiter,"Strength","The Lion's Roar",Andhakasura
+68,223.3333,226.6667,Anuradha,4,Scorpio,"15°00′ Leo",7,2,"The Role of the Self",Sowilo,"6 of Wands","6 of Double Vajras",Jupiter,"Strength","The Lion's Roar",
+69,226.6667,230.0000,Jyeshtha,1,Sagittarius,"11°40′ Leo",33,5,"Privacy",Sowilo,"6 of Wands","6 of Double Vajras",Jupiter,"Strength","The Lion's Roar",
+70,230.0000,233.3333,Jyeshtha,2,Capricorn,"8°20′ Leo",33,1,"Privacy",Sowilo,"5 of Wands","5 of Double Vajras",Saturn,"Strength","The Lion's Roar",Jalandhara
+71,233.3333,236.6667,Jyeshtha,3,Aquarius,"5°00′ Leo",31,4,"Influence",Sowilo,"5 of Wands","5 of Double Vajras",Saturn,"Strength","The Lion's Roar",
+72,236.6667,240.0000,Jyeshtha,4,Pisces,"1°40′ Leo",56,6,"Stimulation",Sowilo,"5 of Wands","5 of Double Vajras",Saturn,"Strength","The Lion's Roar",Maricha
+73,240.0000,243.3333,Mula,1,Aries,"28°20′ Cancer",56,3,"Stimulation",Tiwaz,"4 of Cups","4 of Lotuses",Moon,"The Chariot","The Chariot",
+74,243.3333,246.6667,Mula,2,Taurus,"25°00′ Cancer",62,5,"Detail",Tiwaz,"4 of Cups","4 of Lotuses",Moon,"The Chariot","The Chariot",
+75,246.6667,250.0000,Mula,3,Gemini,"21°40′ Cancer",62,1,"Detail",Tiwaz,"4 of Cups","4 of Lotuses",Moon,"The Chariot","The Chariot",
+76,250.0000,253.3333,Mula,4,Cancer,"18°20′ Cancer",53,4,"Beginnings",Tiwaz,"3 of Cups","3 of Lotuses",Mercury,"The Chariot","The Chariot",Hayagriva-Asura
+77,253.3333,256.6667,Purva Ashadha,1,Leo,"15°00′ Cancer",39,6,"Provocation",Berkano,"3 of Cups","3 of Lotuses",Mercury,"The Chariot","The Chariot",
+78,256.6667,260.0000,Purva Ashadha,2,Virgo,"11°40′ Cancer",39,3,"Provocation",Berkano,"3 of Cups","3 of Lotuses",Mercury,"The Chariot","The Chariot",
+79,260.0000,263.3333,Purva Ashadha,3,Libra,"8°20′ Cancer",52,5,"Stillness",Berkano,"2 of Cups","2 of Lotuses",Venus,"The Chariot","The Chariot",Kamalanayana
+80,263.3333,266.6667,Purva Ashadha,4,Scorpio,"5°00′ Cancer",52,2,"Stillness",Berkano,"2 of Cups","2 of Lotuses",Venus,"The Chariot","The Chariot",
+81,266.6667,270.0000,Uttara Ashadha,1,Sagittarius,"1°40′ Cancer",15,4,"Extremes",Berkano,"2 of Cups","2 of Lotuses",Venus,"The Chariot","The Chariot",Kalanemi
+82,270.0000,273.3333,Uttara Ashadha,2,Capricorn,"28°20′ Gemini",15,1,"Extremes",Ehwaz,"10 of Swords","10 of Vajras",Sun,"The Lovers","The Two Paths",
+83,273.3333,276.6667,Uttara Ashadha,3,Aquarius,"25°00′ Gemini",12,3,"Caution",Ehwaz,"10 of Swords","10 of Vajras",Sun,"The Lovers","The Two Paths",
+84,276.6667,280.0000,Uttara Ashadha,4,Pisces,"21°40′ Gemini",45,5,"The Gatherer",Ehwaz,"10 of Swords","10 of Vajras",Sun,"The Lovers","The Two Paths",
+85,280.0000,283.3333,Shravana,1,Aries,"18°20′ Gemini",45,2,"The Gatherer",Ehwaz,"9 of Swords","9 of Vajras",Mars,"The Lovers","The Two Paths",Bali-Raja
+86,283.3333,286.6667,Shravana,2,Taurus,"15°00′ Gemini",35,4,"Change",Mannaz,"9 of Swords","9 of Vajras",Mars,"The Lovers","The Two Paths",
+87,286.6667,290.0000,Shravana,3,Gemini,"11°40′ Gemini",35,1,"Change",Mannaz,"9 of Swords","9 of Vajras",Mars,"The Lovers","The Two Paths",
+88,290.0000,293.3333,Shravana,4,Cancer,"8°20′ Gemini",16,3,"Skills",Mannaz,"8 of Swords","8 of Vajras",Jupiter,"The Lovers","The Two Paths",Bana-Asura
+89,293.3333,296.6667,Dhanishta,1,Leo,"5°00′ Gemini",20,6,"The Now",Mannaz,"8 of Swords","8 of Vajras",Jupiter,"The Lovers","The Two Paths",
+90,296.6667,300.0000,Dhanishta,2,Virgo,"1°40′ Gemini",20,2,"The Now",Mannaz,"8 of Swords","8 of Vajras",Jupiter,"The Lovers","The Two Paths",UNNAMED
+91,300.0000,303.3333,Dhanishta,3,Libra,"28°20′ Taurus",8,5,"Contribution",Laguz,"7 of Shields","7 of Jewels",Saturn,"The Hierophant","The Buddha",
+92,303.3333,306.6667,Dhanishta,4,Scorpio,"25°00′ Taurus",8,1,"Contribution",Laguz,"7 of Shields","7 of Jewels",Saturn,"The Hierophant","The Buddha",
+93,306.6667,310.0000,Shatabhisha,1,Sagittarius,"21°40′ Taurus",23,3,"Assimilation",Laguz,"7 of Shields","7 of Jewels",Saturn,"The Hierophant","The Buddha",
+94,310.0000,313.3333,Shatabhisha,2,Capricorn,"18°20′ Taurus",2,6,"Higher Knowing",Laguz,"6 of Shields","6 of Jewels",Moon,"The Hierophant","The Buddha",Maya-Vijnana
+95,313.3333,316.6667,Shatabhisha,3,Aquarius,"15°00′ Taurus",2,2,"Higher Knowing",Ingwaz,"6 of Shields","6 of Jewels",Moon,"The Hierophant","The Buddha",
+96,316.6667,320.0000,Shatabhisha,4,Pisces,"11°40′ Taurus",24,5,"Rationalisation",Ingwaz,"6 of Shields","6 of Jewels",Moon,"The Hierophant","The Buddha",
+97,320.0000,323.3333,Purva Bhadrapada,1,Aries,"8°20′ Taurus",24,1,"Rationalisation",Ingwaz,"5 of Shields","5 of Jewels",Mercury,"The Hierophant","The Buddha",Vidyunmali
+98,323.3333,326.6667,Purva Bhadrapada,2,Taurus,"5°00′ Taurus",27,4,"Caring",Ingwaz,"5 of Shields","5 of Jewels",Mercury,"The Hierophant","The Buddha",
+99,326.6667,330.0000,Purva Bhadrapada,3,Gemini,"1°40′ Taurus",3,6,"Ordering",Ingwaz,"5 of Shields","5 of Jewels",Mercury,"The Hierophant","The Buddha",Tarakaksha
+100,330.0000,333.3333,Purva Bhadrapada,4,Cancer,"28°20′ Aries",3,3,"Ordering",Dagaz,"4 of Wands","4 of Double Vajras",Venus,"The Emperor","The King",
+101,333.3333,336.6667,Uttara Bhadrapada,1,Leo,"25°00′ Aries",42,5,"Growth",Dagaz,"4 of Wands","4 of Double Vajras",Venus,"The Emperor","The King",
+102,336.6667,340.0000,Uttara Bhadrapada,2,Virgo,"21°40′ Aries",42,1,"Growth",Dagaz,"4 of Wands","4 of Double Vajras",Venus,"The Emperor","The King",
+103,340.0000,343.3333,Uttara Bhadrapada,3,Libra,"18°20′ Aries",51,4,"Shock",Dagaz,"3 of Wands","3 of Double Vajras",Sun,"The Emperor","The King",Kamalanabha
+104,343.3333,346.6667,Uttara Bhadrapada,4,Scorpio,"15°00′ Aries",21,6,"The Hunter",Othala,"3 of Wands","3 of Double Vajras",Sun,"The Emperor","The King",
+105,346.6667,350.0000,Revati,1,Sagittarius,"11°40′ Aries",21,3,"The Hunter",Othala,"3 of Wands","3 of Double Vajras",Sun,"The Emperor","The King",
+106,350.0000,353.3333,Revati,2,Capricorn,"8°20′ Aries",17,5,"Opinions",Othala,"2 of Wands","2 of Double Vajras",Mars,"The Emperor","The King",Shankhasura
+107,353.3333,356.6667,Revati,3,Aquarius,"5°00′ Aries",17,2,"Opinions",Othala,"2 of Wands","2 of Double Vajras",Mars,"The Emperor","The King",
+108,356.6667,360.0000,Revati,4,Pisces,"1°40′ Aries",25,4,"The Spirit of the Self",Othala,"2 of Wands","2 of Double Vajras",Mars,"The Emperor","The King",Ahi-Budhnya

@@ -9,9 +9,10 @@
    planet and the natal one it crosses line up across the ring.
    One control folds it flat into a wheel seen from above (Aries at
    nine o'clock, as on the other wheels) and back out into three
-   dimensions. Drag to turn it; tap to see what is there.
+   dimensions. Drag to turn it; tap to see what is there. With the
+   mandala loaded (tarot.js), a fifth band carries its cards.
    Plain canvas, no library. Shares its look with torus.js.
-   - WyrdSkyTorus.mount(host, { rows, natal, ay, caption, mode })
+   - WyrdSkyTorus.mount(host, { rows, natal, ay, caption, mode, tarot })
        rows:  [{ body, sid, gate, line, retro }] (the sky now)
        natal: { sid: {Sun: lon, ...} } (optional)
    ============================================================ */
@@ -20,15 +21,18 @@ const { norm, nakIndex, GLYPH, NAKSHATRA } = Wyrd.helpers;
 const TAU = Math.PI * 2, D2R = Math.PI / 180;
 const SIGNS_ = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
 const SG = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"].map(g => g + "︎");
-const LAYERS = [                     /* outer edge → over the top → inner edge */
+const BASE = [                       /* outer edge → over the top → inner edge */
   { id: "signs", name: "Sidereal signs" }, { id: "mansions", name: "Mansions" },
   { id: "gates", name: "Gates" }, { id: "tropical", name: "Tropical signs" },
 ];
-const NU = 192, PER = 6, NV = LAYERS.length * PER, NB = 12, R = 1, r = 0.42;
+const TAROT_RGB = [[150, 120, 230], [110, 150, 230], [200, 120, 150], [120, 190, 170], [220, 170, 110], [150, 200, 120]];
+const NU = 216, PER = 6, NB = 12, R = 1, r = 0.42;
 const GATE_AT = trop => GATE_ORDER[Math.floor(norm(trop - 302) / 5.625)];
 
 function mount(host, opts){
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const tarot = opts.tarot || null;                                   // the 108 padas of the mandala, when loaded
+  const LAYERS = tarot ? [...BASE, { id: "tarot", name: "The mandala's cards" }] : BASE, NV = LAYERS.length * PER;
   const rows = opts.rows || [], natal = opts.natal && opts.natal.sid ? opts.natal.sid : null;
   const ay = opts.ay != null ? opts.ay : (rows[0] ? norm(rows[0].trop - rows[0].sid) : 24.2);
   const cap = opts.caption || { set textContent(v){} };
@@ -51,6 +55,9 @@ function mount(host, opts){
       case "gates": { const g = GATE_AT(trop), lit = skyGates.has(g), who = rows.filter(x => x.gate === g).map(x => x.body);
         return { lit, rgb: lit ? [240, 236, 225] : [70, 130, 150], label: `Gate ${g}${GATE_NAME[g] ? " · " + GATE_NAME[g] : ""}${who.length ? " · lit by " + who.join(", ") : ""}` }; }
       case "tropical": { const s = Math.floor(trop / 30); return { rgb: s % 2 ? [150, 110, 240] : [175, 140, 255], label: `${SIGNS_[s]} (tropical)` }; }
+      case "tarot": { const c = WyrdTarot.at(tarot, lon), who = rows.filter(x => Math.floor(norm(x.sid) / (10 / 3)) === c.idx).map(x => x.body), t = Math.floor(c.idx / 9);
+        return { lit: who.length > 0, rgb: who.length ? [255, 236, 200] : TAROT_RGB[t % TAROT_RGB.length].map(v => v - (c.idx % 2) * 18),
+          label: `${WyrdTarot.trump(c)} · ${WyrdTarot.minor(c)} (${c.ruler})${c.void ? " · void: " + c.void : ""}${who.length ? " · " + who.join(", ") : ""}` }; }
     }
   }
   const COL = [];
@@ -198,8 +205,9 @@ function mount(host, opts){
       .map(o => ({ ...o, q: P3(o.p.sid * D2R, o.v, .1) })).filter(o => Math.hypot(o.q[0] - x, o.q[1] - y) < Math.max(14, Math.min(W, H) * .03))[0];
     if (near){
       const p = near.p; pick = null;
-      cap.textContent = near.sky ? `${p.body} today · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}° sidereal · ${NAKSHATRA[nakIndex(p.sid)][0]} · gate ${p.gate}.${p.line}${p.retro ? " · retrograde" : ""}`
-        : `Your ${p.body} at birth · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}°${rows.filter(t => at(t.sid, p.sid) < 3).map(t => ` · ${t.body} is crossing it now`).join("")}`;
+      const card = tarot ? ` · ${WyrdTarot.minor(WyrdTarot.at(tarot, p.sid))}` : "";
+      cap.textContent = near.sky ? `${p.body} today · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}° sidereal · ${NAKSHATRA[nakIndex(p.sid)][0]} · gate ${p.gate}.${p.line}${card}${p.retro ? " · retrograde" : ""}`
+        : `Your ${p.body} at birth · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}°${card}${rows.filter(t => at(t.sid, p.sid) < 3).map(t => ` · ${t.body} is crossing it now`).join("")}`;
       kick(); return;
     }
     const inside = pts => { let c = false; for (let a = 0, b = pts.length - 1; a < pts.length; b = a++){

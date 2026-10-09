@@ -32,6 +32,7 @@ const G = {
   exalted: ["Exalted", "The sign where a planet is classically at its strongest. Each planet has one, and its debilitation is the opposite sign."],
   debilitated: ["Debilitated", "The sign where a planet is classically at its weakest, opposite its exaltation."],
   ownsign: ["Own sign", "A sign the planet rules. The Sun and Moon rule one sign each; the other five classical planets rule two."],
+  tarot: ["Card", "The Völva's mandala lays the tarot over the 108 padas of the zodiac. Each pada carries a minor card in two decks (the outer, and the inner of Lotuses, Vajras, Jewels and Double Vajras) and a trump in two decks. A planet's card is the card of the pada it stands in."],
   moolatrikona: ["Root sign", "A stretch of a planet's own sign where it works most purely as itself (in Sanskrit, moolatrikona). Between exalted and own sign in strength."],
   karaka: ["Karakas", "In Jyotish, the seven classical planets ranked by how far each has travelled through its sign. The furthest is the atmakaraka, the significator of the self; the rest follow in order."],
   atmakaraka: ["Atmakaraka", "The planet furthest through its sign. In Jyotish it is the significator of the soul."],

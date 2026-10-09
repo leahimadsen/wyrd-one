@@ -37,8 +37,9 @@ s += `<circle cx="500" cy="500" r="190" class="wh-core"/><text x="500" y="470" c
   <text x="500" y="548" class="wh-c4">${P.paksha} ${P.tithiName}</text>`;
 const flatSVG = `<svg class="wwheel" viewBox="0 0 1000 1000" role="img" aria-label="Today's planets on the sidereal zodiac">${s}</svg>`;
 /* the sky around the Earth: flat as a wheel, or opened out into three dimensions; the plain wheel stays as the fallback */
+const TAROT = window.WyrdTarot ? await WyrdTarot.load() : null;
 try {
-  const ST = WyrdSkyTorus.mount($("tdWheel"), { rows: D.rows, caption: $("tdCap"), onMode: v => {
+  const ST = WyrdSkyTorus.mount($("tdWheel"), { rows: D.rows, tarot: TAROT, caption: $("tdCap"), onMode: v => {
     document.querySelectorAll("[data-st]").forEach(b => b.setAttribute("aria-pressed", b.dataset.st === v));
     $("tdSky").classList.toggle("big", v === "3d"); setTimeout(() => ST.resize(), 360);
     if (Wyrd.pulse) Wyrd.pulse("act", "sky-" + v);
@@ -57,9 +58,9 @@ $("tdFacts").innerHTML = `
     <dt>${g("gate")}</dt><dd>${sun.gate}.${sun.line}${GATE_NAME[sun.gate] ? " · " + GATE_NAME[sun.gate] : ""}</dd></dl></div>`;
 
 $("tdTable").innerHTML = `<caption>Teal glyphs on the wheel are ${g("retro", "retrograde")}.</caption>
-  <tr><th scope="col">Planet</th><th scope="col">${g("sidereal", "Sidereal")}</th><th scope="col">${g("tropical", "Tropical")}</th><th scope="col">${g("nakshatra", "Mansion")}</th><th scope="col">${g("gate", "Gate")}</th></tr>
+  <tr><th scope="col">Planet</th><th scope="col">${g("sidereal", "Sidereal")}</th><th scope="col">${g("tropical", "Tropical")}</th><th scope="col">${g("nakshatra", "Mansion")}</th><th scope="col">${g("gate", "Gate")}</th>${TAROT ? `<th scope="col">${g("tarot", "Card")}</th>` : ""}</tr>
   ${D.rows.map(r => `<tr><th scope="row">${GLYPH[r.body]} ${r.body}${r.retro ? ` <span class="rx" title="retrograde">℞</span>` : ""}</th>
-    <td>${signOf(r.sid)} ${dm(r.sid)}</td><td>${signOf(r.trop)} ${dm(r.trop)}</td><td>${r.nak} ${pada(r.sid)}</td><td>${r.gate}.${r.line}</td></tr>`).join("")}`;
+    <td>${signOf(r.sid)} ${dm(r.sid)}</td><td>${signOf(r.trop)} ${dm(r.trop)}</td><td>${r.nak} ${pada(r.sid)}</td><td>${r.gate}.${r.line}</td>${TAROT ? `<td>${WyrdTarot.minor(WyrdTarot.at(TAROT, r.sid))}</td>` : ""}</tr>`).join("")}`;
 
 $("tdNext").innerHTML = D.upcoming.length ? [...D.upcoming].sort((a, b) => a.jd - b.jd).map(e => `<li class="cal-${e.kind}"><time>${day(e.jd)}</time><span>${GLYPH[e.body]} ${e.body} ${
   e.kind === "ingress" ? `enters ${e.sign}` : `stations ${e.turns} in ${e.sign}`}</span></li>`).join("") : `<li><span>No sign changes or stations in the next thirty days.</span></li>`;
