@@ -56,7 +56,7 @@ c = engine.cast(eph, 1990, 5, 17, 13.5, 51.5, -0.13)
 w = weather.week(eph, c, date(2026, 10, 5))
 check("week has seven moons", len(w["moon"]) == 7)
 html = weather.render(w, "Freya")
-check("report names both bodies", "Your birth body" in html and "Your Dharma body" in html)
+check("report names both designs", "Your Birth Design" in html and "Your Dharma Design" in html)
 check("no slow planet listed as this week's", all(set(ch["by"]) & weather.FAST for body in ("natal", "dharma") for ch in w[body]["channels"]))
 
 jobs._live_subscriptions = lambda s: [dict(x, customer=CUST[x["customer"]]) for x in SUBS if x["status"] in jobs.LIVE]

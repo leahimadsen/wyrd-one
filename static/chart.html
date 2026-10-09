@@ -24,9 +24,9 @@
 </head>
 <body>
 <a class="skip" href="#lands">Skip to content</a>
-<nav class="topbar" aria-label="Site"><a href="/" class="tb-home">The Wyrd Console</a><span class="tb-links"><a href="/reports">Readings</a><a href="/membership">Membership</a><a href="/learn">Learn</a><a href="/today">Today</a><a href="/account" class="tb-acct" data-acct>Sign in</a></span></nav>
-<!-- The map: the chart is the hub, and every land is one way into it.
-     Each land opens on its own tab; the map is always one tap away. -->
+<nav class="topbar" aria-label="Site"><a href="/" class="tb-home">The Wyrd Console</a><span class="tb-links"><a href="/reports">Readings</a><a href="/membership">Membership</a><a href="/learn">Learn</a><a href="/today">Today's sky</a><a href="/account" class="tb-acct" data-acct>Sign in</a></span></nav>
+<!-- The hub: the whole chart as one shape (the torus), then the same chart opened
+     one layer at a time, as a numbered path. Each step opens on its own tab. -->
 <header class="hub" id="skyHost">
   <div class="hub-in">
     <p class="hub-crumb"><a href="/">← Cast another chart</a></p>
@@ -34,11 +34,12 @@
     <p class="meta" id="chartMeta"></p>
     <div class="ctools" id="tools"></div>
     <p class="unknown-note" id="unknownNote" hidden></p>
-    <a class="start" id="startHere" href="#learn"></a>
-    <nav class="map" id="map" aria-label="The lands of your chart"></nav>
+    <div class="hub-torus"><div class="map-core tz-core"></div></div>
     <div class="tz-layers" id="tzLayers" role="group" aria-label="Layers of the torus"></div>
     <p class="tz-cap" id="tzCap" aria-live="polite">Drag the torus to turn it. Tap it to see what is there.</p>
-    <p class="map-hint">The zodiac runs around the ring and your chart's layers wrap around the tube; your planets ride its outer edge. Every land is a different way into the same chart. Start anywhere, or follow the path above.</p>
+    <p class="map-hint">Your whole chart as one shape: the zodiac runs around the ring, your chart's layers wrap around the tube, and your planets ride its outer edge. Below, the same chart is opened one layer at a time. Each step builds on the one before.</p>
+    <a class="start" id="startHere" href="#learn"></a>
+    <nav class="map" id="map" aria-label="Your chart, step by step"></nav>
   </div>
 </header>
 
@@ -60,30 +61,22 @@
     <div class="facts" id="facts"></div>
   </section>
 
-  <section class="land-panel" id="p-body" hidden aria-labelledby="h-body">
-    <h2 id="h-body">The harmonic body</h2>
-    <p class="lede">Which planet feeds each station of the body, from crown to root?</p>
-    <div id="bodyHost"></div>
-  </section>
-
-  <section class="land-panel" id="p-design" hidden aria-labelledby="h-design">
-    <h2 id="h-design">Your design</h2>
-    <p class="lede">How does energy move through my body, and where does it surface?</p>
-    <div id="designHost"></div>
-  </section>
-
   <section class="land-panel" id="p-runes" hidden aria-labelledby="h-runes">
     <h2 id="h-runes">Your activated runes</h2>
     <p class="lede">Which runes does my chart light, and how does each play out in me?</p>
     <div id="runesHost"></div>
   </section>
-
-  <section class="land-panel" id="p-dharma" hidden aria-labelledby="h-dharma">
-    <h2 id="h-dharma">The Dharma Weave</h2>
-    <p class="lede">What does my chart ripen into, and how is that worked out?</p>
-    <div id="dharmaHost"></div>
+  <section class="land-panel" id="p-design" hidden aria-labelledby="h-design">
+    <h2 id="h-design">Your design</h2>
+    <p class="lede">How does energy move through my body, and what is it ripening into?</p>
+    <div id="designIntro"></div>
+    <h3 class="sec-h" id="flow">How your energy flows</h3>
+    <div id="designHost"></div>
+    <h3 class="sec-h" id="harmonic">The Harmonic Body</h3>
+    <div id="bodyHost"></div>
+    <details class="dg-more" id="weave"><summary><h3 class="sec-h">How your Dharma Design is made</h3></summary>
+      <div id="dharmaHost"></div></details>
   </section>
-
   <section class="land-panel" id="p-clock" hidden aria-labelledby="h-clock">
     <h2 id="h-clock">The Vimshottari clock</h2>
     <p class="lede">Which chapter of my life am I in, and when does it turn?</p>
@@ -97,17 +90,13 @@
   </section>
 
   <section class="land-panel" id="p-sky" hidden aria-labelledby="h-sky">
-    <h2 id="h-sky">The sky now</h2>
-    <p class="lede">Where are the planets today, and which of mine are they touching?</p>
+    <h2 id="h-sky">Now and next</h2>
+    <p class="lede">Which of my planets is the sky touching today, and what happens over the next twelve months?</p>
+    <h3 class="sec-h">The sky now</h3>
     <div id="trHost"></div>
-  </section>
-
-  <section class="land-panel" id="p-calendar" hidden aria-labelledby="h-calendar">
-    <h2 id="h-calendar">What's coming</h2>
-    <p class="lede">What happens in my sky over the next twelve months?</p>
+    <h3 class="sec-h" id="coming">What's coming</h3>
     <div id="calHost"></div>
   </section>
-
   <section class="land-panel" id="p-colour" hidden aria-labelledby="h-colour">
     <h2 id="h-colour">The colour room</h2>
     <p class="lede">What colour is each house, and where do my planets sit on the colour wheel?</p>
@@ -128,16 +117,16 @@
 
   <section class="land-panel" id="p-reading" hidden aria-labelledby="h-reading">
     <div class="offer">
-      <h2 id="h-reading">Your full reading</h2>
-      <p>Everything on the map, read: thirteen sections and about forty pages, written for your placements and nobody else's. The Seat you rise from, the engine of your Moon, the Matrix your Saturn builds, every planet in both zodiacs and how they feed each other, your soul-planet and its cabinet, your runes and when they wake, the gates of your work, your body's channels, where you thrive, the Dharma Weave, the Path of Dharma, the periods of your life, and every question your chart asks.</p>
+      <h2 id="h-reading">The Wyrd Reading</h2>
+      <p>Everything on the path, read in thirteen sections, written for your placements and nobody else's. The Seat you rise from, the engine of your Moon, the Matrix your Saturn builds, every planet in both zodiacs and how they feed each other, your Soul-Planet and its cabinet, your runes and when they wake, the gates of your work, your Birth and Dharma Designs drawn and read, where you thrive, the Path of Dharma, the eras of your life, and every question your chart asks.</p>
       <p class="unknown-note" id="readingUnknown" hidden>Your birth time is unknown, so your reading is read the way this chart is: houses counted from your Sun's sign, and no rising sign. If you can find your time, edit your details first.</p>
       <button class="btn-buy" id="buyBtn">Get my reading — $44</button>
       <p class="fine">Secure checkout by Stripe. Your reading opens the moment payment completes; bookmark the page or save it as a PDF. <a href="/sample">See a sample reading first →</a></p>
       <p class="err" id="buyErr" role="alert"></p>
     </div>
     <div class="offer offer-member">
-      <h3>Or become a member · $11 a month</h3>
-      <p>Body Weather every Monday: how the week's planets land in your birth body and your Dharma body, written for your chart. Your chart kept on your account, and this reading for $35.20 instead of $44.</p>
+      <h3>Or become a member · <span data-price="month">$11</span> a month or <span data-price="year">$111</span> a year</h3>
+      <p>Body Weather every Monday: a letter by email on how the week's planets move through your Birth Design and your Dharma Design, written for your chart. Plus <span data-price="member">$35.20</span> for this reading instead of <span data-price="reading">$44</span>.</p>
       <a class="btn-cast" href="/membership">See the membership</a>
       <p class="fine">Astrologers and practitioners: <a href="/membership#pro">Wyrd Console Professional</a> lets you generate readings for your clients.</p>
     </div>

@@ -69,6 +69,7 @@ th{color:var(--dim)} tr.hi td{color:var(--jade)}
 .rd-qs{padding-left:1.4em}
 .rd-qs li{margin:0 0 20px}
 .rd-ql{color:var(--dim);font-size:14px}
+.sample-cta p{margin:.4em 0}.sample-cta a{color:var(--gold,#b8924a)}
 footer{margin-top:60px;color:var(--dim);font-size:14px;border-top:1px solid var(--rule);padding-top:20px}
 @media(max-width:600px){.rd-gifts,.rd-triad{grid-template-columns:1fr}.rd-pair{grid-template-columns:1fr;gap:2px}}
 .bg-pair{display:flex;flex-wrap:wrap;gap:22px;margin:18px 0;justify-content:center}
@@ -111,7 +112,7 @@ footer{margin-top:60px;color:var(--dim);font-size:14px;border-top:1px solid var(
 </header>
 {{BODY}}
 <p class="closing">{{CLOSING}}</p>
-<footer>Written by {{AUTHOR}} · Web of Wyrd. This page is your reading; it stays at this address.</footer>
+{{FOOTER}}
 </div>
 </body>
 </html>

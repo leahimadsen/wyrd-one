@@ -119,10 +119,10 @@ def dharma_defines(N, Dh):
     return f"""<h3 class="rd-tier">What the dharma defines</h3>
       {pair("Dharma centres", ", ".join(cen_d) or "none — every centre open")}
       {pair("Birth centres", ", ".join(cen_n) or "none — every centre open")}
-      {pair("Opened by the dharma", ", ".join(newly) or "nothing the birth rave leaves open")}
-      {pair("Released by the dharma", ", ".join(lost) or "nothing the birth rave defines")}
+      {pair("Opened by the dharma", ", ".join(newly) or "nothing the Birth Design leaves open")}
+      {pair("Released by the dharma", ", ".join(lost) or "nothing the Birth Design defines")}
       {f'<div class="rd-tw"><table><tr><th>Channel</th><th>Its two gates</th><th></th></tr>{rows}</table></div>' if rows else
-       '<p>The dharma rave completes no channel: it works through single gates, each one open-ended.</p>'}"""
+       '<p>The Dharma Design completes no channel: it works through single gates, each one open-ended.</p>'}"""
 
 def dharma_table(N, Dh):
     """Every body, birth beside dharma, with the register's name for each dharma gate."""
@@ -232,7 +232,7 @@ def build(chart, dasha, who):
       multiplies too: 792, less two full circles, leaves exactly 72. Every dharma chart ever cast carries its two
       Suns one fifth of the wheel apart. That is the Pentagram Cross.</p>
       {pair("Dharma profile", f"{Dh['profile']} · {Dh['band']}")}{pair("Band", band)}
-      {pair("Rave profile", f"{N['profile']} · the equipment as issued")}
+      {pair("Birth Design profile", f"{N['profile']} · the equipment as issued")}
       {pair("The law", f"{Dh['suns']['gap']:.6f}° {'✓' if Dh['suns']['holds'] else '✗'}")}
       <p class="rd-kenning">The body is written under the messenger's number, the dharma under the lover's.</p>
       {f'<p class="rd-kenning">The dharma repeats {" and ".join(repeats)} of the birth chart. The repetition is load-bearing — that is a thing the life does not get to outgrow.</p>' if repeats else ''}
@@ -296,7 +296,7 @@ def build(chart, dasha, who):
       that mansion's lord rules the sphere; the step opens when that lord's mahadasha arrives. Work the steps in
       order whatever their ages. A step that opened before you started is still waiting to be walked.</p>{steps(N)}
       <h3 class="rd-tier">The Path of Dharma · mature</h3>
-      <p>The same eleven positions read on the Dharma Rave. Where a sphere repeats a gate across both paths the
+      <p>The same eleven positions read on the Dharma Design. Where a sphere repeats a gate across both paths the
       repetition is load-bearing. Where they differ, the difference is the maturation: the same spectrum, walked further.</p>{mature(N, Dh)}
       {pair("Load-bearing", " · ".join(shared) + " repeat across both paths" if shared else "no sphere repeats — every one matures")}"""))
 

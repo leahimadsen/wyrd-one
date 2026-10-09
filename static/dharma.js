@@ -35,7 +35,7 @@ function pentagram(C){
 
 function mount(host, X){
   const C = X.C, D = C.dharma, N = C.natal;
-  if (!D){ host.innerHTML = `<p class="err">The dharma rave isn't available for this chart.</p>`; return; }
+  if (!D){ host.innerHTML = `<p class="err">The Dharma Design isn't available for this chart.</p>`; return; }
   const bs = C.sid.Sun, ds = C.tropDes ? norm(C.tropDes.Sun - C.ay) : norm(bs - 88);   // sidereal, in the birth's frame
   const step = (n, title, body) => `<div class="dw-step"><span>${n}</span><div><h3>${title}</h3>${body}</div></div>`;
   const times9 = (l, label) => {
@@ -58,11 +58,11 @@ function mount(host, X){
     ${X.unknown ? `<p class="unknown-note">Without a birth time the dharma positions are uncertain: the Sun's dharma moves about 9° a day, so its gate and line, and the dharma Moon, may not be yours.</p>` : ""}
     <div class="vd-decode">
       <h3>What the Dharma Weave is</h3>
-      <p>The rave reads two moments: your birth, and the design moment about three months before it, when the Sun stood exactly 88° earlier.
-      The Dharma Weave takes those same two moments and passes every position through the ${g("navamsa", "navamsa")}, the ninth harmonic of Jyotish,
-      which is the chart of what a life ripens into. The result is a second rave, laid over the first: the dharma rave.</p>
+      <p>Your Birth Design reads two moments: your birth, and the design moment about three months before it, when the Sun stood exactly 88° earlier.
+      The Dharma Weave takes those same two moments and passes every sidereal position through the ${g("navamsa", "navamsa")}, the ninth harmonic of Jyotish,
+      which is the chart of what a life ripens into. The result is a second design, laid over the first: your Dharma Design.</p>
     </div>
-    <h3 class="vd-h">How your dharma rave was made</h3>
+    <h3 class="vd-h">How your Dharma Design was made</h3>
     ${step(1, "Two moments", `<p>Your birth, and your design moment on <b>${day(C.jdDes)}</b>.
       At birth your Sun stood at <b>${lon(bs)}</b> (sidereal); at the design moment, 88° earlier, at <b>${lon(ds)}</b>.</p>`)}
     ${step(2, "Multiply by nine", `<p>Every position at both moments is multiplied by nine and taken around the circle, which is what the navamsa does. Your two Suns:</p>
@@ -79,14 +79,14 @@ function mount(host, X){
       Your dharma Sun is <b>${intoMin.toFixed(1)}′</b> into its line, so your band is <b>${D.band}</b>${echo ? " (an echo)" : " (the seam)"}.</p>`)}
     ${step(5, "Every dharma activation", `<p>All thirteen bodies, at birth and in the dharma. A gate that repeats is outlined.</p>
       <div class="tw"><table class="dw-table"><tr><th scope="col">Body</th><th scope="col">Birth</th><th scope="col">Dharma</th><th scope="col">Design</th><th scope="col">Dharma design</th></tr>${rows}</table></div>
-      <p class="fine">${reps.length ? `Repeating across both raves: ${reps.join(", ")}.` : "No gate repeats between your birth and dharma raves."}</p>`)}
-    ${step(6, "What the dharma rave defines", `<dl class="ln-dl">
+      <p class="fine">${reps.length ? `Repeating across both designs: ${reps.join(", ")}.` : "No gate repeats between your Birth and Dharma Designs."}</p>`)}
+    ${step(6, "What the Dharma Design defines", `<dl class="ln-dl">
       <dt>${g("type")}</dt><dd>${rD.type} <small>(birth: ${rB.type})</small></dd>
       <dt>${g("authority")}</dt><dd>${rD.authority} <small>(birth: ${rB.authority})</small></dd>
       <dt>${g("definition")}</dt><dd>${rD.definition}</dd>
       <dt>${g("centre", "Defined")}</dt><dd>${rD.centres.join(", ") || "none"}</dd>
       <dt>${g("channel", "Channels")}</dt><dd>${rD.channels.join(", ") || "none"}</dd></dl>
-      <p>${newly.length ? `The dharma defines ${newly.join(", ")}, which your birth rave leaves open.` : ""} ${lost.length ? `Your birth rave defines ${lost.join(", ")}, which the dharma leaves open.` : ""}
+      <p>${newly.length ? `The dharma defines ${newly.join(", ")}, which your Birth Design leaves open.` : ""} ${lost.length ? `Your Birth Design defines ${lost.join(", ")}, which the dharma leaves open.` : ""}
       ${!newly.length && !lost.length ? "Your dharma rave defines the same centres as your birth rave." : ""}</p>`)}
     ${step(7, "See it on the body", `<p>The harmonic body can lay the dharma rave over the figure: turn on <b>Dharma Rave</b> there, alone or with the Body Rave, to see where they agree.</p>
       <p><a class="ln-deep" href="#body">Open the harmonic body →</a></p>`)}`;

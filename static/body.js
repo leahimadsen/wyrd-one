@@ -462,7 +462,7 @@ function paintStation(s){
         <dt>Operator</dt><dd>${s.operator}<small>${s.opGloss}</small></dd>
         <dt>Fed by</dt><dd>${GLYPH[s.feeder]} ${s.feeder} · ${s.hz.toFixed(2)} Hz<small>Planetary ladder</small></dd>
         <dt>Supply line</dt><dd>House ${supply}${hh && hh.color ? " · " + hh.color : ""}<small>${s.feeder} at ${signOf(pos)} ${degIn(pos).toFixed(2)}°. This station eats that house's colour.</small></dd>
-        <dt>Rave centre</dt><dd>${s.hd}</dd>
+        <dt>Design centre</dt><dd>${s.hd}</dd>
       </dl>
       <div class="hb-ask"><b>Descent scan</b><p>${s.ask}</p></div>
       <div class="hb-bars"><h4>Chord · ratio staff</h4>${bars}</div>
@@ -562,13 +562,11 @@ function mount(host, chart){
   C = chart; root = host; woken = new Set(); last = null; nkFocus = null; stopScan();
   host.classList.add("hb");
   host.innerHTML = `
-    <p class="hb-intro">The proportional figure with its seven stations, inside its torus field: the current bursts from the crown, falls around the body, is drawn in beneath the feet and rises up the axis again. Each is fed by one planet, standing beside it on its own thread; the label under each planet is the house it stands in, which is the colour that station eats. Around the figure, the two zodiacs: tropical outside, sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on the inner ring.</p>
+    <p class="hb-intro">The same body seen another way. The Harmonic Body is a proportional figure with seven stations from crown to root, each fed by one of your planets, standing beside it on its own thread; the label under each planet is the house it stands in, which gives that station its colour. Your design's centres and live channels sit on the figure too, following the Birth / Dharma switch above. The seven stations and the nine design centres are different maps: the Heart station is not the Heart centre. Around the figure is its torus field, and the two zodiacs: tropical outside, sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on the inner ring.</p>
     <div class="hb-ctl">
       <button class="hb-btn on" data-hb-view="up">Upright</button>
       <button class="hb-btn" data-hb-view="tilt">Tilted</button>
       <button class="hb-btn on" data-hb-toggle="zod" aria-pressed="true">Two zodiacs</button>
-      <button class="hb-btn" data-hb-toggle="rave" aria-pressed="false">Body Rave</button>
-      <button class="hb-btn" data-hb-toggle="dharma" aria-pressed="false">Dharma Rave</button>
       <button class="hb-btn on" data-hb-toggle="torus" aria-pressed="true">Torus field</button>
       <button class="hb-btn" data-hb-scan>Descent scan</button>
       <button class="hb-btn" data-hb-clear>Clear</button>
@@ -638,5 +636,11 @@ document.addEventListener("keydown", e => {
   if (el){ e.preventDefault(); el.dispatchEvent(new MouseEvent("click", { bubbles: true })); }
 });
 
-window.WyrdBody = { mount, centres: HB_CENTRES, channels: HB_CHANNELS, runsFrom };
+/* the Your design land's switch: which design's centres and channels sit on the figure */
+function setDesign(v){
+  showRave = v !== "dharma"; showDharma = v !== "birth" && !!(C && C.dharma);
+  const g = root && root.querySelector("#hbCentres"); if (!g) return;
+  g.innerHTML = centresSVG(); g.classList.toggle("on", showRave || showDharma);
+}
+window.WyrdBody = { mount, setDesign, centres: HB_CENTRES, channels: HB_CHANNELS, runsFrom };
 })();
