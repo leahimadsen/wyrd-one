@@ -71,6 +71,17 @@ th{color:var(--dim)} tr.hi td{color:var(--jade)}
 .rd-ql{color:var(--dim);font-size:14px}
 footer{margin-top:60px;color:var(--dim);font-size:14px;border-top:1px solid var(--rule);padding-top:20px}
 @media(max-width:600px){.rd-gifts,.rd-triad{grid-template-columns:1fr}.rd-pair{grid-template-columns:1fr;gap:2px}}
+.bg-pair{display:flex;flex-wrap:wrap;gap:22px;margin:18px 0;justify-content:center}
+.bg-fig{margin:0;flex:1 1 260px;max-width:340px;text-align:center}
+.bg-fig svg{width:100%;height:auto;display:block}
+.bg-fig figcaption{font-size:14px;color:var(--dim);margin-top:6px}.bg-fig figcaption b{color:var(--ivory)}
+.bg-ch{stroke:rgba(156,180,166,.22);stroke-width:3;stroke-linecap:round}
+.bg-birth .bg-ch.on{stroke:#c9a35a;stroke-width:4.5}.bg-dharma .bg-ch.on{stroke:#9b84f0;stroke-width:4.5}
+.bg-arrow{fill:#fff4d6;stroke:rgba(0,0,0,.35);stroke-width:.6}.bg-dharma .bg-arrow{fill:#efe8ff}
+.bg-birth .bg-spark{fill:#f2d48a}.bg-dharma .bg-spark{fill:#d6c9ff}
+.bg-c path{fill:none;stroke:rgba(156,180,166,.6);stroke-width:1.6}
+.bg-birth .bg-c.on path{fill:#c9a35a;stroke:#e6c47e}.bg-dharma .bg-c.on path{fill:#9b84f0;stroke:#c2b2ff}
+.bg-c text{fill:var(--ivory);font-size:10.5px;text-anchor:middle}.bg-c.on text{fill:#14101e;font-weight:600}
 @media print{
   :root{--void:#fff;--ivory:#1b1b1b;--dim:#666;--celadon:#2f5f50;--jade:#2f6f5a;--gold:#8a6a2a;--rule:#ddd}
   @page{margin:.65in .7in}
@@ -79,6 +90,7 @@ footer{margin-top:60px;color:var(--dim);font-size:14px;border-top:1px solid var(
   .rd-sec{padding-top:0;margin-top:22pt}.rd-sec h2{font-size:20pt}.rd-sec h3{font-size:13pt;margin:16pt 0 4pt;break-after:avoid}
   .rd-pair{font-size:10pt;padding:4pt 0;gap:10pt;break-inside:avoid}.rd-hdr,.rd-note,.rd-held{font-size:9.5pt}
   .rd-body h5,.rd-gifts h5,.rd-repair h5{font-size:10pt;margin:8pt 0 1pt}table{font-size:9.5pt}
+  .bg-sparks{display:none}.bg-ch{stroke:#e2e2e2;stroke-width:2}.bg-c path{stroke:#888}.bg-c text{fill:#222}.bg-c.on text{fill:#fff}.bg-pair{break-inside:avoid}
   .rd-entry{margin:12pt 0}.rd-entry p,.rd-body p{margin:4pt 0}.rd-step{break-inside:avoid}
   .rd-ask{background:none}a{color:inherit}
 }
