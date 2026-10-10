@@ -5,6 +5,8 @@
 
    What is here:
    - SIGNS, NAKSHATRAS: the source tables (sidereal frame)
+   - WYRD_MANSIONS (wyrd-mansions.js, loaded first if present): each
+     mansion's short text and the sheet's cards for each pada
    - buildStations(): the 108 pada stations, derived from the tables
    - RECORDS: station-specific data supplied by The Völva (tarot,
      correspondences, notes). Anything not supplied stays unassigned.
@@ -75,7 +77,7 @@
       const start = i * PADA, end = (i + 1) * PADA, mid = start + PADA / 2;
       const nak = NAKSHATRAS[Math.floor(i / 4)], sign = SIGNS[Math.floor(mid / 30)];
       const navamsa = SIGNS[i % 12];                                    // the ninth-harmonic sign: pada n of the wheel → sign n mod 12
-      const id = i + 1, rec = RECORDS[id] || {};
+      const id = i + 1, rec = RECORDS[id] || {}, M = root.WYRD_MANSIONS;
       out.push({
         id, code: "S" + pad3(id),
         zodiacStart: start, zodiacEnd: end,
@@ -86,6 +88,9 @@
         straddles: Math.floor(start / 30) !== Math.floor((end - 1e-9) / 30),     // a pada never crosses a sign boundary; kept as a check
         tarot: Object.assign({ id: "T" + pad3(id), glyph: "T" + pad3(id), name: null, deck: null, description: null, status: "unassigned" }, rec.tarot || {}),
         correspondences: rec.correspondences || {},
+        mansion: M ? M.mansions[nak.index] : null,               // the mansion's short text (wyrd-mansions.js, from the corpus)
+        syllable: M ? M.mansions[nak.index].syllables[i % 4] : null,
+        cards: M ? M.cards[i] : null,                              // The Völva's 108-pada sheet
         notes: rec.notes || "",
         source: rec.source || null,
       });

@@ -2,166 +2,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="wyrd-mandala.css">
 <style>
-/* Layout: an instrument plate. The dial carries the complexity; the station record is a ledger beside it (beneath it on a phone). */
-:root {
-  --paper: #e9ebe3;      /* vellum, faintly verdigris */
-  --paper-2: #dfe2d8;
-  --ink: #1d2421;
-  --ink-2: #545c56;
-  --hair: rgba(29, 36, 33, .22);
-  --hair-2: rgba(29, 36, 33, .1);
-  --brass: #87652a;
-  --rubric: #a3361f;     /* manuscript red: the selection */
-  --verd: #3d6b5e;       /* computed relations */
-  --display: "IM Fell English SC", "IM Fell English", Georgia, serif;
-  --serif: "Crimson Pro", "Iowan Old Style", Georgia, serif;
-  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-}
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --paper: #121614; --paper-2: #181d1a; --ink: #e2e3d8; --ink-2: #a1a89f; --hair: rgba(226, 227, 216, .24); --hair-2: rgba(226, 227, 216, .1);
-  --brass: #c49a55; --rubric: #dc6a4f; --verd: #7fb3a2; color-scheme: dark; } }
-:root[data-theme="dark"] {
-  --paper: #121614; --paper-2: #181d1a; --ink: #e2e3d8; --ink-2: #a1a89f; --hair: rgba(226, 227, 216, .24); --hair-2: rgba(226, 227, 216, .1);
-  --brass: #c49a55; --rubric: #dc6a4f; --verd: #7fb3a2; color-scheme: dark; }
-
-body { background: var(--paper); color: var(--ink); font-family: var(--serif); font-size: 17px; line-height: 1.5; }
-.plate { max-width: 1320px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 56px; display: grid; gap: 22px; }
+/* the page around the instrument; the instrument's own styles are in wyrd-mandala.css */
+:root { --paper: #e9ebe3; --ink: #1d2421; --ink-2: #545c56; --brass: #87652a;
+  --display: "IM Fell English SC", "IM Fell English", Georgia, serif; --serif: "Crimson Pro", "Iowan Old Style", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #121614; --ink: #e2e3d8; --ink-2: #a1a89f; --brass: #c49a55; color-scheme: dark; } }
+:root[data-theme="dark"] { --paper: #121614; --ink: #e2e3d8; --ink-2: #a1a89f; --brass: #c49a55; color-scheme: dark; }
+body { background: var(--paper); color: var(--ink); font-family: var(--serif); font-size: 17px; line-height: 1.5; margin: 0; }
+.plate { max-width: 1320px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 22px; }
 .masthead { display: grid; gap: 4px; border-bottom: 1px solid var(--ink); padding-bottom: 14px; }
 .masthead h1 { font-family: var(--display); font-weight: 400; font-size: clamp(30px, 4.4vw, 46px); letter-spacing: .04em; margin: 0; line-height: 1.05; text-wrap: balance; }
 .masthead p { margin: 0; font-style: italic; color: var(--ink-2); max-width: 70ch; }
 .masthead .frame { font-family: var(--mono); font-size: 12px; font-style: normal; letter-spacing: .04em; color: var(--brass); }
-
-.work { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 420px); gap: 28px; align-items: start; }
-@media (max-width: 899px) { .work { grid-template-columns: minmax(0, 1fr); } }
-.dial-col { display: grid; gap: 14px; min-width: 0; }
-
-/* ---------- controls ---------- */
-.ctl { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; font-size: 15px; }
-.ctl .lab { font-family: var(--display); font-size: 14px; letter-spacing: .08em; color: var(--ink-2); min-width: 74px; }
-button, select, input[type="search"] { font: inherit; font-size: 15px; color: var(--ink); background: var(--paper); border: 1px solid var(--hair); border-radius: 2px; padding: 5px 10px; }
-button { cursor: pointer; }
-button:hover, select:hover { border-color: var(--ink-2); }
-button[aria-pressed="true"] { border-color: var(--rubric); color: var(--rubric); }
-button:focus-visible, select:focus-visible, input:focus-visible, svg:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
-.pads { display: inline-flex; gap: 4px; }
-.pads button { font-family: var(--mono); font-size: 13px; padding: 5px 9px; }
-input[type="search"] { min-width: 0; width: 240px; max-width: 100%; }
-input[type="range"] { accent-color: var(--brass); width: 180px; max-width: 46vw; }
-.chk { display: inline-flex; gap: 6px; align-items: center; }
-.chk input { accent-color: var(--ink); }
-.planned-n { font-family: var(--mono); font-size: 12px; color: var(--ink-2); border-bottom: 1px dotted var(--hair); cursor: help; }
-.rel-note { flex-basis: 100%; margin: 0; font-size: 14px; font-style: italic; color: var(--ink-2); }
-.num-out { font-family: var(--mono); font-size: 13px; color: var(--ink-2); min-width: 3.5em; }
-
-/* ---------- the dial ---------- */
-.dial { width: 100%; max-width: 860px; margin: 0 auto; aspect-ratio: 1 / 1; }
-#mandala { width: 100%; height: 100%; display: block; overflow: visible; touch-action: manipulation; }
-#mandala text { font-family: var(--serif); fill: var(--ink); }
-.rim { fill: none; stroke: var(--ink); stroke-width: 1; }
-.rim-t { stroke: var(--ink-2); stroke-width: .6; }
-.rim-t10 { stroke: var(--ink); stroke-width: 1; }
-#mandala .rim-lab { font-family: var(--mono); font-size: 11px; fill: var(--ink-2); }
-
-.f-edge { fill: var(--paper-2); stroke: var(--ink); stroke-width: 1; }
-.f-inner { fill: none; stroke: var(--hair); stroke-width: .8; stroke-dasharray: 2 4; }
-.f-axis { stroke: var(--ink-2); stroke-width: .7; }
-.f-tri { fill: none; stroke: var(--brass); stroke-width: .9; }
-.f-node { fill: var(--brass); }
-.f-bindu-ring { fill: none; stroke: var(--ink); stroke-width: 1; }
-.f-bindu { fill: var(--ink); }
-
-.z-sec { fill: var(--paper); stroke: none; }
-.z-sec.alt { fill: var(--paper-2); }
-.z-div { stroke: var(--ink); stroke-width: 1.4; }
-#mandala .z-glyph { font-size: 25px; }
-#mandala .z-name { font-family: var(--mono); font-size: 8.5px; letter-spacing: .12em; fill: var(--ink-2); }
-.z-through { stroke: var(--brass); stroke-width: 1.1; stroke-dasharray: 3 3; }
-
-.n-sec { fill: var(--paper-2); stroke: none; transition: fill 160ms; }
-.n-sec.alt { fill: var(--paper); }
-.n-div { stroke: var(--ink); stroke-width: 1; }
-#mandala .n-name { font-family: var(--display); font-size: 12.5px; letter-spacing: .04em; }
-#mandala .n-num { font-family: var(--mono); font-size: 8.5px; fill: var(--ink-2); letter-spacing: .04em; }
-
-.p-sec { fill: var(--paper); stroke: none; transition: fill 160ms; }
-.p-div { stroke: var(--hair); stroke-width: .7; }
-.p-div-nak { stroke: var(--ink); stroke-width: 1.3; }
-#mandala .p-num { font-family: var(--mono); font-size: 9.5px; fill: var(--ink-2); }
-.p-varg { fill: none; stroke: var(--brass); stroke-width: 1.1; }
-
-.t-edge { fill: none; stroke: var(--ink); stroke-width: .9; }
-.t-glyph { color: var(--ink); }
-.g-card { fill: var(--paper); stroke: currentColor; stroke-width: .9; }
-.g-frame { fill: none; stroke: currentColor; stroke-width: .35; opacity: .6; }
-.g-num { font-family: var(--mono); font-size: 7.4px; fill: currentColor; writing-mode: vertical-rl; letter-spacing: .02em; }
-.t-glyph.unassigned { opacity: .62; }
-
-.hit { fill: transparent; cursor: pointer; }
-.n-sec.is-hov, .p-sec.is-hov { fill: color-mix(in srgb, var(--brass) 14%, var(--paper)); }
-.t-glyph.is-hov { opacity: 1; color: var(--brass); }
-.n-sec.is-sel { fill: color-mix(in srgb, var(--rubric) 7%, var(--paper-2)); }
-.z-sec.is-sel { fill: color-mix(in srgb, var(--rubric) 6%, var(--paper)); }
-.p-sec.is-sel { fill: color-mix(in srgb, var(--rubric) 20%, var(--paper)); }
-.t-glyph.is-sel { opacity: 1; color: var(--rubric); }
-.sel-wedge { fill: none; stroke: var(--rubric); stroke-width: 1.8; }
-.sel-ray { stroke: var(--rubric); stroke-width: 1; stroke-dasharray: 1 3; }
-#mandala .sel-code { font-family: var(--mono); font-size: 13px; font-weight: 500; fill: var(--rubric); }
-
-/* focus mode: the rest of the instrument recedes; relations are drawn in verdigris */
-#mandala.focusing .ring-zodiac, #mandala.focusing .ring-nakshatras, #mandala.focusing .ring-tarot { opacity: .45; }
-#mandala.focusing .p-sec:not(.is-sel):not(.is-rel) { fill: color-mix(in srgb, var(--paper) 70%, var(--paper-2)); }
-.p-sec.is-rel { fill: color-mix(in srgb, var(--verd) 16%, var(--paper)); }
-.t-glyph.is-rel { opacity: 1; color: var(--verd); }
-.rel { fill: none; stroke: var(--verd); stroke-width: 1; }
-.rel-node { fill: var(--paper); stroke: var(--verd); stroke-width: 1.2; }
-
-.key { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 14px; color: var(--ink-2); margin: 0; padding: 0; list-style: none; }
-.key i { display: inline-block; width: 18px; height: 0; vertical-align: middle; margin-right: 6px; border-top: 1.2px solid; }
-
-/* ---------- the station record ---------- */
-.record { border-top: 3px solid var(--ink); padding-top: 14px; display: grid; gap: 18px; min-width: 0; position: sticky; top: env(safe-area-inset-top, 0px); max-height: calc(100vh - 20px); overflow: auto; }
-@media (max-width: 899px) { .record { position: static; max-height: none; overflow: visible; } }
-.record.has-sel { border-top-color: var(--rubric); }
-.eyebrow { font-family: var(--display); font-size: 14px; letter-spacing: .12em; color: var(--ink-2); margin: 0; }
-.rec-code { font-family: var(--mono); font-weight: 500; font-size: 48px; line-height: 1; margin: 2px 0 6px; color: var(--rubric); letter-spacing: -.01em; }
-.rec-code span { font-size: 15px; color: var(--ink-2); font-weight: 400; margin-left: 6px; }
-.rec-sub { margin: 0; font-style: italic; color: var(--ink-2); }
-.rec-sec { display: grid; gap: 8px; border-top: 1px solid var(--hair); padding-top: 12px; }
-.rec-sec h3 { font-family: var(--display); font-weight: 400; font-size: 17px; letter-spacing: .08em; margin: 0; }
-.kv { display: grid; grid-template-columns: minmax(110px, 38%) minmax(0, 1fr); gap: 5px 12px; margin: 0; }
-.kv dt { color: var(--ink-2); font-size: 15px; }
-.kv dd { margin: 0; overflow-wrap: anywhere; }
-.kv small, .kv .num small { color: var(--ink-2); font-size: 14px; }
-.num { font-family: var(--mono); font-size: 14px; font-variant-numeric: tabular-nums; }
-.mark { color: var(--brass) !important; }
-.na, .na-block { color: var(--ink-2); font-style: italic; }
-.na-block { margin: 0; }
-.tarot { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 14px; align-items: start; }
-.tarot-big { width: 76px; height: 114px; color: var(--rubric); }
-.cands { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 8px; }
-.cands li { border-left: 2px solid var(--hair); padding: 2px 0 2px 12px; display: grid; gap: 1px; }
-.cands p { margin: 0; }
-.c-deck { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--ink-2); }
-.c-name { font-family: var(--display); font-size: 18px; }
-.c-det { font-size: 15px; color: var(--ink-2); }
-details { border-top: 1px dotted var(--hair); padding: 6px 0; }
-summary { cursor: pointer; font-family: var(--display); letter-spacing: .05em; }
-summary small { font-family: var(--mono); color: var(--ink-2); margin-left: 4px; }
-.corr { margin-top: 6px; }
-.prov { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .03em; padding: 0 5px; border: 1px solid var(--hair); color: var(--ink-2); border-radius: 2px; margin-left: 2px; max-width: 100%; }
-.prov-attested-primary, .prov-attested-traditional { border-color: var(--ink-2); color: var(--ink); }
-.prov-computed { border-color: var(--verd); color: var(--verd); }
-.prov-structural { border-color: var(--brass); color: var(--brass); }
-.prov-constructed { border-style: dashed; border-color: var(--rubric); color: var(--rubric); }
-.prov-undetermined { border-style: dotted; }
-.planned { font-size: 13.5px; color: var(--ink-2); margin: 4px 0 0; }
-.note { margin: 0; max-width: 62ch; }
-.src { font-size: 13.5px; color: var(--ink-2); font-style: italic; margin: 0; }
-.rec-empty p { margin: 0 0 10px; color: var(--ink-2); }
 .colophon { border-top: 1px solid var(--ink); padding-top: 12px; font-size: 14px; color: var(--ink-2); display: grid; gap: 6px; max-width: 90ch; }
 .colophon p { margin: 0; }
-@media (prefers-reduced-motion: reduce) { .n-sec, .p-sec { transition: none; } }
 </style>
 
 <div class="plate">
@@ -171,58 +26,16 @@ summary small { font-family: var(--mono); color: var(--ink-2); margin-left: 4px;
     <p class="frame">Sidereal frame · 0° Aries at the zenith of the dial · 27 × 4 = 108 padas of 3°20′ · tropical shown as a projection only</p>
   </header>
 
-  <div class="work">
-    <div class="dial-col">
-      <div class="ctl" role="group" aria-label="Navigate stations">
-        <span class="lab">Station</span>
-        <button type="button" id="prev" aria-label="Previous station">← Prev</button>
-        <button type="button" id="next" aria-label="Next station">Next →</button>
-        <select id="navNak" aria-label="Choose a nakshatra"></select>
-        <span class="pads" id="navPadas" role="group" aria-label="Pada"><button type="button" data-p="1">1</button><button type="button" data-p="2">2</button><button type="button" data-p="3">3</button><button type="button" data-p="4">4</button></span>
-        <input type="search" id="search" list="stationList" placeholder="Search: 37, Magha 1, Leo…" aria-label="Search for a station">
-        <datalist id="stationList"></datalist>
-        <button type="button" id="reset">Reset</button>
-      </div>
-
-      <div class="dial">
-        <svg id="mandala" tabindex="0" role="img" aria-label="The Wyrd Mandala: 108 pada stations around the sidereal zodiac. Use the arrow keys to step between stations."></svg>
-      </div>
-
-      <ul class="key" aria-label="Key">
-        <li><i style="border-color: var(--ink)"></i>Nakshatra boundary</li>
-        <li><i style="border-color: var(--brass); border-top-style: dashed"></i>Sign boundary, drawn through</li>
-        <li><i style="border-color: var(--brass)"></i>Triangle: where sign and mansion boundaries coincide (0°, 120°, 240°)</li>
-        <li><i style="border-color: var(--ink-2)"></i>Cross: the four cardinal sign starts</li>
-        <li><span style="color: var(--brass)">○</span> vargottama pada</li>
-      </ul>
-
-      <div class="ctl" role="group" aria-label="Layers">
-        <span class="lab">Layers</span>
-        <span id="layers" class="ctl"></span>
-      </div>
-      <div class="ctl" role="group" aria-label="Instrument">
-        <span class="lab">Dial</span>
-        <label for="rot">Rotate</label><input type="range" id="rot" min="0" max="359" step="1" value="0">
-        <button type="button" id="alignSel">Bring selected station to the zenith</button>
-      </div>
-      <div class="ctl" role="group" aria-label="Focus mode">
-        <span class="lab">Focus</span>
-        <label class="chk"><input type="checkbox" id="focus"> Show relations from the selected station</label>
-        <select id="relation" aria-label="Relation"></select>
-        <p class="rel-note" id="relNote"></p>
-      </div>
-    </div>
-
-    <aside class="record" id="record" aria-live="polite"></aside>
-  </div>
+  <div id="wyrd-mandala"></div>
 
   <footer class="colophon">
     <p>This is an investigative model. A correspondence shown here is a mapping or a structural relationship under study; it never states that one tradition's figure is another's. Every entry carries its provenance, and a station with no supplied record shows what is missing.</p>
-    <p>Station 001 is the worked example, drawn from <i>The First Gate</i>. The other 107 stations carry placeholder glyphs (T002–T108) until their tarot identities are ruled.</p>
+    <p>Station 001 is the worked example, drawn from <i>The First Gate</i>. Each mansion carries its short text from the Wyrd corpus, and each pada its cards from The Völva's 108-pada sheet. The glyphs on the tarot ring are numbered placeholders until their artwork is drawn.</p>
   </footer>
 </div>
 
+<script src="wyrd-mansions.js"></script>
 <script src="wyrd-data.js"></script>
 <script src="wyrd-glyphs.js"></script>
 <script src="wyrd-mandala.js"></script>
-<script>WyrdMandala.mount();</script>
+<script>WyrdMandala.mount(document.getElementById("wyrd-mandala"));</script>
