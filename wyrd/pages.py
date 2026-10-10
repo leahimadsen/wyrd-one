@@ -174,7 +174,7 @@ def sign(base, s):
 
 
 def sitemap(base):
-    urls = ["/", "/reports", "/membership", "/today", "/sample", "/learn"]
+    urls = ["/", "/reports", "/membership", "/today", "/mandala", "/sample", "/learn"]
     urls += [f"/learn/gates/{g}" for g in GATES] + [f"/learn/nakshatras/{s}" for s, _ in NAKS] + [f"/learn/signs/{s}" for s, _ in SIGNS]
     urls += ["/learn/runes"] + [f"/learn/runes/{r[0]}" for r in RUNES] + ["/learn/dharma"] + [f"/learn/dharma/gates/{g}" for g in GATES]
     rows = "".join(f"<url><loc>{e(base + u)}</loc></url>" for u in urls)

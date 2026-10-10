@@ -142,14 +142,15 @@
       o += `<circle r="12" class="f-bindu-ring"/><circle r="4.5" class="f-bindu"/>`;
       return o;
     }
-    function drawZodiac() {
+    function drawZodiac(arcDefs) {
       const [r0, r1] = ring("zodiac");
       let o = "";
       for (const s of D.SIGNS) {
         o += `<path d="${sector(r0, r1, s.start, s.end)}" class="z-sec ${s.index % 2 ? "alt" : ""}" data-sign="${s.index}"/>`;
-        const [gx, gy] = pt((r0 + r1) / 2 + 9, s.start + 15), [nx, ny] = pt(r0 + 12, s.start + 15);
+        const [gx, gy] = pt(r1 - 17, s.start + 15), id = `wm${n}-zn-${s.index}`;
         o += `<text x="${f(gx)}" y="${f(gy)}" class="z-glyph" text-anchor="middle" dominant-baseline="central">${s.glyph}</text>`;
-        o += `<text x="${f(nx)}" y="${f(ny)}" class="z-name" text-anchor="middle" dominant-baseline="central">${s.name.toUpperCase()}</text>`;
+        arcDefs.push(`<path id="${id}" d="${textArc(r0 + 11, s.start + 1, s.end - 1)}"/>`);
+        o += `<text class="z-name"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${s.name.toUpperCase()}</textPath></text>`;
       }
       for (const s of D.SIGNS) o += `<path d="${radial(r0, r1, s.start)}" class="z-div"/>`;
       return o;
@@ -162,7 +163,7 @@
         const id = `wm${n}-nk-${k.index}`;
         arcDefs.push(`<path id="${id}" d="${textArc((r0 + r1) / 2 + 9, k.start + .4, k.end - .4)}"/>`);
         arcDefs.push(`<path id="${id}-b" d="${textArc((r0 + r1) / 2 - 11, k.start + .4, k.end - .4)}"/>`);
-        o += `<text class="n-name"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${k.short}</textPath></text>`;
+        o += `<text class="n-name${k.short.length > 9 ? " long" : ""}"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${k.short}</textPath></text>`;
         o += `<text class="n-num"><textPath href="#${id}-b" startOffset="50%" text-anchor="middle">${String(k.number).padStart(2, "0")} · ${k.ruler}</textPath></text>`;
       }
       for (const k of D.NAKSHATRAS) o += `<path d="${radial(r0, r1, k.start)}" class="n-div"/>`;
@@ -273,7 +274,7 @@
     }
     function render() {
       const arcDefs = [];
-      const body = { field: drawField(), zodiac: drawZodiac(), nakshatras: drawNakshatras(arcDefs), padas: drawPadas(), tarot: drawTarot(),
+      const body = { field: drawField(), zodiac: drawZodiac(arcDefs), nakshatras: drawNakshatras(arcDefs), padas: drawPadas(), tarot: drawTarot(),
         nordic: drawNordic(arcDefs), tropical: drawTropical(arcDefs) };
       svg.innerHTML = `<defs>${G.defs()}${arcDefs.join("")}</defs><g class="rim-g">${drawRim()}</g>
         ${["field", "zodiac", "nakshatras", "padas", "tarot", "nordic", "tropical"].map(id => `<g class="ring ring-${id}" data-layer="${id}"${state.layers[id] === false ? " hidden" : ""}>${body[id]}</g>`).join("")}
