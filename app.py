@@ -305,6 +305,11 @@ def today_api():
 def today_page():
     return send_from_directory(app.static_folder, "today.html")
 
+
+@app.get("/mandala")
+def mandala_page():
+    return send_from_directory(app.static_folder, "mandala.html")
+
 # A public sample reading, so people can see what they would be buying.
 # A made-up birth, not a real person: edit freely.
 SAMPLE = {"name": "A sample chart", "date": "1988-09-23", "time": "06:40",

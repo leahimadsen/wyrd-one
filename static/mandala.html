@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Wyrd Mandala: the 108 Padas, Two Zodiacs and Their Cards · The Wyrd Console</title>
+<meta name="description" content="The Wyrd Mandala by The Völva: the 108 padas of the sidereal zodiac turning inside the tropical, with the 27 mansions, a Buddhist and a Nordic card for every station, and every correspondence mapped. Free and interactive.">
+<link rel="canonical" href="https://wyrdconsole.com/mandala">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Wyrd Console">
+<meta property="og:title" content="The Wyrd Mandala">
+<meta property="og:description" content="108 stations, two zodiacs turning against each other, a card for each ring. Turn it, slide it through the centuries, open any station.">
+<meta property="og:url" content="https://wyrdconsole.com/mandala">
+<meta property="og:image" content="https://wyrdconsole.com/static/mandala/wyrd-mandala-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wyrdconsole.com/static/mandala/wyrd-mandala-og.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#05080a">
+<link rel="icon" href="/static/icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="/static/console.css">
+<link rel="stylesheet" href="/static/site.css">
+<link rel="stylesheet" href="/static/map.css">
+<link rel="stylesheet" href="/static/mandala/wyrd-mandala.css">
+<link rel="stylesheet" href="/static/a11y.css">
+<style>
+  .mp main { width: min(1240px, 100% - 32px); }
+  .mp-head { max-width: 760px; margin: 0 0 22px; }
+  .mp-head h1 { font-weight: 400; font-size: clamp(30px, 5vw, 44px); color: var(--celadon); margin: 0 0 8px; line-height: 1.1; }
+  .mp-head p { color: var(--ivory); margin: 0 0 10px; }
+  .mp-you { border: 1px solid var(--rule); border-left: 2px solid var(--jade); padding: 10px 14px; margin: 0 0 22px; max-width: 760px; }
+  .mp-you p { margin: 0; }
+  .mp main .wm { --wm-sticky: 12px; }
+  .mp .mand-learn { max-width: 760px; }
+</style>
+</head>
+<body class="mp">
+<a class="skip" href="#mandala">Skip to content</a>
+<nav class="topbar" aria-label="Site"><a href="/" class="tb-home">The Wyrd Console</a><span class="tb-links"><a href="/reports">Readings</a><a href="/membership">Membership</a><a href="/learn">Learn</a><a href="/today">Today's sky</a><a href="/account" class="tb-acct" data-acct>Sign in</a></span></nav>
+<main id="mandala" tabindex="-1">
+  <header class="mp-head">
+    <h1>The Wyrd Mandala</h1>
+    <p>Two zodiacs turning against each other. Inside, the sidereal ring: twelve signs, twenty-seven mansions, a hundred and eight padas, and a card of the Buddhist deck for each, where things come from. Outside, the tropical ring with the Nordic deck: where they land. The distance between the rings is the ayanamsa, and the year slider turns it.</p>
+    <p>Tap any of the 108 stations to open its record: the mansion, both cards, and every system mapped onto it, each marked with how it is held.</p>
+  </header>
+  <div class="mp-you" id="you"></div>
+  <div id="host"></div>
+  <div class="offer mand-learn">
+    <h3>Learning the Mandala</h3>
+    <p>The whole instrument is here, free, to study for as long as you like. Learning to work with it is its own course: how to read a station through its rings, how the two rotors and their decks speak to each other, and how to lay your own chart on the wheel and read what lines up.</p>
+    <p>The course is coming. It will be sold on its own, apart from The Wyrd Reading, and included in the membership.</p>
+    <a class="btn-cast" href="/membership">See the membership</a>
+  </div>
+</main>
+<footer class="foot">
+  <p>The Wyrd Console · by The Völva · <a href="https://thewebofwyrd.substack.com">Web of Wyrd</a> · <a href="/today">Today's sky</a> · <a href="/reports">Astrology readings</a> · <a href="/membership">Membership</a> · <a href="/learn">Learn</a></p>
+  <p class="fine">Sidereal positions use the Lahiri ayanamsa. An investigative model: a correspondence shown here is a mapping under study, never a claim that one tradition's figure is another's. For reflection and self-study.</p>
+</footer>
+<script src="/static/viz.js"></script>
+<script src="/static/pulse.js"></script>
+<script src="/static/common.js"></script>
+<script src="/static/mandala/wyrd-mansions.js"></script>
+<script src="/static/mandala/wyrd-data.js"></script>
+<script src="/static/mandala/wyrd-glyphs.js"></script>
+<script src="/static/mandala/wyrd-mandala.js"></script>
+<script>
+(() => {
+  /* the chart cast in this browser, if there is one, stands on the wheel */
+  const saved = window.WyrdCommon && WyrdCommon.current(), C = saved && WyrdCommon.fresh(saved.result) ? saved.result.chart : null;
+  const pl = {};
+  if (C){ for (const b of ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Rahu","Ketu","Uranus","Neptune","Pluto"]) if (C.sid[b] != null) pl[b] = C.sid[b];
+    if (!C.unknownTime){ pl.Ascendant = C.ascS; pl.Midheaven = C.mcS; } }
+  const who = C && saved.birth.name ? `${saved.birth.name}'s` : "Your";
+  document.getElementById("you").innerHTML = C
+    ? `<p>${who} planets stand in the middle of the wheel, each at its sidereal place. <a href="/chart#mandala">Open it in ${C && saved.birth.name ? "the" : "your"} chart →</a></p>`
+    : `<p>Place your own planets on the wheel: <a href="/">cast your free chart</a>, then open The Wyrd Mandala from your chart, or come back here.</p>`;
+  WyrdMandala.mount(document.getElementById("host"), { planets: pl, theme: "site" });
+})();
+</script>
+<script>fetch("/api/me").then(r=>r.json()).then(d=>{if(d.signedIn)for(const a of document.querySelectorAll("[data-acct]"))a.textContent="Your account"}).catch(()=>{})</script>
+</body>
+</html>

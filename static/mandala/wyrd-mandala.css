@@ -80,7 +80,7 @@
 .wm .z-sec { fill: var(--wm-paper); stroke: none; }
 .wm .z-sec.alt { fill: var(--wm-paper-2); }
 .wm .z-div { stroke: var(--wm-ink); stroke-width: 1.4; }
-.wm .wm-svg .z-glyph { font-size: 22px; }
+.wm .wm-svg .z-glyph { font-size: 21px; }
 .wm .wm-svg .z-name { font-family: var(--wm-mono); font-size: 8.5px; letter-spacing: .12em; fill: var(--wm-ink-2); }
 .wm .z-through { stroke: var(--wm-brass); stroke-width: 1.1; stroke-dasharray: 3 3; }
 
@@ -88,6 +88,7 @@
 .wm .n-sec.alt { fill: var(--wm-paper); }
 .wm .n-div { stroke: var(--wm-ink); stroke-width: 1; }
 .wm .wm-svg .n-name { font-family: var(--wm-display); font-size: 10.6px; letter-spacing: .01em; }
+.wm .wm-svg .n-name.long { font-size: 9.4px; letter-spacing: 0; }
 .wm .wm-svg .n-num { font-family: var(--wm-mono); font-size: 7.6px; fill: var(--wm-ink-2); letter-spacing: .04em; }
 
 .wm .p-sec { fill: var(--wm-paper); stroke: none; transition: fill 160ms; }
