@@ -55,7 +55,7 @@
           <button type="button" data-wm="reset">Reset</button>
         </div>
         <div class="wm-dial">
-          <svg class="wm-svg" data-wm="svg" tabindex="0" role="img" viewBox="-520 -520 1040 1040"
+          <svg class="wm-svg" data-wm="svg" tabindex="0" role="img" viewBox="-560 -560 1120 1120"
             aria-label="The Wyrd Mandala: 108 pada stations around the sidereal zodiac. Use the arrow keys to step between stations."></svg>
         </div>
         <ul class="wm-key" aria-label="Key">
@@ -64,6 +64,8 @@
           <li><i style="border-color: var(--wm-brass)"></i>Triangle: where sign and mansion boundaries meet (0°, 120°, 240°)</li>
           <li><i style="border-color: var(--wm-ink-2)"></i>Cross: the four cardinal sign starts</li>
           <li><span style="color: var(--wm-brass)">○</span> vargottama pada</li>
+          <li><i style="border-color: var(--wm-verd); border-top-width: 6px"></i>Tropical rings, outside: the Nordic cards and the tropical signs, turned by the ayanamsa</li>
+          <li><i style="border-color: var(--wm-verd); border-top-style: dashed"></i>The equinox: 0° tropical Aries</li>
           <li data-wm="plKey" hidden><span style="color: var(--wm-pl)">☉</span> your planets, at their sidereal places</li>
         </ul>
         <div class="wm-ctl" role="group" aria-label="Layers"><span class="wm-lab">Layers</span><span data-wm="layers" class="wm-ctl"></span></div>
@@ -71,6 +73,14 @@
           <span class="wm-lab">Dial</span>
           <label for="wm-rot-${n}">Rotate</label><input type="range" id="wm-rot-${n}" data-wm="rot" min="0" max="359" step="1" value="0">
           <button type="button" data-wm="align">Bring selected station to the top</button>
+        </div>
+        <div class="wm-ctl" role="group" aria-label="The two rotors">
+          <span class="wm-lab">Year</span>
+          <label for="wm-year-${n}">Turn the tropical ring through time</label>
+          <input type="range" id="wm-year-${n}" data-wm="year" min="285" max="2700" step="1" value="${D.EPOCH}">
+          <output class="wm-year" data-wm="yearOut">${D.EPOCH}</output>
+          <button type="button" data-wm="now">Back to ${D.EPOCH}</button>
+          <p class="wm-rel-note" data-wm="yearNote"></p>
         </div>
         <div class="wm-ctl" role="group" aria-label="Focus mode">
           <span class="wm-lab">Focus</span>
@@ -114,7 +124,7 @@
     const radial = (r0, r1, a) => { const [x0, y0] = pt(r0, a), [x1, y1] = pt(r1, a); return `M${f(x0)} ${f(y0)}L${f(x1)} ${f(y1)}`; };
     /* an arc for text: runs left-to-right whichever half of the dial it sits on */
     function textArc(r, a, b) {
-      const m = ((a + b) / 2 + state.rot) % 360, bottom = m > 90 && m < 270;
+      const m = norm((a + b) / 2 + state.rot), bottom = m > 90 && m < 270;
       const [p, q2] = bottom ? [b, a] : [a, b], [x0, y0] = pt(r, p), [x1, y1] = pt(r, q2);
       return `M${f(x0)} ${f(y0)}A${r} ${r} 0 0 ${bottom ? 0 : 1} ${f(x1)} ${f(y1)}`;
     }
@@ -181,8 +191,40 @@
       }
       return o;
     }
+    /* the tropical rotor: the Nordic deck's 36 decans, and the tropical signs, turned back from 0° sidereal Aries by the ayanamsa */
+    const AY = () => D.FRAME.ayanamsa.degrees;
+    function drawNordic(arcDefs) {
+      const [r0, r1] = ring("nordic"), dec = root.WYRD_MANSIONS && root.WYRD_MANSIONS.cards.decans;
+      let o = "";
+      for (let k = 0; k < 36; k++) {
+        const a = k * 10 - AY(), b = a + 10, d = dec && dec[k];
+        o += `<path d="${sector(r0, r1, a, b)}" class="tz-sec ${Math.floor(k / 3) % 2 ? "alt" : ""}" data-dec="${k}"/>`;
+        if (d) { const id = `wm${n}-nd-${k}`;
+          arcDefs.push(`<path id="${id}" d="${textArc((r0 + r1) / 2 + 3, a + .3, b - .3)}"/>`);
+          o += `<text class="nd-name"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${d.nordic.minor.replace(" of ", " ")}</textPath></text>`; }
+      }
+      for (let k = 0; k < 36; k++) o += `<path d="${radial(r0, r1, k * 10 - AY())}" class="${k % 3 ? "tz-div-t" : "tz-div"}"/>`;
+      return o;
+    }
+    function drawTropical(arcDefs) {
+      const [r0, r1] = ring("tropical"), dec = root.WYRD_MANSIONS && root.WYRD_MANSIONS.cards.decans;
+      let o = "";
+      for (const s of D.SIGNS) {
+        const a = s.start - AY(), b = s.end - AY(), id = `wm${n}-tz-${s.index}`;
+        o += `<path d="${sector(r0, r1, a, b)}" class="tz-sec ${s.index % 2 ? "alt" : ""}" data-tsign="${s.index}"/>`;
+        const [gx, gy] = pt(r1 - 13, s.start + 15 - AY());
+        o += `<text x="${f(gx)}" y="${f(gy)}" class="tz-glyph" text-anchor="middle" dominant-baseline="central">${s.glyph}</text>`;
+        arcDefs.push(`<path id="${id}" d="${textArc(r0 + 13, a + 1, b - 1)}"/>`);
+        o += `<text class="tz-name"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${s.name.toUpperCase()}${dec ? " · " + dec[s.index * 3].nordic.trump.replace(/^The /, "").toUpperCase() : ""}</textPath></text>`;
+      }
+      for (const s of D.SIGNS) o += `<path d="${radial(r0, r1, s.start - AY())}" class="tz-div-s"/>`;
+      /* the equinox: 0° tropical Aries, where the receiving ring begins */
+      const [ex, ey] = pt(ring("tropical")[1] + 44, -AY());
+      o += `<path d="${radial(ring("nordic")[0] - 4, r1 + 22, -AY())}" class="eq"/><text x="${f(ex)}" y="${f(ey)}" class="eq-lab" text-anchor="middle" dominant-baseline="central">EQUINOX</text>`;
+      return o;
+    }
     function drawRim() {
-      const r = ring("tarot")[1] + 6;
+      const r = ring("tropical")[1] + 6;
       let o = `<circle r="${r}" class="rim"/><circle r="${r + 16}" class="rim"/>`;
       for (let d = 0; d < 360; d++) {
         const len = d % 10 === 0 ? 11 : d % 5 === 0 ? 7 : 3.5;
@@ -209,13 +251,13 @@
       return o;
     }
     function drawHit() {
-      const r0 = ring("zodiac")[0], r1 = ring("tarot")[1] + 22;
+      const r0 = ring("zodiac")[0], r1 = ring("tropical")[1];
       return S.map(s => `<path d="${sector(r0, r1, s.zodiacStart, s.zodiacEnd)}" class="hit" data-st="${s.id}"><title>${s.code} · ${s.nakshatra} ${s.pada} · ${inSign(s.zodiacStart)}</title></path>`).join("");
     }
     function drawSelection() {
       const s = state.sel; if (!s) return "";
-      const r0 = ring("zodiac")[0], r1 = ring("tarot")[1] + 22;
-      const [lx, ly] = pt(r1 + 26, mid(s));
+      const r0 = ring("zodiac")[0], r1 = ring("tropical")[1];
+      const [lx, ly] = pt(r1 + 60, mid(s));
       return `<path d="${sector(r0, r1, s.zodiacStart, s.zodiacEnd)}" class="sel-wedge"/>
         <path d="${radial(14, r0, mid(s))}" class="sel-ray"/>
         <text x="${f(lx)}" y="${f(ly)}" class="sel-code" text-anchor="middle" dominant-baseline="central">${s.code}</text>`;
@@ -231,9 +273,10 @@
     }
     function render() {
       const arcDefs = [];
-      const body = { field: drawField(), zodiac: drawZodiac(), nakshatras: drawNakshatras(arcDefs), padas: drawPadas(), tarot: drawTarot() };
+      const body = { field: drawField(), zodiac: drawZodiac(), nakshatras: drawNakshatras(arcDefs), padas: drawPadas(), tarot: drawTarot(),
+        nordic: drawNordic(arcDefs), tropical: drawTropical(arcDefs) };
       svg.innerHTML = `<defs>${G.defs()}${arcDefs.join("")}</defs><g class="rim-g">${drawRim()}</g>
-        ${["field", "zodiac", "nakshatras", "padas", "tarot"].map(id => `<g class="ring ring-${id}" data-layer="${id}"${state.layers[id] === false ? " hidden" : ""}>${body[id]}</g>`).join("")}
+        ${["field", "zodiac", "nakshatras", "padas", "tarot", "nordic", "tropical"].map(id => `<g class="ring ring-${id}" data-layer="${id}"${state.layers[id] === false ? " hidden" : ""}>${body[id]}</g>`).join("")}
         <g class="focus-g">${drawFocus()}</g><g class="sel-g">${drawSelection()}</g><g class="hit-g">${drawHit()}</g><g class="pl-g">${drawPlanets()}</g>`;
       svg.classList.toggle("focusing", !!(state.focus && state.sel));
       paintMarks();
@@ -253,6 +296,12 @@
         el.classList.toggle("is-sel", !!sel && k === sel.nakshatraIndex);
       });
       svg.querySelectorAll("[data-sign]").forEach(el => el.classList.toggle("is-sel", !!sel && +el.dataset.sign === sel.signIndex));
+      /* the tropical cells the selected station lands in */
+      const ay = AY();
+      const hit = (lo, w) => { if (!sel) return false; const s0 = norm(sel.zodiacStart + ay), s1 = s0 + D.PADA;
+        return [lo, lo + 360, lo - 360].some(x => s0 < x + w && s1 > x); };
+      svg.querySelectorAll("[data-dec]").forEach(el => el.classList.toggle("is-sel", hit(+el.dataset.dec * 10, 10)));
+      svg.querySelectorAll("[data-tsign]").forEach(el => el.classList.toggle("is-sel", hit(+el.dataset.tsign * 30, 30)));
     }
 
     /* ---------- the station record ---------- */
@@ -321,10 +370,11 @@
         ${cardsText(s)}
         <section class="rec-sec">
           <h3>Correspondences</h3>
-          ${corr.length ? corr.map(([sys, rows], i) => `<details${i < 2 ? " open" : ""}><summary>${esc(sys)} <small>${rows.length}</small></summary>
-            <dl class="kv corr">${rows.map(r => `<dt>${esc(r.label)}</dt><dd>${esc(r.value)} ${badge(r.provenance)}</dd>`).join("")}</dl></details>`).join("")
-            : `<p class="na-block">No further correspondence layers have been mapped to this station yet.</p>`}
-          <p class="planned">Layers reserved, not yet mapped: ${D.LAYERS.filter(l => l.status === "planned").map(l => l.label).join(" · ")}</p>
+          ${corr.length ? corr.map(([sys, rows], i) => { const one = rows.every(r => r.provenance === rows[0].provenance) ? rows[0].provenance : null;
+            return `<details${i < 2 ? " open" : ""}><summary>${esc(sys)} <small>${rows.length}</small>${one ? " " + badge(one) : ""}</summary>
+            <dl class="kv corr">${rows.map(r => `<dt>${esc(r.label)}</dt><dd>${esc(r.value)}${one ? "" : " " + badge(r.provenance)}</dd>`).join("")}</dl></details>`; }).join("")
+            : `<p class="na-block">No correspondences have been mapped to this station yet.</p>`}
+          <p class="planned">Every row says how it is held: attested in a primary or traditional source, computed from the wheel, structural to this system's own rules, or constructed and awaiting a ruling.</p>
         </section>
         ${s.notes ? `<section class="rec-sec"><h3>Notes</h3>${s.notes.split(/\n\n+/).map(p => `<p class="note">${esc(p)}</p>`).join("")}
           ${s.source ? `<p class="src">Source: ${esc(s.source)}</p>` : ""}</section>` : ""}`;
@@ -348,9 +398,7 @@
     /* controls built from the data */
     els.nak.innerHTML = `<option value="">Nakshatra…</option>` + D.NAKSHATRAS.map(k => `<option value="${k.index}">${String(k.number).padStart(2, "0")} · ${k.name}</option>`).join("");
     els.list.innerHTML = S.map(s => `<option value="${s.code} · ${s.nakshatra} ${s.pada} · ${inSign(s.zodiacStart)}"></option>`).join("");
-    const planned = D.LAYERS.filter(l => l.status === "planned");
-    els.layers.innerHTML = D.LAYERS.filter(l => l.toggle).map(l => `<label class="wm-chk"><input type="checkbox" data-layer="${l.id}" checked> ${l.label}</label>`).join("")
-      + `<span class="planned-n" title="${planned.map(l => l.label).join(", ")}">+ ${planned.length} layers reserved</span>`;
+    els.layers.innerHTML = D.LAYERS.filter(l => l.toggle).map(l => `<label class="wm-chk"><input type="checkbox" data-layer="${l.id}" checked> ${l.label}</label>`).join("");
     els.relation.innerHTML = Object.entries(D.RELATIONS).map(([k, r]) => `<option value="${k}">${r.label}</option>`).join("");
 
     /* pointer on the dial: the whole radial wedge of a station is its target, so it stays tappable on a phone */
@@ -382,7 +430,17 @@
     els.focus.addEventListener("change", () => { state.focus = els.focus.checked; els.relation.disabled = !state.focus; render(); });
     els.relation.addEventListener("change", () => { state.relation = els.relation.value; els.relNote.textContent = D.RELATIONS[state.relation].note; render(); });
     els.relNote.textContent = D.RELATIONS[state.relation].note;
+    /* the year: turns the tropical ring against the sidereal one, and re-reads every station's tropical side */
+    const yearNote = () => { const a = D.FRAME.ayanamsa, y = a.epoch;
+      q("yearOut").textContent = y < 1 ? `${1 - y} BCE` : y;
+      q("yearNote").textContent = `In ${y < 1 ? (1 - y) + " BCE" : y} the rings stand ${dms(Math.abs(a.degrees))} apart${a.degrees < 0 ? ", the tropical ring behind the sidereal" : ""}. `
+        + (Math.abs(a.degrees) < .5 ? "This is about when the two zodiacs coincided." : `The equinox stands at ${inSign(-a.degrees)} sidereal.`); };
+    const setYear = y => { D.setYear(y); q("year").value = y; yearNote(); select(state.sel ? state.sel.id : null); };
+    q("year").addEventListener("input", () => setYear(+q("year").value));
+    q("now").addEventListener("click", () => setYear(D.EPOCH));
+    yearNote();
     q("reset").addEventListener("click", () => {
+      D.setYear(D.EPOCH); q("year").value = D.EPOCH; yearNote();
       state.rot = 0; els.rot.value = 0; state.focus = false; els.focus.checked = false; els.relation.disabled = true;
       D.LAYERS.forEach(l => { state.layers[l.id] = true; }); els.layers.querySelectorAll("input").forEach(c => { c.checked = true; });
       select(null);
