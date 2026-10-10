@@ -268,22 +268,25 @@
           <p class="m-syl">This pada's sound: <b>${esc(s.syllable)}</b> <small>· the four padas of ${esc(s.nakshatra)} sound ${m.syllables.map(esc).join(" · ")}</small></p>
         </section>`;
     }
+    /* the two decks, one per rotor: Buddhist on the sidereal ring (emanating), Nordic on the true tropical ring (receiving) */
     function cardsText(s) {
-      const t = s.tarot, c = s.cards, ph = G.get(t.glyph).placeholder;
+      const t = s.tarot, c = s.cards, ph = G.get(t.glyph).placeholder, ay = D.FRAME.ayanamsa;
+      const deck = (name, ring, where, cards) => `<li><p class="c-deck">${name} · ${ring}</p>
+        ${cards.map(x => `<p class="c-name">${esc(x.minor)} <small>· ${esc(x.trump)}</small></p>
+          <p class="c-det">${esc(x.sign)}, ruled by ${esc(x.ruler)}</p>`).join("")}<p class="c-det">${where}</p></li>`;
       return `<section class="rec-sec">
           <h3>Cards</h3>
-          <div class="tarot">
+          ${c ? `<div class="tarot">
             <svg class="tarot-big" viewBox="0 0 ${G.size.w} ${G.size.h}" role="img" aria-label="Glyph ${t.glyph}${ph ? " (placeholder)" : ""}"><use href="#tarot-${t.glyph}"/></svg>
-            <dl class="kv">
-              ${c ? `<dt>Minor card</dt><dd>${esc(c.minor)} <small>· ${esc(c.minorInner)}</small></dd>
-              <dt>Decan ruler</dt><dd>${esc(c.ruler)}</dd>
-              <dt>Trump</dt><dd>${esc(c.trump)} <small>· ${esc(c.trumpInner)}</small></dd>
-              ${c.void ? `<dt>Asura void</dt><dd>${esc(c.void)}</dd>` : ""}` : `<dt>Card</dt><dd>${t.name ? esc(t.name) : NA}</dd>`}
-              <dt>Glyph</dt><dd class="num">${t.glyph}${ph ? " <small>· artwork to come</small>" : ""}</dd>
-            </dl>
-          </div>
-          ${c ? `<p class="src">From The Völva's 108-pada sheet: outer deck · inner deck.</p>` : ""}
-          ${t.candidates ? `<p class="c-intro">${esc(t.description || "")}</p><ul class="cands">${t.candidates.map(x => `<li><p class="c-deck">${esc(x.deck)}</p><p class="c-name">${esc(x.name)}</p><p class="c-det">${esc(x.detail)}</p>${badge(x.provenance)}</li>`).join("")}</ul>` : ""}
+            <ul class="cands">
+              ${deck("Buddhist deck", "sidereal ring", `where it comes from: ${inSign(s.zodiacStart)} – ${inSign(s.zodiacEnd)}`, [c.buddhist])}
+              ${deck("Nordic deck", "tropical ring", `where it lands: ${inSign(s.zodiacStart + ay.degrees)} – ${inSign(s.zodiacEnd + ay.degrees)} (${ay.epoch})${c.nordic.length > 1 ? "; the pada crosses a decan line, so both cards" : ""}`, c.nordic)}
+            </ul></div>
+          ${c.gate ? `<div class="gate-card"><p class="c-deck">At the gate · 0° sidereal Aries</p><p class="c-name">${esc(c.gate.buddhist)}</p>
+            <p class="c-det">${esc(c.gate.reading)}. ${esc(c.gate.note)}</p></div>` : ""}
+          <dl class="kv">${c.void ? `<dt>Asura void</dt><dd>${esc(c.void)}</dd>` : ""}
+            <dt>Glyph</dt><dd class="num">${t.glyph}${ph ? " <small>· artwork to come</small>" : ""}</dd></dl>`
+          : `<dl class="kv"><dt>Card</dt><dd>${t.name ? esc(t.name) : NA}</dd></dl>`}
         </section>`;
     }
     function record(s) {
