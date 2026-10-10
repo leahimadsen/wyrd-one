@@ -70,6 +70,16 @@
 
   /* ---------- the 108 stations, derived ---------- */
   const PADA = 10 / 3;
+  /* The ruling (The Völva): the Buddhist deck on the sidereal ring, the Nordic deck on the true tropical ring.
+     Both read the same 36 decans. Sidereally a pada sits wholly inside one decan (three padas to a decan); tropically
+     the ring is offset by the ayanamsa, so a pada can cross a decan line, and then both Nordic cards are given. */
+  function cardsFor(start, end, C) {
+    const dec = lon => C.decans[Math.floor((((lon % 360) + 360) % 360) / 10) % 36], ay = FRAME.ayanamsa.degrees;
+    const b = dec((start + end) / 2), n0 = dec(start + ay), n1 = dec(end + ay - 1e-9);
+    const nordic = [n0, n1].filter((d, k, a) => a.indexOf(d) === k).map(d => ({ minor: d.nordic.minor, trump: d.nordic.trump, ruler: d.ruler, sign: d.sign }));
+    return { buddhist: { minor: b.buddhist.minor, trump: b.buddhist.trump, ruler: b.ruler, sign: b.sign }, nordic,
+      void: C.voids[Math.round(start / PADA)] || "", gate: start === 0 ? C.gate : null };
+  }
   const pad3 = n => String(n).padStart(3, "0");
   function buildStations() {
     const out = [];
@@ -86,11 +96,11 @@
         nakshatraLord: nak.ruler, deity: nak.deity, deityAlt: nak.deityAlt,
         navamsa: navamsa.name, vargottama: navamsa.index === sign.index,
         straddles: Math.floor(start / 30) !== Math.floor((end - 1e-9) / 30),     // a pada never crosses a sign boundary; kept as a check
-        tarot: Object.assign({ id: "T" + pad3(id), glyph: "T" + pad3(id), name: null, deck: null, description: null, status: "unassigned" }, rec.tarot || {}),
+        tarot: Object.assign({ id: "T" + pad3(id), glyph: "T" + pad3(id), name: null, deck: null, description: null, status: M ? "ruled" : "unassigned" }, rec.tarot || {}),
         correspondences: rec.correspondences || {},
         mansion: M ? M.mansions[nak.index] : null,               // the mansion's short text (wyrd-mansions.js, from the corpus)
         syllable: M ? M.mansions[nak.index].syllables[i % 4] : null,
-        cards: M ? M.cards[i] : null,                              // The Völva's 108-pada sheet
+        cards: M ? cardsFor(start, end, M.cards) : null,          // the two decks, one per rotor
         notes: rec.notes || "",
         source: rec.source || null,
       });
@@ -114,15 +124,7 @@
   const RECORDS = {
     1: {
       source: "The First Gate: Opening the Wyrd Mandala at 0° Sidereal Aries (The Völva)",
-      tarot: {
-        status: "candidates",
-        name: null,
-        description: "Two candidate assignments, one per rotor. Neither is yet ruled as this station's tarot identity.",
-        candidates: [
-          { deck: "Buddhist deck · sidereal ring", name: "The Fool", detail: "The Great Departure: the going-forth that begins with nothing", provenance: "constructed" },
-          { deck: "Nordic deck · tropical ring", name: "The Emperor · Four of Wands", detail: "Týr; Venus in Aries, third decan, at the station's tropical address", provenance: "attested-primary" },
-        ],
-      },
+      tarot: { status: "ruled" },
       correspondences: {
         "Two rotors": [
           { label: "Sidereal address", value: "0°00′00″ Aries", provenance: "computed" },

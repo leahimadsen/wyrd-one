@@ -55,9 +55,9 @@ function mount(host, opts){
       case "gates": { const g = GATE_AT(trop), lit = skyGates.has(g), who = rows.filter(x => x.gate === g).map(x => x.body);
         return { lit, rgb: lit ? [240, 236, 225] : [70, 130, 150], label: `Gate ${g}${GATE_NAME[g] ? " · " + GATE_NAME[g] : ""}${who.length ? " · lit by " + who.join(", ") : ""}` }; }
       case "tropical": { const s = Math.floor(trop / 30); return { rgb: s % 2 ? [150, 110, 240] : [175, 140, 255], label: `${SIGNS_[s]} (tropical)` }; }
-      case "tarot": { const c = WyrdTarot.at(tarot, lon), who = rows.filter(x => Math.floor(norm(x.sid) / (10 / 3)) === c.idx).map(x => x.body), t = Math.floor(c.idx / 9);
+      case "tarot": { const c = WyrdTarot.at(tarot, lon, trop), who = rows.filter(x => Math.floor(norm(x.sid) / (10 / 3)) === c.idx).map(x => x.body), t = Math.floor(c.idx / 9);
         return { lit: who.length > 0, rgb: who.length ? [255, 236, 200] : TAROT_RGB[t % TAROT_RGB.length].map(v => v - (c.idx % 2) * 18),
-          label: `${WyrdTarot.trump(c)} · ${WyrdTarot.minor(c)} (${c.ruler})${c.void ? " · void: " + c.void : ""}${who.length ? " · " + who.join(", ") : ""}` }; }
+          label: `Buddhist: ${WyrdTarot.buddhist(c)} · Nordic: ${WyrdTarot.nordic(c)}${c.void ? " · void: " + c.void : ""}${who.length ? " · " + who.join(", ") : ""}` }; }
     }
   }
   const COL = [];
@@ -217,7 +217,7 @@ function mount(host, opts){
       .map(o => ({ ...o, q: P3(o.p.sid * D2R, o.v, .1) })).filter(o => Math.hypot(o.q[0] - x, o.q[1] - y) < Math.max(14, Math.min(W, H) * .03))[0];
     if (near){
       const p = near.p; pick = null;
-      const card = tarot ? ` · ${WyrdTarot.minor(WyrdTarot.at(tarot, p.sid))}` : "";
+      const card = tarot ? ` · ${WyrdTarot.minor(WyrdTarot.at(tarot, p.sid, p.sid + ay))}` : "";
       cap.textContent = near.sky ? `${p.body} today · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}° sidereal · ${SIGNS_[Math.floor(norm(p.sid + ay) / 30)]} ${Math.floor(norm(p.sid + ay) % 30)}° tropical · ${NAKSHATRA[nakIndex(p.sid)][0]} · gate ${p.gate}.${p.line}${card}${p.retro ? " · retrograde" : ""}`
         : `Your ${p.body} at birth · ${SIGNS_[Math.floor(norm(p.sid) / 30)]} ${Math.floor(norm(p.sid) % 30)}° sidereal · ${SIGNS_[Math.floor(norm(p.sid + ay) / 30)]} ${Math.floor(norm(p.sid + ay) % 30)}° tropical${card}${rows.filter(t => at(t.sid, p.sid) < 3).map(t => ` · ${t.body} is crossing it now`).join("")}`;
       kick(); return;

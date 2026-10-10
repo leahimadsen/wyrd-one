@@ -60,7 +60,7 @@ $("tdFacts").innerHTML = `
 $("tdTable").innerHTML = `<caption>Teal glyphs on the wheel are ${g("retro", "retrograde")}.</caption>
   <tr><th scope="col">Planet</th><th scope="col">${g("sidereal", "Sidereal")}</th><th scope="col">${g("tropical", "Tropical")}</th><th scope="col">${g("nakshatra", "Mansion")}</th><th scope="col">${g("gate", "Gate")}</th>${TAROT ? `<th scope="col">${g("tarot", "Card")}</th>` : ""}</tr>
   ${D.rows.map(r => `<tr><th scope="row">${GLYPH[r.body]} ${r.body}${r.retro ? ` <span class="rx" title="retrograde">℞</span>` : ""}</th>
-    <td>${signOf(r.sid)} ${dm(r.sid)}</td><td>${signOf(r.trop)} ${dm(r.trop)}</td><td>${r.nak} ${pada(r.sid)}</td><td>${r.gate}.${r.line}</td>${TAROT ? `<td>${WyrdTarot.minor(WyrdTarot.at(TAROT, r.sid))}</td>` : ""}</tr>`).join("")}`;
+    <td>${signOf(r.sid)} ${dm(r.sid)}</td><td>${signOf(r.trop)} ${dm(r.trop)}</td><td>${r.nak} ${pada(r.sid)}</td><td>${r.gate}.${r.line}</td>${TAROT ? `<td>${WyrdTarot.minor(WyrdTarot.at(TAROT, r.sid, r.trop))}</td>` : ""}</tr>`).join("")}`;
 
 $("tdNext").innerHTML = D.upcoming.length ? [...D.upcoming].sort((a, b) => a.jd - b.jd).map(e => `<li class="cal-${e.kind}"><time>${day(e.jd)}</time><span>${GLYPH[e.body]} ${e.body} ${
   e.kind === "ingress" ? `enters ${e.sign}` : `stations ${e.turns} in ${e.sign}`}</span></li>`).join("") : `<li><span>No sign changes or stations in the next thirty days.</span></li>`;

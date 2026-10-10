@@ -42,15 +42,18 @@ def pair(k, v): return f'<div class="rd-pair"><em>{k}</em><span>{v}</span></div>
 def gate_title(g): return REG.get(str(g), {}).get("t") or GATE_NAME.get(str(g), "")
 
 
-MANDALA = json.load(open(os.path.join(HERE, "static", "mandala.json"), encoding="utf-8"))["padas"]
+MANDALA = json.load(open(os.path.join(HERE, "static", "mandala.json"), encoding="utf-8"))
 
-def card_of(l):
-    """The Völva's mandala: the cards of the pada a sidereal longitude stands in."""
-    return MANDALA[int(E.norm(l) // (10 / 3)) % 108]
+def card_of(sid, trop):
+    """The Völva's mandala: the Buddhist deck's decan card at the sidereal place, the Nordic deck's at the tropical place."""
+    b, n = MANDALA["decans"][int(E.norm(sid) // 10) % 36], MANDALA["decans"][int(E.norm(trop) // 10) % 36]
+    return {"buddhist": {**b["buddhist"], "ruler": b["ruler"]}, "nordic": {**n["nordic"], "ruler": n["ruler"]}}
 
-def card_pair(l):
-    c = card_of(l)
-    return pair("Its card", f'{c["minor"]} · {c["minorInner"]}, ruled by {c["ruler"]}, under {c["trump"]} · {c["trumpInner"]}')
+def card_pair(sid, trop):
+    c = card_of(sid, trop)
+    b, n = c["buddhist"], c["nordic"]
+    return pair("Its cards", f'{b["minor"]} under {b["trump"]}, ruled by {b["ruler"]}, in the Buddhist deck, where it comes from (sidereal); '
+                             f'{n["minor"]} under {n["trump"]}, ruled by {n["ruler"]}, in the Nordic deck, where it lands (tropical)')
 
 
 def rune_at(l, asc):
@@ -169,7 +172,7 @@ def planets(C):
           {woven(C, b, s)}
           {f'<p class="rd-kenning">{X["DIGNITY"][dg]}</p>' if dg else ""}
           {pair("Rune", f'{r["glyph"]} {r["name"]}, {r["gloss"]}. {X["RUNES"][r["name"]]["means"]}')}
-          {card_pair(s)}
+          {card_pair(s, t)}
           {gates}
           {pair("At its best", P["light"])}{pair("Watch for", P["shadow"])}</div>""")
     return "".join(out)

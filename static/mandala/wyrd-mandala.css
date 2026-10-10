@@ -160,6 +160,8 @@
 .wm .c-deck { font-family: var(--wm-mono); font-size: 12px; letter-spacing: .04em; color: var(--wm-ink-2); }
 .wm .c-name { font-family: var(--wm-display); font-size: 18px; }
 .wm .c-det { font-size: 15px; color: var(--wm-ink-2); }
+.wm .c-name small { font-family: var(--wm-serif); font-size: 15px; color: var(--wm-ink-2); }
+.wm .gate-card { border: 1px solid var(--wm-brass); padding: 8px 12px; display: grid; gap: 2px; }
 .wm details { border-top: 1px dotted var(--wm-hair); padding: 6px 0; }
 .wm summary { cursor: pointer; font-family: var(--wm-display); letter-spacing: .05em; }
 .wm summary small { font-family: var(--wm-mono); color: var(--wm-ink-2); margin-left: 4px; }

@@ -181,26 +181,27 @@ function chartLand(){
   const gl = v => v ? `${v.gate}.${v.line}` : "—";
   const head = [["Body"], [g("sidereal", "Sidereal")], [g("tropical", "Tropical")], [g("nakshatra", "Mansion") + " · " + g("pada", "pada")],
     [g("house", unknown ? "House (solar)" : "House")], ...(PL ? [[g("placidus", "Placidus")]] : []), [g("rune", "Rune")], [g("navamsa", "Navamsa")],
-    [g("dignity", "Dignity")], [g("gate", "Gate")], [g("design", "Design gate")], [g("tarot", "Card")]];
+    [g("dignity", "Dignity")], [g("gate", "Gate")], [g("design", "Design gate")], [g("tarot", "Cards")]];
   const rows = BODIES.map(b => {
     const l = C.sid[b], ru = WyrdWheel.runeAt(C, l), d = dignity(b);
     return `<tr><th scope="row">${GLYPH[b]} ${b}${retro(b) ? ` <span class="rx" title="retrograde">℞</span>` : ""}</th><td>${fmt(l)}</td><td>${fmt(C.trop[b])}</td>
       <td>${station(l)}</td><td>${houseOf(l, C.ascS)}</td>${PL ? `<td>${PL.houses[b]}</td>` : ""}<td>${ru.glyph} ${ru.name}</td>
-      <td>${C.nav && C.nav[b] != null ? signOf(C.nav[b]) : "—"}</td><td>${d ? `<span class="dg ${d.k}">${d.label}</span>` : ""}</td><td>${gl(NP[b])}</td><td class="des">${gl(ND[b])}</td><td data-card="${l}">…</td></tr>`;
+      <td>${C.nav && C.nav[b] != null ? signOf(C.nav[b]) : "—"}</td><td>${d ? `<span class="dg ${d.k}">${d.label}</span>` : ""}</td><td>${gl(NP[b])}</td><td class="des">${gl(ND[b])}</td><td data-card="${l}" data-trop="${C.trop[b]}">…</td></tr>`;
   }).join("");
   const dash = n => `<td>—</td>`.repeat(n);
   const angRow = (n, l, lt, mansion) => { const ru = WyrdWheel.runeAt(C, l);
     return `<tr class="ang"><th scope="row">${g(n === "Ascendant" ? "asc" : "mc", n)}</th><td>${fmt(l)}</td><td>${fmt(lt)}</td><td>${mansion}</td>
-      <td>${houseOf(l, C.ascS)}</td>${PL ? `<td>${n === "Ascendant" ? 1 : 10}</td>` : ""}<td>${ru.glyph} ${ru.name}</td><td>${n === "Ascendant" && C.navAsc != null ? signOf(C.navAsc) : "—"}</td>${dash(3)}<td data-card="${l}">…</td></tr>`; };
-  $("posTable").innerHTML = `<caption>Sidereal is Lahiri; the gates run on the tropical wheel. ℞ marks a planet that was retrograde.</caption>
+      <td>${houseOf(l, C.ascS)}</td>${PL ? `<td>${n === "Ascendant" ? 1 : 10}</td>` : ""}<td>${ru.glyph} ${ru.name}</td><td>${n === "Ascendant" && C.navAsc != null ? signOf(C.navAsc) : "—"}</td>${dash(3)}<td data-card="${l}" data-trop="${lt}">…</td></tr>`; };
+  $("posTable").innerHTML = `<caption>Sidereal is Lahiri; the gates run on the tropical wheel. Cards: the Buddhist deck at the sidereal place, then the Nordic deck at the tropical place. ℞ marks a planet that was retrograde.</caption>
     <tr>${head.map(h => `<th scope="col">${h[0]}</th>`).join("")}</tr>
     ${rows}
     <tr><th scope="row">⊕ Earth</th>${dash(PL ? 8 : 7)}<td>${gl(NP.Earth)}</td><td class="des">${gl(ND.Earth)}</td><td>—</td></tr>
     ${unknown ? "" : angRow("Ascendant", C.ascS, C.ascT, station(C.ascS)) + angRow("Midheaven", C.mcS, C.mcT, NAKSHATRA[nakIndex(C.mcS)][0])}`;
 
-  /* the mandala's card for each placement: the card of the pada it stands in */
+  /* the mandala's cards for each placement: the Buddhist deck at its sidereal place, the Nordic deck at its tropical place */
   if (window.WyrdTarot) WyrdTarot.load().then(T => document.querySelectorAll("#posTable [data-card]").forEach(td => {
-    const c = WyrdTarot.at(T, +td.dataset.card); td.innerHTML = c ? `${c.minor} <small>· ${c.minorInner}</small><br><small>${c.trump} · ${c.trumpInner}</small>` : "—"; }));
+    const c = WyrdTarot.at(T, +td.dataset.card, +td.dataset.trop);
+    td.innerHTML = c ? `<span title="Buddhist deck, sidereal">${c.buddhist.minor} <small>· ${c.buddhist.trump}</small></span><br><span title="Nordic deck, tropical">${c.nordic.minor} <small>· ${c.nordic.trump}</small></span>` : "—"; }));
   const rv = WyrdWheel.rave(C), P = X.panchanga;
   const kar = Object.entries(C.karaka).map(([k, b]) => `<li><span>${k === "Atmakaraka" ? g("atmakaraka", "Atma") : k.replace("karaka", "")}</span>${GLYPH[b]} ${b}</li>`).join("");
   const asp = [];

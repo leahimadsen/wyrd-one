@@ -1,13 +1,44 @@
-"""Turn The Völva's mandala sheet (lib/wyrd-mandala-108.csv) into static/mandala.json, which the site reads."""
+"""Turn The Völva's mandala sheet (lib/wyrd-mandala-108.csv) into static/mandala.json and static/mandala/wyrd-mansions.js."""
 import csv, json, os
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 rows = list(csv.DictReader(open(os.path.join(HERE, "lib", "wyrd-mandala-108.csv"), encoding="utf-8")))
 assert len(rows) == 108, "the mandala has 108 padas"
-padas = [{"nak": r["nakshatra"], "pada": int(r["nak_pada"]), "minor": r["minor_card_outer"], "minorInner": r["minor_card_inner"],
-          "ruler": r["decan_ruler"], "trump": r["trump_outer"], "trumpInner": r["trump_inner"], "void": r["asura_void"] or ""} for r in rows]
-json.dump({"_note": "The Völva's 108-pada mandala (from lib/wyrd-mandala-108.csv): each pada of the sidereal zodiac, from Ashwini 1 at 0°, with its cards. Regenerate with scripts/mandala.py if the CSV changes.",
-           "padas": padas}, open(os.path.join(HERE, "static", "mandala.json"), "w"), ensure_ascii=False, separators=(",", ":"))
-print("static/mandala.json: 108 padas")
+# The cards follow one rule, the 36 decans (Golden Dawn): number 2-10 through each three signs,
+# suit by the sign's element, ruler in Chaldean order from Mars, trump by sign. Two decks read it:
+#   the Buddhist deck (the sheet's inner names) on the sidereal ring: emanating;
+#   the Nordic deck (the sheet's outer names) on the true tropical ring, sidereal + ayanamsa: receiving.
+# The sheet's own card columns were laid on a mirrored tropical chassis; only their names are kept.
+import re
+SIGNS = "Aries Taurus Gemini Cancer Leo Virgo Libra Scorpio Sagittarius Capricorn Aquarius Pisces".split()
+SUIT = ["Wands", "Shields", "Swords", "Cups"]                 # fire, earth, air, water
+CHALDEAN = ["Mars", "Sun", "Venus", "Mercury", "Moon", "Saturn", "Jupiter"]
+inner_suit, inner_trump, outer_trump = {}, {}, {}
+for r in rows:   # the names each deck gives, checked against the rule wherever the mirrored chassis is unambiguous
+    num, suit = re.match(r"(\d+) of (\w+)", r["minor_card_outer"]).groups()
+    inner_suit.setdefault(suit, re.match(r"\d+ of (.+)", r["minor_card_inner"]).group(1))
+    assert inner_suit[suit] == re.match(r"\d+ of (.+)", r["minor_card_inner"]).group(1)
+    inner_trump.setdefault(r["trump_outer"], r["trump_inner"]); assert inner_trump[r["trump_outer"]] == r["trump_inner"]
+    d, m, sg = re.match(r"(\d+)°(\d+)′ (\w+)", r["tropical_under_chassis"]).groups()
+    mid = (SIGNS.index(sg) * 30 + int(d) + int(m) / 60 - 5 / 3) % 360
+    if abs(mid % 10 - 5) < 4.9:
+        k = int(mid // 10); outer_trump[k // 3] = r["trump_outer"]
+        assert (int(num), suit, r["decan_ruler"]) == (2 + k % 9, SUIT[(k // 3) % 4], CHALDEAN[k % 7]), (r["pada"], k)
+assert len(outer_trump) == 12 and len(inner_suit) == 4
+decans = []
+for k in range(36):
+    suit, tr = SUIT[(k // 3) % 4], outer_trump[k // 3]
+    decans.append({"sign": SIGNS[k // 3], "n": 2 + k % 9, "ruler": CHALDEAN[k % 7],
+                   "nordic": {"minor": f"{2 + k % 9} of {suit}", "trump": tr},
+                   "buddhist": {"minor": f"{2 + k % 9} of {inner_suit[suit]}", "trump": inner_trump[tr]}})
+padas = [{"nak": r["nakshatra"], "pada": int(r["nak_pada"]), "void": r["asura_void"] or ""} for r in rows]
+GATE = {"at": 0, "buddhist": "The Fool", "reading": "The Great Departure: the going-forth that begins with nothing",
+        "note": "The Fool belongs to no sign and no decan. It stands at the gate itself, 0° sidereal Aries, where the Buddhist ring begins."}
+json.dump({"_note": "The Völva's mandala. decans: the 36 decan cards, index = floor(longitude / 10); the Buddhist deck reads them at the "
+                    "sidereal longitude, the Nordic deck at the true tropical longitude. padas: the 108 sidereal padas from Ashwini 1 at 0°, "
+                    "with their asura voids. gate: the card at the opening of the wheel. Made from lib/wyrd-mandala-108.csv by scripts/mandala.py.",
+           "decans": decans, "padas": padas, "gate": GATE},
+          open(os.path.join(HERE, "static", "mandala.json"), "w"), ensure_ascii=False, separators=(",", ":"))
+print("static/mandala.json: 36 decans, 108 padas")
 
 # The Wyrd Mandala room (static/mandala/): the 27 mansions' short texts, taken from the corpus
 # (lib/corpus.json: NAKSHATRA, ENGINE, NAK_DEEP), and the sheet's cards for each pada.
@@ -20,8 +51,8 @@ for i in range(27):
     mansions.append({"name": n[0], "symbol": n[3], "gana": n[4], "line": n[6],
                      "shakti": e[1], "power": e[2], "above": e[3], "below": e[4], "result": e[5],
                      "core": e[6], "question": e[10], "syllables": syl})
-cards = [{k: p[k] for k in ("minor", "minorInner", "ruler", "trump", "trumpInner", "void")} for p in padas]
+cards = {"decans": decans, "voids": [p["void"] for p in padas], "gate": GATE}
 with open(os.path.join(HERE, "static", "mandala", "wyrd-mansions.js"), "w", encoding="utf-8") as f:
     f.write("/* Generated by scripts/mandala.py from lib/corpus.json and lib/wyrd-mandala-108.csv. Do not edit by hand. */\n")
     f.write("window.WYRD_MANSIONS = " + json.dumps({"mansions": mansions, "cards": cards}, ensure_ascii=False, separators=(",", ":")) + ";\n")
-print("static/mandala/wyrd-mansions.js: 27 mansions, 108 cards")
+print("static/mandala/wyrd-mansions.js: 27 mansions, 36 decans")
