@@ -1,0 +1,41 @@
+<title>The Wyrd Mandala</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="wyrd-mandala.css">
+<style>
+/* the page around the instrument; the instrument's own styles are in wyrd-mandala.css */
+:root { --paper: #e9ebe3; --ink: #1d2421; --ink-2: #545c56; --brass: #87652a;
+  --display: "IM Fell English SC", "IM Fell English", Georgia, serif; --serif: "Crimson Pro", "Iowan Old Style", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #121614; --ink: #e2e3d8; --ink-2: #a1a89f; --brass: #c49a55; color-scheme: dark; } }
+:root[data-theme="dark"] { --paper: #121614; --ink: #e2e3d8; --ink-2: #a1a89f; --brass: #c49a55; color-scheme: dark; }
+body { background: var(--paper); color: var(--ink); font-family: var(--serif); font-size: 17px; line-height: 1.5; margin: 0; }
+.plate { max-width: 1320px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 22px; }
+.masthead { display: grid; gap: 4px; border-bottom: 1px solid var(--ink); padding-bottom: 14px; }
+.masthead h1 { font-family: var(--display); font-weight: 400; font-size: clamp(30px, 4.4vw, 46px); letter-spacing: .04em; margin: 0; line-height: 1.05; text-wrap: balance; }
+.masthead p { margin: 0; font-style: italic; color: var(--ink-2); max-width: 70ch; }
+.masthead .frame { font-family: var(--mono); font-size: 12px; font-style: normal; letter-spacing: .04em; color: var(--brass); }
+.colophon { border-top: 1px solid var(--ink); padding-top: 12px; font-size: 14px; color: var(--ink-2); display: grid; gap: 6px; max-width: 90ch; }
+.colophon p { margin: 0; }
+</style>
+
+<div class="plate">
+  <header class="masthead">
+    <h1>The Wyrd Mandala</h1>
+    <p>One hundred and eight stations of the sidereal zodiac, each addressable, with the systems mapped onto them held apart and compared rather than equated.</p>
+    <p class="frame">Sidereal frame · 0° Aries at the zenith of the dial · 27 × 4 = 108 padas of 3°20′ · tropical shown as a projection only</p>
+  </header>
+
+  <div id="wyrd-mandala"></div>
+
+  <footer class="colophon">
+    <p>This is an investigative model. A correspondence shown here is a mapping or a structural relationship under study; it never states that one tradition's figure is another's. Every entry carries its provenance, and a station with no supplied record shows what is missing.</p>
+    <p>Station 001 is the worked example, drawn from <i>The First Gate</i>. Each mansion carries its short text from the Wyrd corpus, and each pada its cards from The Völva's 108-pada sheet. The glyphs on the tarot ring are numbered placeholders until their artwork is drawn.</p>
+  </footer>
+</div>
+
+<script src="wyrd-mansions.js"></script>
+<script src="wyrd-data.js"></script>
+<script src="wyrd-glyphs.js"></script>
+<script src="wyrd-mandala.js"></script>
+<script>WyrdMandala.mount(document.getElementById("wyrd-mandala"));</script>

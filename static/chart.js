@@ -77,6 +77,8 @@ const LANDS = [
     terms: [], prompt: "Your reading is about your chart alone, read in full: the ground every bond stands on." },
   { id: "reading",   name: "The Wyrd Reading",           short: "Reading", mark: "✦", gold: true,
     teaser: "Everything on the path, read in thirteen sections, written for you", terms: [] },
+  { id: "mandala",   name: "The Wyrd Mandala",       short: "Mandala", mark: "✺", explore: true, teaser: "The 108 stations, a card for each, your planets among them",
+    terms: ["nakshatra", "pada", "navamsa"] },
   { id: "armillary", name: "The armillary",          short: "Armillary", mark: "◎", explore: true, teaser: "Your sky as a sphere you can open",
     terms: ["armillary", "ayanamsa", "gate", "rune"], prompt: "Your reading draws every frame of the sphere into one account of you." },
   { id: "colour",    name: "The colour room",        short: "Colour", mark: "◐", explore: true, teaser: "Your twelve houses as a colour wheel",
@@ -173,6 +175,9 @@ function chartLand(){
   wx.addEventListener("click", e => { const d = e.target.closest("[data-dl]"); if (d && Wyrd.pulse) Wyrd.pulse("act", "download"); if (d) downloadWheel(wx.querySelector(".wx-stage svg"), d.dataset.dl); });
 
   const NP = C.natal.personality, ND = C.natal.design, PL = X.placidus;
+  /* the mansion and pada, linked to its station in the Wyrd Mandala */
+  const station = l => { const k = Math.floor(norm(l) / (10 / 3)) % 108 + 1;
+    return `<a class="to-st" href="#mandala/s${String(k).padStart(3, "0")}" title="Open station ${k} in the Wyrd Mandala">${NAKSHATRA[nakIndex(l)][0]} ${pada(l)}</a>`; };
   const gl = v => v ? `${v.gate}.${v.line}` : "—";
   const head = [["Body"], [g("sidereal", "Sidereal")], [g("tropical", "Tropical")], [g("nakshatra", "Mansion") + " · " + g("pada", "pada")],
     [g("house", unknown ? "House (solar)" : "House")], ...(PL ? [[g("placidus", "Placidus")]] : []), [g("rune", "Rune")], [g("navamsa", "Navamsa")],
@@ -180,7 +185,7 @@ function chartLand(){
   const rows = BODIES.map(b => {
     const l = C.sid[b], ru = WyrdWheel.runeAt(C, l), d = dignity(b);
     return `<tr><th scope="row">${GLYPH[b]} ${b}${retro(b) ? ` <span class="rx" title="retrograde">℞</span>` : ""}</th><td>${fmt(l)}</td><td>${fmt(C.trop[b])}</td>
-      <td>${NAKSHATRA[nakIndex(l)][0]} ${pada(l)}</td><td>${houseOf(l, C.ascS)}</td>${PL ? `<td>${PL.houses[b]}</td>` : ""}<td>${ru.glyph} ${ru.name}</td>
+      <td>${station(l)}</td><td>${houseOf(l, C.ascS)}</td>${PL ? `<td>${PL.houses[b]}</td>` : ""}<td>${ru.glyph} ${ru.name}</td>
       <td>${C.nav && C.nav[b] != null ? signOf(C.nav[b]) : "—"}</td><td>${d ? `<span class="dg ${d.k}">${d.label}</span>` : ""}</td><td>${gl(NP[b])}</td><td class="des">${gl(ND[b])}</td><td data-card="${l}">…</td></tr>`;
   }).join("");
   const dash = n => `<td>—</td>`.repeat(n);
@@ -191,7 +196,7 @@ function chartLand(){
     <tr>${head.map(h => `<th scope="col">${h[0]}</th>`).join("")}</tr>
     ${rows}
     <tr><th scope="row">⊕ Earth</th>${dash(PL ? 8 : 7)}<td>${gl(NP.Earth)}</td><td class="des">${gl(ND.Earth)}</td><td>—</td></tr>
-    ${unknown ? "" : angRow("Ascendant", C.ascS, C.ascT, `${NAKSHATRA[nakIndex(C.ascS)][0]} ${pada(C.ascS)}`) + angRow("Midheaven", C.mcS, C.mcT, NAKSHATRA[nakIndex(C.mcS)][0])}`;
+    ${unknown ? "" : angRow("Ascendant", C.ascS, C.ascT, station(C.ascS)) + angRow("Midheaven", C.mcS, C.mcT, NAKSHATRA[nakIndex(C.mcS)][0])}`;
 
   /* the mandala's card for each placement: the card of the pada it stands in */
   if (window.WyrdTarot) WyrdTarot.load().then(T => document.querySelectorAll("#posTable [data-card]").forEach(td => {
@@ -284,7 +289,7 @@ function skyTorus(){
 }
 
 /* ---------- each land, built on first visit ---------- */
-let learn = null;
+let learn = null, MAND = null;
 const BUILD = {
   learn: () => { learn = WyrdLearn.mount($("learnHost"), { C, birth, unknown, name: birth.name, dignity, retro, onStep: drawStart }); },
   chart: () => { chartLand(); WyrdVargas.mount($("vargaHost"), C, { unknown }); },
@@ -292,6 +297,12 @@ const BUILD = {
     if (unknown) $("dashaHost").insertAdjacentHTML("afterbegin", `<p class="unknown-note">The clock is set by the Moon. Without a birth time your Moon could be anywhere in a day's travel, so these dates may be out by months.</p>`); },
   design: designLand,
   runes: () => WyrdRunes.mount($("runesHost"), C),
+  mandala: () => {
+    const pl = Object.fromEntries(BODIES.map(b => [b, C.sid[b]]));
+    if (!unknown){ pl.Ascendant = C.ascS; pl.Midheaven = C.mcS; }
+    MAND = WyrdMandala.mount($("mandalaHost"), { planets: pl, theme: "site", hash: false,
+      onSelect: s => { if (location.hash.startsWith("#mandala")) history.replaceState(null, "", "#mandala" + (s ? "/" + s.code.toLowerCase() : "")); } });
+  },
   armillary: () => { $("armHostWrap").innerHTML = Wyrd.armillary(); watchArmillary($("p-armillary")); },
   sky: () => { renderTransits(C); WyrdLands.calendar($("calHost"), { C, birth, unknown }); skyTorus(); },
   colour: () => { $("colourHost").innerHTML = Wyrd.colour(); setTimeout(() => Wyrd.afterColour(), 0); },
@@ -326,6 +337,7 @@ function go(){
   Wyrd.sky.stop(); if (TZ) TZ.stop();
   if (!built.has(id)){ built.add(id); if (land !== LEARN) decorate(land); BUILD[id](); }
   if (id === "learn" && arg && learn) learn.show(+arg - 1);
+  if (id === "mandala" && MAND && /^s\d{3}$/.test(arg || "")){ MAND.select(+arg.slice(1)); scrollTo(0, 0); }
   /* along the path: learn … compare, then the reading, then the rooms to explore; never wrapping round */
   const SEQ = [...PATH, ...LANDS.filter(l => l.gold), ...LANDS.filter(l => l.explore)];
   const i = SEQ.indexOf(land), prev = SEQ[i - 1], next = SEQ[i + 1];

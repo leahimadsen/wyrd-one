@@ -672,6 +672,7 @@ def membership_page():
     <ul><li><b>Body Weather by email every Monday:</b> which centres the week's sky switches on in your Birth Design and your Dharma Design, which stay open, and which of your gates it lights</li>
       <li>The Moon's mansion day by day, the week's stations and sign changes, and the Vimshottari era and chapter you're in</li>
       <li>One chart saved to your account, for your weekly letter</li>
+      <li><b>Learning the Mandala</b>, the course on working with the Wyrd Mandala, included when it opens</li>
       <li>The Wyrd Reading for {money(config.MEMBER_READING_CENTS)} instead of {money(config.PRICE_CENTS)}</li></ul>
     {buy("member-month", f"Join for {money(m)} a month", True)}
     {buy("member-year", f"Or {money(y)} a year") if on else ""}</section>
@@ -683,7 +684,7 @@ def membership_page():
     {buy("pro-month", f"Subscribe for {money(pr)} a month")}
     <p class="muted">Already a Professional? <a href="/signin?next=/pro">Sign in to your practice desk</a>.</p></section>
 </div>
-<p class="muted">The free chart stays free, with or without a membership: the whole path, Compare for up to nine people, today's sky and the year ahead.
+<p class="muted">The free chart stays free, with or without a membership: the whole path, the Wyrd Mandala, Compare for up to nine people, today's sky and the year ahead.
 Cancel any time from your account. Payments are handled by Stripe. Prefer one reading? <a href="/reports">The Wyrd Reading is {money(config.PRICE_CENTS)}, once.</a></p>"""
     ld = pages._ld({"@context": "https://schema.org", "@type": "Product", "name": config.MEMBER_NAME,
                     "description": "Weekly Body Weather astrology letter for your Birth Design and Dharma Design.",

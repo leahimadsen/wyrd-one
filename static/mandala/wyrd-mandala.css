@@ -1,0 +1,190 @@
+/* ============================================================
+   WYRD MANDALA · styles
+   Everything is scoped under .wm, with its own --wm-* tokens, so the
+   instrument can sit inside any page without borrowing its variables.
+   Themes: vellum by default (dark when the reader's system is dark);
+   data-wm-theme="site" for the Wyrd Console's jade-on-void.
+   Layout: an instrument plate. The dial carries the complexity; the
+   station record is a ledger beside it (beneath it on a phone).
+   ============================================================ */
+.wm {
+  --wm-paper: #e9ebe3; --wm-paper-2: #dfe2d8;
+  --wm-ink: #1d2421; --wm-ink-2: #545c56;
+  --wm-hair: rgba(29, 36, 33, .22); --wm-hair-2: rgba(29, 36, 33, .1);
+  --wm-brass: #87652a;
+  --wm-rubric: #a3361f;     /* manuscript red: the selection */
+  --wm-verd: #3d6b5e;       /* computed relations */
+  --wm-pl: #2c5d8a;         /* your planets */
+  --wm-display: "IM Fell English SC", "IM Fell English", Georgia, serif;
+  --wm-serif: "Crimson Pro", "Iowan Old Style", Georgia, serif;
+  --wm-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --wm-size: 17px;
+  color: var(--wm-ink); font-family: var(--wm-serif); font-size: var(--wm-size); line-height: 1.5;
+}
+@media (prefers-color-scheme: dark) { .wm:not([data-wm-theme="light"]) {
+  --wm-paper: #121614; --wm-paper-2: #181d1a; --wm-ink: #e2e3d8; --wm-ink-2: #a1a89f;
+  --wm-hair: rgba(226, 227, 216, .24); --wm-hair-2: rgba(226, 227, 216, .1);
+  --wm-brass: #c49a55; --wm-rubric: #dc6a4f; --wm-verd: #7fb3a2; --wm-pl: #8cb8e0; } }
+.wm[data-wm-theme="dark"] {
+  --wm-paper: #121614; --wm-paper-2: #181d1a; --wm-ink: #e2e3d8; --wm-ink-2: #a1a89f;
+  --wm-hair: rgba(226, 227, 216, .24); --wm-hair-2: rgba(226, 227, 216, .1);
+  --wm-brass: #c49a55; --wm-rubric: #dc6a4f; --wm-verd: #7fb3a2; --wm-pl: #8cb8e0; }
+.wm[data-wm-theme="site"] {
+  --wm-paper: #070b0d; --wm-paper-2: #0d1417; --wm-ink: #d9d4c4; --wm-ink-2: #9b998d;
+  --wm-hair: rgba(156, 180, 166, .26); --wm-hair-2: rgba(156, 180, 166, .1);
+  --wm-brass: #b8924a; --wm-rubric: #d9805f; --wm-verd: #6fb7a0; --wm-pl: #9fc6e6;
+  --wm-display: "Texturina", "Iowan Old Style", Palatino, Georgia, serif;
+  --wm-serif: "Texturina", "Iowan Old Style", Palatino, Georgia, serif;
+  --wm-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --wm-size: 15.5px; }
+
+.wm *, .wm *::before, .wm *::after { box-sizing: border-box; }
+.wm .wm-work { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 420px); gap: 28px; align-items: start; }
+@media (max-width: 899px) { .wm .wm-work { grid-template-columns: minmax(0, 1fr); } }
+.wm .wm-dial-col { display: grid; gap: 14px; min-width: 0; }
+
+/* ---------- controls ---------- */
+.wm .wm-ctl { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; font-size: 15px; }
+.wm .wm-lab { font-family: var(--wm-display); font-size: 14px; letter-spacing: .08em; color: var(--wm-ink-2); min-width: 74px; }
+.wm button, .wm select, .wm input[type="search"] { font: inherit; font-size: 15px; color: var(--wm-ink); background: var(--wm-paper); border: 1px solid var(--wm-hair); border-radius: 2px; padding: 5px 10px; }
+.wm button { cursor: pointer; }
+.wm button:hover, .wm select:hover { border-color: var(--wm-ink-2); }
+.wm button[aria-pressed="true"] { border-color: var(--wm-rubric); color: var(--wm-rubric); }
+.wm button:focus-visible, .wm select:focus-visible, .wm input:focus-visible, .wm svg:focus-visible { outline: 2px solid var(--wm-brass); outline-offset: 2px; }
+.wm .wm-pads { display: inline-flex; gap: 4px; }
+.wm .wm-pads button { font-family: var(--wm-mono); font-size: 13px; padding: 5px 9px; }
+.wm input[type="search"] { min-width: 0; width: 240px; max-width: 100%; }
+.wm input[type="range"] { accent-color: var(--wm-brass); width: 180px; max-width: 46vw; }
+.wm .wm-chk { display: inline-flex; gap: 6px; align-items: center; }
+.wm .wm-chk input { accent-color: var(--wm-ink); }
+.wm .planned-n { font-family: var(--wm-mono); font-size: 12px; color: var(--wm-ink-2); border-bottom: 1px dotted var(--wm-hair); cursor: help; }
+.wm .wm-rel-note { flex-basis: 100%; margin: 0; font-size: 14px; font-style: italic; color: var(--wm-ink-2); }
+
+/* ---------- the dial ---------- */
+.wm .wm-dial { width: 100%; max-width: 860px; margin: 0 auto; aspect-ratio: 1 / 1; }
+.wm .wm-svg { width: 100%; height: 100%; display: block; overflow: visible; touch-action: manipulation; }
+.wm .wm-svg text { font-family: var(--wm-serif); fill: var(--wm-ink); }
+.wm .rim { fill: none; stroke: var(--wm-ink); stroke-width: 1; }
+.wm .rim-t { stroke: var(--wm-ink-2); stroke-width: .6; }
+.wm .rim-t10 { stroke: var(--wm-ink); stroke-width: 1; }
+.wm .wm-svg .rim-lab { font-family: var(--wm-mono); font-size: 11px; fill: var(--wm-ink-2); }
+
+.wm .f-edge { fill: var(--wm-paper-2); stroke: var(--wm-ink); stroke-width: 1; }
+.wm .f-inner { fill: none; stroke: var(--wm-hair); stroke-width: .8; stroke-dasharray: 2 4; }
+.wm .f-axis { stroke: var(--wm-ink-2); stroke-width: .7; }
+.wm .f-tri { fill: none; stroke: var(--wm-brass); stroke-width: .9; }
+.wm .f-node { fill: var(--wm-brass); }
+.wm .f-bindu-ring { fill: none; stroke: var(--wm-ink); stroke-width: 1; }
+.wm .f-bindu { fill: var(--wm-ink); }
+
+.wm .z-sec { fill: var(--wm-paper); stroke: none; }
+.wm .z-sec.alt { fill: var(--wm-paper-2); }
+.wm .z-div { stroke: var(--wm-ink); stroke-width: 1.4; }
+.wm .wm-svg .z-glyph { font-size: 25px; }
+.wm .wm-svg .z-name { font-family: var(--wm-mono); font-size: 8.5px; letter-spacing: .12em; fill: var(--wm-ink-2); }
+.wm .z-through { stroke: var(--wm-brass); stroke-width: 1.1; stroke-dasharray: 3 3; }
+
+.wm .n-sec { fill: var(--wm-paper-2); stroke: none; transition: fill 160ms; }
+.wm .n-sec.alt { fill: var(--wm-paper); }
+.wm .n-div { stroke: var(--wm-ink); stroke-width: 1; }
+.wm .wm-svg .n-name { font-family: var(--wm-display); font-size: 12.5px; letter-spacing: .04em; }
+.wm .wm-svg .n-num { font-family: var(--wm-mono); font-size: 8.5px; fill: var(--wm-ink-2); letter-spacing: .04em; }
+
+.wm .p-sec { fill: var(--wm-paper); stroke: none; transition: fill 160ms; }
+.wm .p-sec.has-pl { fill: color-mix(in srgb, var(--wm-pl) 16%, var(--wm-paper)); }
+.wm .p-div { stroke: var(--wm-hair); stroke-width: .7; }
+.wm .p-div-nak { stroke: var(--wm-ink); stroke-width: 1.3; }
+.wm .wm-svg .p-num { font-family: var(--wm-mono); font-size: 9.5px; fill: var(--wm-ink-2); }
+.wm .p-varg { fill: none; stroke: var(--wm-brass); stroke-width: 1.1; }
+
+.wm .t-edge { fill: none; stroke: var(--wm-ink); stroke-width: .9; }
+.wm .t-glyph { color: var(--wm-ink); }
+.wm .g-card { fill: var(--wm-paper); stroke: currentColor; stroke-width: .9; }
+.wm .g-frame { fill: none; stroke: currentColor; stroke-width: .35; opacity: .6; }
+.wm .g-num { font-family: var(--wm-mono); font-size: 7.4px; fill: currentColor; writing-mode: vertical-rl; letter-spacing: .02em; }
+.wm .t-glyph.unassigned { opacity: .62; }
+
+/* your planets, standing in the field */
+.wm .pl { cursor: pointer; }
+.wm .pl-disc { fill: var(--wm-paper-2); stroke: var(--wm-pl); stroke-width: 1.2; }
+.wm .pl-tick { stroke: var(--wm-pl); stroke-width: 1; opacity: .8; }
+.wm .wm-svg .pl-glyph { font-size: 15px; fill: var(--wm-pl); }
+.wm .wm-svg .pl-glyph.pl-ab { font-family: var(--wm-mono); font-size: 9.5px; }
+.wm .pl.is-sel .pl-disc, .wm .pl.is-hov .pl-disc { stroke: var(--wm-rubric); stroke-width: 1.8; }
+
+.wm .hit { fill: transparent; cursor: pointer; }
+.wm .n-sec.is-hov, .wm .p-sec.is-hov { fill: color-mix(in srgb, var(--wm-brass) 14%, var(--wm-paper)); }
+.wm .t-glyph.is-hov { opacity: 1; color: var(--wm-brass); }
+.wm .n-sec.is-sel { fill: color-mix(in srgb, var(--wm-rubric) 7%, var(--wm-paper-2)); }
+.wm .z-sec.is-sel { fill: color-mix(in srgb, var(--wm-rubric) 6%, var(--wm-paper)); }
+.wm .p-sec.is-sel { fill: color-mix(in srgb, var(--wm-rubric) 20%, var(--wm-paper)); }
+.wm .t-glyph.is-sel { opacity: 1; color: var(--wm-rubric); }
+.wm .sel-wedge { fill: none; stroke: var(--wm-rubric); stroke-width: 1.8; }
+.wm .sel-ray { stroke: var(--wm-rubric); stroke-width: 1; stroke-dasharray: 1 3; }
+.wm .wm-svg .sel-code { font-family: var(--wm-mono); font-size: 13px; font-weight: 500; fill: var(--wm-rubric); }
+
+/* focus mode: the rest of the instrument recedes; relations are drawn in verdigris */
+.wm .wm-svg.focusing .ring-zodiac, .wm .wm-svg.focusing .ring-nakshatras, .wm .wm-svg.focusing .ring-tarot { opacity: .45; }
+.wm .wm-svg.focusing .p-sec:not(.is-sel):not(.is-rel) { fill: color-mix(in srgb, var(--wm-paper) 70%, var(--wm-paper-2)); }
+.wm .p-sec.is-rel { fill: color-mix(in srgb, var(--wm-verd) 16%, var(--wm-paper)); }
+.wm .t-glyph.is-rel { opacity: 1; color: var(--wm-verd); }
+.wm .rel { fill: none; stroke: var(--wm-verd); stroke-width: 1; }
+.wm .rel-node { fill: var(--wm-paper); stroke: var(--wm-verd); stroke-width: 1.2; }
+
+.wm .wm-key { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 14px; color: var(--wm-ink-2); margin: 0; padding: 0; list-style: none; }
+.wm .wm-key i { display: inline-block; width: 18px; height: 0; vertical-align: middle; margin-right: 6px; border-top: 1.2px solid; }
+
+/* ---------- the station record ---------- */
+.wm .wm-record { border-top: 3px solid var(--wm-ink); padding-top: 14px; display: grid; gap: 18px; min-width: 0; position: sticky; top: var(--wm-sticky, 0px); max-height: calc(100vh - var(--wm-sticky, 0px) - 12px); overflow: auto; overscroll-behavior: contain; }
+@media (max-width: 899px) { .wm .wm-record { position: static; max-height: none; overflow: visible; } }
+.wm .wm-record.has-sel { border-top-color: var(--wm-rubric); }
+.wm .eyebrow { font-family: var(--wm-display); font-size: 14px; letter-spacing: .12em; color: var(--wm-ink-2); margin: 0; }
+.wm .rec-code { font-family: var(--wm-mono); font-weight: 500; font-size: 48px; line-height: 1; margin: 2px 0 6px; color: var(--wm-rubric); letter-spacing: -.01em; }
+.wm .rec-code span { font-size: 15px; color: var(--wm-ink-2); font-weight: 400; margin-left: 6px; }
+.wm .rec-sub { margin: 0; font-style: italic; color: var(--wm-ink-2); }
+.wm .rec-sec { display: grid; gap: 8px; border-top: 1px solid var(--wm-hair); padding-top: 12px; }
+.wm .rec-sec h3 { font-family: var(--wm-display); font-weight: 400; font-size: 17px; letter-spacing: .08em; margin: 0; color: var(--wm-ink); }
+.wm .rec-sec p { margin: 0; }
+.wm .kv { display: grid; grid-template-columns: minmax(110px, 38%) minmax(0, 1fr); gap: 5px 12px; margin: 0; }
+.wm .kv dt { color: var(--wm-ink-2); font-size: 15px; }
+.wm .kv dd { margin: 0; overflow-wrap: anywhere; }
+.wm .kv small { color: var(--wm-ink-2); font-size: 14px; }
+.wm .num { font-family: var(--wm-mono); font-size: 14px; font-variant-numeric: tabular-nums; }
+.wm .mark { color: var(--wm-brass) !important; }
+.wm .na, .wm .na-block { color: var(--wm-ink-2); font-style: italic; }
+.wm .tarot { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; align-items: start; }
+.wm .tarot-big { width: 64px; height: 96px; color: var(--wm-rubric); }
+.wm .cands { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 8px; }
+.wm .cands li { border-left: 2px solid var(--wm-hair); padding: 2px 0 2px 12px; display: grid; gap: 1px; }
+.wm .c-intro { font-size: 15px; color: var(--wm-ink-2); }
+.wm .c-deck { font-family: var(--wm-mono); font-size: 12px; letter-spacing: .04em; color: var(--wm-ink-2); }
+.wm .c-name { font-family: var(--wm-display); font-size: 18px; }
+.wm .c-det { font-size: 15px; color: var(--wm-ink-2); }
+.wm details { border-top: 1px dotted var(--wm-hair); padding: 6px 0; }
+.wm summary { cursor: pointer; font-family: var(--wm-display); letter-spacing: .05em; }
+.wm summary small { font-family: var(--wm-mono); color: var(--wm-ink-2); margin-left: 4px; }
+.wm .corr { margin-top: 6px; }
+.wm .prov { display: inline-block; font-family: var(--wm-mono); font-size: 10.5px; letter-spacing: .03em; padding: 0 5px; border: 1px solid var(--wm-hair); color: var(--wm-ink-2); border-radius: 2px; margin-left: 2px; max-width: 100%; }
+.wm .prov-attested-primary, .wm .prov-attested-traditional { border-color: var(--wm-ink-2); color: var(--wm-ink); }
+.wm .prov-computed { border-color: var(--wm-verd); color: var(--wm-verd); }
+.wm .prov-structural { border-color: var(--wm-brass); color: var(--wm-brass); }
+.wm .prov-constructed { border-style: dashed; border-color: var(--wm-rubric); color: var(--wm-rubric); }
+.wm .prov-undetermined { border-style: dotted; }
+.wm .planned { font-size: 13.5px; color: var(--wm-ink-2); }
+.wm .note { max-width: 62ch; }
+.wm .src { font-size: 13.5px; color: var(--wm-ink-2); font-style: italic; }
+.wm .rec-empty p { margin: 0 0 10px; color: var(--wm-ink-2); }
+
+/* the mansion: its short text */
+.wm .m-name { font-family: var(--wm-display); font-size: 22px; line-height: 1.2; }
+.wm .m-name small { font-family: var(--wm-serif); font-size: 15px; font-style: italic; color: var(--wm-ink-2); }
+.wm .m-line { font-style: italic; color: var(--wm-ink-2); }
+.wm .m-shakti { font-size: 15px; }
+.wm .m-core { max-width: 62ch; }
+.wm .m-q { border-left: 2px solid var(--wm-brass); padding-left: 12px; font-style: italic; }
+.wm .m-syl { font-size: 14px; color: var(--wm-ink-2); }
+.wm .m-syl b { font-family: var(--wm-mono); font-weight: 500; color: var(--wm-ink); }
+.wm .mine { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.wm .pl-g1 { color: var(--wm-pl); display: inline-block; min-width: 1.4em; }
+.wm .rec-mine { border-top-color: var(--wm-pl); }
+@media (prefers-reduced-motion: reduce) { .wm .n-sec, .wm .p-sec { transition: none; } }
