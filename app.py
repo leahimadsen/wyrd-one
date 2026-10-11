@@ -21,7 +21,7 @@ from wyrd.extras import extras
 from wyrd import calendar as wcal
 from wyrd import pulse
 from wyrd import accounts, billing, mailer, pages, weather
-from wyrd import together
+from wyrd import together, sukuyo
 import atexit
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -457,7 +457,9 @@ def render_together(meta, banner=""):
     for m in together_people(meta):
         b = birth_from(m); c = cast_for(b)
         if m.get("unknown_time"): c = dict(c); c["sid"], c["trop"] = dict(c["sid"]), dict(c["trop"]); unknown_time(c)
-        people.append({"name": m["name"] or f"Person {len(people) + 1}", "C": c, "dasha": engine.dasha_tree(c, jd_now()), "b": b})
+        try: shuku = sukuyo.birth_shuku(EPH, b["y"], b["mo"], b["d"])       # for the bond by the lunar mansions
+        except Exception: shuku = None
+        people.append({"name": m["name"] or f"Person {len(people) + 1}", "C": c, "dasha": engine.dasha_tree(c, jd_now()), "b": b, "shuku": shuku})
     body = together.build(people)
     who = html.escape(together.names_line([p["name"] for p in people]))
     born = " · ".join(f"{html.escape(p['name'])}, {p['b']['y']:04d}-{p['b']['mo']:02d}-{p['b']['d']:02d}" for p in people)

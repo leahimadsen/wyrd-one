@@ -2,11 +2,11 @@
 /* ============================================================
    COMPARE
    You and up to eight more people.
-   Two people: the pair, in full (Sukuyō, the Jyotish eight-fold match,
-   every planet in the other's houses, the aspects in words, the bond's
-   higher and lower paths, how the two bodygraphs meet, the runes between
-   you, the two charts on one wheel, the data). The deeper writing is in
-   synastry.js.
+   Two people: the pair's facts (the Sukuyō relation by name, the
+   Jyotish eight-fold match, every planet in the other's houses, the
+   aspects between you, how the two bodygraphs meet, the runes between
+   you, the two charts on one wheel, the data). What it all means, in
+   words, is the paid reading together (wyrd/together.py, lib/bond.json).
    Three to nine: the unit (every pair's Sukuyō bond in one grid, what
    the group completes together, the elements between you), and any
    pair can be opened in full.
@@ -50,10 +50,7 @@ const completes = (set, [p, q]) => set.has(p) && set.has(q);
 
 /* ---------- words ---------- */
 function contactText(c, A, B){
-  const D = T(), key = ORDER.indexOf(c.p) <= ORDER.indexOf(c.q) ? `${c.p}-${c.q}` : `${c.q}-${c.p}`, e = D.PAIRS[key];
-  /* the writing says "the Sun person", "the Moon person": put the right name in */
-  const fill = s => s.replace(/the (\w+) person/g, (m, pl) => c.p === c.q ? "one of you" : pl === c.p ? esc(A.name) : pl === c.q ? esc(B.name) : m);
-  if (e) return `${fill(e.core)} ${fill(e[c.f])}${e.ask ? `<em class="cp-ask">${fill(e.ask)}</em>` : ""}`;
+  const D = T();       /* the contact's full writing and its question are in the paid reading together */
   return `${esc(A.name)}'s ${c.p} (${D.ROLE[c.p]}) meets ${esc(B.name)}'s ${c.q} (${D.ROLE[c.q]}), ${D.FLAVOUR[c.f]}.`;
 }
 function sukuyoBlock(R, A, B){
@@ -65,7 +62,7 @@ function sukuyoBlock(R, A, B){
     <div class="sk-pair"><span class="sk-big">${R.pair}</span><div><h4>${t.title}</h4><p class="fine">${t.short}${R.distance ? ` · ${g("distance", R.distance)}` : ""}</p></div></div>
     <p class="sk-who">${esc(A.name)}: <span class="sk-k">${R.a.kanji}</span> ${R.a.read} · ${esc(B.name)}: <span class="sk-k">${R.b.kanji}</span> ${R.b.read}</p>
     ${R.pair === "命" ? "" : `<p class="sk-who">${role(R.toA, B.name, A.name)}; ${role(R.toB, A.name, B.name)}.</p>`}
-    <p>${t.text}</p>${R.distance ? `<p>${D.DISTANCE[R.distance]}</p>` : ""}${t.ask ? `<p class="cp-ask">${t.ask}</p>` : ""}</div>`;
+    </div>`;
 }
 function overview(cs, R, together){
   const n = { conj: 0, soft: 0, hard: 0 }; cs.forEach(c => n[c.f]++);
@@ -77,6 +74,12 @@ function overview(cs, R, together){
     ${together.length ? ` Together you complete ${together.length} ${g("channel", together.length > 1 ? "channels" : "channel")} neither of you has alone.` : ""}</p>`;
 }
 
+/* ---------- what the free side leaves to the paid reading ---------- */
+const LOCKED = `<div class="cp-lock"><h4 class="cp-h">The bond in words</h4>
+  <p>What this bond is for, its higher and lower paths and how to weave them, the Sukuyō relation and every contact above written out in full,
+  your planets in each other's houses in words, and the questions the bond asks: all of it is in <b>the reading together</b>.</p>
+  <button type="button" class="link-btn cp-tobuy">See the reading together ↑</button></div>`;
+
 /* ---------- the pair ---------- */
 function pairView(A, B){
   const D = T(), cs = contacts(A, B), R = relation(A, B);
@@ -85,7 +88,7 @@ function pairView(A, B){
   const shared = [...gA].filter(x => gB.has(x)).sort((a, b) => a - b);
   const over = (P, Q) => OVERLAY.map(b => { const h = houseOf(P.C.sid[b], Q.C.ascS);
     const phase = typeof HOUSES !== "undefined" && HOUSES[h - 1] ? HOUSES[h - 1].phase : D.HOUSE[h - 1];
-    return `<li><b>${esc(P.name)}'s ${GLYPH[b]} ${b}</b> ${D.IN_HOUSE[b]} ${esc(Q.name)}'s ${ORD(h)} house — ${phase.charAt(0).toLowerCase() + phase.slice(1)}.</li>`; }).join("");
+    return `<li><b>${esc(P.name)}'s ${GLYPH[b]} ${b}</b> in ${esc(Q.name)}'s ${ORD(h)} house — ${phase.charAt(0).toLowerCase() + phase.slice(1)}.</li>`; }).join("");
   const top = cs.slice(0, 6).map(c => `<li><h5>${esc(A.name)}'s ${GLYPH[c.p]} ${c.p} · ${esc(B.name)}'s ${GLYPH[c.q]} ${c.q}
       <span style="color:${c.x.col}">${c.x.name.toLowerCase()}</span> <small>orb ${c.x.orb.toFixed(1)}°</small></h5><p>${contactText(c, A, B)}</p></li>`).join("");
   const rows = (P, Q) => WyrdWheel.WHEEL_BODIES.map(b => `<tr><th>${GLYPH[b]} ${b}</th><td>${signOf(P.C.sid[b])}</td><td>${houseOf(P.C.sid[b], Q.C.ascS)}</td></tr>`).join("");
@@ -96,8 +99,8 @@ function pairView(A, B){
     <h4 class="cp-h">Your planets in each other's houses</h4>${window.WyrdSynastry ? WyrdSynastry.houses(A, B) : `<ul class="cp-over">${over(B, A)}</ul><ul class="cp-over">${over(A, B)}</ul>`}
     <h4 class="cp-h">Traditional synastry · the aspects between you</h4>${overview(cs, R, together)}
     ${top ? `<ol class="cp-contacts">${top}</ol>` : `<p>No close contacts between the main planets: a bond that works through the houses rather than the aspects.</p>`}
-    ${window.WyrdSynastry ? `<h4 class="cp-h">The bond's purpose, its higher and lower paths</h4>${WyrdSynastry.paths(A, B, { cs, R, together, kuta: window.WyrdKuta ? WyrdKuta.read(A.C.sid.Moon, B.C.sid.Moon) : null })}
-    <h4 class="cp-h">${g("design", "Human Design")} · how your bodies meet</h4>${WyrdSynastry.design(A, B)}` : ""}
+    ${LOCKED}
+    ${window.WyrdSynastry ? `<h4 class="cp-h">${g("design", "Human Design")} · how your bodies meet</h4>${WyrdSynastry.design(A, B)}` : ""}
     <h4 class="cp-h">${g("rune", "Runes")} · the runes between you</h4>${window.WyrdRunes ? WyrdRunes.pairHTML(A, B) : ""}
     <h4 class="cp-h">${esc(A.name)} inside, ${esc(B.name)} outside</h4><div class="cmp-wheel" data-pair-wheel></div>
     <details class="cp-data"><summary>All the data</summary><div class="facts">
@@ -258,6 +261,7 @@ function mount(host, X){
   host.addEventListener("click", e => {
     if (e.target.closest(".cp-addbtn")){ adding = true; draw(); return; }
     const rm = e.target.closest("[data-remove]"); if (rm){ people.splice(+rm.dataset.remove, 1); pairSel = "0-1"; draw(); return; }
+    if (e.target.closest(".cp-tobuy")){ buyEl.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
     const pr = e.target.closest("[data-pair]");
     if (pr){ pairSel = pr.dataset.pair; const h = out.querySelector(".cp-pair-host"); showPair(h); h.scrollIntoView({ behavior: "smooth", block: "start" }); }
   });

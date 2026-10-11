@@ -54,11 +54,34 @@ check("no blank left unfilled", not re.findall(r"\{[a-z_]+\}", two))
 years = [int(y) for y in re.findall(r"<tr><td>(\d{4})</td>", two)]
 check("the next thirty years, in order", years and years == sorted(years) and years[-1] - years[0] <= 30)
 check("for two, each change says how the guests get on", "and the two guests are" in two)
-check("sections numbered I to IV", all(f'<div class="rd-num">{n}</div>' in two for n in ("I", "II", "III", "IV")))
+check("sections numbered I to V", all(f'<div class="rd-num">{n}</div>' in two for n in ("I", "II", "III", "IV", "V")))
 
 nine = together.build([person(f"P{i}", i * 40, i * 33 + 5, ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"][i % 7]) for i in range(9)])
 check("nine people: everyone wakes the other eight", all(nine.count(f"What P{i} wakes") == 1 for i in range(9)) and nine.count("'s soul-planet, ") == 72)
 check("nine people: every pair's season now", nine.count("&amp;") >= 36)
+
+# ---- the bond in words: paid, and only paid ----
+from wyrd import bond as BOND
+import glob
+shu = lambda i: {"index": i, "kanji": "", "read": ""}
+A, Bp = person("Freya", 10, 100, "Venus"), person("Odin", 200, 250, "Saturn")
+A["shuku"], Bp["shuku"] = shu(3), shu(7)
+r = BOND.relation(A, Bp)
+pair_html = together.build([A, Bp])
+check("the Sukuyō relation is written out", BOND.B["SUKUYO"][r["pair"]]["text"] in pair_html)
+check("what the bond is for, and both paths", all(h in pair_html for h in ("What this bond is for", "The higher path", "The lower path", "Weaving the two")))
+cs = BOND.contacts(A, Bp)
+check("the strongest contact is written out", cs and BOND.contact_text(cs[0], {"name": "Freya"}, {"name": "Odin"}).split(" <em")[0][:60] in pair_html)
+check("every planet in the other's houses, in words", pair_html.count("in Odin's") >= 9 and pair_html.count("in Freya's") >= 9)
+check("the bond's question joins the questions", BOND.B["SUKUYO"][r["pair"]]["ask"] in pair_html.split("The Questions")[1])
+check("sections numbered I to V", all(f'<div class="rd-num">{n}</div>' in pair_html for n in ("I", "II", "III", "IV", "V")))
+check("the bond comes after the story and the table", pair_html.index("Prologue") < pair_html.index("Who Sits at the Table") < pair_html.index("<h2>The Bond</h2>"))
+check("no shuku, no Sukuyō, and nothing breaks", "Sukuyō ·" not in two and "The higher path" in two)
+
+shipped = "".join(open(f, encoding="utf-8").read() for f in glob.glob(os.path.join(ROOT, "static", "*.js")) + glob.glob(os.path.join(ROOT, "static", "*.html")))
+paid = [v["text"][:50] for v in BOND.B["SUKUYO"].values()] + [v["core"][:50] for v in BOND.B["PAIRS"].values()] + \
+       [v["high"][:50] for v in BOND.B["BOND"].values()] + [v["ask"][:40] for v in BOND.B["SUKUYO"].values()]
+check("none of the paid writing is sent to the browser", not [x for x in paid if x in shipped])
 
 # ---- checkout ----
 CALLS = []
