@@ -11,8 +11,8 @@
 <meta property="og:description" content="Cast your free birth chart, then read it in The Völva's words: sidereal astrology, nakshatras, the 64 gates and your Dharma Design.">
 <link rel="canonical" href="https://wyrdconsole.com/">
 <meta property="og:url" content="https://wyrdconsole.com/">
-<meta property="og:image" content="https://wyrdconsole.com/static/icons/icon-512.png">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://wyrdconsole.com/static/look/share.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"The Wyrd Console","alternateName":"Wyrd Console astrology"},{"@type":"Organization","name":"The Wyrd Console","founder":{"@type":"Person","name":"The Völva"},"sameAs":["https://thewebofwyrd.substack.com"]},{"@type":"WebApplication","name":"The Wyrd Console birth chart calculator","applicationCategory":"LifestyleApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}]}</script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#05080a">
@@ -25,10 +25,12 @@
 <link rel="stylesheet" href="/static/console.css">
 <link rel="stylesheet" href="/static/site.css">
 <link rel="stylesheet" href="/static/a11y.css">
+<link rel="stylesheet" href="/static/look/wyrd90.css">
 </head>
 <body>
 <a class="skip" href="#castForm">Skip to the chart form</a>
 <nav class="topbar" aria-label="Site"><a href="/" class="tb-home">The Wyrd Console</a><span class="tb-links"><a href="/reports">Readings</a><a href="/membership">Membership</a><a href="/learn">Learn</a><a href="/today">Today's sky</a><a href="/account" class="tb-acct" data-acct>Sign in</a></span></nav>
+<img class="masthead" src="/static/look/banner.png" alt="Web of Wyrd">
 <header class="seat" id="skyHost">
   <div class="seat-in">
     <h1><span class="seat-mark">Hliðskjálf</span><span class="seat-h">Your free birth chart, read in every frame</span></h1>
@@ -41,6 +43,7 @@
     <p class="seat-how">Free, no sign-up. Your chart opens as a short path, one layer at a time.</p>
 
     <form id="castForm" class="cast" autocomplete="off" novalidate>
+      <div class="win-bar" aria-hidden="true"><video poster="/static/look/torus-poster.jpg" autoplay muted loop playsinline><source src="/static/look/torus.webm" type="video/webm"><source src="/static/look/torus.mp4" type="video/mp4"></video><span>cast your chart</span><video poster="/static/look/torus-poster.jpg" autoplay muted loop playsinline><source src="/static/look/torus.webm" type="video/webm"><source src="/static/look/torus.mp4" type="video/mp4"></video></div>
       <label class="f-name">Name <span id="nameNote">optional — it goes on your reading</span>
         <input name="name" maxlength="80" placeholder="As you'd like it written"></label>
       <label class="f-name">Full name at birth <span>optional — for your name's numbers</span>

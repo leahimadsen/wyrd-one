@@ -1,0 +1,113 @@
+/* ============================================================
+   THE LOOK: The Völva's own art, a little 90s, a little rough.
+   Loaded last on every page. Two moods, from her references:
+     body.paper   the manuscript: her paper, knotwork corners, the rune
+                  ring, blackletter titles, letterpress type, ink and
+                  rainbow (readings, learn pages, offers, account)
+     (default)    the night: deep indigo, neon rainbow, the torus,
+                  glowing pale-cyan lettering (the front page, the chart)
+   Art in /static/look/ is cut from her images. Edit the colours below.
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=UnifrakturMaguntia&display=swap');
+
+:root{
+  --ink:#1d1712; --ink-soft:rgba(29,23,18,.72); --paper:#eee8db;
+  --violet:#4b1d9e; --violet-hi:#6a35e0; --orange:#b4450b; --cyan:#7ff6ff; --magenta:#ff4fd8; --sun:#ffb43a;
+  --rainbow:linear-gradient(90deg,#e0201b,#ff7a00,#ffd400,#3fc12a,#13b8c9,#2a55e0,#6a35e0,#c22fd0);
+  --black:'UnifrakturMaguntia','Old English Text MT',serif;
+  --fell:'IM Fell English','Iowan Old Style',Georgia,serif;
+  --fellsc:'IM Fell English SC','IM Fell English',Georgia,serif;
+}
+
+/* ---------------- the night ---------------- */
+body:not(.paper){
+  --void:#0b0322; --void-lift:#160742; --void-deep:#06011a;
+  --ivory:#eaf3ff; --ivory-dim:rgba(222,236,255,.72);
+  --celadon:#9ff3ff; --jade:#9a6bff; --jade-deep:#3a1590; --jade-dim:rgba(154,107,255,.32); --jade-glow:rgba(154,107,255,.6);
+  --gold:#ffb43a; --gold-dim:rgba(255,180,58,.3); --rule:rgba(160,140,255,.22);
+  background:#0b0322 radial-gradient(ellipse at 50% 0%,#2a0b78 0%,#0b0322 60%) fixed;
+}
+.seat h1 .seat-mark,.night-title{font-family:var(--fell);color:#c9fbff;
+  text-shadow:0 0 6px #49e8ff,0 0 18px rgba(73,232,255,.55),0 0 40px rgba(154,107,255,.6)}
+.seat h1 .seat-h{color:#ffd9a0}
+.seat-what li::before{content:"✶";color:var(--magenta)}
+.masthead{display:block;width:100%;height:auto;aspect-ratio:1344/256;object-fit:cover;margin:0 auto;border-bottom:3px ridge #8f7ce0}
+
+/* the cast form as a little 90s window */
+body:not(.paper) .cast{border:3px outset #a99bf0;background:#120533;padding:0 16px 16px;box-shadow:7px 7px 0 rgba(0,0,0,.5)}
+.win-bar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 -16px 14px;padding:3px 6px;
+  font-family:var(--fellsc);font-size:16px;letter-spacing:.06em;color:#fff;background:var(--rainbow);text-shadow:1px 1px 0 #000;border-bottom:2px solid #000}
+.win-bar video{position:static!important;width:30px;height:38px;object-fit:cover;border:1px solid #000;background:#2a0b78}
+body:not(.paper) .cast input{border:2px inset #6d5bc4;background:#05011a;color:#eaf3ff;border-radius:0}
+
+/* ---------------- buttons, everywhere: chunky and bevelled ---------------- */
+.btn-cast,.btn-buy,.cp-buybtn,a.btn-cast,a.btn-buy{font-family:var(--fellsc)!important;font-size:18px!important;letter-spacing:.03em;
+  color:#fff!important;background:var(--violet)!important;border:4px outset #b39cf5!important;border-radius:0!important;
+  padding:9px 20px!important;text-decoration:none;box-shadow:4px 4px 0 rgba(0,0,0,.35);text-shadow:1px 1px 0 #20085a}
+.btn-buy,a.btn-buy{background:#c2410c!important;border-color:#ffb27a!important;text-shadow:1px 1px 0 #5a1d00}
+.btn-cast:active,.btn-buy:active,.cp-buybtn:active{border-style:inset!important;box-shadow:1px 1px 0 rgba(0,0,0,.35);transform:translate(2px,2px)}
+
+/* ---------------- the manuscript ---------------- */
+body.paper{
+  --void:var(--paper); --void-lift:#f3ecdf; --ivory:var(--ink); --ivory-dim:var(--ink-soft); --dim:var(--ink-soft);
+  --celadon:var(--violet); --jade:var(--violet-hi); --jade-deep:#d9cdf5; --gold:var(--orange); --rule:rgba(29,23,18,.2);
+  --serif:var(--fell);
+  background:var(--paper) url(/static/look/paper.jpg) repeat; color:var(--ink); font-family:var(--fell); font-size:18.5px; line-height:1.62;
+}
+body.paper h1,body.paper h2,body.paper .rd-sec h2,body.paper header h1{font-family:var(--black);font-weight:400;color:#14100c;letter-spacing:.01em;line-height:1.1}
+body.paper h1{font-size:clamp(40px,9vw,64px)}
+body.paper h2{font-size:clamp(30px,6vw,40px)}
+body.paper h3,body.paper .rd-tier,body.paper .rd-sec h3{font-family:var(--fellsc);font-weight:400;color:var(--violet);font-size:22px}
+body.paper a{color:var(--violet);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+body.paper a:visited{color:#6b2a7a}
+body.paper a:hover{color:var(--orange)}
+body.paper ::selection{background:#ffd400;color:#000}
+body.paper .muted,body.paper .fine,body.paper .rd-sub,body.paper .born{color:var(--ink-soft)!important}
+body.paper .lede{font-style:italic;color:var(--ink-soft)!important}
+body.paper .pg-top a,body.paper .pg-top span a{color:var(--violet)!important;border-color:var(--ink)!important;background:none!important}
+body.paper .bg-fig figcaption,body.paper .bg-fig figcaption *{color:#eaf3ff!important}
+
+/* knotwork in two corners, and the rune ring by the name */
+body.paper .pg-main,body.paper .wrap{position:relative;padding-top:clamp(40px,10vw,90px)}
+body.paper .pg-main::before,body.paper .wrap::before{content:"";position:absolute;top:0;right:-6px;width:clamp(110px,26vw,230px);aspect-ratio:1;
+  background:url(/static/look/knot-tr.png) top right/contain no-repeat;opacity:.85;pointer-events:none}
+body.paper .pg-main::after,body.paper .wrap::after{content:"";position:absolute;bottom:0;left:-6px;width:clamp(110px,26vw,230px);aspect-ratio:1;
+  background:url(/static/look/knot-bl.png) bottom left/contain no-repeat;opacity:.85;pointer-events:none}
+body.paper .pg-main,body.paper .wrap{padding-bottom:clamp(120px,24vw,220px)}
+body.paper .pg-top{background:none;border-bottom:0;font-family:var(--fellsc);position:relative}
+body.paper .pg-top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--rainbow);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+body.paper .pg-home{font-family:var(--black)!important;font-size:24px;color:#14100c!important;text-decoration:none!important;display:inline-flex;align-items:center;gap:8px}
+body.paper .pg-home::before{content:"";width:34px;height:34px;background:url(/static/look/emblem.png) center/contain no-repeat}
+body.paper .pg-foot{border-top:0;position:relative;font-family:var(--fell)}
+body.paper .pg-foot::before{content:"";display:block;width:64px;height:64px;margin:0 auto 6px;background:url(/static/look/emblem.png) center/contain no-repeat;opacity:.9}
+
+/* boxes: double rules and a hard 90s shadow */
+body.paper .plan,body.paper .rd-toc,body.paper .note-box,body.paper .offer,body.paper .cta{background:rgba(255,252,244,.55)!important;
+  border:3px double var(--ink)!important;border-radius:0!important;box-shadow:6px 6px 0 rgba(29,23,18,.18)}
+body.paper .plan.lead{border-color:var(--violet)!important;box-shadow:6px 6px 0 rgba(75,29,158,.28)}
+body.paper .price{font-family:var(--black);color:var(--orange)}
+body.paper hr,body.paper .rd-sec{border-top:0!important}
+body.paper .rd-sec::before{content:"";display:block;height:5px;margin:0 0 34px;background:var(--rainbow);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+body.paper table{border-collapse:collapse}
+body.paper td,body.paper th{border-bottom:1px solid var(--rule)}
+body.paper input,body.paper select{background:#fffaf0;color:var(--ink);border:2px inset #b8ab95;border-radius:0;font-family:var(--fell)}
+
+/* the reading */
+body.paper .rd-num{font-family:var(--fellsc);color:var(--orange)}
+body.paper .rd-kenning,body.paper .opening,body.paper .closing,body.paper .rd-how{color:var(--ink-soft)!important}
+body.paper .rd-story>p:first-of-type::first-letter{font-family:var(--black);color:var(--violet);font-size:3.6em}
+body.paper .rd-gifts .light{border-left:3px solid #3fc12a}
+body.paper .rd-gifts .dark{border-left:3px solid var(--violet)}
+body.paper .rd-gifts h5,body.paper .rd-body h5,body.paper .rd-repair h5{color:var(--orange)}
+body.paper .rd-toc h2{font-family:var(--black);color:var(--violet)}
+body.paper .rd-toc span{color:var(--orange)}
+body.paper .rd-totop{background:var(--violet);color:#fff!important;border:3px outset #b39cf5;border-radius:0;font-family:var(--fellsc);text-decoration:none!important}
+body.paper .tools button{font-family:var(--fellsc);border:3px outset #b8ab95;background:#f6efe0;color:var(--ink);border-radius:0}
+/* drawings made for the dark stay on a little night screen */
+body.paper .bg-pair{background:#0b0322;border:4px inset #8f7ce0;padding:10px}
+body.paper .bg-pair+p,body.paper .bg-fig{color:inherit}
+body.paper .bg-fig figcaption,body.paper .bg-fig text{color:#eaf3ff}
+@media print{
+  body.paper{background:#fff}
+  body.paper .pg-main::before,body.paper .pg-main::after,body.paper .wrap::before,body.paper .wrap::after{display:none}
+}
