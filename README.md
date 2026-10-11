@@ -144,10 +144,11 @@ Thirteen sections: the Seat, the Engine (Moon), **the Planets** (all twelve, eac
 
 ## Gifts (admin only)
 
-At `/admin/gifts` give anyone a Membership or Professional plan for 1, 3, 6 or 12 months or for good. Nothing is charged: the gift is kept on their Stripe customer, they get an email inviting them to sign in, and you can end it any time. To gift a reading, fill in their birth details at `/admin` and press **Make a gift link**: the link opens their full reading, free, for two years.
+At `/admin/gifts` give anyone a Membership or Professional plan by email for 30 days (the default, for creators), 1, 3, 6 or 12 months, or for good. Nothing is charged and no card is asked for: the gift is kept as metadata on their Stripe customer and no subscription is made. They get an email inviting them to sign in. The list shows each gift and its last day; press **End** to revoke one. A gift works through its last day (UTC) and the account is back on the free site the day after, unless they pay for a plan, which a gift never touches. Access is checked against Stripe with a five-minute cache, so an ended gift can take up to five minutes to close everywhere. To gift a reading, fill in their birth details at `/admin` and press **Make a gift link**: the link opens their full reading, free, for two years.
 
 ## Search
 
 `/reports`, `/membership`, `/learn` and a page for every gate, nakshatra and sign are server-rendered with titles, descriptions, share previews and structured data (price, FAQ). `/sitemap.xml` and `/robots.txt` tell Google what to read; private pages send noindex. Add the site to Google Search Console and submit the sitemap.
 
 Tests: `python tests/members_check.py` (accounts, plans, Body Weather, weekly job, search pages; no Stripe calls).
+`python tests/gifts_check.py` (granting, expiry and revoking complimentary access; checks no checkout or subscription is ever made).

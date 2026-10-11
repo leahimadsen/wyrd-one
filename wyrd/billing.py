@@ -30,11 +30,11 @@ def status(secret, email, fresh=False):
             c = found[0]
             out["customer"] = c["id"]
             meta = {}
-            for x in reversed(found): meta.update(x.get("metadata") or {})        # saved chart, gift, counts: wherever they are
+            for x in reversed(found): meta.update(x.get("metadata") or {})        # saved chart, counts: wherever they are
             try: out["birth"] = json.loads(meta["wyrd_birth"]) if meta.get("wyrd_birth") else None
             except ValueError: out["birth"] = None
             out["proUse"] = _use(meta)
-            g = gift_of(meta)
+            g = _best_gift(found)
             if g:
                 out["gift"] = g
                 if g["live"]: out[g["tier"]] = True
@@ -116,20 +116,42 @@ def _empty():
 def gift_of(meta):
     tier, until = meta.get("wyrd_gift_tier"), meta.get("wyrd_gift_until")
     if meta.get("wyrd_gift") != "1" or tier not in ("member", "pro") or not until: return None
-    live = until == "forever" or until >= time.strftime("%Y-%m-%d", time.gmtime())
+    live = until == "forever" or until >= today()
     return {"tier": tier, "until": until, "live": live}
 
 
+def today():
+    """The date gifts are measured against (UTC). A gift works through its last day."""
+    return time.strftime("%Y-%m-%d", time.gmtime())
+
+
+def _best_gift(customers):
+    """One person can have several Stripe customers (checkout can make a second), so the
+    gift is read from each of them rather than from their merged metadata: a gift ended
+    on one record never hides a gift given on another, and the other way round."""
+    gifts = [g for g in (gift_of(c.get("metadata") or {}) for c in customers) if g]
+    if not gifts: return None
+    return max(gifts, key=lambda g: (g["live"], g["until"] == "forever", g["until"]))
+
+
+def _end_on(secret, customers, keep=None):
+    for c in customers:
+        if c["id"] != keep and (c.get("metadata") or {}).get("wyrd_gift") == "1":
+            stripe_api.update_customer_metadata(secret, c["id"], {"wyrd_gift": "0", "wyrd_gift_until": ""})
+
+
 def give(secret, email, tier, until):
+    """Metadata on their customer only: no subscription, no card, nothing charged. A new
+    gift replaces any earlier one; a paid subscription is never touched."""
     cid = customer_for(secret, email)
     stripe_api.update_customer_metadata(secret, cid, {"wyrd_gift": "1", "wyrd_gift_tier": tier, "wyrd_gift_until": until})
+    _end_on(secret, stripe_api.find_customers(secret, email), keep=cid)
     forget(email)
 
 
 def end_gift(secret, email):
-    st = status(secret, email, fresh=True)
-    if st["customer"]:
-        stripe_api.update_customer_metadata(secret, st["customer"], {"wyrd_gift": "0", "wyrd_gift_until": ""})
+    """Ends the gift on every customer with this email. Paid subscriptions carry on."""
+    _end_on(secret, stripe_api.find_customers(secret, email))
     forget(email)
 
 
