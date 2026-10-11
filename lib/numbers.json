@@ -1,0 +1,41 @@
+{
+  "_note": "DRAFT writing for The Numbers in the paid reading, for The Völva to rewrite. Each number has an engine, a light wield and a shadow, like the register. Placeholders in curly braces are filled in by the site; keep them.",
+
+  "TITLE": "The Numbers",
+  "SUB": "your birth date and your name, counted",
+  "INTRO": "Numbers are the plainest instrument in the console: a birth date and a name, added up until only one digit is left. Each number sits on two planets. The first is the console's own Stavefall seat on the Planetary Ladder, where every number is a full station. The second is the Vedic tradition's planet for that number. Where your numbers' planets stand in your chart, and when their periods come, is where the numbers stop being abstract.",
+  "NO_NAME": "Add your full name at birth, exactly as it was first written, and three more numbers join these: your expression, your soul urge and your personality.",
+
+  "KIND": {
+    "life_path": "the road the whole life walks",
+    "birthday": "the gift you arrived carrying",
+    "personal_year": "the year you are standing in now, {year}",
+    "expression": "what your full name equips you to do",
+    "soul_urge": "what you want underneath, from the vowels of your name",
+    "personality": "how other people meet you first, from its consonants"
+  },
+
+  "NUMBER": {
+    "1":  {"name": "the beginner",      "light": "Starts things no one else would start, and stands alone without needing to be told it is allowed.", "shadow": "Cannot follow, and mistakes isolation for independence."},
+    "2":  {"name": "the go-between",    "light": "Holds two sides at once and finds the line that joins them; partnership is where the power is.",     "shadow": "Disappears into other people, and waits to be chosen."},
+    "3":  {"name": "the voice",         "light": "Expression, play and making: the life speaks, sings, writes or builds its way through.",               "shadow": "Scatters, and performs a feeling instead of having it."},
+    "4":  {"name": "the builder",       "light": "Order, foundations, the long plain work that lasts after the applause.",                                "shadow": "Rigidity, and work used as a place to hide."},
+    "5":  {"name": "the traveller",     "light": "Freedom, change and the senses: the one who goes, tries, and comes back changed.",                     "shadow": "Restlessness that will not stay for the consequence."},
+    "6":  {"name": "the keeper",        "light": "Care, home, beauty and responsibility, carried well.",                                                  "shadow": "Martyrdom, and control dressed as love."},
+    "7":  {"name": "the seeker",        "light": "The inner study: solitude used for truth, and questions followed all the way down.",                    "shadow": "Withdrawal, suspicion, the locked room."},
+    "8":  {"name": "the steward",       "light": "Power, money and consequence, handled with weight and fairness.",                                       "shadow": "The scales tipped toward the self; control mistaken for safety."},
+    "9":  {"name": "the finisher",      "light": "Completion, compassion and the wide view: the one who closes the circle for others.",                  "shadow": "Carrying everyone's grief, and leaving before the work is done."},
+    "11": {"name": "the messenger",     "light": "A master 2: intuition lit up, the go-between who carries something from further off.",                 "shadow": "High voltage with no ground: nerves, and a gift too bright to hold still."},
+    "22": {"name": "the master builder","light": "A master 4: the builder whose foundations hold whole communities.",                                    "shadow": "The plan so large it never starts."},
+    "33": {"name": "the teacher",       "light": "A master 6: care raised into teaching, the keeper who shows others how to keep.",                       "shadow": "Rescuing as an identity."}
+  },
+
+  "PLANETS_TITLE": "Your life path's planets in your chart",
+  "PLANET_LINE": "{planet} ({system}) stands in {sign}, in your {house} house: {life}. {period}",
+  "PERIOD_PAST": "Its period ran {from}–{to}.",
+  "PERIOD_NOW": "Its period is running now, {from}–{to}: the life path is loudest in these years.",
+  "PERIOD_AHEAD": "Its period comes {from}–{to}, from age {age}.",
+  "SAME_PLANET": "Both systems seat your life path on the same planet, so read it twice as loudly.",
+  "YEAR_LINE": "This is a personal {n} year: {light} Watch for its shadow: {shadow}",
+  "ASK": "Your life path is {n}, {name}. Where are you walking it in its light, and where in its shadow?"
+}

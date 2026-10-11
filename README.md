@@ -144,9 +144,11 @@ Body Weather's centre lines are drafts in `lib/body_weather.json` for The Völva
 
 ## The full reading
 
+**The Numbers** (`wyrd/numbers.py`, `static/numbers.js`): life path, birthday and personal year from the birth date, and expression, soul urge and personality from the optional *full name at birth* on the form. Each number sits on two planets, the console's own Stavefall seat and the Vedic one. The free chart shows the numbers; the reading says what they mean (drafts in `lib/numbers.json`) and where the life path's planets stand and when their periods come. Sections now refer to each other by name, so adding one never breaks a "see section …".
+
 Every reading opens with **a prologue**: a silly story of how you got here (who sent you, the costume you chose, the gift and the shadow packed with it, and the houseguests who arrive at each age), assembled from the chart. Its lines are drafts in `lib/story.json` for The Völva to rewrite; the numbered sections that follow decode it.
 
-Thirteen sections: the Seat, the Engine (Moon), **the Planets** (all twelve, each read sidereally for karma and reality and tropically for experience, with dignity, rune and gates), the Soul-Planet, **the Runes** (the lit runes ranked, and the dasha periods that wake each one), the Work, **the Body** (all nine centres, every channel and the mansion and pada that feeds each gate), **Where You Thrive** (culture, places, work), the Dharma Weave, the Path of Dharma, the Clock (with the whole life by period) and the Questions. The new sections draw on `lib/register_ext.json`, drafted for The Völva to edit.
+Fourteen sections: the Seat, the Engine (Moon), **the Planets** (all twelve, each read sidereally for karma and reality and tropically for experience, with dignity, rune and gates), the Soul-Planet, **the Runes** (the lit runes ranked, and the dasha periods that wake each one), the Work, **the Body** (all nine centres, every channel and the mansion and pada that feeds each gate), **Where You Thrive** (culture, places, work), the Dharma Weave, the Path of Dharma, the Clock (with the whole life by period), **the Numbers** and the Questions. The new sections draw on `lib/register_ext.json`, drafted for The Völva to edit.
 
 ## Gifts (admin only)
 
@@ -157,4 +159,4 @@ At `/admin/gifts` give anyone a Membership or Professional plan by email for 30 
 `/reports`, `/membership`, `/learn` and a page for every gate, nakshatra and sign are server-rendered with titles, descriptions, share previews and structured data (price, FAQ). `/sitemap.xml` and `/robots.txt` tell Google what to read; private pages send noindex. Add the site to Google Search Console and submit the sitemap.
 
 Tests: `python tests/members_check.py` (accounts, plans, Body Weather, weekly job, search pages; no Stripe calls).
-`python tests/karaka_check.py` (the karakas in both zodiacs; needs node). `python tests/together_check.py` (prices, checkout and the reading together). `python tests/gifts_check.py` (granting, expiry and revoking complimentary access; checks no checkout or subscription is ever made).
+`python tests/numbers_check.py` (life path, birthday, personal year and the name's numbers, browser against server; needs node). `python tests/karaka_check.py` (the karakas in both zodiacs; needs node). `python tests/together_check.py` (prices, checkout and the reading together). `python tests/gifts_check.py` (granting, expiry and revoking complimentary access; checks no checkout or subscription is ever made).

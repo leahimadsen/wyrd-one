@@ -43,6 +43,8 @@
     <form id="castForm" class="cast" autocomplete="off" novalidate>
       <label class="f-name">Name <span id="nameNote">optional — it goes on your reading</span>
         <input name="name" maxlength="80" placeholder="As you'd like it written"></label>
+      <label class="f-name">Full name at birth <span>optional — for your name's numbers</span>
+        <input name="full_name" maxlength="80" placeholder="Every name, as first written on your birth certificate" autocomplete="off"></label>
       <label>Date of birth <input name="date" type="date" required min="1850-01-01" max="2149-12-31"></label>
       <label>Time of birth <input name="time" type="time" required></label>
       <label class="f-unknown"><input type="checkbox" name="unknown" id="unknownTime"> I don't know my birth time</label>
