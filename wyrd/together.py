@@ -2,16 +2,19 @@
 
   Prologue                    the Norns seat you at one table
   I   Who Sits at the Table   each person's soul-planet, seat and current guest
-  II  What You Wake in Each Other   where each one's soul-planet and guest land in the others' houses
-  III The Seasons You Share   how the guests get on now, and every change in the next thirty years
-  IV  The Questions
+  II  The Bond                each pair in words: Sukuyō, what it is for, the higher and lower
+                              paths, the contacts, the houses (wyrd/bond.py, lib/bond.json)
+  III What You Wake in Each Other   where each one's soul-planet and guest land in the others' houses
+  IV  The Seasons You Share   how the guests get on now, and every change in the next thirty years
+  V   The Questions
 
 Every sentence comes from lib/together.json (drafted for The Völva to rewrite)
 and lib/register_ext.json; this file only chooses which lines the charts call for.
-Free Compare (static/dynamics.js) covers the bond itself; this is the paid side."""
+Free Compare shows the bond's facts; everything it means, in words, is here."""
 import html, json, math, os
 
 from . import engine as E
+from . import bond as BOND
 from .reading import section, pair, ROMAN, GLYPH
 from .reading_more import X as REG_EXT, ORD, E_year, the
 
@@ -79,7 +82,16 @@ def build(people):
     out.append(section(0, T["TABLE_TITLE"], T["TABLE_SUB"], f"""<p>{T["TABLE_INTRO"]}</p>
       <div class="rd-tw"><table><tr><th>Who</th><th>Soul-planet</th><th>Seat</th><th>Guest now</th></tr>{rows}</table></div>"""))
 
-    # ---------- II · what you wake in each other ----------
+    # ---------- II · the bond, pair by pair ----------
+    pairs = [(i, k) for i in range(len(P)) for k in range(i + 1, len(P))]
+    bond_asks, blocks = [], []
+    for i, k in pairs:
+        text, asks = BOND.pair(P[i], P[k], full=two)
+        bond_asks += asks
+        blocks.append(text if two else f'<h3 class="rd-tier">{fill(T["BOND_PAIR"], a=P[i]["name"], b=P[k]["name"])}</h3><div class="rd-pairbond">{text}</div>')
+    out.append(section(0, T["BOND_TITLE"], T["BOND_SUB"], f'<p>{T["BOND_INTRO"]}</p>{"".join(blocks)}'))
+
+    # ---------- III · what you wake in each other ----------
     life, lends = REG_EXT["HOUSE_LIFE"], {k: v["lends"] for k, v in REG_EXT["PLANETS"].items() if v.get("lends")}
     blocks = []
     for i, a in enumerate(P):
@@ -94,8 +106,7 @@ def build(people):
     out.append(section(0, T["WAKE_TITLE"], T["WAKE_SUB"], f"""<p>{T["WAKE_INTRO"]}</p>
       {f'<p class="rd-note">{unknown}</p>' if unknown else ""}{"".join(blocks)}"""))
 
-    # ---------- III · the seasons you share ----------
-    pairs = [(i, k) for i in range(len(P)) for k in range(i + 1, len(P))]
+    # ---------- IV · the seasons you share ----------
     now_rows = "".join(pair(f"{P[i]['name']} &amp; {P[k]['name']}",
                             f"{GLYPH[guest[i]]} {guest[i]} and {GLYPH[guest[k]]} {guest[k]}: <b>{S[season(guest[i], guest[k])]['label']}</b>")
                        for i, k in pairs)
@@ -115,8 +126,9 @@ def build(people):
       <h3 class="rd-tier">{T["SEASON_AHEAD"]}</h3><p>{T["SEASON_AHEAD_INTRO"]}</p>
       <div class="rd-tw"><table><tr><th>Year</th><th>What changes</th></tr>{"".join(ahead)}</table></div>"""))
 
-    # ---------- IV · the questions ----------
-    out.append(section(0, T["ASKS_TITLE"], T["ASKS_SUB"], '<ol class="rd-qs">' + "".join(f"<li><div>{q}</div></li>" for q in T["ASKS"]) + "</ol>"))
+    # ---------- V · the questions ----------
+    qs = list(dict.fromkeys(bond_asks + T["ASKS"]))
+    out.append(section(0, T["ASKS_TITLE"], T["ASKS_SUB"], '<ol class="rd-qs">' + "".join(f"<li><div>{q}</div></li>" for q in qs) + "</ol>"))
 
     for i in range(len(out)):
         out[i] = out[i].replace("{{N}}", ROMAN[i], 1)

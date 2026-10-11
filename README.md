@@ -52,8 +52,11 @@ or IP addresses, and nothing at all from browsers that send Do Not Track or Glob
 
 ## Compare, Sukuyō and the Dharma Weave
 - `static/compare.js` — Compare: two people in full, or a unit of three or four.
-- `static/dynamics.js` — **all of Compare's writing** (the Sukuyō relations, every planet contact,
-  the house overlays), written in the register's voice: engines, flood and freeze, a closing question.
+- `static/dynamics.js` — Compare's free words: the names of things (the Sukuyō relations by name, what each
+  planet carries in a word, the houses as phases). Compare shows the facts of a bond for free.
+- `lib/bond.json` — **the paid writing about a bond**: each Sukuyō relation's engine and question, every planet
+  contact, the houses in words, and the bond's purpose and higher and lower paths. Written into the reading
+  together by `wyrd/bond.py`, and never sent to the browser otherwise.
 - `wyrd/sukuyo.py` — the birth shuku from the old Japanese lunar calendar (rebuilt from new moons and
   solar terms, checked against seventeen known lunar dates including the 2012 and 2017 leap months, where
   Japan and China differ), and the sanku relations with their distances.

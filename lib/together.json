@@ -11,7 +11,7 @@
   "PROLOGUE_TABLE_TWO": "What neither of you knew was that Skuld, who keeps what shall be, had already put the two of you at the same table. She does this on purpose. She says it saves time.",
   "PROLOGUE_TABLE_MANY": "What none of you knew was that Skuld, who keeps what shall be, had already put all {n} of you at the same table. She does this on purpose. She says it saves time, and that the arguments are good for everyone.",
   "PROLOGUE_NOW": "She checked the appointment books, as she does. Right now, {guests}. {season}",
-  "PROLOGUE_CLOSE": "That is the story. <b>Who Sits at the Table</b> decodes who sent you. <b>What You Wake in Each Other</b> decodes why it felt like that from the start. <b>The Seasons You Share</b> decodes the timing.",
+  "PROLOGUE_CLOSE": "That is the story. <b>Who Sits at the Table</b> decodes who sent you. <b>The Bond</b> decodes why Skuld bothered. <b>What You Wake in Each Other</b> decodes why it felt like that from the start. <b>The Seasons You Share</b> decodes the timing.",
 
   "SENT": {
     "Sun": "the Sun, to shine",
@@ -42,6 +42,10 @@
   "TABLE_SUB": "each of you: who sent you, the costume, and the guest staying now",
   "TABLE_INTRO": "Each person's soul-planet is the planet furthest through its sign: the one that sent them, and the one that holds the errand. The seat is the rising sign. The guest is the planet whose period is running in that life now.",
 
+  "BOND_TITLE": "The Bond",
+  "BOND_SUB": "what it is for, its higher and lower paths, and every contact in words",
+  "BOND_INTRO": "The bond by the lunar mansions (Sukuyō), and by the planets between you: what it is for, how it lifts you, how it drags, and how to weave the two.",
+  "BOND_PAIR": "{a} and {b}",
   "WAKE_TITLE": "What You Wake in Each Other",
   "WAKE_SUB": "where each of you lands in the other's life",
   "WAKE_INTRO": "Lay one chart over another and every planet of one person falls in a house of the other's. Two matter most here: the soul-planet, which is what you were sent to do, and the guest staying with you now, which is what you are busy with. Where they land in another person's chart is the part of their life you stir up, whether either of you meant to.",
