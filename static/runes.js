@@ -107,14 +107,15 @@ function mount(host, C){
   const card = (r, i) => `<div class="rn-card${i < 3 ? " lead" : ""}">
     <h3><span class="rn-g" aria-hidden="true">${r.glyph}</span> ${r.name} <span class="fine">· house ${r.house}, ${r.opening ? "opening" : "closing"} rune${i < 3 ? " · one of your three strongest" : ""}</span></h3>
     <p class="rn-means">${MEANS[r.name].charAt(0).toUpperCase() + MEANS[r.name].slice(1)}.</p>
-    <ul class="rn-thru">${r.holders.map(b => through(C, r, b)).join("")}</ul>
-    ${R[r.name] && R[r.name].call ? `<p class="rn-call">Its call: <em>${R[r.name].call}</em></p>` : ""}</div>`;
+    ${i === 0 ? `<ul class="rn-thru">${r.holders.map(b => through(C, r, b)).join("")}</ul>
+    ${R[r.name] && R[r.name].call ? `<p class="rn-call">Its call: <em>${R[r.name].call}</em></p>` : ""}`
+      : `<p class="fine">Lit by ${r.holders.map(b => b === "Ascendant" ? "your Ascendant" : `your ${GLYPH[b] || ""} ${b}`).join(", ")}. How it works through ${r.holders.length > 1 ? "their mansions" : "its mansion"} is in your reading.</p>`}</div>`;
   host.innerHTML = `
     <p>Twenty-four runes ring your chart, two to each house, counted from your rising sign. A rune is activated when a planet or your Ascendant stands in it.
     Each activated rune works through the lunar mansion of the planet that lights it, so the same rune reads differently in different charts. Strongest first:
     a rune is strongest when it holds your Ascendant, your soul-planet, your Sun or Moon, or the lord of the period you are in.</p>
     ${L.map(card).join("")}
-    <p class="fine">To learn each rune in depth, see <a href="/learn/runes">Learn the runes</a>. The Wyrd Reading shows the years each activated rune wakes.</p>`;
+    <p class="fine">Your strongest rune is read in full above, as a taste. The Wyrd Reading reads every one of them through its mansion, ranks them, and names the years each one wakes. To learn the runes themselves, see <a href="/learn/runes">Learn the runes</a>.</p>`;
 }
 
 /* ---------- two charts: the runes between you ---------- */

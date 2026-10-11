@@ -387,6 +387,9 @@ addEventListener("hashchange", go);
 go();
 
 /* ---------- the reading ---------- */
+/* a taste: the first lines of their own story, fading out, right above the button */
+if (C.teaser) { const t = $("readingTaste"); t.querySelector(".rd-taste-body").innerHTML = C.teaser; t.hidden = false; }
+
 $("buyBtn").addEventListener("click", async () => {
   if (Wyrd.pulseNow) Wyrd.pulseNow("act", "buy");
   const err = $("buyErr"), btn = $("buyBtn"); err.textContent = "";

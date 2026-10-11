@@ -94,6 +94,12 @@ check("all the weight is accounted for: rising 3, Moon 2, eight planets, nine ho
       abs(sum(w.values()) - (3 + 2 + 8 + 9 + 4.5 + 1)) < 1e-9)   # G and Heart share the heart station: one between them
 check("a defined centre adds to its station", parts["heart"]["centre"] == 1)
 
+# the body diagram
+C, d = chart(5); g = M.grid(C, ["Root"]); w, _ = M.weight(g); fig = M.figure(g, w)
+check("the diagram marks all seven stations and names them", fig.count('class="mf-dot') == 7 and all(M.ZONE[k]["name"].replace("The ", "") in fig for k in M.KEYS))
+check("every station on the diagram has a place on the figure", set(T["FIGURE"]["at"]) == set(M.KEYS))
+check("the two heaviest stations stand out", fig.count('mf-dot hi') >= 2)
+
 # the full reading carries it
 src = open(os.path.join(ROOT, "wyrd", "reading.py"), encoding="utf-8").read()
 check("the reading has the section, right after The Body", src.index("MEDICAL.body") > src.index("MORE.body(C)") and src.index("MEDICAL.body") < src.index("Where You Thrive\", \"culture"))

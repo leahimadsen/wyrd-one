@@ -140,25 +140,31 @@ def web(C):
 
 
 # ---------------- the planets, in both zodiacs ----------------
+OUTER = ("Uranus", "Neptune", "Pluto")      # generational: everyone born within a few years shares their signs
+
+
 def planets(C):
+    """Each planet in both zodiacs. The reference details (rune, cards, gates) are gathered at the back, in record()."""
     out = [f'<p class="rd-kenning">{X["FRAMES"]["sidereal"]}</p><p class="rd-kenning">{X["FRAMES"]["tropical"]}</p><p>{X["FRAMES"]["both"]}</p>']
     out.append(web(C))
-    N = C["natal"]
     for b in ORDER:
         s, t = C["sid"][b], C["trop"][b]
         si, ti = sign_i(s), sign_i(t)
         S, T, P = X["SIGNS"][si], X["SIGNS"][ti], X["PLANETS"][b]
-        h = E.house_of(s, C["ascS"]); nk = E.nak_index(s); nak = NAKS[nk]; aim = aim_of(s); r = rune_at(s, C["ascS"])
+        h = E.house_of(s, C["ascS"]); nk = E.nak_index(s); nak = NAKS[nk]; aim = aim_of(s)
         dg = dignity(b, s)
+        if b in OUTER:
+            if b == OUTER[0]:
+                out.append('<h3 class="rd-tier">The outer planets</h3><p>Uranus, Neptune and Pluto move so slowly that everyone born '
+                           'within a few years of you shares their signs. What makes them yours is the house they stand in.</p>')
+            out.append(f"""<div class="rd-entry rd-outer"><h3>{GLYPH[b]} {b} <span class="rd-side p">sidereal {lon(s)}</span></h3>
+          <div class="rd-hdr">{P["governs"]}</div>
+          <p><b>{PL["PIS"][b][si]}</b> {P["sid"]} It works in your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}.</p>
+          {pair("At its best", P["light"])}{pair("Watch for", P["shadow"])}</div>""")
+            continue
         shift = PL["SAME"] if si == ti else PL["SHIFT"][ti]
         # each sign's line once: in its own column, and not again in the sidereal one when both zodiacs agree
         lived = "" if si == ti else f'<p><b>{PL["PIS"][b][si]}</b></p>'
-        gp, gd = N["personality"].get(b), N["design"].get(b)
-        gates = ""
-        if gp:
-            gates += pair("Gate, conscious", f'{gp["gate"]}.{gp["line"]} {esc(gate_title(gp["gate"]))}: {esc(first(REG.get(str(gp["gate"]), {}).get("l")))}')
-        if gd:
-            gates += pair("Gate, unconscious", f'{gd["gate"]}.{gd["line"]} {esc(gate_title(gd["gate"]))}')
         out.append(f"""<div class="rd-entry"><h3>{GLYPH[b]} {b} <span class="rd-side p">tropical {lon(t)} → sidereal {lon(s)}</span></h3>
           <div class="rd-hdr">{P["governs"]}</div>
           <div class="rd-gifts"><div class="light"><h5>How it feels · tropical {T["sign"]}</h5>
@@ -170,11 +176,24 @@ def planets(C):
           <div class="rd-repair"><h5>{"The shift · " + T["sign"] + " into " + S["sign"] if si != ti else "One sign in both zodiacs · " + S["sign"]}</h5><p>{shift}</p></div>
           {woven(C, b, s)}
           {f'<p class="rd-kenning">{X["DIGNITY"][dg]}</p>' if dg else ""}
-          {pair("Rune", f'{r["glyph"]} {r["name"]}, {r["gloss"]}. {X["RUNES"][r["name"]]["means"]}')}
-          {card_pair(s, t)}
-          {gates}
           {pair("At its best", P["light"])}{pair("Watch for", P["shadow"])}</div>""")
+    out.append('<p class="rd-note">Each planet\'s rune, cards and gates are in the table at the back, {SEC:For the Record}.</p>')
     return "".join(out)
+
+
+def record(C):
+    """For the Record: the reference details for every planet, in one place at the back."""
+    N = C["natal"]; rows = []
+    for b in ORDER:
+        s, t = C["sid"][b], C["trop"][b]; r = rune_at(s, C["ascS"]); c = card_of(s, t)
+        gp, gd = N["personality"].get(b), N["design"].get(b)
+        g = lambda v: f'{v["gate"]}.{v["line"]} {esc(gate_title(v["gate"]))}' if v else "—"
+        rows.append(f'<tr><td>{GLYPH[b]} {b}</td><td>{lon(s)}<br><small>{lon(t)} tropical</small></td><td>{E.NAK[E.nak_index(s)]} {pada_of(s)}</td>'
+                    f'<td>{r["glyph"]} {r["name"]}</td><td>{c["buddhist"]["minor"]} · {c["buddhist"]["trump"]}<br><small>{c["nordic"]["minor"]} · {c["nordic"]["trump"]}</small></td>'
+                    f'<td>{g(gp)}<br><small>{g(gd)}</small></td></tr>')
+    return f"""<p>Everything in one place, for looking things up. Positions are sidereal with the tropical underneath; the cards are the
+      Buddhist deck (sidereal) over the Nordic deck (tropical); the gates are conscious over unconscious.</p>
+      <div class="rd-tw"><table class="rd-record"><tr><th>Planet</th><th>Position</th><th>Mansion</th><th>Rune</th><th>Cards</th><th>Gates</th></tr>{"".join(rows)}</table></div>"""
 
 
 # ---------------- the runes and when they wake ----------------

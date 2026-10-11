@@ -139,6 +139,25 @@ def _antars(dasha, now, n=6):
 def cell(bs): return " ".join(GLYPH[b] for b in bs)
 
 
+def figure(g, w, unknown=False):
+    """The body diagram: the engraving, the ladder down its middle, a mark on each station sized by its weight,
+    and to the side the planets that land there by sign (and by house, when the birth time is known)."""
+    F = T["FIGURE"]; W, H = F["w"], F["h"]; X0 = W + 40; top = max(w.values()) or 1
+    pts = [F["at"][k] for k in KEYS]
+    has = os.path.exists(os.path.join(HERE, F["src"].lstrip("/")))      # until the engraving is added, the ladder stands alone
+    out = [f'<image href="{F["src"]}" x="0" y="0" width="{W}" height="{H}"/>' if has else "",
+           f'<polyline class="mf-ladder" points="{" ".join(f"{x},{y}" for x, y in pts)}"/>']
+    for i, k in enumerate(KEYS):
+        x, y = F["at"][k]; r = 6 + 12 * w[k] / top; ly = 40 + i * (H * 0.62 / 6)
+        on = [b for b in g[k]["sign"]] + ([] if unknown else [b for b in g[k]["house"] if b not in g[k]["sign"]])
+        out.append(f'<path class="mf-lead" d="M{x + r},{y} L{X0 - 10},{ly}"/>'
+                   f'<circle class="mf-dot{" hi" if w[k] >= sorted(w.values())[-2] else ""}" cx="{x}" cy="{y}" r="{r:.1f}"/>'
+                   f'<text class="mf-name" x="{X0}" y="{ly - 4}">{ZONE[k]["name"].replace("The ", "")}</text>'
+                   f'<text class="mf-pl" x="{X0}" y="{ly + 22}">{cell(on) or "·"}</text>')
+    return (f'<figure class="mf"><svg viewBox="0 0 {X0 + 230} {H}" role="img" aria-label="Your seven stations on the body">{"".join(out)}</svg>'
+            f'<figcaption>{F["caption"] if has else F["caption"].split(" Engraving")[0]}</figcaption></figure>')
+
+
 def body(C, dasha, asks):
     """The section's HTML."""
     unknown = C.get("unknownTime"); rows = facts(C); by = {r["body"]: r for r in rows}
@@ -171,11 +190,13 @@ def body(C, dasha, asks):
         return "<p>" + fill(T["PLANET_LINE"], planet=f"<b>{GLYPH[r['body']]} {cap(the(r['body']))}</b>", rules=P["rules"], sign=r["sign"],
                             place=fill(T["PLACE_SAME"] if r["part"] == znames(r["zones"]) else T["PLACE"], part=r["part"], zone=znames(r["zones"])),
                             plain=P["plain"], ladder=ladder, how=how) + "</p>"
-    planets = "".join(line(r) for r in rows)
-    strained = [r for r in rows if r["strain"]]
-    strain = (f'<p>{T["STRAIN"]}</p><ul>' + "".join("<li>" + fill(T["STRAIN_ROW"], planet=f"<b>{GLYPH[r['body']]} {cap(the(r['body']))}</b>", sign=r["sign"],
-              house=ORD(r["house"]), weak=T["STRAIN_WEAK"] if r["dignity"] == "debilitated" else "", short=T["PLANET"][r["body"]]["short"],
-              zone=znames(r["zones"])) + "</li>" for r in strained) + "</ul>" if strained else f'<p>{T["STRAIN_NONE"]}</p>')
+    marked = [r for r in rows if r["strain"] or r["strong"]]
+    quiet = [r for r in rows if not (r["strain"] or r["strong"])]
+    tag = lambda r: f' <span class="rd-side p">{T["STRAIN_TAG"] if r["strain"] else T["STRONG_TAG"]}</span>'
+    planets = (f'<p>{T["STRAIN"]}</p>' + "".join(line(r).replace("</b>", "</b>" + tag(r), 1) for r in marked)) if marked else f'<p>{T["STRAIN_NONE"]}</p>'
+    if quiet:
+        planets += f'<h3 class="rd-tier">{T["QUIET_H"]}</h3><ul>' + "".join("<li>" + fill(T["QUIET_ROW"], planet=f"<b>{GLYPH[r['body']]} {cap(the(r['body']))}</b>",
+                   sign=r["sign"], short=T["PLANET"][r["body"]]["short"], zone=znames(r["zones"])) + "</li>" for r in quiet) + "</ul>"
 
     # doshas, and where each lives on the ladder
     ds = doshas(C); lead = max(ds, key=ds.get)
@@ -210,9 +231,8 @@ def body(C, dasha, asks):
     return f"""<p>{T["INTRO"]}</p><p class="rd-note">{T["NOTE"]}</p>
       <h3 class="rd-tier">{T["LENSES_H"]}</h3><dl class="rd-lenses">{key}</dl>
       {table}
-      <h3 class="rd-tier">{T["WEIGHT_H"]}</h3>{rising}<p>{T["WEIGHT"]}</p>{gather}{trop_line}
-      <h3 class="rd-tier">Your planets and what they look after</h3>{planets}
-      <h3 class="rd-tier">{T["STRAIN_H"]}</h3>{strain}
+      <h3 class="rd-tier">{T["WEIGHT_H"]}</h3>{figure(g, w, unknown)}{rising}<p>{T["WEIGHT"]}</p>{gather}{trop_line}
+      <h3 class="rd-tier">{T["STRAIN_H"]}</h3>{planets}
       <h3 class="rd-tier">{T["DOSHA_H"]}</h3>{dosha}
       {houses}
       <h3 class="rd-tier">{T["TIME_H"]}</h3><p>{when}</p><p>{T["TIME_NEXT"]}</p><ul>{nxt}</ul>"""

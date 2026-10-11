@@ -48,7 +48,7 @@ def _cta():
 
 
 # ---------------- the readings ----------------
-def reports(base, price_cents, member_cents, month_cents=1100, year_cents=11100, pro_cents=4400, pro_n=30,
+def reports(base, price_cents, member_cents, month_cents=1100, year_cents=11100, pro_cents=3300, pro_n=30,
             together_cents=2200, together_extra=1100, member_off=20):
     p = price_cents / 100
     m = lambda c: f"${c // 100}" if c % 100 == 0 else f"${c / 100:.2f}"

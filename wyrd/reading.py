@@ -19,8 +19,9 @@ which passages a chart calls for and lays them out.
   XIII The Path of Dharma  Mission, Illuminations, the Diamond
   XIV  The Numbers         life path, birthday, personal year, and the name's numbers, each on two planets
   XV   The Questions       every question the chart asked, gathered
+  XVI  For the Record      the reference table: positions, mansions, runes, cards and gates
 
-Sections refer to each other by name ({{SEC:The Work}}); the numbers are filled in last.
+Sections refer to each other by name ({{SEC:The Work}}, or {SEC:The Work} once an f-string has halved the braces); the numbers are filled in last.
 
 The order builds: the story first, then the parts it named in the order it named them (Seat, Engine,
 Soul-Planet, Clock), so every later section can lean on the periods.
@@ -367,9 +368,12 @@ def build(chart, dasha, who):
     out.append(section(7, "The Questions", "every question your chart asked, in the order it asked them",
                        f'<ol class="rd-qs">{qs}</ol>'))
 
+    # ---------- for the record: the look-it-up details, kept out of the story's way ----------
+    out.append(section(0, "For the Record", "every planet's position, mansion, rune, cards and gates", MORE.record(C)))
+
     for i in range(len(out)):                       # number the sections in the order they stand
         out[i] = out[i].replace("{{N}}", ROMAN[i], 1)
     import re
     num = {re.search(r"<h2>(.*?)</h2>", s).group(1): ROMAN[i] for i, s in enumerate(out)}
-    out = [re.sub(r"\{\{SEC:(.*?)\}\}", lambda m: num[m.group(1)], s) for s in out]
+    out = [re.sub(r"\{\{?SEC:(.*?)\}\}?", lambda m: num[m.group(1)], s) for s in out]
     return STORY.tell(C, dasha, (who or {}).get("name"), ENG) + "".join(out)     # the prologue opens it, unnumbered
