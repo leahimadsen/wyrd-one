@@ -126,6 +126,7 @@ Everything is held in Stripe; there is no database.
 
 - **$44 natal reading** — unchanged. Signed-in members pay the member price (`MEMBER_READING_CENTS`).
 - **Membership** — $11/month or $111/year (`MEMBER_MONTHLY_CENTS`, `MEMBER_YEARLY_CENTS`): weekly Body Weather, chart kept on the account, member price on the reading.
+- **The reading together** — `TOGETHER_CENTS` ($22) for two people and `TOGETHER_EXTRA_CENTS` ($11) for each extra person, up to nine; members take `TOGETHER_MEMBER_OFF` (20%) off. Bought from Compare once two or more people are added. A story of the table, what each person wakes in the others, and the seasons they share for the next thirty years. Its writing is a draft in `lib/together.json` for The Völva to rewrite; everyone's birth details ride in the payment, so the reading rebuilds from its link like the $44 one.
 - **Professional** — `PRO_MONTHLY_CENTS` a month: the practice desk at `/pro` generates full readings for clients (`PRO_READINGS_A_MONTH` a month) and Body Weather for any client.
 
 Prices are made inside each Stripe Checkout, so no products need creating in the dashboard. Who has paid is asked of Stripe (cached five minutes); a member's saved chart and Body Weather "last sent" week live in their Stripe customer's metadata.
@@ -153,4 +154,4 @@ At `/admin/gifts` give anyone a Membership or Professional plan by email for 30 
 `/reports`, `/membership`, `/learn` and a page for every gate, nakshatra and sign are server-rendered with titles, descriptions, share previews and structured data (price, FAQ). `/sitemap.xml` and `/robots.txt` tell Google what to read; private pages send noindex. Add the site to Google Search Console and submit the sitemap.
 
 Tests: `python tests/members_check.py` (accounts, plans, Body Weather, weekly job, search pages; no Stripe calls).
-`python tests/gifts_check.py` (granting, expiry and revoking complimentary access; checks no checkout or subscription is ever made).
+`python tests/together_check.py` (prices, checkout and the reading together). `python tests/gifts_check.py` (granting, expiry and revoking complimentary access; checks no checkout or subscription is ever made).

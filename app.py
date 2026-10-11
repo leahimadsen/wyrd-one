@@ -21,6 +21,7 @@ from wyrd.extras import extras
 from wyrd import calendar as wcal
 from wyrd import pulse
 from wyrd import accounts, billing, mailer, pages, weather
+from wyrd import together
 import atexit
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -371,7 +372,9 @@ def paid_reading():
                 return redirect("/consultation?" + urlencode({"session_id": sid}))
         meta = s.get("metadata", {})
     try:
-        return render_reading(meta, "PREVIEW — no payment taken" if request.args.get("preview") else "")
+        banner = "PREVIEW — no payment taken" if request.args.get("preview") else ""
+        if meta.get("kind") == "together": return render_together(meta, banner)
+        return render_reading(meta, banner)
     except BadInput:
         abort(400)
 
@@ -391,6 +394,79 @@ def render_reading(meta, banner="", sample=False):
                         .replace("{{CLOSING}}", config.READING_CLOSING).replace("{{AUTHOR}}", config.AUTHOR)
                         .replace("{{PREVIEW}}", banner).replace("{{BODY}}", body)
                         .replace("{{FOOTER}}", SAMPLE_FOOT if sample else f"<footer>Written by {config.AUTHOR} · The Web of Wyrd. This page is your reading; it stays at this address.</footer>"),
+                    mimetype="text/html")
+
+# ---------------- the reading together: two to nine people ----------------
+def together_cents(n, member=False):
+    """$22 for two, $11 for each person after that; members take TOGETHER_MEMBER_OFF percent off."""
+    cents = config.TOGETHER_CENTS + config.TOGETHER_EXTRA_CENTS * max(0, n - 2)
+    return cents * (100 - config.TOGETHER_MEMBER_OFF) // 100 if member else cents
+
+def pack_person(d, b):
+    """One person's birth, small enough for one Stripe metadata value (500 characters)."""
+    p = {"n": (d.get("name") or "").strip()[:40], "d": d["date"], "t": d["time"], "la": round(b["place"]["lat"], 4),
+         "lo": round(b["place"]["lon"], 4), "tz": b["place"]["tz"], "pl": (b["place"]["label"] or "")[:80]}
+    if d.get("unknown_time"): p["u"] = 1
+    return json.dumps(p, ensure_ascii=False, separators=(",", ":"))
+
+def unpack_person(v):
+    p = json.loads(v)
+    meta = {"name": p.get("n", ""), "date": p["d"], "time": p["t"], "lat": p["la"], "lon": p["lo"], "tz": p["tz"], "place_label": p.get("pl", "")}
+    if p.get("u"): meta["unknown_time"] = "1"
+    return meta
+
+def together_people(meta):
+    try:
+        n = int(meta.get("people", 0))
+        if not 2 <= n <= together.MAX_PEOPLE: raise ValueError
+        return [unpack_person(meta[f"p{i}"]) for i in range(1, n + 1)]
+    except (KeyError, ValueError, TypeError):
+        raise BadInput("This reading's details are missing.")
+
+@app.post("/api/checkout-together")
+def checkout_together():
+    if limited(10): return jsonify(error="Too many requests — wait a minute."), 429
+    d = request.get_json(force=True, silent=True) or {}
+    people = d.get("people") if isinstance(d.get("people"), list) else []
+    if not 2 <= len(people) <= together.MAX_PEOPLE:
+        return jsonify(error=f"A reading together is for two to {together.MAX_PEOPLE} people."), 400
+    meta = {"kind": "together", "people": str(len(people))}
+    for i, x in enumerate(people, 1):
+        if not isinstance(x, dict): return jsonify(error="Check everyone's birth details."), 400
+        try: meta[f"p{i}"] = pack_person(x, birth_from(x))
+        except (BadInput, ValueError) as e:
+            return jsonify(error=f"{(x.get('name') or f'Person {i}')[:40]}: {e or 'check the birth details.'}"), 400
+    if config.DEV_PREVIEW:
+        return jsonify(url="/reading?" + urlencode({"preview": 1, **meta}))
+    email, member, customer = signed_in(), False, None
+    try:
+        if email:
+            st = billing.status(config.STRIPE_SECRET, email)
+            member, customer = st["member"] or st["pro"], st["customer"]
+        s = stripe_api.create_checkout(config.STRIPE_SECRET, base_url=config.BASE_URL, price_id=None,
+                                       price_cents=together_cents(len(people), member),
+                                       product_name=f"{config.TOGETHER_NAME}, for {len(people)}" + (" (member price)" if member else ""),
+                                       metadata=meta, email=email, customer=customer, cancel="/chart?cancelled=1#compare")
+    except stripe_api.StripeError as e:
+        app.logger.error("stripe: %s", e)
+        return jsonify(error="Payment couldn't start. Please try again."), 502
+    return jsonify(url=s["url"])
+
+def render_together(meta, banner=""):
+    people = []
+    for m in together_people(meta):
+        b = birth_from(m); c = cast_for(b)
+        if m.get("unknown_time"): c = dict(c); c["sid"], c["trop"] = dict(c["sid"]), dict(c["trop"]); unknown_time(c)
+        people.append({"name": m["name"] or f"Person {len(people) + 1}", "C": c, "dasha": engine.dasha_tree(c, jd_now()), "b": b})
+    body = together.build(people)
+    who = html.escape(together.names_line([p["name"] for p in people]))
+    born = " · ".join(f"{html.escape(p['name'])}, {p['b']['y']:04d}-{p['b']['mo']:02d}-{p['b']['d']:02d}" for p in people)
+    page = open(os.path.join(HERE, "static", "reading.html"), encoding="utf-8").read()
+    return Response(page.replace("{{TITLE}}", config.SITE_TITLE).replace("{{WHO}}", who)
+                        .replace("{{BORN}}", born).replace("{{OPENING}}", together.T["OPENING"])
+                        .replace("{{CLOSING}}", together.T["CLOSING"]).replace("{{AUTHOR}}", config.AUTHOR)
+                        .replace("{{PREVIEW}}", banner).replace("{{BODY}}", body)
+                        .replace("{{FOOTER}}", f"<footer>Written by {config.AUTHOR} · The Web of Wyrd. This page is your reading together; it stays at this address.</footer>"),
                     mimetype="text/html")
 
 SAMPLE_FOOT = f"""<footer class="sample-cta"><p><b>That was a sample, cast for a made-up birth.</b> Yours is written for your own placements, every section of it.</p>
@@ -598,6 +674,7 @@ def api_me():
             pass
     cents = config.MEMBER_READING_CENTS if member else config.PRICE_CENTS
     r = jsonify(signedIn=bool(email), member=member, readingPrice=money(cents),
+                together={"two": together_cents(2, member), "extra": together_cents(3, member) - together_cents(2, member), "max": together.MAX_PEOPLE},
                 prices={"reading": money(config.PRICE_CENTS), "member": money(config.MEMBER_READING_CENTS),
                         "month": money(config.MEMBER_MONTHLY_CENTS), "year": money(config.MEMBER_YEARLY_CENTS)})
     r.headers["Cache-Control"] = "no-store"

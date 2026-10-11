@@ -1,0 +1,78 @@
+{
+  "_note": "DRAFT writing for The Wyrd Reading Together (two to nine people), for The Völva to rewrite. Placeholders in curly braces are filled in by the site; keep them. Change any line and every reading changes with it. The free Compare writing lives in static/dynamics.js; this is the paid side, built around timing.",
+
+  "OPENING": "This reading is for the people at one table: who sent each of you, what each of you wakes in the others, and the seasons you share. Read the story first. The rest decodes it.",
+  "CLOSING": "A bond is a set of engines too, and it has its seasons. Work the questions together, out loud if you can.",
+
+  "PROLOGUE_TITLE": "Prologue: The Table",
+  "PROLOGUE_SUB": "a silly story of how you ended up together",
+  "PROLOGUE_OPEN": "Long before you met, each of you stood in the queue at the Well of Urðr, on different days, with no idea the others existed. Urðr, who keeps what has already happened, looked each of you up in her book.",
+  "PROLOGUE_PERSON": "{name} had been sent by {sent}, and chose {wore}.",
+  "PROLOGUE_TABLE_TWO": "What neither of you knew was that Skuld, who keeps what shall be, had already put the two of you at the same table. She does this on purpose. She says it saves time.",
+  "PROLOGUE_TABLE_MANY": "What none of you knew was that Skuld, who keeps what shall be, had already put all {n} of you at the same table. She does this on purpose. She says it saves time, and that the arguments are good for everyone.",
+  "PROLOGUE_NOW": "She checked the appointment books, as she does. Right now, {guests}. {season}",
+  "PROLOGUE_CLOSE": "That is the story. <b>Who Sits at the Table</b> decodes who sent you. <b>What You Wake in Each Other</b> decodes why it felt like that from the start. <b>The Seasons You Share</b> decodes the timing.",
+
+  "SENT": {
+    "Sun": "the Sun, to shine",
+    "Moon": "the Moon, to look after people",
+    "Mars": "Mars, to do the brave thing",
+    "Mercury": "Mercury, with a message to deliver",
+    "Jupiter": "Jupiter, to find out what is true and teach it",
+    "Venus": "Venus, to love something properly",
+    "Saturn": "Saturn, to build something that lasts"
+  },
+  "WORE": {
+    "Aries": "the helmet, slightly too big",
+    "Taurus": "the velvet cloak and the very good boots",
+    "Gemini": "two costumes at once",
+    "Cancer": "the shell with the deep pockets",
+    "Leo": "the mane, the crown and the little spotlight",
+    "Virgo": "the pressed apron with the sewing kit",
+    "Libra": "the outfit that went with everyone else's",
+    "Scorpio": "the long dark coat with the secret pocket",
+    "Sagittarius": "the travelling clothes and the muddy boots",
+    "Capricorn": "the nine-hundred-year-old sensible coat",
+    "Aquarius": "the costume nobody had worn before",
+    "Pisces": "the costume made of water"
+  },
+  "GUEST_NOW": "{lord} is staying with {name}",
+
+  "TABLE_TITLE": "Who Sits at the Table",
+  "TABLE_SUB": "each of you: who sent you, the costume, and the guest staying now",
+  "TABLE_INTRO": "Each person's soul-planet is the planet furthest through its sign: the one that sent them, and the one that holds the errand. The seat is the rising sign. The guest is the planet whose period is running in that life now.",
+
+  "WAKE_TITLE": "What You Wake in Each Other",
+  "WAKE_SUB": "where each of you lands in the other's life",
+  "WAKE_INTRO": "Lay one chart over another and every planet of one person falls in a house of the other's. Two matter most here: the soul-planet, which is what you were sent to do, and the guest staying with you now, which is what you are busy with. Where they land in another person's chart is the part of their life you stir up, whether either of you meant to.",
+  "WAKE_SOUL": "{a}'s soul-planet, {planet}, lands in {b}'s {house} house: {life}. {a} brings {lends} there, for good.",
+  "WAKE_GUEST": "For now, {a}'s guest, {lord}, stands in {b}'s {house} house: while it stays, {a} stirs up {b}'s {life}.",
+  "UNKNOWN_HOUSES": "{name}'s birth time is unknown, so {name}'s houses are counted from the Sun's sign.",
+
+  "SEASON_TITLE": "The Seasons You Share",
+  "SEASON_SUB": "the guests staying with each of you, and how they get on",
+  "SEASON_INTRO": "Every life is a house with one planet in residence at a time, staying for years. When two people share their days, the two guests share them too, and how those two planets get on sets the weather between you. The tradition keeps a table of which planets are friends, which are neutral, and which are enemies; Rahu is read like Saturn and Ketu like Mars.",
+  "SEASON_PAIR": "{a} and {b}: {la} and {lb}, {label}.",
+  "SEASON_AHEAD": "Ahead",
+  "SEASON_AHEAD_INTRO": "The next thirty years, change by change. Each line is a new guest arriving in someone's house.",
+  "SEASON_CHANGE": "{name}'s {lord} arrives",
+  "SEASON_CHANGE_TWO": "{name}'s {lord} arrives, and the two guests are {label}",
+
+  "SEASONS": {
+    "same":    {"label": "the same planet",   "text": "The same planet is running both your lives at once. You want the same things at the same time, which is wonderful until you both want the last biscuit."},
+    "allies":  {"label": "allies",           "text": "Your two guests are old friends. They lend each other tools and make the season between you easy. Use it to build."},
+    "friendly":{"label": "warm on one side", "text": "One guest likes the other more than it is liked back. The season is warm on one side; the warmer one should say so, and the other should notice."},
+    "polite":  {"label": "polite strangers", "text": "Your two guests are polite strangers. Nothing between you is blocked and nothing is pushed: whatever this season becomes, you make it."},
+    "uneasy":  {"label": "uneasy",           "text": "Your two guests don't quite trust each other, and small things rub. It is a season for saying the small thing early, before it grows teeth."},
+    "odds":    {"label": "at odds",          "text": "Your two guests are at odds. The season tests the bond, and the test is the point: what survives it is load-bearing."}
+  },
+
+  "ASKS_TITLE": "The Questions",
+  "ASKS_SUB": "for the table, in the order the reading asked them",
+  "ASKS": [
+    "What were each of you sent to do, and does the other know?",
+    "Where does the other land in your life, and have you ever said so out loud?",
+    "What is this season asking you to build together, and what is it asking you to stop expecting?",
+    "When the next guest arrives, what will you want to have already said?"
+  ]
+}

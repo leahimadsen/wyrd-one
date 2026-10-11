@@ -52,6 +52,11 @@ MEMBER_YEARLY_CENTS  = int(os.environ.get("MEMBER_YEARLY_CENTS", "11100"))     #
 MEMBER_READING_CENTS = int(os.environ.get("MEMBER_READING_CENTS", "3520"))     # the $44 reading at 20% off for members
 PRO_MONTHLY_CENTS    = int(os.environ.get("PRO_MONTHLY_CENTS", "4400"))        # Professional, a month
 PRO_READINGS_A_MONTH = int(os.environ.get("PRO_READINGS_A_MONTH", "30"))       # client readings included each month
+# The Wyrd Reading Together: a reading for two, and each extra person (up to nine in all) adds to it.
+TOGETHER_CENTS       = int(os.environ.get("TOGETHER_CENTS", "2200"))           # $22 for two people
+TOGETHER_EXTRA_CENTS = int(os.environ.get("TOGETHER_EXTRA_CENTS", "1100"))     # $11 for each person after two
+TOGETHER_MEMBER_OFF  = int(os.environ.get("TOGETHER_MEMBER_OFF", "20"))        # members' discount, percent
+TOGETHER_NAME        = "Your Wyrd Reading Together"
 MEMBER_NAME          = "Wyrd Membership"
 # Real Stripe prices, so members can switch plans in the Stripe portal. When unset,
 # each checkout makes its price from the cents above instead.
