@@ -217,13 +217,13 @@ def build(chart, dasha, who):
                    f"<td>{GLYPH[KT[k]]} {KT[k]} <small>{E.deg_in(C['trop'][KT[k]]):.2f}°</small></td><td>{KGLOSS[k]}</td></tr>"
                    for k, b in K.items())
     akT, moved, th = KT["Atmakaraka"], sum(K[k] != KT[k] for k in K), MORE.the
-    tropical = (f"In the tropical zodiac, measured by the seasons rather than the stars, the same planet leads: {th(ak)} is the soul-planet in both, "
-                f"and the soul's errand is felt as plainly as it is fated." if akT == ak else
-                f"In the tropical zodiac, measured by the seasons rather than the stars, the cabinet reorders and <b>{th(akT)}</b> leads. "
-                f"This reading follows the sidereal order, where {th(ak)} holds the soul; {th(akT)} is how that errand is felt from the inside, "
-                f"the planet the life experiences as most its own.")
-    tropical += ("" if not moved else " All seven seats change hands between the two zodiacs." if moved == 7 else
-                 f" {['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][moved]} of the seven seats change{'s' if moved == 1 else ''} hands between the two zodiacs.")
+    tropical = (f"If you rank the planets in the tropical zodiac instead, which follows the seasons rather than the stars, the same planet comes out on top. "
+                f"{th(ak)[0].upper() + th(ak)[1:]} is your soul-planet either way, so what you came here to do and how it feels to you line up." if akT == ak else
+                f"If you rank the planets in the tropical zodiac instead, which follows the seasons rather than the stars, the order changes and <b>{th(akT)}</b> comes out on top. "
+                f"This reading uses the sidereal order, where {th(ak)} is your soul-planet. {th(akT)[0].upper() + th(akT)[1:]} shows how that purpose feels to you from the inside, "
+                f"the planet your life experiences as most its own.")
+    tropical += ("" if not moved else " Every one of the seven places is different between the two zodiacs." if moved == 7 else
+                 f" {['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][moved]} of the seven places {'is' if moved == 1 else 'are'} different between the two zodiacs.")
     out.append(section(2, "The Soul-Planet", f"Atmakaraka {GLYPH[ak]} {ak} · {fmt_lon(l)} · {E.nak_of(l)}", f"""
       <p>{KGLOSS['Atmakaraka']}</p>
       <p class="rd-kenning">{CORPUS['KARAKA_METHOD']}</p>

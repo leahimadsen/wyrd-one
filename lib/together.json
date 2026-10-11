@@ -1,132 +1,132 @@
 {
-  "_note": "DRAFT writing for The Wyrd Reading Together (two to nine people), for The Völva to rewrite. Placeholders in curly braces are filled in by the site; keep them. Change any line and every reading changes with it. The free Compare writing lives in static/dynamics.js; this is the paid side, built around timing.",
-  "OPENING": "This reading is for the people at one table: who sent each of you, what each of you wakes in the others, and the seasons you share. Read the story first. The rest decodes it.",
-  "CLOSING": "A bond is a set of engines too, and it has its seasons. Work the questions together, out loud if you can.",
+  "_note": "The writing for The Wyrd Reading Together (two to nine people). Plain and warm, told the way you'd say it. Placeholders in curly braces are filled in by the site; keep them. Change any line and every reading changes with it.",
+  "OPENING": "This reading is for the people at one table: who sent each of you, what you bring out in each other, and the seasons you'll share. Start with the story. Everything after it explains it.",
+  "CLOSING": "Like any chart, a bond has its strengths, its weak spots and its seasons. Go through the questions together, out loud if you can.",
   "PROLOGUE_TITLE": "Prologue: The Table",
-  "PROLOGUE_SUB": "a silly story of how you ended up together",
-  "PROLOGUE_OPEN": "Long before you met, each of you stood in the queue at the Well of Urðr, on different days, with no idea the others existed. Urðr, who keeps what has already happened, looked each of you up in her book.",
+  "PROLOGUE_SUB": "a silly story about how you ended up together",
+  "PROLOGUE_OPEN": "Long before you met, each of you waited your turn at the Well of Urðr, on different days and without any idea the others existed. When your turns came, Urðr looked each of you up in her book.",
   "PROLOGUE_PERSON": "{name} had been sent by {sent}, and chose {wore}.",
-  "PROLOGUE_TABLE_TWO": "What neither of you knew was that Skuld, who keeps what shall be, had already put the two of you at the same table. She does this on purpose. She says it saves time.",
-  "PROLOGUE_TABLE_MANY": "What none of you knew was that Skuld, who keeps what shall be, had already put all {n} of you at the same table. She does this on purpose. She says it saves time, and that the arguments are good for everyone.",
-  "PROLOGUE_NOW": "She checked the appointment books, as she does. Right now, {guests}. {season}",
-  "PROLOGUE_CLOSE": "That is the story. <b>Who Sits at the Table</b> decodes who sent you. <b>The Bond</b> decodes why Skuld bothered. <b>What You Wake in Each Other</b> decodes why it felt like that from the start. <b>The Old Match</b>, <b>How Your Bodies Meet</b> and <b>Your Numbers Together</b> decode the gifts. <b>The Seasons You Share</b> decodes the appointment book.",
+  "PROLOGUE_TABLE_TWO": "Neither of you knew that Skuld, who keeps the appointment book, had already put the two of you at the same table. She does that on purpose.",
+  "PROLOGUE_TABLE_MANY": "None of you knew that Skuld, who keeps the appointment book, had already put all {n} of you at the same table. She does that on purpose, and she thinks the arguments are good for everyone.",
+  "PROLOGUE_NOW": "She checked her book, as she always does. Right now, {guests}. {season}",
+  "PROLOGUE_CLOSE": "That's the story, and the rest of the reading explains it. <b>Who Sits at the Table</b> is about who sent you. <b>The Bond</b> is about why Skuld put you together. <b>What You Wake in Each Other</b> is about why it felt the way it did from the start. <b>The Old Match</b>, <b>How Your Bodies Meet</b> and <b>Your Numbers Together</b> are about your gifts. <b>The Seasons You Share</b> is the appointment book.",
   "SENT": {
-    "Sun": "the Sun, to shine",
+    "Sun": "the Sun, to be fully themselves",
     "Moon": "the Moon, to look after people",
     "Mars": "Mars, to do the brave thing",
     "Mercury": "Mercury, with a message to deliver",
-    "Jupiter": "Jupiter, to find out what is true and teach it",
+    "Jupiter": "Jupiter, to find out what's true and pass it on",
     "Venus": "Venus, to love something properly",
     "Saturn": "Saturn, to build something that lasts"
   },
   "WORE": {
-    "Aries": "the helmet, slightly too big",
-    "Taurus": "the velvet cloak and the very good boots",
-    "Gemini": "two costumes at once",
+    "Aries": "the helmet that was a little too big",
+    "Taurus": "the velvet cloak and the good boots",
+    "Gemini": "two costumes",
     "Cancer": "the shell with the deep pockets",
-    "Leo": "the mane, the crown and the little spotlight",
-    "Virgo": "the pressed apron with the sewing kit",
+    "Leo": "the crown and the mane",
+    "Virgo": "the apron with the sewing kit",
     "Libra": "the outfit that went with everyone else's",
-    "Scorpio": "the long dark coat with the secret pocket",
-    "Sagittarius": "the travelling clothes and the muddy boots",
-    "Capricorn": "the nine-hundred-year-old sensible coat",
-    "Aquarius": "the costume nobody had worn before",
+    "Scorpio": "the long dark coat",
+    "Sagittarius": "the muddy travelling clothes",
+    "Capricorn": "the sensible old coat",
+    "Aquarius": "something nobody had worn before",
     "Pisces": "the costume made of water"
   },
   "GUEST_NOW": "{lord} is staying with {name}",
   "TABLE_TITLE": "Who Sits at the Table",
   "TABLE_SUB": "each of you: who sent you, the costume, and the guest staying now",
-  "TABLE_INTRO": "Each person's soul-planet is the planet furthest through its sign: the one that sent them, and the one that holds the errand. The seat is the rising sign. The guest is the planet whose period is running in that life now.",
+  "TABLE_INTRO": "Each person's soul-planet is the planet furthest through its sign. It's the one that sent them, and it holds what they came here to do. The seat is the rising sign, which is the costume. The guest is the planet whose period is running in that person's life right now.",
   "BOND_TITLE": "The Bond",
   "BOND_SUB": "what it is for, its higher and lower paths, and every contact in words",
-  "BOND_INTRO": "The bond by the lunar mansions (Sukuyō), and by the planets between you: what it is for, how it lifts you, how it drags, and how to weave the two.",
+  "BOND_INTRO": "Here the bond is read two ways: by the lunar mansions (Sukuyō), and by the planets between you. It covers what the bond is for, how it lifts you, how it can drag you down, and how to bring the two together.",
   "BOND_PAIR": "{a} and {b}",
   "WAKE_TITLE": "What You Wake in Each Other",
   "WAKE_SUB": "where each of you lands in the other's life",
-  "WAKE_INTRO": "Lay one chart over another and every planet of one person falls in a house of the other's. Two matter most here: the soul-planet, which is what you were sent to do, and the guest staying with you now, which is what you are busy with. Where they land in another person's chart is the part of their life you stir up, whether either of you meant to.",
-  "WAKE_SOUL": "{a}'s soul-planet, {planet}, lands in {b}'s {house} house: {life}. {a} brings {lends} there, for good.",
-  "WAKE_GUEST": "For now, {a}'s guest, {lord}, stands in {b}'s {house} house: while it stays, {a} stirs up {b}'s {life}.",
+  "WAKE_INTRO": "If you lay one chart over another, every planet of one person falls in one of the other person's houses. Two of them matter most here. Your soul-planet is what you came to do, and your current guest is what you're busy with now. Where they land in someone else's chart is the part of their life you walk into, whether or not either of you means to.",
+  "WAKE_SOUL": "{a}'s soul-planet, {planet}, lands in {b}'s {house} house, the house of {life}. {a} brings {lends} into that part of {b}'s life, and keeps bringing it.",
+  "WAKE_GUEST": "For now, {a}'s guest, {lord}, sits in {b}'s {house} house, so while it stays {a} stirs up {b}'s {life}.",
   "UNKNOWN_HOUSES": "{name}'s birth time is unknown, so {name}'s houses are counted from the Sun's sign.",
   "SEASON_TITLE": "The Seasons You Share",
   "SEASON_SUB": "the next thirty years, chapter by chapter",
-  "SEASON_INTRO": "Every life is a house with one planet in residence at a time, staying for years, and each long stay is divided into nine shorter ones. When two people share their days, their guests share them too, and how those planets get on sets the weather between you. The tradition keeps a table of which planets are friends, which are neutral and which are enemies; Rahu is read like Saturn and Ketu like Mars. Above the houses the slow planets keep their own appointments: the returns of Saturn, Jupiter and the nodes, and Saturn's long crossing of the Moon. This section walks the next thirty years chapter by chapter, then lays them out year by year.",
+  "SEASON_INTRO": "Every life is like a house with one planet living in it at a time, staying for years, and each long stay is split into nine shorter ones. When two people share their lives, the planets living with each of them share it too, and how those planets get along sets the mood between you. The tradition keeps a table of which planets are friends, which are neutral and which don't get on. Rahu is read like Saturn and Ketu like Mars. The slow planets also keep their own appointments: Saturn and Jupiter coming back to where they started, the nodes coming round, and Saturn's long crossing over the Moon. This section goes through the next thirty years one chapter at a time, then shows them year by year.",
   "SEASON_PAIR": "{a} and {b}: {la} and {lb}, {label}.",
   "SEASONS": {
     "same": {
       "label": "the same planet",
-      "text": "The same planet is running both your lives at once. You want the same things at the same time, which is wonderful until you both want the last biscuit."
+      "text": "The same planet is living with both of you, so you tend to want the same things at the same time. That's lovely, until you both want the same last thing."
     },
     "allies": {
       "label": "allies",
-      "text": "Your two guests are old friends. They lend each other tools and make the season between you easy. Use it to build."
+      "text": "Your two planets get along well right now, so things between you feel easy. It's a good time to build something together while it stays that way."
     },
     "friendly": {
       "label": "warm on one side",
-      "text": "One guest likes the other more than it is liked back. The season is warm on one side; the warmer one should say so, and the other should notice."
+      "text": "One planet likes the other more than it's liked back, so it feels warmer from one side. The warmer one should say so, and the cooler one should notice."
     },
     "polite": {
       "label": "polite strangers",
-      "text": "Your two guests are polite strangers. Nothing between you is blocked and nothing is pushed: whatever this season becomes, you make it."
+      "text": "Your two planets are polite strangers. Nothing is blocking you and nothing is pushing you, so whatever this season becomes is up to the two of you."
     },
     "uneasy": {
       "label": "uneasy",
-      "text": "Your two guests don't quite trust each other, and small things rub. It is a season for saying the small thing early, before it grows teeth."
+      "text": "Your two planets don't quite trust each other, so small things can rub. It helps to bring up the small things early, before they grow."
     },
     "odds": {
       "label": "at odds",
-      "text": "Your two guests are at odds. The season tests the bond, and the test is the point: what survives it is load-bearing."
+      "text": "Your two planets don't get on, so this season will test the bond. Whatever makes it through will be the part you can lean on."
     }
   },
   "ASKS_TITLE": "The Questions",
   "ASKS_SUB": "for the table, in the order the reading asked them",
   "ASKS": [
-    "What were each of you sent to do, and does the other know?",
-    "Where does the other land in your life, and have you ever said so out loud?",
-    "What is this season asking you to build together, and what is it asking you to stop expecting?",
-    "When the next guest arrives, what will you want to have already said?"
+    "What did each of you come here to do, and does the other person know?",
+    "Where does the other person land in your life, and have you ever told them?",
+    "What is this season asking you to build together, and what is it asking you to let go of?",
+    "When the next guest arrives, what will you wish you'd already said?"
   ],
-  "PROLOGUE_GIFTS": "Verðandi packed each of you a gift, with its shadow folded into the same bag: {gifts}. Neither of you has found the shadow yet. You will find each other's first.",
+  "PROLOGUE_GIFTS": "Verðandi packed each of you a gift with its shadow folded into the same bag: {gifts}. You probably haven't found your own shadow yet. You'll find each other's first, which is part of what being together is for.",
   "PROLOGUE_GIFT": "{name} got {shakti}, from {mansion}",
-  "PROLOGUE_BOOK": "Skuld's appointment book was already full. {turn} {mark} She underlined {year} twice and would not say why.",
+  "PROLOGUE_BOOK": "Skuld's book was already full. {turn} {mark} She underlined {year} twice and wouldn't say why.",
   "PROLOGUE_TURN": "The next guest due is {lord}, for {name}, in {year}.",
   "PROLOGUE_MARK": "In {year}, {what}.",
-  "PROLOGUE_ERRAND": "On the last page, under both your names, she wrote what the table is for: {errand}",
-  "PROLOGUE_ERRAND_PLAIN": "to grow each other on purpose, and to say so out loud.",
+  "PROLOGUE_ERRAND": "On the last page, under both your names, she wrote what you're here for together: {errand}",
+  "PROLOGUE_ERRAND_PLAIN": "to help each other grow, on purpose, and to say so out loud.",
   "CHAPTER_TITLE": "{from}–{to} · {la} and {lb}",
-  "CHAPTER_OPEN": "From {from} to {to}, {la} stays with {a} and {lb} stays with {b}. The two guests are <b>{label}</b>.",
-  "CHAPTER_LANDS": "{a}'s {lord} stands in {b}'s {house} house: through these years {a} stirs up {b}'s {life}.",
+  "CHAPTER_OPEN": "From {from} to {to}, {la} is living with {a} and {lb} with {b}. The two of them are <b>{label}</b>.",
+  "CHAPTER_LANDS": "{a}'s {lord} sits in {b}'s {house} house, so through these years {a} stirs up {b}'s {life}.",
   "CHAPTER_SUBS": "Inside this chapter",
-  "SUB_LINE": "{name}'s {lord} sub-period begins: {short}. The two shorter guests are {label}.",
-  "SUB_UNIT": "{name}'s {lord} sub-period begins: {short}.",
+  "SUB_LINE": "{name}'s {lord} sub-period begins, {short}. The two shorter guests are {label}.",
+  "SUB_UNIT": "{name}'s {lord} sub-period begins, {short}.",
   "LORD_BOND": {
-    "Sun": "The Sun's years make {name} want to be seen, by the world and by the people closest. The bond does well when it admires out loud, and badly when it competes for the light.",
-    "Moon": "The Moon's years turn {name} toward home, feeling and family. Expect more moods and more need; this is when a bond's comfort is built, or found missing.",
-    "Mars": "Mars's years give {name} drive, heat and the need for a project. Give the fire a job, or it will find one inside the bond.",
-    "Mercury": "Mercury's years make {name} talk, trade, study and plan. The bond lives in conversation now: keep the talk honest and the lists shared.",
-    "Jupiter": "Jupiter's years bring {name} growth, teachers, faith and luck, sometimes children. The bond expands; watch that it does not promise more than it can keep.",
-    "Venus": "Venus's years bring {name} pleasure, beauty, love and money. The bond can bloom here, or be tested by someone or something lovely.",
-    "Saturn": "Saturn's years ask {name} for work, weight and patience. The bond is tested by duty, and whatever survives is built in stone.",
-    "Rahu": "Rahu's years make {name} hungry: for more, for new, for whatever was forbidden. Ambition or restlessness runs high; name the hunger before it names itself.",
-    "Ketu": "Ketu's years pull {name} inward, toward letting go and the spiritual. {name} may seem far away; the bond needs room here, not chasing."
+    "Sun": "In the Sun's years {name} wants to be seen, by the world and by the person across the table. Saying out loud what you admire in each other helps a lot here. Competing for attention doesn't.",
+    "Moon": "The Moon's years turn {name} toward home, feelings and family. There's more emotion and more need, and this is when a relationship's sense of comfort gets built, or turns out to be missing.",
+    "Mars": "Mars's years give {name} drive, heat and a need for a project. If that energy has somewhere to go it's a gift, and if it doesn't it tends to come out in the relationship.",
+    "Mercury": "In Mercury's years {name} talks, studies, trades and plans more. The relationship lives in conversation now, so keep it honest and share the lists.",
+    "Jupiter": "Jupiter's years bring {name} growth, teachers, faith and luck, and sometimes children. The relationship grows too. Just be careful not to promise more than you can keep.",
+    "Venus": "Venus's years bring {name} pleasure, beauty, love and money. The relationship can really bloom here, and it can also be tested by someone or something lovely.",
+    "Saturn": "Saturn's years ask {name} for hard work, responsibility and patience. Duty tests the relationship, and whatever survives is built to last.",
+    "Rahu": "Rahu's years make {name} hungry for more, for something new, or for whatever was off limits. It helps to name that hunger together before it takes over.",
+    "Ketu": "Ketu's years pull {name} inward, toward letting go and the spiritual. {name} may seem far away for a while. Give them room rather than chasing."
   },
   "SUB_SHORT": {
-    "Sun": "a season of visibility and pride",
-    "Moon": "a season of feeling and home",
-    "Mars": "a season of push and heat",
-    "Mercury": "a season of talk, trade and learning",
-    "Jupiter": "a season of growth and good counsel",
-    "Venus": "a season of pleasure and closeness",
-    "Saturn": "a season of work and weight",
-    "Rahu": "a season of hunger and sudden change",
-    "Ketu": "a season of letting go"
+    "Sun": "a time for being seen",
+    "Moon": "a time for feelings and home",
+    "Mars": "a time of energy and heat",
+    "Mercury": "a time for talking, work and learning",
+    "Jupiter": "a time of growth and good advice",
+    "Venus": "a time for pleasure and closeness",
+    "Saturn": "a time of hard work",
+    "Rahu": "a time of restlessness and change",
+    "Ketu": "a time for letting go"
   },
   "MARKS_TITLE": "The sky's own appointments",
   "MARKS": {
-    "saturn_return": "{name}'s Saturn return, {when}: Saturn comes back to where it stood at {name}'s birth, and the life is audited. What was built on sand comes down. For the bond, a time to recommit on purpose, or to stop pretending.",
-    "saturn_opposition": "{name}'s Saturn opposition, {when}: Saturn halfway round, the midlife reckoning. The bond is asked whether it still fits the person {name} is becoming.",
-    "jupiter_return": "{name}'s Jupiter return, {when}: Jupiter comes home. A year of growth and fresh faith, and a good year to begin something together.",
-    "nodal_return": "{name}'s nodal return, {when}: the nodes come round to where they stood at birth. A turn of direction: what {name} hungers for resets.",
-    "sade_sati": "{name}'s Sade Sati, {when}: Saturn crosses the three signs around {name}'s Moon, seven and a half years of pressure on the heart and the home. Carry each other's load here; it is the long test."
+    "saturn_return": "{name}'s Saturn return, {when}. Saturn comes back to where it was when {name} was born, and life gets a thorough check-up. Anything built on weak ground tends to come down. For the two of you, it's a time to recommit on purpose, or to stop pretending.",
+    "saturn_opposition": "{name}'s Saturn opposition, {when}. Saturn is halfway round, which is the classic midlife reckoning. The question for the relationship is whether it still fits the person {name} is becoming.",
+    "jupiter_return": "{name}'s Jupiter return, {when}. Jupiter comes home, bringing growth and fresh hope. It's a good year to start something together.",
+    "nodal_return": "{name}'s nodal return, {when}. The nodes come back round to where they were at birth, and what {name} wants out of life shifts direction. It's worth talking about where it's heading.",
+    "sade_sati": "{name}'s Sade Sati, {when}. Saturn spends about seven and a half years crossing the signs around {name}'s Moon, which puts pressure on feelings and home life. Help carry each other through it. It's a long test, and it's passed slowly."
   },
   "MARK_SHORT": {
     "saturn_return": "Saturn returns for {name}",
@@ -136,13 +136,13 @@
     "sade_sati": "Saturn begins its long crossing of {name}'s Moon"
   },
   "YEARS_TITLE": "Year by year",
-  "YEARS_INTRO": "The same thirty years at a glance: each person's long guest and shorter guest in the middle of the year, how the long guests get on, and the sky's appointments. Marked years are the ones to watch: both of you change at once, or the sky's appointments pile up.",
+  "YEARS_INTRO": "Here are the same thirty years at a glance: each person's long guest and shorter guest in the middle of the year, how the long guests get on, and the sky's appointments. The marked years are worth watching, either because you both change at once or because several things happen together.",
   "WATCH_TITLE": "Years to watch",
-  "WATCH_NONE": "No year piles up: the changes come one at a time.",
+  "WATCH_NONE": "No single year stands out. The changes come one at a time.",
   "NUM_TITLE": "Your Numbers Together",
   "NUM_SUB": "life paths and names, side by side",
-  "NUM_INTRO": "Each of you carries numbers from your birth date and, if it was given, your full name at birth. Here they sit side by side. Each number sits on two planets, the console's own Stavefall seat and the Vedic one, and how those planets get on is how the two numbers get on. <a href=\"/learn/numbers\">How the numbers work →</a>",
-  "NUM_PAIR_SAME": "You share the number: the same road, walked side by side. Recognition is easy, and so are shared blind spots.",
+  "NUM_INTRO": "Each of you has numbers from your birth date and, if you gave it, your full name at birth. Here they are side by side. Every number sits on two planets, its Stavefall seat and its Vedic one, and how those planets get on tells you how the numbers get on. <a href=\"/learn/numbers\">How the numbers work →</a>",
+  "NUM_PAIR_SAME": "You share this number, so you're walking the same road side by side. You'll recognise each other easily, and you'll share the same blind spots too.",
   "NUM_PAIR": "By Stavefall the planets beneath them, {sa} and {sb}, are <b>{ls}</b>; by the Vedic seating, {va} and {vb}, they are <b>{lv}</b>.",
   "NUM_LABEL": {
     "same": "one planet",
@@ -154,16 +154,16 @@
   },
   "NUM_MEANING": {
     "same": "the numbers stand on the same ground",
-    "allies": "the numbers pull the same way",
-    "friendly": "one number warms to the other more than it is warmed",
-    "polite": "the numbers leave each other room",
-    "uneasy": "the numbers rub: say what each one needs",
-    "odds": "the numbers pull opposite ways, and the friction is the work"
+    "allies": "the numbers pull in the same direction",
+    "friendly": "one number warms to the other more than the other does",
+    "polite": "the numbers give each other room",
+    "uneasy": "the numbers rub a little, so say what each of you needs",
+    "odds": "the numbers pull in opposite directions, and working with that is the point"
   },
-  "NUM_NO_NAME": "Name numbers appear for everyone whose full name at birth was given.",
+  "NUM_NO_NAME": "Name numbers show up for everyone whose full name at birth was given.",
   "KUTA_TITLE": "The Old Match",
   "KUTA_SUB": "Ashtakoota, the eight-fold Jyotish match, in words",
-  "KUTA_INTRO": "Jyotish matches two people by their Moons: the sign and the birth star each was born under. Eight measures add up to 36 points. Tradition reads the match in a fixed order, one partner first; three of the measures change with that order, so this reading counts it both ways. A score is a starting point, not a verdict.",
+  "KUTA_INTRO": "In Jyotish, two people are matched by their Moons: the sign and the birth star each was born under. There are eight measures, worth thirty-six points in all. Tradition reads the match in a fixed order with one partner first, and three of the measures change depending on that order, so this reading counts it both ways. Think of the score as a starting point rather than a verdict.",
   "KUTA_VERDICT": {
     "strong": "a strong match by the old count",
     "workable": "a workable match by the old count",
@@ -172,64 +172,64 @@
   "KUTA": {
     "Varna": {
       "about": "temperament and spiritual footing",
-      "full": "Your temperaments sit comfortably: neither has to strain to respect the other.",
-      "none": "Your spiritual footings differ: respect has to be chosen rather than assumed."
+      "full": "Your temperaments sit comfortably together, and respect comes easily.",
+      "none": "Your temperaments are quite different, so respect is something you choose rather than something you assume."
     },
     "Vashya": {
       "about": "magnetism: who draws whom",
-      "full": "The pull runs both ways: each of you draws the other.",
-      "part": "One of you draws the other more; the pull is real, but uneven.",
-      "none": "Neither of you naturally sways the other; attraction here is built rather than given."
+      "full": "The pull goes both ways. Each of you draws the other in.",
+      "part": "One of you pulls the other in more strongly. The attraction is real, but it isn't even.",
+      "none": "Neither of you naturally sways the other, so the attraction here is built over time."
     },
     "Tara": {
       "about": "the birth stars' goodwill",
-      "full": "Each birth star is kind to the other: the stars wish you well.",
-      "part": "One star is kind and one is testing: luck favours the bond from one side.",
-      "none": "Both stars count as testing: the bond makes its own luck."
+      "full": "Each of your birth stars is kind to the other, so the stars are on your side.",
+      "part": "One star is kind and the other is more testing, so luck favours the bond from one side.",
+      "none": "Both stars count as testing, so the two of you make your own luck."
     },
     "Yoni": {
       "about": "instinct and intimacy, read through the animal of each birth star",
-      "full": "Your instincts match: the animals of your birth stars are at ease together, and closeness comes naturally.",
-      "part": "Your instincts are different animals that can learn each other; intimacy takes patience.",
-      "none": "Your birth-star animals are old enemies: instinct needs translating, and tenderness has to be deliberate."
+      "full": "Your instincts match. The animals of your birth stars are at ease together, and closeness comes naturally.",
+      "part": "Your instincts are different but can learn each other. Intimacy takes some patience, and it's better for it.",
+      "none": "The animals of your birth stars are old rivals, so your instincts need translating and tenderness has to be deliberate."
     },
     "Graha Maitri": {
       "about": "the friendship of the two Moon-sign lords: how your minds get on",
-      "full": "Your Moon-sign lords are friends: your minds get on.",
-      "part": "Your minds are civil rather than close; you understand each other by effort.",
-      "none": "Your Moon-sign lords are at odds: you think differently, and arguments need rules."
+      "full": "The planets that rule your Moon signs are friends, so your minds get on well.",
+      "part": "Your minds get on politely rather than closely. Understanding each other takes some effort.",
+      "none": "The planets that rule your Moon signs don't get on, so you think quite differently and arguments need some ground rules."
     },
     "Gana": {
       "about": "nature: divine, human or fierce",
-      "full": "Your natures can live together.",
-      "part": "One nature is gentler than the other; the fiercer has to learn restraint.",
-      "none": "Your natures clash; the bond needs agreed limits."
+      "full": "Your natures can live together easily.",
+      "part": "One of you is gentler than the other, so the stronger nature needs to learn some restraint.",
+      "none": "Your natures clash, so it helps to agree on some limits together."
     },
     "Bhakoot": {
       "about": "the distance between your Moon signs: love, money and the life you build",
       "full": "Your Moon signs sit at an easy distance for love, money and the life you build.",
-      "none": "Your Moon signs sit at a testing distance (2–12, 5–9 or 6–8): be explicit about money and family."
+      "none": "Your Moon signs sit at one of the testing distances (2–12, 5–9 or 6–8), so be clear with each other about money and family."
     },
     "Nadi": {
       "about": "the pulse of the body",
-      "full": "Your pulses differ, and balance each other.",
-      "none": "You share a Nadi, the same bodily pulse: the tradition's most serious single mismatch. Living closely, you can wear out each other's constitution; give each other rest and room."
+      "full": "Your bodies run on different rhythms, and they balance each other.",
+      "none": "You share a Nadi, the same bodily rhythm, which the tradition treats as the most serious single mismatch. Living closely, you can wear each other out, so make sure you both get rest and space."
     }
   },
   "HD_TITLE": "How Your Bodies Meet",
   "HD_SUB": "your two designs, side by side, in words",
-  "HD_INTRO": "Lay one bodygraph over another and some channels light up only when you are together, some you share, and some one of you carries for both. Where one of you is defined and the other open, the open one feels the defined one's energy amplified, and can mistake it for their own.",
+  "HD_INTRO": "If you lay one bodygraph over another, some channels only light up when you're together, some you both have, and some one of you carries for both. Where one of you is defined and the other is open, the open one feels the defined one's energy more strongly and can mistake it for their own.",
   "HD_TYPES": "{a} is a {ta} with {aa} authority; {b} is a {tb} with {ab} authority. Together your two bodies make one field: a {tc}.",
   "HD_KIND": {
-    "em": "Electromagnetic: each of you holds one end of the channel, and together it lights up. This is the spark between you, and the place you most easily rub.",
-    "comp": "Companionship: you both carry the channel whole. Here you understand each other without effort, and share one way of being.",
-    "dom": "Dominance: one of you carries the whole channel and the other has neither gate. Here one leads and the other learns the current from outside.",
-    "promise": "Compromise: one of you carries the whole channel and the other only one of its gates. The one with the whole current tends to win here; the other gives way, and should notice when that costs too much."
+    "em": "Electromagnetic: each of you has one end of the channel, and together it lights up. This is the spark between you, and also where you're most likely to rub.",
+    "comp": "Companionship: you both have the whole channel. Here you understand each other without having to explain.",
+    "dom": "Dominance: one of you has the whole channel and the other has neither end. Here one of you leads, and the other learns that energy from the outside.",
+    "promise": "Compromise: one of you has the whole channel and the other has just one end. The one with the whole channel tends to get their way here, so the other should notice when giving way starts to cost too much."
   },
   "HD_CHANNEL": "{g1} ({t1}) to {g2} ({t2})",
   "HD_OWNER": "{name}'s",
   "HD_COND_TITLE": "Who conditions whom",
   "HD_COND": "{a}'s defined {centre} ({does}) is amplified in {b}, whose {centre} is open. For {b}: {open}",
-  "HD_COND_NONE": "You are defined and open in the same centres, so little amplification passes between you.",
-  "HD_OPEN_BOTH": "Open in both of you: {centres}. Here the two of you take in the world together; other people and places will colour these centres for you both."
+  "HD_COND_NONE": "You're defined and open in the same centres, so not much passes between you here.",
+  "HD_OPEN_BOTH": "Open in both of you: {centres}. Here you take in the world together, and other people and places will colour these centres for you both."
 }

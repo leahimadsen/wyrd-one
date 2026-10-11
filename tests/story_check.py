@@ -41,7 +41,7 @@ check("each story names its mansion and shakti", all(ENG[nk][0] in texts[si * 27
 
 C, d = chart(10, 100, "Saturn")
 t = story.tell(C, d, "Freya Test", ENG)
-check("the first name is used", "called Freya," in t)
+check("the first name is used", "called you Freya" in t)
 check("exactly one houseguest is in the house now", t.count(S["NOW"].strip()) == 1)
 ages = [int(a) for a in re.findall(r"At (\d+) comes", t)]
 check("houseguests arrive in order, within a lifetime", ages == sorted(ages) and ages[-1] <= S["UNTIL_AGE"])
