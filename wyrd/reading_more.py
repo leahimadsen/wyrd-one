@@ -151,9 +151,8 @@ def planets(C):
         h = E.house_of(s, C["ascS"]); nk = E.nak_index(s); nak = NAKS[nk]; aim = aim_of(s); r = rune_at(s, C["ascS"])
         dg = dignity(b, s)
         shift = PL["SAME"] if si == ti else PL["SHIFT"][ti]
-        tail = lambda line: line.split(": ", 1)[-1]
-        felt = "" if si == ti else (f'<p><b>Your {b}, felt:</b> {tail(PL["PIS"][b][ti])}<br>'
-                                    f'<b>Your {b}, lived:</b> {tail(PL["PIS"][b][si])}</p>')
+        # each sign's line once: in its own column, and not again in the sidereal one when both zodiacs agree
+        lived = "" if si == ti else f'<p><b>{PL["PIS"][b][si]}</b></p>'
         gp, gd = N["personality"].get(b), N["design"].get(b)
         gates = ""
         if gp:
@@ -165,10 +164,10 @@ def planets(C):
           <div class="rd-gifts"><div class="light"><h5>How it feels · tropical {T["sign"]}</h5>
             <p>{PL["SIGN_TROP"][ti]}</p><p><b>{PL["PIS"][b][ti]}</b></p><p>{P["trop"]}</p></div>
           <div class="dark"><h5>What it brings · sidereal {S["sign"]}</h5>
-            <p>{PL["SIGN_SID"][si]}</p><p><b>{PL["PIS"][b][si]}</b></p>
+            <p>{PL["SIGN_SID"][si]}</p>{lived}
             <p>{P["sid"]} It works in your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}.</p>
             <p>Its star is <b>{nak[0]}</b>, pada {pada_of(s)}, ruled by {nak[1]}: {nak[6]} {aim["says"]}</p></div></div>
-          <div class="rd-repair"><h5>{"The shift · " + T["sign"] + " into " + S["sign"] if si != ti else "One sign in both zodiacs · " + S["sign"]}</h5><p>{shift}</p>{felt}</div>
+          <div class="rd-repair"><h5>{"The shift · " + T["sign"] + " into " + S["sign"] if si != ti else "One sign in both zodiacs · " + S["sign"]}</h5><p>{shift}</p></div>
           {woven(C, b, s)}
           {f'<p class="rd-kenning">{X["DIGNITY"][dg]}</p>' if dg else ""}
           {pair("Rune", f'{r["glyph"]} {r["name"]}, {r["gloss"]}. {X["RUNES"][r["name"]]["means"]}')}
