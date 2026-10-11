@@ -1,0 +1,428 @@
+{
+  "_note": "The Body's Old Map: medical astrology for the paid reading and the free chart's body map. Plain and warm. It's for reflection and never a diagnosis; the NOTE says so and must stay. Placeholders in curly braces are filled in by the site; keep them.",
+  "TITLE": "The Body's Old Map",
+  "SUB": "which parts of your body your planets sit on",
+  "INTRO": "Every old system on this site has its own map of the body. They look like they disagree, but they're answering different questions, so here they're all laid onto one figure: the Planetary Ladder's seven stations, from the crown of your head down to the root. The zodiac already runs the same way, Aries at the head and Pisces at the feet, so every sign, house, mansion and centre has a station it belongs to. Where several maps land on the same station, that part of your body matters more for you.",
+  "NOTE": "This is the old map, for reflection. It isn't a diagnosis and it can't tell you anything a doctor can't. If something in your body is bothering you, go and get it looked at.",
+  "TABLE_NOTE": "Each row is a station on the ladder, top to bottom, and each column is one of the maps. The planets in a cell are the ones that land on that station by that map. AC is your rising sign. In the centre column, ● is a defined centre and ○ an open one.",
+  "SIGN": {
+    "Aries": {
+      "part": "the head",
+      "parts": "the head, face, brain and eyes",
+      "line": "The head takes a lot of your energy. Headaches, heat in the face, and knocks and scrapes above the neck are the classic things to watch, and so is running everything through your head instead of your body."
+    },
+    "Taurus": {
+      "part": "the throat",
+      "parts": "the throat, neck, thyroid, jaw and voice",
+      "line": "The throat and neck hold a lot. Tension tends to settle in the jaw and the back of the neck, and the voice and thyroid are the old places to keep an eye on."
+    },
+    "Gemini": {
+      "part": "the shoulders and arms",
+      "parts": "the shoulders, arms, hands, lungs and breath",
+      "line": "Your breath and your hands carry the weight. Shallow breathing when you're busy, tight shoulders and tired wrists are the usual signs it's been too much."
+    },
+    "Cancer": {
+      "part": "the chest and stomach",
+      "parts": "the chest, breasts, stomach and the body's fluids",
+      "line": "Feelings go straight to your stomach. What you eat and how you feel when you eat it matter more for you than for most people."
+    },
+    "Leo": {
+      "part": "the heart and back",
+      "parts": "the heart, upper back, spine and circulation",
+      "line": "The heart and the upper back are where you carry things. Good posture, real rest and things that make you laugh do more for you than they sound like they would."
+    },
+    "Virgo": {
+      "part": "the belly",
+      "parts": "the belly, intestines and digestion",
+      "line": "Worry goes to your gut. Digestion is the first thing to tell you when life is out of order, and routine is genuinely good medicine for you."
+    },
+    "Libra": {
+      "part": "the kidneys and lower back",
+      "parts": "the kidneys, lower back and the skin's balance",
+      "line": "The lower back and kidneys are your soft spot. Water, balance and not sitting for too long in one position are the old advice here."
+    },
+    "Scorpio": {
+      "part": "the pelvis",
+      "parts": "the reproductive organs, bladder and the body's way of clearing things out",
+      "line": "What's held in the pelvis is held for a long time. Your body clears things slowly, feelings included, so give it ways to let go."
+    },
+    "Sagittarius": {
+      "part": "the hips and thighs",
+      "parts": "the hips, thighs and liver",
+      "line": "Your hips and thighs want to move, and the liver handles your excesses. Walking a long way is good for you. Too much of a good thing is the classic trouble."
+    },
+    "Capricorn": {
+      "part": "the knees and bones",
+      "parts": "the knees, bones, joints, teeth and skin",
+      "line": "Bones, joints and teeth carry the weight here. Stiffness builds slowly, so steady use and warmth do more than a big effort now and then."
+    },
+    "Aquarius": {
+      "part": "the calves and ankles",
+      "parts": "the calves, ankles and circulation",
+      "line": "Circulation and the lower legs are where things show up. Cold feet, tired calves and twisted ankles are the old signs, and moving every day keeps it flowing."
+    },
+    "Pisces": {
+      "part": "the feet",
+      "parts": "the feet, the lymph and sleep",
+      "line": "Your feet and your sleep hold a lot. You take in more from other people than you realise, and the body needs real rest to let it out again."
+    }
+  },
+  "PLANET": {
+    "Sun": {
+      "rules": "the heart, the spine, the right eye and your overall energy",
+      "short": "the heart and your energy",
+      "dosha": {
+        "Pitta": 1
+      },
+      "light": "Your energy has a steady source. You tend to bounce back well when you've had proper rest and some sun.",
+      "strain": "Your energy can run low or burn too hot. Pay attention to the heart, the eyes and the back, and to what happens when you push through tiredness.",
+      "plain": "It sets how much energy you have to spend and how fast you recover."
+    },
+    "Moon": {
+      "rules": "the body's fluids, the stomach, the breasts, sleep, the left eye and your moods",
+      "short": "sleep, digestion and moods",
+      "dosha": {
+        "Kapha": 0.5,
+        "Vata": 0.5
+      },
+      "light": "Your body settles well. Sleep, appetite and mood come back into rhythm fairly easily once life calms down.",
+      "strain": "Your mood goes straight into your body. Sleep, digestion and fluid balance are the first things to shift when you're upset.",
+      "plain": "It sets your rhythms: sleep, appetite and how your feelings land in your body."
+    },
+    "Mars": {
+      "rules": "the blood, the muscles, heat, inflammation, cuts and burns",
+      "short": "the blood, muscles and heat",
+      "dosha": {
+        "Pitta": 1
+      },
+      "light": "You have strong muscles and good fight in you. You heal fast from knocks and recover well from hard effort.",
+      "strain": "Heat builds up. Inflammation, fevers, rashes, cuts and accidents from rushing are the classic signs, and anger tends to go straight into the body.",
+      "plain": "It's your physical drive: muscle, heat and the urge to act."
+    },
+    "Mercury": {
+      "rules": "the nerves, the lungs, the skin, the hands and speech",
+      "short": "the nerves and breath",
+      "dosha": {
+        "Vata": 0.34,
+        "Pitta": 0.33,
+        "Kapha": 0.33
+      },
+      "light": "Your nerves are quick and adaptable. You pick up what your body is telling you, as long as you listen.",
+      "strain": "Your nerves run hot. Overthinking turns up as jitteriness, skin trouble, shallow breathing or stomach upsets.",
+      "plain": "It's your nervous system and the way your mind talks to your body."
+    },
+    "Jupiter": {
+      "rules": "the liver, fat, growth and the hips",
+      "short": "the liver and weight",
+      "dosha": {
+        "Kapha": 1
+      },
+      "light": "This is the old protector. It's good for recovery and for the body's general resilience.",
+      "strain": "Too much of a good thing. Weight, the liver and blood sugar are the old places to watch, more from excess than from lack.",
+      "plain": "It's growth and protection: how the body builds up and how well it holds its reserves."
+    },
+    "Venus": {
+      "rules": "the kidneys, the reproductive system, the throat, the face and the skin's glow",
+      "short": "the kidneys and hormones",
+      "dosha": {
+        "Kapha": 0.5,
+        "Vata": 0.5
+      },
+      "light": "There's ease and grace in your body. Pleasure and beauty genuinely help you heal.",
+      "strain": "The kidneys, hormones and reproductive system are the soft spots, and so is too much sugar or comfort.",
+      "plain": "It's pleasure, balance and the body's hormones."
+    },
+    "Saturn": {
+      "rules": "the bones, teeth, joints, the skin and anything long-term",
+      "short": "the bones and joints",
+      "dosha": {
+        "Vata": 1
+      },
+      "light": "You have good stamina. The body stays strong over a long time, and it does well on routine and age.",
+      "strain": "Things build slowly and stay. Stiffness, cold, aching joints, teeth and long-running complaints are the classic Saturn trouble.",
+      "plain": "It's structure and time: the bones, and how the body ages."
+    },
+    "Rahu": {
+      "rules": "the hard-to-pin-down: odd symptoms, toxins, allergies and anxiety",
+      "short": "anxiety and the hard-to-name",
+      "dosha": {
+        "Vata": 1
+      },
+      "light": "You can be drawn to new or unusual ways of looking after yourself, and they often help.",
+      "strain": "Symptoms can be strange or hard to name. Allergies, anxiety and things that don't fit the textbook belong to Rahu.",
+      "plain": "It's the restless and unusual, and the things that are hard to pin down."
+    },
+    "Ketu": {
+      "rules": "sudden things, surgery, the immune system and old, hidden complaints",
+      "short": "the immune system and sudden things",
+      "dosha": {
+        "Pitta": 1
+      },
+      "light": "The body can let go of things suddenly and cleanly. Fasting, quiet and cutting things out tend to help you.",
+      "strain": "Things can come on suddenly or hide for a long time. Ketu is linked to surgery, infections and complaints with no clear cause.",
+      "plain": "It's release: what the body lets go of, sometimes suddenly."
+    }
+  },
+  "STATION": {
+    "Sun": "the crown",
+    "Moon": "the brow",
+    "Saturn": "the throat",
+    "Jupiter": "the heart",
+    "Mars": "the solar plexus",
+    "Venus": "the sacrum",
+    "Mercury": "the root",
+    "Rahu": "the pole above the crown",
+    "Ketu": "the pole below the feet"
+  },
+  "NAK": [
+    "the knees",
+    "the head",
+    "the hips",
+    "the shins",
+    "the eyes",
+    "the hair",
+    "the fingers",
+    "the mouth",
+    "the nails",
+    "the nose",
+    "the sexual organs",
+    "the sexual organs",
+    "the hands",
+    "the forehead",
+    "the teeth",
+    "the arms",
+    "the chest",
+    "the neck",
+    "the feet",
+    "the thighs",
+    "the thighs",
+    "the ears",
+    "the back",
+    "the jaw",
+    "the sides",
+    "the sides",
+    "the belly"
+  ],
+  "PLANET_LINE": "{planet} looks after {rules}. Yours is in {sign}, {place}. {plain} {ladder}{how}",
+  "NEUTRAL": "Nothing about its place pushes it either way.",
+  "WEIGHT_H": "Where the weight falls",
+  "WEIGHT": "Adding up every map, with your rising sign counted three times and your Moon twice, this is where your chart gathers.",
+  "WEIGHT_TROP": "The tropical map puts more weight on {zone} ({parts}). If that's how your body feels from the inside, trust it: that's the experience, and the sidereal map is the build.",
+  "STRAIN_H": "Planets under strain",
+  "STRAIN": "A planet is under strain when it's in its weakest sign, or in the 6th, 8th or 12th house, the houses of illness, long trouble and rest. It's where your body asks for more care, not where something is wrong.",
+  "STRAIN_NONE": "None of your planets is badly placed for the body. That doesn't mean nothing will ever go wrong, just that there's no one place the chart keeps pointing at.",
+  "DOSHA_H": "Your doshas",
+  "DOSHA_INTRO": "Ayurveda describes the body with three doshas. Each planet leans toward one or two of them. Counting your rising sign's ruler and your Moon twice, and adding your Moon's mansion, this is how yours come out.",
+  "DOSHA": {
+    "Vata": {
+      "is": "air and space: movement, nerves, dryness and cold",
+      "line": "With Vata leading you're quick and changeable, and you run out of steam fast. Warmth, regular meals, oil on the skin and early nights are the old ways to settle it."
+    },
+    "Pitta": {
+      "is": "fire and water: heat, digestion, drive and sharpness",
+      "line": "With Pitta leading you run hot, in temper and in body. Cooling food, not skipping meals, and not competing with yourself are the old ways to calm it."
+    },
+    "Kapha": {
+      "is": "earth and water: structure, steadiness, softness and calm",
+      "line": "With Kapha leading you're steady and strong, and slow to start. Movement, lighter food, and getting up early are the old ways to keep it from getting heavy."
+    }
+  },
+  "HOUSES_H": "The health houses",
+  "HOUSES": {
+    "1": "the 1st house is the body itself and its strength",
+    "6": "the 6th house is illness and how you heal, and your daily habits",
+    "8": "the 8th house is long-running trouble, surgery and how long things last",
+    "12": "the 12th house is rest, sleep, hospitals and the feet"
+  },
+  "HOUSE_LINE": "{house_says}. Its ruler is {lord}, which sits in your {where} house.{in_it}",
+  "HOUSE_IN": " {planets} {verb} in it.",
+  "TIME_H": "The body in time",
+  "TIME_NOW": "Right now you're in {maha}'s long period with {antar}'s sub-period running inside it, until {to}. So this season brings forward {maha_short}, and {maha_zone}, where {maha_name} sits; and {antar_short}, and {antar_zone}, where {antar} sits.",
+  "TIME_SAME": "Right now you're in {maha}'s long period and its own sub-period, until {to}, so this season brings forward {maha_short}, and {maha_zone}, where {maha_name} sits.",
+  "TIME_NEXT": "The next sub-periods, and the part of the body each one's planet sits on:",
+  "TIME_ROW": "{from}: {lord}, for {rules}. In your chart it sits at {zone}.",
+  "ASK": "Your chart gathers at {zone}: {parts}. What does that part of your body tell you when you're not listening?",
+  "STRAIN_ROW": "{planet} in {sign}, your {house} house{weak}. Look after {short}, and {zone}, where it sits.",
+  "STRAIN_WEAK": ", its weakest sign",
+  "LENSES_H": "How the maps fit together",
+  "LENSES": [
+    [
+      "The sign",
+      "the body you were given. This is the sidereal sign, the one Jyotish reads, and it's the main map."
+    ],
+    [
+      "The house",
+      "where your life lands in your body. It's counted from your rising sign, so the 1st house is your head and the 12th your feet."
+    ],
+    [
+      "The mansion",
+      "the fine detail: one small part of the body inside the bigger area."
+    ],
+    [
+      "The centre",
+      "how energy moves there, from your bodygraph. A defined centre runs steadily on its own; an open one takes in whatever is around it."
+    ],
+    [
+      "The tropical sign",
+      "how the body feels to live in. It's the Western map of the same figure, the same way the console reads the tropical zodiac everywhere else, as experience."
+    ],
+    [
+      "The planet",
+      "what kind of thing it is: heat, bone, nerves, fluids. The station says where; the planet says what."
+    ],
+    [
+      "The dosha",
+      "the temperament of the whole body. Each dosha has its home in one part of the ladder."
+    ],
+    [
+      "The period",
+      "when. Each planet's years bring forward the parts of the body it rules and sits on."
+    ]
+  ],
+  "ZONES": [
+    {
+      "key": "crown",
+      "name": "The crown",
+      "parts": "the top of the head, the skull and the brain",
+      "signs": [
+        "Aries"
+      ],
+      "centre": [
+        "Head"
+      ],
+      "dosha": "Kapha",
+      "line": "A lot of your life runs through your head. Pressure, headaches and sleepless thinking are the first signs you've done too much, and getting out of your head and into your body is the old cure."
+    },
+    {
+      "key": "brow",
+      "name": "The brow",
+      "parts": "the face, eyes, ears and nose",
+      "signs": [
+        "Aries"
+      ],
+      "centre": [
+        "Ajna"
+      ],
+      "dosha": "Kapha",
+      "line": "Your senses work hard. Eyes, sinuses and the tension between the brows are where strain shows up, and screens, noise and bright light cost you more than most."
+    },
+    {
+      "key": "throat",
+      "name": "The throat",
+      "parts": "the neck, mouth, jaw, teeth and voice",
+      "signs": [
+        "Taurus"
+      ],
+      "centre": [
+        "Throat"
+      ],
+      "dosha": "Kapha",
+      "line": "What you don't say goes to your throat. A tight jaw, a sore throat or a voice that goes when you're upset are the classic signs, and speaking up really does help your body."
+    },
+    {
+      "key": "heart",
+      "name": "The heart",
+      "parts": "the chest, heart, lungs, arms, hands and upper back",
+      "signs": [
+        "Gemini",
+        "Cancer",
+        "Leo"
+      ],
+      "centre": [
+        "G",
+        "Heart"
+      ],
+      "dosha": "Kapha",
+      "line": "You carry things in your chest and shoulders. Breath, posture and the heart are where life shows up in you, and real rest and real connection are the medicine."
+    },
+    {
+      "key": "solar",
+      "name": "The solar plexus",
+      "parts": "the stomach, belly, liver and digestion",
+      "signs": [
+        "Cancer",
+        "Virgo"
+      ],
+      "centre": [
+        "Solar",
+        "Spleen"
+      ],
+      "dosha": "Pitta",
+      "line": "Your gut is your second brain. Worry and feeling both go straight to your stomach, and regular meals and a calm table do more for you than they sound like they would."
+    },
+    {
+      "key": "sacrum",
+      "name": "The sacrum",
+      "parts": "the pelvis, hips, lower back, kidneys and reproductive organs",
+      "signs": [
+        "Libra",
+        "Scorpio",
+        "Sagittarius"
+      ],
+      "centre": [
+        "Sacral"
+      ],
+      "dosha": "Vata",
+      "line": "Your energy lives low in the body. The lower back, the kidneys and your cycles hold a lot, and they do best when you work with your energy instead of pushing past it."
+    },
+    {
+      "key": "root",
+      "name": "The root",
+      "parts": "the thighs, legs, knees, ankles, feet and bones",
+      "signs": [
+        "Sagittarius",
+        "Capricorn",
+        "Aquarius",
+        "Pisces"
+      ],
+      "centre": [
+        "Root"
+      ],
+      "dosha": "Vata",
+      "line": "Your body needs ground. Legs, knees, feet and bones carry the weight, and walking, standing and slow steady movement keep you well."
+    }
+  ],
+  "NAK_ZONE": [
+    "root",
+    "crown",
+    "sacrum",
+    "root",
+    "brow",
+    "crown",
+    "heart",
+    "throat",
+    "heart",
+    "brow",
+    "sacrum",
+    "sacrum",
+    "heart",
+    "brow",
+    "throat",
+    "heart",
+    "heart",
+    "throat",
+    "root",
+    "root",
+    "root",
+    "brow",
+    "heart",
+    "throat",
+    "solar",
+    "solar",
+    "solar"
+  ],
+  "AGREE": "{lenses} all point here.",
+  "AGREE_ONE": "Mostly {lenses} points here.",
+  "LENS_NAME": {
+    "sign": "your signs",
+    "house": "your houses",
+    "mansion": "your mansions",
+    "centre": "your bodygraph"
+  },
+  "LADDER_SAME": "It also feeds {station} on the ladder, so it's at home where it sits and counts double there. ",
+  "LADDER_OTHER": "On the ladder it feeds {station}, so it ties {station} to {zone}. ",
+  "RISING": "Your rising sign is {sign}, which sits at {zone}. The old books say the 1st house is the body itself, so that's where your body starts from.",
+  "DOSHA_HOME": "{dosha}'s home in the body is {zones}, so that's where it shows first.",
+  "PLACE": "on {part}, which is {zone} on the ladder",
+  "PLACE_SAME": "on {part}"
+}
