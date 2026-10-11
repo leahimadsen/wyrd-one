@@ -3,6 +3,7 @@ The paid reading, assembled in story order from The Völva's own register.
 Every interpretive sentence comes from corpus.json; this file only chooses
 which passages a chart calls for and lays them out.
 
+  Prologue         a silly story of how you got here (wyrd/story.py, lib/story.json)
   I    The Seat            rising sign and mansion: frame, bearing, features
   II   The Engine          the Moon's mansion, worked in full
   III  The Matrix          Saturn as the builder of your reality, and the world seen from the Moon
@@ -26,6 +27,7 @@ from . import engine as E
 from . import vargas as VG
 from . import rave as RV
 from . import reading_more as MORE
+from . import story as STORY
 
 CORPUS = json.load(open(os.path.join(os.path.dirname(__file__), "..", "lib", "corpus.json"), encoding="utf-8"))
 REG, ENG, NAKS, DEEP = CORPUS["REGISTER"], CORPUS["ENGINE"], CORPUS["NAKSHATRA"], CORPUS["NAK_DEEP"]
@@ -324,4 +326,4 @@ def build(chart, dasha, who):
 
     for i in range(len(out)):                       # number the sections in the order they stand
         out[i] = out[i].replace("{{N}}", ROMAN[i], 1)
-    return "".join(out)
+    return STORY.tell(C, dasha, (who or {}).get("name"), ENG) + "".join(out)     # the prologue opens it, unnumbered
