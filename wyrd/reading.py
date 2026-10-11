@@ -16,7 +16,10 @@ which passages a chart calls for and lays them out.
   X    The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
   XI   The Path of Dharma  Mission, Illuminations, the Diamond
   XII  The Clock           the periods running now, and the whole life by period
-  XIII The Questions       every question the chart asked, gathered
+  XIII The Numbers         life path, birthday, personal year, and the name's numbers, each on two planets
+  XIV  The Questions       every question the chart asked, gathered
+
+Sections refer to each other by name ({{SEC:The Work}}); the numbers are filled in last.
 
 The planets, runes, body and thriving sections draw on lib/register_ext.json too.
 """
@@ -28,6 +31,7 @@ from . import vargas as VG
 from . import rave as RV
 from . import reading_more as MORE
 from . import story as STORY
+from . import reading_numbers as NUMBERS
 
 CORPUS = json.load(open(os.path.join(os.path.dirname(__file__), "..", "lib", "corpus.json"), encoding="utf-8"))
 REG, ENG, NAKS, DEEP = CORPUS["REGISTER"], CORPUS["ENGINE"], CORPUS["NAKSHATRA"], CORPUS["NAK_DEEP"]
@@ -36,7 +40,7 @@ GATE_NAME, KGLOSS, SEQ = CORPUS["GATE_NAME"], CORPUS["KARAKA_GLOSS"], CORPUS["SE
 
 GLYPH = {"Sun": "☉", "Moon": "☽", "Mercury": "☿", "Venus": "♀", "Mars": "♂", "Jupiter": "♃",
          "Saturn": "♄", "Uranus": "♅", "Neptune": "♆", "Pluto": "♇", "Rahu": "☊", "Ketu": "☋", "Earth": "⊕"}
-ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII"]
+ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI"]
 
 esc = html.escape
 
@@ -252,7 +256,7 @@ def build(chart, dasha, who):
       {f'<p class="rd-kenning">The dharma repeats {" and ".join(repeats)} of the birth chart. The repetition is load-bearing — that is a thing the life does not get to outgrow.</p>' if repeats else ''}
       <h3 class="rd-tier">The dharma cross</h3>
       <p>The four positions that carry the Dharma Design, as the four Suns and Earths carry the Birth Design: the dharma Sun and its Earth,
-      and the dharma design Sun and its Earth. Read them as you read section VII, conscious side first.</p>
+      and the dharma design Sun and its Earth. Read them as you read section {{SEC:The Work}}, conscious side first.</p>
       {register_entry(dps['gate'], dps['line'], 'personality', 'Dharma Sun', asks)}
       {register_entry(Dh['personality']['Earth']['gate'], Dh['personality']['Earth']['line'], 'personality', 'Dharma Earth', asks)}
       {register_entry(dds['gate'], dds['line'], 'design', 'Dharma design Sun', asks)}
@@ -277,7 +281,7 @@ def build(chart, dasha, who):
                 t = R.get("t", GATE_NAME.get(str(g["gate"]), ""))
                 act = activation(g["gate"], g["line"], C, dasha, n)
                 if col == "design":
-                    q = '<p class="rd-step-q held">This is design-side. Read the gate\'s engine in section VII or X first; its question waits in section XIII.</p>'
+                    q = '<p class="rd-step-q held">This is design-side. Read the gate\'s engine in section {{SEC:The Work}} or {{SEC:The Dharma Weave}} first; its question waits in section {{SEC:The Questions}}.</p>'
                 else:
                     q = f'<p class="rd-step-q">The question to carry: <em>{R.get("a", "")}</em></p>' if R.get("a") else ""
                 out.append(f"""<div class="rd-step"><div class="rd-sn">Step {k}</div>
@@ -329,6 +333,9 @@ def build(chart, dasha, who):
         for m in dasha['maha'])}</table></div>
       <h3 class="rd-tier">Your life by period</h3>{MORE.periods(C, dasha)}"""))
 
+    # ---------- the numbers ----------
+    out.append(section(0, NUMBERS.T["TITLE"], NUMBERS.T["SUB"], NUMBERS.body(C, dasha, who, asks)))
+
     # ---------- VIII · the questions ----------
     qs = "".join(f'<li><div class="rd-ql">{esc(lab)}{" · held, design-side" if d else ""}</div><div>{q}</div></li>'
                  for lab, q, d in asks)
@@ -337,4 +344,7 @@ def build(chart, dasha, who):
 
     for i in range(len(out)):                       # number the sections in the order they stand
         out[i] = out[i].replace("{{N}}", ROMAN[i], 1)
+    import re
+    num = {re.search(r"<h2>(.*?)</h2>", s).group(1): ROMAN[i] for i, s in enumerate(out)}
+    out = [re.sub(r"\{\{SEC:(.*?)\}\}", lambda m: num[m.group(1)], s) for s in out]
     return STORY.tell(C, dasha, (who or {}).get("name"), ENG) + "".join(out)     # the prologue opens it, unnumbered

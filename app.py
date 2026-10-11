@@ -202,6 +202,7 @@ def consultation_reading():
             "place_id": place["id"], "place_label": place["label"],
             "lat": place["lat"], "lon": place["lon"], "tz": place["tz"],
             "wyrd_report_ready": "1"}
+    if isinstance(data.get("full_name"), str) and data["full_name"].strip(): meta["full_name"] = data["full_name"].strip()[:80]
     try:
         stripe_api.save_birth_metadata(config.STRIPE_SECRET, sid, meta)
     except stripe_api.StripeError:
@@ -336,6 +337,7 @@ def checkout():
             "place_id": b["place"]["id"], "place_label": b["place"]["label"],
             "lat": b["place"]["lat"], "lon": b["place"]["lon"], "tz": b["place"]["tz"]}
     if d.get("unknown_time"): meta["unknown_time"] = "1"
+    if isinstance(d.get("full_name"), str) and d["full_name"].strip(): meta["full_name"] = d["full_name"].strip()[:80]   # for the name's numbers
     if config.DEV_PREVIEW:
         from urllib.parse import urlencode
         return jsonify(url="/reading?" + urlencode({"preview": 1, **meta}))
@@ -525,7 +527,7 @@ def admin_logout():
 @app.post("/admin/reading")
 def admin_reading():
     if not is_admin() or not same_origin(): abort(404)
-    meta = {k: request.form.get(k, "") for k in ("name", "date", "time", "place_id", "lat", "lon", "tz", "place_label")}
+    meta = {k: request.form.get(k, "") for k in BIRTH_KEYS}
     if not meta["lat"]: meta.pop("lat"); meta.pop("lon"); meta.pop("tz")
     try:
         return render_reading(meta, "Generated in your admin — no payment taken. Save it as a PDF from your browser's print menu.")
@@ -907,7 +909,7 @@ def account_page():
 <form method="post" action="/signout" style="margin-top:40px"><button class="alt" type="submit">Sign out</button></form>""", script=script)
 
 WEEK_LINK = '<h2>This week</h2><p><a href="/account/weather">Read this week&#39;s Body Weather →</a></p>'
-BIRTH_KEYS = ("name", "date", "time", "place_id", "lat", "lon", "tz", "place_label")
+BIRTH_KEYS = ("name", "date", "time", "place_id", "lat", "lon", "tz", "place_label", "full_name")
 
 @app.post("/api/account/chart")
 def account_chart():

@@ -23,7 +23,7 @@ unk.addEventListener("change", syncUnknown);
 
 /* ---------- editing a chart already cast: fill the form back in ---------- */
 function fill(b){
-  f.name.value = b.name || ""; f.date.value = b.date || ""; f.time.value = b.time || "";
+  f.name.value = b.name || ""; f.full_name.value = b.full_name || ""; f.date.value = b.date || ""; f.time.value = b.time || "";
   unk.checked = !!b.unknown_time; syncUnknown();
   if (b.place_id != null){
     place = { id: b.place_id, label: b.place_label, lat: b.lat, lon: b.lon, tz: b.tz };
@@ -43,7 +43,7 @@ if (consultSid){
 }
 
 function birthFromForm(){
-  return { name: f.name.value.trim(), date: f.date.value, time: unk.checked ? "12:00" : f.time.value,
+  return { name: f.name.value.trim(), full_name: f.full_name.value.trim() || undefined, date: f.date.value, time: unk.checked ? "12:00" : f.time.value,
            unknown_time: unk.checked || undefined, place_id: place.id, lat: place.lat, lon: place.lon, tz: place.tz,
            place_label: place.label };
 }
