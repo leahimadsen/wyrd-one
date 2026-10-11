@@ -1,9 +1,8 @@
 {
-  "_note": "DRAFT writing for The Numbers in the paid reading, for The Völva to rewrite. Each number has an engine, a light wield and a shadow, like the register. Placeholders in curly braces are filled in by the site; keep them.",
-
-"LEARN": {
+  "_note": "The Numbers, in The Völva's register: the paid reading's section and the public learn page. Each number has an engine, a light wield and a shadow. Placeholders in curly braces are filled in by the site; keep them.",
+  "LEARN": {
     "TITLE": "Learn the numbers",
-    "LEDE": "A birth date and a name, added up until one digit is left. Each number then sits on two planets: the console's own Stavefall seat, and the Vedic tradition's planet. This page shows how the numbers are counted and how the two seatings are made.",
+    "LEDE": "A birth date and a name, added until one digit is left. Each number then stands on two planets: the console's own Stavefall seat, and the Vedic tradition's. This page shows how the counting is done, and how the two seatings were made.",
     "COUNT_H": "How a number is counted",
     "COUNT": [
       "Write the number out and add its digits. If the answer has two digits, add those. Stop at one digit, with one exception: 11, 22 and 33 are master numbers and stay as they are.",
@@ -16,14 +15,14 @@
       "Your expression adds every letter: what the name equips you to do. Your soul urge adds only the vowels (A, E, I, O, U, and Y when a word has no other vowel): what you want underneath. Your personality adds only the consonants: how other people meet you first. Reduce each name on its own, then add the names together and reduce once more. JOHN is 1 + 6 + 8 + 5 = 20, which is 2; SMITH is 1 + 4 + 9 + 2 + 8 = 24, which is 6; so John Smith's expression is 2 + 6 = 8."
     ],
     "MASTER_H": "Master numbers",
-    "MASTER": "11, 22 and 33 are kept whole because they are louder versions of 2, 4 and 6: the same engine, run at a higher voltage. A master number sits on the same planets as its root, so 11 sits where 2 sits.",
+    "MASTER": "11, 22 and 33 are kept whole: they are 2, 4 and 6 run at a higher voltage — the same engine, louder. A master number stands on the same planets as its root, so 11 stands where 2 stands.",
     "SEATS_H": "The two seatings",
     "STAVEFALL_H": "Stavefall: the console's own seating",
     "STAVEFALL": [
-      "Stavefall does not borrow its numbers from a numerology tradition. It seats them on the Planetary Ladder, the console's chain of seven stations that runs from the crown of the head to the root of the spine, each station fed by one planet.",
+      "Stavefall does not borrow its numbers from a numerology tradition. It seats them on the Planetary Ladder — the console's chain of seven stations from the crown of the head to the root of the spine, each fed by one planet.",
       "Counting from the crown down: the Sun feeds the crown and takes 1, and the Moon feeds the brow and takes 2. The other five take 3 to 7 in the order the ladder already climbs them: Saturn at the throat, Jupiter at the heart, Mars at the solar plexus, Venus at the sacrum, Mercury at the root. The ladder keeps its own rule: from root to throat, each planet takes longer to go round the Sun than the one below it (Mercury 88 days, Venus 225, Mars 687, Jupiter 4,333, Saturn 10,759).",
       "That fills seven. The nodes are not stations; they are the pole the stations are threaded on, so they take the two numbers left. Rahu is 8, the pole above the crown. Ketu is 9, the pole below the feet, and 9 is the counting's own modulus, which is the right seat for the tail: the vanishing point that carries nothing.",
-      "So a Stavefall number is not just a planet. It is a whole station, with its realm, its place in the body, its colour and its tone."
+      "So a Stavefall number is not a bare planet. It is a whole station: realm, place in the body, colour, tone."
     ],
     "VEDIC_H": "Vedic numerology: the tradition's seating",
     "VEDIC": [
@@ -31,46 +30,90 @@
       "The two agree on 1, 2 and 6 (the Sun, the Moon and Venus) and part on the rest."
     ],
     "READ_H": "Reading both",
-    "READ": "Where the two seatings agree, the number speaks with one voice: read it twice as loudly. Where they differ, you hold two planets for one number. The Stavefall planet says where in the body and on the ladder the number lives. The Vedic planet says which planet the tradition hears in it. Your reading looks at both planets in your own chart: the sign and house each stands in, and the years its period runs.",
+    "READ": "Where the two seatings agree, the number speaks with one voice; read it twice as loudly. Where they differ, you hold two planets for one number. The Stavefall planet says where in the body, and on the ladder, the number lives. The Vedic planet says which planet the tradition hears in it. Your reading looks for both in your own chart: the sign and house each stands in, and the years its period runs.",
     "TABLE_H": "The nine numbers",
     "DESC": "A free guide to numerology in The Wyrd Console: how your life path, birthday, personal year and name numbers are counted, master numbers, and the two planets each number sits on, Stavefall and Vedic."
   },
-
   "TITLE": "The Numbers",
   "SUB": "your birth date and your name, counted",
-  "INTRO": "Numbers are the plainest instrument in the console: a birth date and a name, added up until only one digit is left. Each number sits on two planets. The first is the console's own Stavefall seat on the Planetary Ladder, where every number is a full station. The second is the Vedic tradition's planet for that number. Where your numbers' planets stand in your chart, and when their periods come, is where the numbers stop being abstract.",
-  "NO_NAME": "Add your full name at birth, exactly as it was first written, and three more numbers join these: your expression, your soul urge and your personality.",
-
+  "INTRO": "Numbers are the plainest instrument in the console: a birth date and a name, added until one digit is left. Each number then stands on two planets — the console's own Stavefall seat, and the Vedic tradition's. A number on its own is abstract. Where its planets stand in your chart, and when their periods come, is where it stops being abstract.",
+  "NO_NAME": "Add your full name at birth — every name, as first written — and three more numbers join these: expression, soul urge, personality.",
   "KIND": {
     "life_path": "the road the whole life walks",
     "birthday": "the gift you arrived carrying",
-    "personal_year": "the year you are standing in now, {year}",
-    "expression": "what your full name equips you to do",
-    "soul_urge": "what you want underneath, from the vowels of your name",
-    "personality": "how other people meet you first, from its consonants"
+    "personal_year": "the year you are standing in: {year}",
+    "expression": "what the full name equips you to do",
+    "soul_urge": "what you want underneath — the vowels of the name",
+    "personality": "how you are met first — its consonants"
   },
-
   "NUMBER": {
-    "1":  {"name": "the beginner",      "light": "Starts things no one else would start, and stands alone without needing to be told it is allowed.", "shadow": "Cannot follow, and mistakes isolation for independence."},
-    "2":  {"name": "the go-between",    "light": "Holds two sides at once and finds the line that joins them; partnership is where the power is.",     "shadow": "Disappears into other people, and waits to be chosen."},
-    "3":  {"name": "the voice",         "light": "Expression, play and making: the life speaks, sings, writes or builds its way through.",               "shadow": "Scatters, and performs a feeling instead of having it."},
-    "4":  {"name": "the builder",       "light": "Order, foundations, the long plain work that lasts after the applause.",                                "shadow": "Rigidity, and work used as a place to hide."},
-    "5":  {"name": "the traveller",     "light": "Freedom, change and the senses: the one who goes, tries, and comes back changed.",                     "shadow": "Restlessness that will not stay for the consequence."},
-    "6":  {"name": "the keeper",        "light": "Care, home, beauty and responsibility, carried well.",                                                  "shadow": "Martyrdom, and control dressed as love."},
-    "7":  {"name": "the seeker",        "light": "The inner study: solitude used for truth, and questions followed all the way down.",                    "shadow": "Withdrawal, suspicion, the locked room."},
-    "8":  {"name": "the steward",       "light": "Power, money and consequence, handled with weight and fairness.",                                       "shadow": "The scales tipped toward the self; control mistaken for safety."},
-    "9":  {"name": "the finisher",      "light": "Completion, compassion and the wide view: the one who closes the circle for others.",                  "shadow": "Carrying everyone's grief, and leaving before the work is done."},
-    "11": {"name": "the messenger",     "light": "A master 2: intuition lit up, the go-between who carries something from further off.",                 "shadow": "High voltage with no ground: nerves, and a gift too bright to hold still."},
-    "22": {"name": "the master builder","light": "A master 4: the builder whose foundations hold whole communities.",                                    "shadow": "The plan so large it never starts."},
-    "33": {"name": "the teacher",       "light": "A master 6: care raised into teaching, the keeper who shows others how to keep.",                       "shadow": "Rescuing as an identity."}
+    "1": {
+      "name": "the beginner",
+      "light": "The first move — made before permission arrives, and made alone if it has to be.",
+      "shadow": "Cannot follow. Isolation mistaken for independence; the founder of a company of one."
+    },
+    "2": {
+      "name": "the go-between",
+      "light": "Two sides held at once, and the line between them found. The power lives in the joining.",
+      "shadow": "Disappears into the other; waits to be chosen, and calls the waiting patience."
+    },
+    "3": {
+      "name": "the voice",
+      "light": "Expression as engine: the life speaks, sings, writes or builds its way through.",
+      "shadow": "Scatter. The feeling performed instead of had; ten beginnings and an audience."
+    },
+    "4": {
+      "name": "the builder",
+      "light": "Order and foundations — the long plain work still standing after the applause.",
+      "shadow": "Rigidity: the wall built for safety that becomes the room. Work as a place to hide."
+    },
+    "5": {
+      "name": "the traveller",
+      "light": "Freedom, change, the senses: the one who goes, tries, and comes back changed.",
+      "shadow": "Restlessness that will not stay for the consequence; a life of departures."
+    },
+    "6": {
+      "name": "the keeper",
+      "light": "Care, home, beauty and responsibility — carried well, and set down when it is not yours.",
+      "shadow": "Martyrdom. Control dressed as love; the helping that keeps the helped small."
+    },
+    "7": {
+      "name": "the seeker",
+      "light": "The inner study — solitude used for truth, questions followed all the way down.",
+      "shadow": "Withdrawal and suspicion: the locked room, the answer inside, no visitors."
+    },
+    "8": {
+      "name": "the steward",
+      "light": "Power, money and consequence, handled with weight and fairness.",
+      "shadow": "The scales tipped toward the self. Control mistaken for safety."
+    },
+    "9": {
+      "name": "the finisher",
+      "light": "Completion and the wide view — the one who closes the circle for others.",
+      "shadow": "Carrying everyone's grief; leaving before the work is done, and calling it compassion."
+    },
+    "11": {
+      "name": "the messenger",
+      "light": "A master 2: intuition lit, the go-between carrying something from further off.",
+      "shadow": "High voltage with no ground — nerves, and a signal too bright to hold still."
+    },
+    "22": {
+      "name": "the master builder",
+      "light": "A master 4: foundations that hold communities, not only houses.",
+      "shadow": "The plan so large it never starts."
+    },
+    "33": {
+      "name": "the teacher",
+      "light": "A master 6: care raised into teaching — the keeper who shows others how to keep.",
+      "shadow": "Rescue as an identity."
+    }
   },
-
   "PLANETS_TITLE": "Your life path's planets in your chart",
   "PLANET_LINE": "{planet} ({system}) stands in {sign}, in your {house} house: {life}. {period}",
   "PERIOD_PAST": "Its period ran {from}–{to}.",
   "PERIOD_NOW": "Its period is running now, {from}–{to}: the life path is loudest in these years.",
   "PERIOD_AHEAD": "Its period comes {from}–{to}, from age {age}.",
-  "SAME_PLANET": "Both systems seat your life path on the same planet, so read it twice as loudly.",
-  "YEAR_LINE": "This is a personal {n} year: {light} Watch for its shadow: {shadow}",
-  "ASK": "Your life path is {n}, {name}. Where are you walking it in its light, and where in its shadow?"
+  "SAME_PLANET": "Both systems seat your life path on the same planet. Read it twice as loudly.",
+  "YEAR_LINE": "A personal {n} year. Lit well: {light} Watch for the shadow: {shadow}",
+  "ASK": "Your life path is {n}, {name}. Where are you walking it in its light — and where in its shadow?"
 }
