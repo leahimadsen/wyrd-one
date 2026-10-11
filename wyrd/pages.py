@@ -48,15 +48,16 @@ def _cta():
 
 
 # ---------------- the readings ----------------
-def reports(base, price_cents, member_cents, month_cents=1100, year_cents=11100, pro_cents=4400, pro_n=30):
+def reports(base, price_cents, member_cents, month_cents=1100, year_cents=11100, pro_cents=4400, pro_n=30,
+            together_cents=2200, together_extra=1100, member_off=20):
     p = price_cents / 100
     m = lambda c: f"${c // 100}" if c % 100 == 0 else f"${c / 100:.2f}"
     body = f"""
 <h1>Astrology readings by The Völva</h1>
-<p class="lede">Start with the free birth chart: the whole path, in both zodiacs, with your design, runes and timing. When you want it read, there are three ways in.</p>
+<p class="lede">Start with the free birth chart: the whole path, in both zodiacs, with your design, runes and timing. When you want it read, there are four ways in.</p>
 <div class="plans">
   <section class="plan lead"><h2>The Wyrd Reading</h2><div class="price">{m(price_cents)}<small> once</small></div>
-    <p class="muted">A natal astrology reading in thirteen sections, written for your placements and nobody else's.</p>
+    <p class="muted">A natal astrology reading in fourteen sections, written for your placements and nobody else's. It opens with the story of how you got here; the sections decode it.</p>
     <ul><li>The Seat you rise from, the engine of your Moon, and the Matrix your Saturn builds</li>
     <li>Every planet in both zodiacs, and how they feed each other; your Soul-Planet and its cabinet</li>
     <li>Your runes and the years each one wakes</li>
@@ -64,10 +65,16 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=11100,
     <li>Your whole life by Vimshottari era, and every question your chart asks</li></ul>
     <a class="btn-buy" href="/">Cast your chart, then get the reading</a>
     <a class="alt" href="/sample">Read a sample reading first</a></section>
+  <section class="plan"><h2>The Reading Together</h2><div class="price">{m(together_cents)}<small> for two</small></div>
+    <p class="muted">and {m(together_extra)} for each person you add, up to nine</p>
+    <ul><li>A story of how you ended up at one table, and the bond in words: what it is for, its higher and lower paths</li>
+    <li>What each of you wakes in the other, the old eight-fold match, how your bodies meet, and your numbers side by side</li>
+    <li>The next thirty years, chapter by chapter and year by year, with the years to watch</li></ul>
+    <a class="btn-cast" href="/chart#compare">Add people in Compare, then get it</a></section>
   <section class="plan"><h2>Membership</h2><div class="price">{m(month_cents)}<small> a month</small></div>
     <p class="muted">or {m(year_cents)} a year</p>
     <ul><li>Body Weather by email every Monday: how the week's sky moves through your Birth Design and your Dharma Design</li>
-    <li>The Wyrd Reading for {m(member_cents)} instead of {m(price_cents)}</li></ul>
+    <li>The Wyrd Reading for {m(member_cents)} instead of {m(price_cents)}, and {member_off}% off the reading together</li></ul>
     <a class="btn-cast" href="/membership">See the membership</a></section>
   <section class="plan"><h2>Professional</h2><div class="price">{m(pro_cents)}<small> a month</small></div>
     <ul><li>For astrologers and practitioners: The Wyrd Reading for your clients, {pro_n} a month</li>
@@ -89,6 +96,10 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=11100,
          "description": "A personal astrology report written from your birth chart by The Völva: sidereal signs, nakshatras, the 64 gates, the Birth and Dharma Designs, the runes, and the Vimshottari eras of a life.",
          "url": base + "/reports", "image": base + "/static/icons/icon-512.png",
          "offers": {"@type": "Offer", "price": f"{p:.2f}", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": base + "/reports"}},
+        {"@type": "Product", "name": "The Reading Together: a relationship astrology reading", "brand": {"@type": "Brand", "name": "The Wyrd Console"},
+         "description": "A synastry reading for two to nine people by The Völva: the bond by Sukuyō and the planets, the eight-fold match, how your designs meet, your numbers, and the next thirty years together.",
+         "url": base + "/reports", "image": base + "/static/icons/icon-512.png",
+         "offers": {"@type": "Offer", "price": f"{together_cents / 100:.2f}", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": base + "/reports"}},
         {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}]})
     return ("Astrology Readings & Birth Chart Reports · The Wyrd Console",
             f"Personal astrology readings by The Völva, written from your exact birth chart: sidereal and tropical signs, nakshatras, your design and Dharma Design, runes and timing. ${p:.0f}, ready the moment you pay.",
