@@ -76,8 +76,8 @@ function overview(cs, R, together){
 
 /* ---------- what the free side leaves to the paid reading ---------- */
 const LOCKED = `<div class="cp-lock"><h4 class="cp-h">The bond in words</h4>
-  <p>What this bond is for, its higher and lower paths and how to weave them, the Sukuyō relation and every contact above written out in full,
-  your planets in each other's houses in words, and the questions the bond asks: all of it is in <b>the reading together</b>.</p>
+  <p>The full write-up of this bond is in <b>the reading together</b>. It covers what the bond is for, how it lifts you and how it can drag you down,
+  the Sukuyō relation and each of the contacts above explained, your planets in each other's houses, and the questions the bond raises.</p>
   <button type="button" class="link-btn cp-tobuy">See the reading together ↑</button></div>`;
 
 /* ---------- the pair ---------- */
@@ -176,7 +176,7 @@ function mount(host, X){
     if (buyEl.hidden) return;
     const n = people.length, total = price.two + price.extra * (n - 2);
     buyEl.innerHTML = `<div class="cp-buybox"><h3 class="cp-h">The reading together</h3>
-      <p>The paid side of Compare: a story of how ${n === 2 ? "the two of you" : `all ${n} of you`} ended up at one table, what each of you wakes in the ${n === 2 ? "other" : "others"}, and the seasons you share, year by year for the next thirty.</p>
+      <p>A written reading for ${n === 2 ? "the two of you" : `all ${n} of you`}. It starts with a story about how you ended up together, then covers what you bring out in each other and how the next thirty years look for you, year by year.</p>
       <button type="button" class="btn-cast cp-buybtn">Get our reading together — ${dollars(total)}${price.member ? ", your member price" : ""}</button>
       <p class="muted">${dollars(price.two)} for two${n < price.max ? `, and ${dollars(price.extra)} for each person you add, up to ${price.max}` : ""}.</p>
       <p class="err" role="alert"></p></div>`;

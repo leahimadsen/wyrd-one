@@ -63,7 +63,7 @@ cuts = {m["from"] for p in (A, B) for m in p["dasha"]["maha"] if NOW < m["from"]
 check("a chapter for every long-guest change, and one to begin", sec.count('<h3 class="rd-tier">') - 2 == len(cuts) + 1)
 subs = sum(1 for p in (A, B) for s in M._antars(p["dasha"], NOW, end))
 check("every sub-period in the thirty years is a dated turn", sec.count("sub-period begins") == subs and subs >= 20)
-check("each chapter says where each guest lands in the other's chart", sec.count("stands in Odin's") >= len(cuts) and sec.count("stands in Freya's") >= len(cuts))
+check("each chapter says where each guest lands in the other's chart", sec.count("sits in Odin's") >= len(cuts) and sec.count("sits in Freya's") >= len(cuts))
 check("the sky's appointments are written out", "The sky's own appointments" in sec and "Saturn" in sec)
 rows = re.findall(r"<tr(?: class=hi)?><td>(\d{4})", sec)
 check("thirty years, one row each", len(rows) == 30 and int(rows[-1]) - int(rows[0]) == 29)

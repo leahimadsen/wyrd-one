@@ -67,7 +67,7 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=11100,
     <a class="alt" href="/sample">Read a sample reading first</a></section>
   <section class="plan"><h2>The Reading Together</h2><div class="price">{m(together_cents)}<small> for two</small></div>
     <p class="muted">and {m(together_extra)} for each person you add, up to nine</p>
-    <ul><li>A story of how you ended up at one table, and the bond in words: what it is for, its higher and lower paths</li>
+    <ul><li>A story about how you ended up together, and what your bond is for, how it lifts you and where it can struggle</li>
     <li>What each of you wakes in the other, the old eight-fold match, how your bodies meet, and your numbers side by side</li>
     <li>The next thirty years, chapter by chapter and year by year, with the years to watch</li></ul>
     <a class="btn-cast" href="/chart#compare">Add people in Compare, then get it</a></section>
