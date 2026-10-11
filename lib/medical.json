@@ -432,38 +432,38 @@
   "FIGURE": {
     "_note": "The engraving under the body diagram: static/look/anatomy.png, cut out of its paper with tools/engraving.py so only the ink shows. Its size, and where each station sits on it (pixels). Swap the image and update these to fit.",
     "src": "/static/look/anatomy.png",
-    "w": 681,
-    "h": 900,
+    "w": 760,
+    "h": 994,
     "at": {
       "crown": [
-        430,
-        30
+        284,
+        32
       ],
       "brow": [
-        432,
-        70
+        284,
+        72
       ],
       "throat": [
-        428,
-        140
+        291,
+        160
       ],
       "heart": [
-        418,
-        218
+        293,
+        245
       ],
       "solar": [
-        425,
-        292
+        295,
+        323
       ],
       "sacrum": [
-        425,
-        385
+        291,
+        426
       ],
       "root": [
-        430,
-        442
+        288,
+        483
       ]
     },
-    "caption": "Your stations on the body, in their chakra colours. The larger the mark, the more your maps gather there; a ring and ◆ mark the two where they gather most. Engraving after Albinus, 1747."
+    "caption": "Your stations on the body, in their chakra colours. The larger the mark, the more your maps gather there; a ring and ◆ mark the two where they gather most. Engraving by J. Caldwall after John Brisbane, The Anatomy of Painting, 1769."
   }
 }
