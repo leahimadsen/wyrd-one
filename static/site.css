@@ -156,3 +156,8 @@ main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
 .tb-acct { border: 1px solid var(--jade-dim); border-radius: 2px; padding: 1px 10px; }
 .offer-member { margin-top: 22px; border-top: 1px solid var(--rule); padding-top: 18px; }
 .offer-member .btn-cast { display: inline-block; text-decoration: none; }
+
+/* the reading's opening, as a taste on the free chart */
+.rd-taste{max-height:15em;overflow:hidden;margin:6px 0 16px;padding:4px 16px;border-left:3px solid #c9a35a;font-style:italic;
+  -webkit-mask-image:linear-gradient(#000 50%,transparent);mask-image:linear-gradient(#000 50%,transparent)}
+.mf-sw{display:inline-block;width:.7em;height:.7em;border-radius:50%;margin-right:.4em;border:1px solid rgba(255,255,255,.3)}

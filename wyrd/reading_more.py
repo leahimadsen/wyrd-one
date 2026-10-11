@@ -15,6 +15,18 @@ PL = json.load(open(os.path.join(HERE, "lib", "placements.json"), encoding="utf-
 REG, NAKS, DEEP, HOUSES, GATE_NAME = C0["REGISTER"], C0["NAKSHATRA"], C0["NAK_DEEP"], C0["HOUSES"], C0["GATE_NAME"]
 esc = html.escape
 
+# Stock lines (a sign's description, a mansion's quality, a pada's aim) come up whenever two
+# placements share them. Within one reading each is said once, the first time; build() opens a
+# fresh record with reset(). Outside a reading build, everything is said every time.
+import contextvars
+_seen = contextvars.ContextVar("wyrd_seen", default=None)
+def reset(): _seen.set(set())
+def once(key, text, short=""):
+    seen = _seen.get()
+    if seen is None: return text
+    if key in seen: return short
+    seen.add(key); return text
+
 GLYPH = {"Sun": "☉", "Moon": "☽", "Mercury": "☿", "Venus": "♀", "Mars": "♂", "Jupiter": "♃", "Saturn": "♄",
          "Uranus": "♅", "Neptune": "♆", "Pluto": "♇", "Rahu": "☊", "Ketu": "☋", "Earth": "⊕", "Ascendant": "↑"}
 ORDER = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Rahu", "Ketu", "Uranus", "Neptune", "Pluto"]
@@ -89,7 +101,12 @@ def the(p): return f"the {p}" if p in ("Sun", "Moon") else p
 
 
 def woven(C, b, l):
-    """How the planets that rule this one's star and sign lend it their energy."""
+    """How the planets that rule this one's star and sign lend it their energy: said the first time
+    a planet comes up in a reading, and left out after that."""
+    return once(("woven", b), _woven(C, b, l))
+
+
+def _woven(C, b, l):
     asc = C["ascS"]; si = sign_i(l); nak = NAKS[E.nak_index(l)][0]
     lord = star_lord(l); sl = LORD_OF_SIGN[si]
     who = "your rising sign" if b == "Ascendant" else f"your {b}"
@@ -140,41 +157,60 @@ def web(C):
 
 
 # ---------------- the planets, in both zodiacs ----------------
+OUTER = ("Uranus", "Neptune", "Pluto")      # generational: everyone born within a few years shares their signs
+
+
 def planets(C):
+    """Each planet in both zodiacs. The reference details (rune, cards, gates) are gathered at the back, in record()."""
     out = [f'<p class="rd-kenning">{X["FRAMES"]["sidereal"]}</p><p class="rd-kenning">{X["FRAMES"]["tropical"]}</p><p>{X["FRAMES"]["both"]}</p>']
     out.append(web(C))
-    N = C["natal"]
     for b in ORDER:
         s, t = C["sid"][b], C["trop"][b]
         si, ti = sign_i(s), sign_i(t)
         S, T, P = X["SIGNS"][si], X["SIGNS"][ti], X["PLANETS"][b]
-        h = E.house_of(s, C["ascS"]); nk = E.nak_index(s); nak = NAKS[nk]; aim = aim_of(s); r = rune_at(s, C["ascS"])
+        h = E.house_of(s, C["ascS"]); nk = E.nak_index(s); nak = NAKS[nk]; aim = aim_of(s)
         dg = dignity(b, s)
+        if b in OUTER:
+            if b == OUTER[0]:
+                out.append('<h3 class="rd-tier">The outer planets</h3><p>Uranus, Neptune and Pluto move so slowly that everyone born '
+                           'within a few years of you shares their signs. What makes them yours is the house they stand in.</p>')
+            out.append(f"""<div class="rd-entry rd-outer"><h3>{GLYPH[b]} {b} <span class="rd-side p">sidereal {lon(s)}</span></h3>
+          <div class="rd-hdr">{P["governs"]}</div>
+          <p><b>{PL["PIS"][b][si]}</b> {P["sid"]} It works in your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}.</p>
+          {pair("At its best", P["light"])}{pair("Watch for", P["shadow"])}</div>""")
+            continue
         shift = PL["SAME"] if si == ti else PL["SHIFT"][ti]
         # each sign's line once: in its own column, and not again in the sidereal one when both zodiacs agree
         lived = "" if si == ti else f'<p><b>{PL["PIS"][b][si]}</b></p>'
-        gp, gd = N["personality"].get(b), N["design"].get(b)
-        gates = ""
-        if gp:
-            gates += pair("Gate, conscious", f'{gp["gate"]}.{gp["line"]} {esc(gate_title(gp["gate"]))}: {esc(first(REG.get(str(gp["gate"]), {}).get("l")))}')
-        if gd:
-            gates += pair("Gate, unconscious", f'{gd["gate"]}.{gd["line"]} {esc(gate_title(gd["gate"]))}')
         out.append(f"""<div class="rd-entry"><h3>{GLYPH[b]} {b} <span class="rd-side p">tropical {lon(t)} → sidereal {lon(s)}</span></h3>
           <div class="rd-hdr">{P["governs"]}</div>
           <div class="rd-gifts"><div class="light"><h5>How it feels · tropical {T["sign"]}</h5>
-            <p>{PL["SIGN_TROP"][ti]}</p><p><b>{PL["PIS"][b][ti]}</b></p><p>{P["trop"]}</p></div>
+            {once(("trop", ti), f'<p>{PL["SIGN_TROP"][ti]}</p>')}<p><b>{PL["PIS"][b][ti]}</b></p><p>{P["trop"]}</p></div>
           <div class="dark"><h5>What it brings · sidereal {S["sign"]}</h5>
-            <p>{PL["SIGN_SID"][si]}</p>{lived}
+            {once(("sid", si), f'<p>{PL["SIGN_SID"][si]}</p>')}{lived}
             <p>{P["sid"]} It works in your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}.</p>
-            <p>Its star is <b>{nak[0]}</b>, pada {pada_of(s)}, ruled by {nak[1]}: {nak[6]} {aim["says"]}</p></div></div>
+            <p>Its star is <b>{nak[0]}</b>, pada {pada_of(s)}, ruled by {nak[1]}{(": " + q) if (q := once(("nak", nk), nak[6])) else "."} {once(("aim", aim["aim"]), aim["says"], "Its pada works through " + aim["aim"] + ".")}</p></div></div>
           <div class="rd-repair"><h5>{"The shift · " + T["sign"] + " into " + S["sign"] if si != ti else "One sign in both zodiacs · " + S["sign"]}</h5><p>{shift}</p></div>
           {woven(C, b, s)}
           {f'<p class="rd-kenning">{X["DIGNITY"][dg]}</p>' if dg else ""}
-          {pair("Rune", f'{r["glyph"]} {r["name"]}, {r["gloss"]}. {X["RUNES"][r["name"]]["means"]}')}
-          {card_pair(s, t)}
-          {gates}
           {pair("At its best", P["light"])}{pair("Watch for", P["shadow"])}</div>""")
+    out.append('<p class="rd-note">Each planet\'s rune, cards and gates are in the table at the back, {SEC:For the Record}.</p>')
     return "".join(out)
+
+
+def record(C):
+    """For the Record: the reference details for every planet, in one place at the back."""
+    N = C["natal"]; rows = []
+    for b in ORDER:
+        s, t = C["sid"][b], C["trop"][b]; r = rune_at(s, C["ascS"]); c = card_of(s, t)
+        gp, gd = N["personality"].get(b), N["design"].get(b)
+        g = lambda v: f'{v["gate"]}.{v["line"]} {esc(gate_title(v["gate"]))}' if v else "—"
+        rows.append(f'<tr><td>{GLYPH[b]} {b}</td><td>{lon(s)}<br><small>{lon(t)} tropical</small></td><td>{E.NAK[E.nak_index(s)]} {pada_of(s)}</td>'
+                    f'<td>{r["glyph"]} {r["name"]}</td><td>{c["buddhist"]["minor"]} · {c["buddhist"]["trump"]}<br><small>{c["nordic"]["minor"]} · {c["nordic"]["trump"]}</small></td>'
+                    f'<td>{g(gp)}<br><small>{g(gd)}</small></td></tr>')
+    return f"""<p>Everything in one place, for looking things up. Positions are sidereal with the tropical underneath; the cards are the
+      Buddhist deck (sidereal) over the Nordic deck (tropical); the gates are conscious over unconscious.</p>
+      <div class="rd-tw"><table class="rd-record"><tr><th>Planet</th><th>Position</th><th>Mansion</th><th>Rune</th><th>Cards</th><th>Gates</th></tr>{"".join(rows)}</table></div>"""
 
 
 # ---------------- the runes and when they wake ----------------
@@ -290,7 +326,7 @@ def body(C):
             for side, pl, l in carriers.get(g, []):
                 nk = E.nak_index(l); n = NAKS[nk]; aim = aim_of(l)
                 feeds.append(f"""<li><b>Gate {g} {esc(gate_title(g))}</b>, carried by your {"design " if side == "design" else ""}{pl},
-                  fed from <b>{n[0]} pada {pada_of(l)}</b> ({aim["aim"]}), which rules the {n[5].lower()}. {n[6]}</li>""")
+                  fed from <b>{n[0]} pada {pada_of(l)}</b> ({aim["aim"]}), which rules the {n[5].lower()}. {once(("nak", nk), n[6])}</li>""")
         out.append(f"""<div class="rd-entry"><h3>Channel {a}–{b} <span class="rd-side p">{ca} to {cb}</span></h3>
           <div class="rd-hdr">{esc(gate_title(a))} · {esc(gate_title(b))}</div>
           <p>{first(REG.get(str(a), {}).get("e"))} {first(REG.get(str(b), {}).get("e"))}</p>
@@ -353,7 +389,7 @@ def rising(C):
     si, ti = sign_i(s), sign_i(t)
     shift = PL["SAME"] if si == ti else PL["SHIFT"][ti]
     return f"""<div class="rd-gifts"><div class="light"><h5>How you meet the world · tropical {E.SIGNS[ti]} rising</h5>
-        <p>{PL["SIGN_TROP"][ti]}</p></div>
+        {once(("trop", ti), f'<p>{PL["SIGN_TROP"][ti]}</p>')}</div>
       <div class="dark"><h5>What the world hands you · sidereal {E.SIGNS[si]} rising</h5><p>{PL["SIGN_SID"][si]}</p></div></div>
       <div class="rd-repair"><h5>{"The shift · " + E.SIGNS[ti] + " into " + E.SIGNS[si] if si != ti else "One sign in both zodiacs"}</h5><p>{shift}</p></div>
       {woven(C, "Ascendant", s)}"""
@@ -379,7 +415,7 @@ def engine_more(C, dasha):
       {pair("Constitution", D[5])}{pair("Class", D[6])}{pair("Aim of the mansion", D[7])}{pair("Motion", D[8])}
       {pair("Sounds", D[9])}{pair("The body", n[5])}
       <h3 class="rd-tier">Where the engine runs</h3>
-      <p>Your Moon is in pada {pada_of(m)} of {n[0]}. {aim["says"]}</p>
+      <p>Your Moon is in pada {pada_of(m)} of {n[0]}. {once(("aim", aim["aim"]), aim["says"], "It works through " + aim["aim"] + ".")}</p>
       <p>It works in your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}. {MX["MOON_HOUSE"][h - 1]}</p>
       <div class="rd-body"><h5>The Moon you were born under · {phase["name"]}</h5><p>{phase["says"]}</p></div>
       {woven(C, "Moon", m)}
@@ -410,7 +446,7 @@ def matrix(C, dasha):
       <p><b>{MX["SATURN_SIGN"][si]}</b></p>
       <p>{MX["SATURN_HOUSE"][h - 1]}</p>
       <div class="rd-body"><h5>Its star · {n[0]}, pada {pada_of(s)}</h5>
-        <p>{n[6]} The power of this star is {e[1]}, {e[2]}. {e[6]}</p><p>{aim_of(s)["says"]}</p></div>
+        <p>{once(("nak", E.nak_index(s)), n[6])} The power of this star is {e[1]}, {e[2]}. {e[6]}</p><p>{once(("aim", aim_of(s)["aim"]), aim_of(s)["says"], "Its pada works through " + aim_of(s)["aim"] + ".")}</p></div>
       {woven(C, "Saturn", s)}
       <h3 class="rd-tier">Where it presses</h3>
       <p>{MX["SATURN_LOOKS"]}</p>
@@ -458,7 +494,7 @@ def karakas_more(C, dasha, asks=None):
             r1 = VG.RANK[{"own": "own sign", "root": "own sign"}.get(dg, dg or "")]; r9 = VG.RANK[d9]
             if r9 > r1: out.append(fill(KA["STRENGTH"]["nav_up"], d=d9))
             elif r9 < r1: out.append(KA["STRENGTH"]["nav_down"])
-        return " ".join(out) or KA["STRENGTH"]["plain"]
+        return " ".join(out) or once(("plain",), KA["STRENGTH"]["plain"], "Neither strong nor weak, as above.")
 
     out = [f'<h3 class="rd-tier">Your cabinet, one by one</h3><p>{KA["INTRO"]}</p>']
     for role, b in K.items():
@@ -484,7 +520,7 @@ def karakas_more(C, dasha, asks=None):
           <div class="rd-hdr">{R["rules"]}</div>
           <p>{d["body"]}</p>
           <p><b>{KA["ROLE_PLANET"][role][b]}</b></p>
-          <div class="rd-body"><h5>Where it lives</h5><p>It stands in sidereal {E.SIGNS[si]}, your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}: this part of your life plays out there. Its star is {n[0]}, pada {pada_of(l)}: {n[6]}</p></div>
+          <div class="rd-body"><h5>Where it lives</h5><p>It stands in sidereal {E.SIGNS[si]}, your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}: this part of your life plays out there. Its star is {n[0]}, pada {pada_of(l)}{(": " + q) if (q := once(("nak", E.nak_index(l)), n[6])) else "."}</p></div>
           <div class="rd-body"><h5>Its strength</h5><p>{strength(b, l)}</p></div>
           {"" if role == "Atmakaraka" else f'<div class="rd-body"><h5>How it stands to the soul</h5><p>{from_soul(role, l)}</p></div>'}
           <div class="rd-body"><h5>What it ripens into</h5><p>{ripen}</p></div>

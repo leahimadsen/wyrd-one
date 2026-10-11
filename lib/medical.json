@@ -208,9 +208,9 @@
   "WEIGHT_H": "Where the weight falls",
   "WEIGHT": "Adding up every map, with your rising sign counted three times and your Moon twice, this is where your chart gathers.",
   "WEIGHT_TROP": "The tropical map puts more weight on {zone} ({parts}). If that's how your body feels from the inside, trust it: that's the experience, and the sidereal map is the build.",
-  "STRAIN_H": "Planets under strain",
-  "STRAIN": "A planet is under strain when it's in its weakest sign, or in the 6th, 8th or 12th house, the houses of illness, long trouble and rest. It's where your body asks for more care, not where something is wrong.",
-  "STRAIN_NONE": "None of your planets is badly placed for the body. That doesn't mean nothing will ever go wrong, just that there's no one place the chart keeps pointing at.",
+  "STRAIN_H": "The planets to watch",
+  "STRAIN": "A planet is under strain when it's in its weakest sign, or in the 6th, 8th or 12th house, the houses of illness, long trouble and rest. That's where your body asks for more care, not where something is wrong. A planet is strong in its best or its own sign. These are the ones worth reading closely:",
+  "STRAIN_NONE": "None of your planets is badly placed for the body, and none stands out as especially strong. That doesn't mean nothing will ever go wrong, just that there's no one place the chart keeps pointing at.",
   "DOSHA_H": "Your doshas",
   "DOSHA_INTRO": "Ayurveda describes the body with three doshas. Each planet leans toward one or two of them. Counting your rising sign's ruler and your Moon twice, and adding your Moon's mansion, this is how yours come out.",
   "DOSHA": {
@@ -424,5 +424,46 @@
   "RISING": "Your rising sign is {sign}, which sits at {zone}. The old books say the 1st house is the body itself, so that's where your body starts from.",
   "DOSHA_HOME": "{dosha}'s home in the body is {zones}, so that's where it shows first.",
   "PLACE": "on {part}, which is {zone} on the ladder",
-  "PLACE_SAME": "on {part}"
+  "PLACE_SAME": "on {part}",
+  "QUIET_H": "The rest, briefly",
+  "QUIET_ROW": "{planet} in {sign}: {short}, at {zone}.",
+  "STRAIN_TAG": "under strain",
+  "STRONG_TAG": "strong",
+  "FIGURE": {
+    "_note": "The engraving under the body diagram: static/look/anatomy.png, cut out of its paper with tools/engraving.py so only the ink shows. Its size, and where each station sits on it (pixels). Swap the image and update these to fit.",
+    "src": "/static/look/anatomy.png",
+    "w": 760,
+    "h": 994,
+    "at": {
+      "crown": [
+        284,
+        32
+      ],
+      "brow": [
+        284,
+        72
+      ],
+      "throat": [
+        291,
+        160
+      ],
+      "heart": [
+        293,
+        245
+      ],
+      "solar": [
+        295,
+        323
+      ],
+      "sacrum": [
+        291,
+        426
+      ],
+      "root": [
+        288,
+        483
+      ]
+    },
+    "caption": "Your stations on the body, in their chakra colours. The larger the mark, the more your maps gather there; a ring and ◆ mark the two where they gather most. Engraving by J. Caldwall after John Brisbane, The Anatomy of Painting, 1769."
+  }
 }

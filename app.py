@@ -244,10 +244,12 @@ def chart():
     c["extras"] = extras(EPH, c, b)
     if c.get("unknownTime"): c["extras"]["placidus"] = None     # house cusps need a birth time
     c["lex"] = lexicon(c)
+    from wyrd import story, reading
+    c["teaser"] = story.opening(c, c["dashaTree"], d.get("name", ""), reading.ENG)     # the reading's opening, as a taste
     c["v"] = CHART_V
     return jsonify(chart=plain(c), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME)
 
-CHART_V = 3      # bump when a cast changes meaning (2: sidereal Dharma Design, 3: the vargas words); common.js CHART_V must match
+CHART_V = 4      # bump when a cast changes meaning (2: sidereal Dharma Design, 3: the vargas words, 4: the story's opening); common.js CHART_V must match
 
 def lexicon(c):
     """The words the free pages need for this chart: each of its gates (name, title, a first line from the

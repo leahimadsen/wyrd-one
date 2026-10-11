@@ -15,6 +15,12 @@ def fill(t, **kw):
     return t
 
 
+def opening(C, dasha, who, engine_rows, n=2):
+    """The story's first paragraphs, as the free chart's taste of the reading."""
+    import re
+    return "".join(re.findall(r"<p>.*?</p>", tell(C, dasha, who, engine_rows))[:n])
+
+
 def tell(C, dasha, who, engine_rows):
     """The prologue's HTML. engine_rows is corpus.json's ENGINE (one row per mansion)."""
     first = (who or "").strip().split(" ")[0]

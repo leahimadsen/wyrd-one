@@ -93,24 +93,30 @@ footer{margin-top:60px;color:var(--dim);font-size:14px;border-top:1px solid var(
 .bg-c path{fill:none;stroke:rgba(156,180,166,.6);stroke-width:1.6}
 .bg-birth .bg-c.on path{fill:#c9a35a;stroke:#e6c47e}.bg-dharma .bg-c.on path{fill:#9b84f0;stroke:#c2b2ff}
 .bg-c text{fill:var(--ivory);font-size:10.5px;text-anchor:middle}.bg-c.on text{fill:#14101e;font-weight:600}
+.mf{margin:18px 0;break-inside:avoid}.mf svg{width:100%;max-width:640px;height:auto;display:block;margin:0 auto}
+.mf image{opacity:.92}.mf-ladder{fill:none;stroke-width:4;stroke-dasharray:2 6;opacity:.9}
+.mf-lead{stroke-width:1.4;opacity:.6;fill:none}.mf-dot{fill-opacity:.8;stroke:#1b1b1b;stroke-width:1.5}.mf-dot.hi{fill-opacity:.95}.mf-ring{fill:none;stroke-width:3}
+.mf-name{font-family:var(--fellsc,serif);font-size:30px}.mf-pl{font-size:30px;fill:#1b1b1b}
+.mf figcaption{text-align:center;font-size:14px;opacity:.8}
 @media print{
-  .rd-totop{display:none}
+  .rd-totop{display:none}.mf svg{max-width:5in}
   :root{--void:#fff;--ivory:#1b1b1b;--dim:#666;--celadon:#2f5f50;--jade:#2f6f5a;--gold:#8a6a2a;--rule:#ddd}
   @page{margin:.65in .7in}
-  body{font-size:10.5pt;line-height:1.5}.tools,.preview{display:none}.wrap{width:auto;padding:0}
+  body,body.paper{font-size:10pt!important;line-height:1.4!important}.tools,.preview{display:none}.wrap{width:auto;padding:0}
   header h1{font-size:30pt}.opening,.closing{font-size:11pt}
-  .rd-sec{padding-top:0;margin-top:22pt}.rd-sec h2{font-size:20pt}.rd-sec h3{font-size:13pt;margin:16pt 0 4pt;break-after:avoid}
-  .rd-pair{font-size:10pt;padding:4pt 0;gap:10pt;break-inside:avoid}.rd-hdr,.rd-note,.rd-held{font-size:9.5pt}
-  .rd-body h5,.rd-gifts h5,.rd-repair h5{font-size:10pt;margin:8pt 0 1pt}table{font-size:9.5pt}
+  .rd-sec{padding-top:0;margin-top:22pt}.rd-sec h2{font-size:20pt}.rd-sec h3{font-size:13pt;margin:10pt 0 3pt!important;break-after:avoid}
+  .rd-pair{font-size:9.5pt;padding:2pt 0!important;gap:10pt;break-inside:avoid}.rd-hdr,.rd-note,.rd-held{font-size:9.5pt}
+  .rd-body h5,.rd-gifts h5,.rd-repair h5{font-size:10pt;margin:8pt 0 1pt}table{font-size:9pt!important}td,th{padding:2pt 4pt!important}
   .bg-sparks{display:none}.bg-ch{stroke:#e2e2e2;stroke-width:2}.bg-c path{stroke:#888}.bg-c text{fill:#222}.bg-c.on text{fill:#fff}.bg-pair{break-inside:avoid}
   .rd-entry{margin:12pt 0}.rd-entry p,.rd-body p{margin:4pt 0}.rd-step{break-inside:avoid}
   .rd-ask{background:none}a{color:inherit}
 }
+.mf-sw{display:inline-block;width:.7em;height:.7em;border-radius:50%;margin-right:.4em;vertical-align:baseline;border:1px solid rgba(0,0,0,.4)}
 </style>
 <link rel="stylesheet" href="/static/look/wyrd90.css">
 <link rel="icon" href="/static/icons/favicon-32.png" sizes="32x32" type="image/png">
 </head>
-<body class="paper">
+<body class="paper codex">
 <div class="preview">{{PREVIEW}}</div>
 <div class="wrap">
 <header>
