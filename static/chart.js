@@ -216,7 +216,7 @@ function chartLand(){
   /* the numbers: what they are and which planets they sit on; what they mean is in the reading */
   const NB = window.WyrdNumbers, nums = NB ? NB.of(birth.date, birth.full_name, new Date().getFullYear()) : null;
   const numRows = nums ? NB.KINDS.filter(k => k in nums).map(k => { const n = nums[k], p = NB.planets(n);
-    return `<tr><th>${NB.LABEL[k]}</th><td><b>${n}</b>${n > 9 ? ` <small>(${p.root})</small>` : ""}</td><td>${GLYPH[p.stavefall]} ${p.stavefall} <small>${p.station}</small></td><td>${GLYPH[p.vedic]} ${p.vedic}</td></tr>`; }).join("") : "";
+    return `<tr><th>${g(NB.GLOSS[k], NB.LABEL[k])}</th><td><b>${n}</b>${n > 9 ? ` <small>(${g("masternum", p.root)})</small>` : ""}</td><td>${GLYPH[p.stavefall]} ${p.stavefall} <small>${p.station}</small></td><td>${GLYPH[p.vedic]} ${p.vedic}</td></tr>`; }).join("") : "";
   const asp = [];
   for (let i = 0; i < BODIES.length; i++) for (let k = i + 1; k < BODIES.length; k++){
     const [a, b] = [BODIES[i], BODIES[k]]; if (a === "Rahu" && b === "Ketu") continue;
@@ -237,8 +237,8 @@ function chartLand(){
       <table class="mini kar-both"><tr><th></th><th>Sidereal</th><th>Tropical</th></tr>${kar}</table>
       <p class="fine">${karNote}${ROLES.some((k, i) => C.karaka[k] !== KT[i]) ? " Marked rows differ." : ""}</p>
       ${nums ? `<h3 class="fact-h2">Your numbers</h3>
-      <table class="mini"><tr><th></th><th></th><th>Stavefall</th><th>Vedic</th></tr>${numRows}</table>
-      <p class="fine">${birth.full_name ? "" : "Add your full name at birth when you cast your chart for three more: expression, soul urge and personality. "}What each number means, and where your life path's planets stand in your chart, is in your reading.</p>` : ""}
+      <table class="mini"><tr><th></th><th></th><th>${g("stavefall", "Stavefall")}</th><th>${g("vedicnum", "Vedic")}</th></tr>${numRows}</table>
+      <p class="fine">${birth.full_name ? "" : "Add your full name at birth when you cast your chart for three more: expression, soul urge and personality. "}What each number means, and where your life path's planets stand in your chart, is in your reading. <a href="/learn/numbers">How the numbers and their two planets work →</a></p>` : ""}
       <h3 class="fact-h2">${g("aspect", "Aspects")}</h3><ul class="kar asp">${asp.join("") || "<li>None within orb</li>"}</ul></div>
     ${PL ? `<div class="fact"><h3>${g("placidus", "Placidus cusps")}</h3><p class="fine">Tropical. For comparison with the whole-sign houses this console reads.</p>
       <ol class="cusps">${PL.cusps.map((c, i) => `<li><span>${i + 1}</span>${SIGNS[Math.floor(norm(c) / 30)]} ${dm(c)}</li>`).join("")}</ol></div>` : ""}`;

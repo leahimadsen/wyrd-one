@@ -144,7 +144,7 @@ Body Weather's centre lines are drafts in `lib/body_weather.json` for The Völva
 
 ## The full reading
 
-**The Numbers** (`wyrd/numbers.py`, `static/numbers.js`): life path, birthday and personal year from the birth date, and expression, soul urge and personality from the optional *full name at birth* on the form. Each number sits on two planets, the console's own Stavefall seat and the Vedic one. The free chart shows the numbers; the reading says what they mean (drafts in `lib/numbers.json`) and where the life path's planets stand and when their periods come. Sections now refer to each other by name, so adding one never breaks a "see section …".
+**The Numbers** (`wyrd/numbers.py`, `static/numbers.js`): life path, birthday and personal year from the birth date, and expression, soul urge and personality from the optional *full name at birth* on the form. Each number sits on two planets, the console's own Stavefall seat and the Vedic one. The free chart shows the numbers; the reading says what they mean (drafts in `lib/numbers.json`) and where the life path's planets stand and when their periods come. **Learn the numbers** at `/learn/numbers` teaches how they are counted and the two seatings (text in `lib/numbers.json` under LEARN), and every number term on the chart can be tapped for its definition. Sections now refer to each other by name, so adding one never breaks a "see section …".
 
 Every reading opens with **a prologue**: a silly story of how you got here (who sent you, the costume you chose, the gift and the shadow packed with it, and the houseguests who arrive at each age), assembled from the chart. Its lines are drafts in `lib/story.json` for The Völva to rewrite; the numbered sections that follow decode it.
 

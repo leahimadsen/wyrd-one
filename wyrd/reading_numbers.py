@@ -57,6 +57,6 @@ def body(C, dasha, who, asks, year=None):
     py = nums["personal_year"]; m = T["NUMBER"][str(py)]
     year_line = f'<p>{fill(T["YEAR_LINE"], n=py, light=m["light"][0].lower() + m["light"][1:], shadow=m["shadow"][0].lower() + m["shadow"][1:])}</p>'
     asks.append((f"Life path {lp}", fill(T["ASK"], n=lp, name=T["NUMBER"][str(lp)]["name"]), False))
-    return f"""<p>{T["INTRO"]}</p>{table}{'' if "expression" in nums else f'<p class="rd-note">{T["NO_NAME"]}</p>'}
+    return f"""<p>{T["INTRO"]} <a href="/learn/numbers">How the numbers are counted, and the two seatings →</a></p>{table}{'' if "expression" in nums else f'<p class="rd-note">{T["NO_NAME"]}</p>'}
       {"".join(meanings)}<h3 class="rd-tier">{T["PLANETS_TITLE"]}</h3>{lines}
       <h3 class="rd-tier">Personal year {py} · {year}</h3>{year_line}"""

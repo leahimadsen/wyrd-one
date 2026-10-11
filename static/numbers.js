@@ -11,6 +11,7 @@ const STAVEFALL = { 1: ["Sun", "Crown"], 2: ["Moon", "Brow"], 3: ["Saturn", "Thr
   6: ["Venus", "Sacrum"], 7: ["Mercury", "Root"], 8: ["Rahu", "The pole above"], 9: ["Ketu", "The pole below"] };
 const VEDIC = { 1: "Sun", 2: "Moon", 3: "Jupiter", 4: "Rahu", 5: "Mercury", 6: "Venus", 7: "Ketu", 8: "Saturn", 9: "Mars" };
 const LABEL = { life_path: "Life path", birthday: "Birthday", personal_year: "Personal year", expression: "Expression", soul_urge: "Soul urge", personality: "Personality" };
+const GLOSS = { life_path: "lifepath", birthday: "birthdaynum", personal_year: "personalyear", expression: "expression", soul_urge: "soulurge", personality: "personalitynum" };
 const KINDS = Object.keys(LABEL);
 
 const digits = n => String(n).split("").reduce((s, c) => s + +c, 0);
@@ -34,5 +35,5 @@ function of(date, fullName, year){
 }
 const planets = n => { const r = root(n); return { stavefall: STAVEFALL[r][0], station: STAVEFALL[r][1], vedic: VEDIC[r], root: r }; };
 
-window.WyrdNumbers = { of, planets, LABEL, KINDS };
+window.WyrdNumbers = { of, planets, LABEL, GLOSS, KINDS };
 })();
