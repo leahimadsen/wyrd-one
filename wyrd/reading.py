@@ -83,8 +83,22 @@ def pada(l):
 def jd_date(jd):
     return (datetime(2000, 1, 1, 12) + timedelta(days=jd - 2451545.0)).strftime("%b %Y")
 
+def anchor(title):
+    import re
+    return "s-" + re.sub(r"[^a-z0-9]+", "-", re.sub(r"<[^>]+>", "", title).lower()).strip("-")
+
+def contents(body):
+    """The reading's contents, from its own headings: the story first, then each numbered section.
+    A small button at the side of the page brings the list back from anywhere."""
+    import re
+    items = []
+    for sid, num, title in re.findall(r'<section class="rd-sec[^"]*" id="([^"]+)">\s*(?:<div class="rd-num">([^<]*)</div>)?\s*<h2>(.*?)</h2>', body):
+        items.append(f'<li><a href="#{sid}">{f"<span>{num}</span> " if num else ""}{title}</a></li>')
+    return (f'<nav class="rd-toc" id="contents" aria-label="Contents"><h2>Contents</h2><ol>{"".join(items)}</ol></nav>'
+            '<a class="rd-totop" href="#contents" aria-label="Back to the contents">Contents ↑</a>')
+
 def section(n, title, sub, body):
-    return f"""<section class="rd-sec"><div class="rd-num">{{{{N}}}}</div>
+    return f"""<section class="rd-sec" id="{anchor(title)}"><div class="rd-num">{{{{N}}}}</div>
       <h2>{title}</h2><div class="rd-sub">{sub}</div>{body}</section>"""
 
 def pair(k, v):

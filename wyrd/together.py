@@ -143,6 +143,6 @@ def build(people):
              T["PROLOGUE_TABLE_TWO"] if two else fill(T["PROLOGUE_TABLE_MANY"], n=len(P)),
              fill(T["PROLOGUE_NOW"], guests=names_line(guests), season=now_season), book,
              fill(T["PROLOGUE_ERRAND"], errand=errand[0].upper() + errand[1:])]
-    prologue = f"""<section class="rd-sec rd-story"><h2>{T["PROLOGUE_TITLE"]}</h2><div class="rd-sub">{T["PROLOGUE_SUB"]}</div>
+    prologue = f"""<section class="rd-sec rd-story" id="s-story"><h2>{T["PROLOGUE_TITLE"]}</h2><div class="rd-sub">{T["PROLOGUE_SUB"]}</div>
       {"".join(f"<p>{x}</p>" for x in story)}<p class="rd-kenning">{T["PROLOGUE_CLOSE"]}</p></section>"""
     return prologue + "".join(out)

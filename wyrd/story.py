@@ -42,5 +42,5 @@ def tell(C, dasha, who, engine_rows):
         " ".join(timing),
     ]
     body = "".join(f"<p>{p}</p>" for p in paras)
-    return f"""<section class="rd-sec rd-story"><h2>{S["TITLE"]}</h2><div class="rd-sub">{S["SUB"]}</div>
+    return f"""<section class="rd-sec rd-story" id="s-story"><h2>{S["TITLE"]}</h2><div class="rd-sub">{S["SUB"]}</div>
       {body}<p class="rd-kenning">{S["CLOSING"]}</p></section>"""

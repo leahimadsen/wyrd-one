@@ -388,6 +388,7 @@ def render_reading(meta, banner="", sample=False):
     if str(meta.get("unknown_time", "")) in ("1", "true", "True", "on"):
         c = dict(c); c["sid"], c["trop"] = dict(c["sid"]), dict(c["trop"]); unknown_time(c)
     body = reading.build(c, engine.dasha_tree(c, jd_now()), meta)
+    body = reading.contents(body) + body
     who = html.escape(meta.get("name") or "")
     born = f"{b['y']:04d}-{b['mo']:02d}-{b['d']:02d} · {b['hh']:02d}:{b['mi']:02d} ({b['ut']['label']}) · {html.escape(b['place']['label'])}"
     page = open(os.path.join(HERE, "static", "reading.html"), encoding="utf-8").read()
@@ -466,6 +467,7 @@ def render_together(meta, banner=""):
         people.append({"name": m["name"] or f"Person {len(people) + 1}", "C": c, "dasha": engine.dasha_tree(c, jd_now()), "b": b, "shuku": shuku,
                        "date": m["date"], "full_name": m.get("full_name", ""), "marks": together_more.sky_marks(EPH, c, jd_now())})
     body = together.build(people)
+    body = reading.contents(body) + body
     who = html.escape(together.names_line([p["name"] for p in people]))
     born = " · ".join(f"{html.escape(p['name'])}, {p['b']['y']:04d}-{p['b']['mo']:02d}-{p['b']['d']:02d}" for p in people)
     page = open(os.path.join(HERE, "static", "reading.html"), encoding="utf-8").read()
@@ -610,7 +612,8 @@ def sitemap():
 @app.get("/reports")
 def reports_page():
     return page(*pages.reports(config.BASE_URL, config.PRICE_CENTS, config.MEMBER_READING_CENTS,
-                               config.MEMBER_MONTHLY_CENTS, config.MEMBER_YEARLY_CENTS, config.PRO_MONTHLY_CENTS, config.PRO_READINGS_A_MONTH))
+                               config.MEMBER_MONTHLY_CENTS, config.MEMBER_YEARLY_CENTS, config.PRO_MONTHLY_CENTS, config.PRO_READINGS_A_MONTH,
+                               config.TOGETHER_CENTS, config.TOGETHER_EXTRA_CENTS, config.TOGETHER_MEMBER_OFF))
 
 @app.get("/learn")
 def learn_page():
@@ -686,7 +689,7 @@ def api_me():
     cents = config.MEMBER_READING_CENTS if member else config.PRICE_CENTS
     r = jsonify(signedIn=bool(email), member=member, readingPrice=money(cents),
                 together={"two": together_cents(2, member), "extra": together_cents(3, member) - together_cents(2, member), "max": together.MAX_PEOPLE},
-                prices={"reading": money(config.PRICE_CENTS), "member": money(config.MEMBER_READING_CENTS),
+                prices={"reading": money(config.PRICE_CENTS), "member": money(config.MEMBER_READING_CENTS), "together": money(together_cents(2, member)),
                         "month": money(config.MEMBER_MONTHLY_CENTS), "year": money(config.MEMBER_YEARLY_CENTS)})
     r.headers["Cache-Control"] = "no-store"
     return r
@@ -778,7 +781,8 @@ def membership_page():
     <p class="muted">Already a Professional? <a href="/signin?next=/pro">Sign in to your practice desk</a>.</p></section>
 </div>
 <p class="muted">The free chart stays free, with or without a membership: the whole path, the Wyrd Mandala, Compare for up to nine people, today's sky and the year ahead.
-Cancel any time from your account. Payments are handled by Stripe. Prefer one reading? <a href="/reports">The Wyrd Reading is {money(config.PRICE_CENTS)}, once.</a></p>"""
+Cancel any time from your account. Payments are handled by Stripe. Prefer one reading? <a href="/reports">The Wyrd Reading is {money(config.PRICE_CENTS)}, once</a>,
+and <a href="/reports">the reading together</a> is {money(config.TOGETHER_CENTS)} for two ({config.TOGETHER_MEMBER_OFF}% off for members).</p>"""
     ld = pages._ld({"@context": "https://schema.org", "@type": "Product", "name": config.MEMBER_NAME,
                     "description": "Weekly Body Weather astrology letter for your Birth Design and Dharma Design.",
                     "brand": {"@type": "Brand", "name": "The Wyrd Console"},

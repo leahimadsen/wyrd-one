@@ -84,6 +84,14 @@ paid = [v["text"][:50] for v in BOND.B["SUKUYO"].values()] + [v["core"][:50] for
        [v["high"][:50] for v in BOND.B["BOND"].values()] + [v["ask"][:40] for v in BOND.B["SUKUYO"].values()]
 check("none of the paid writing is sent to the browser", not [x for x in paid if x in shipped])
 
+# ---- the contents ----
+from wyrd import reading as RD
+toc = RD.contents(pair_html)
+links = re.findall(r'href="#(s-[a-z0-9-]+)"', toc)
+check("contents list the story and all eight sections", len(links) == 9 and links[0] == "s-story")
+check("every contents link has a section to land on", all(f'id="{l}"' in pair_html for l in links))
+check("a button brings the contents back from anywhere", 'class="rd-totop" href="#contents"' in toc)
+
 # ---- checkout ----
 CALLS = []
 def fake_call(secret, method, path, fields=None):
