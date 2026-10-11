@@ -141,7 +141,7 @@ def _antars(dasha, now, n=6):
 def cell(bs): return " ".join(GLYPH[b] for b in bs)
 
 
-def figure(g, w, unknown=False):
+def figure(g, w, unknown=False, planets=True):
     """The body diagram: the engraving, the ladder down its middle, a mark on each station sized by its weight,
     and to the side the planets that land there by sign (and by house, when the birth time is known)."""
     F = T["FIGURE"]; W, H = F["w"], F["h"]; X0 = W + 40; top = max(w.values()) or 1
@@ -153,15 +153,24 @@ def figure(g, w, unknown=False):
            f'<polyline class="mf-ladder" stroke="url(#mf-bow)" points="{" ".join(f"{x},{y}" for x, y in pts)}"/>']
     for i, k in enumerate(KEYS):
         x, y = F["at"][k]; r = 6 + 12 * w[k] / top; ly = 40 + i * (H * 0.62 / 6)
-        on = [b for b in g[k]["sign"]] + ([] if unknown else [b for b in g[k]["house"] if b not in g[k]["sign"]])
+        on = ([b for b in g[k]["sign"]] + ([] if unknown else [b for b in g[k]["house"] if b not in g[k]["sign"]])) if planets else []
         c = COLOUR[i]; hi = w[k] >= heavy
         out.append(f'<path class="mf-lead" stroke="{c}" d="M{x + r},{y} L{X0 - 10},{ly}"/>'
                    + (f'<circle class="mf-ring" stroke="{c}" cx="{x}" cy="{y}" r="{r + 6:.1f}"/>' if hi else "")
                    + f'<circle class="mf-dot{" hi" if hi else ""}" fill="{c}" cx="{x}" cy="{y}" r="{r:.1f}"/>'
                    f'<text class="mf-name" fill="{c}" x="{X0}" y="{ly - 4}">{ZONE[k]["name"].replace("The ", "")}{" ◆" if hi else ""}</text>'
-                   f'<text class="mf-pl" x="{X0}" y="{ly + 22}">' + ("".join(f'<tspan x="{X0}" dy="{0 if j == 0 else 30}">{cell(on[j:j + 5])}</tspan>' for j in range(0, len(on), 5)) or "·") + '</text>')
+                   + ((f'<text class="mf-pl" x="{X0}" y="{ly + 22}">' + ("".join(f'<tspan x="{X0}" dy="{0 if j == 0 else 30}">{cell(on[j:j + 5])}</tspan>' for j in range(0, len(on), 5)) or "·") + '</text>') if planets else ""))
+    cap = F["caption"] if has else F["caption"].split(" Engraving")[0]
     return (f'<figure class="mf"><svg viewBox="0 0 {X0 + 230} {H}" role="img" aria-label="Your seven stations on the body">{"".join(out)}</svg>'
-            f'<figcaption>{F["caption"] if has else F["caption"].split(" Engraving")[0]}</figcaption></figure>')
+            + (f'<figcaption>{cap}</figcaption>' if planets else "") + '</figure>')
+
+
+def free(C):
+    """The free chart's body map: the figure with the stations sized, no planets, and one plain line."""
+    unknown = C.get("unknownTime"); g = grid(C, defined_centres(C), unknown); w, _ = weight(g)
+    a, b = sorted(KEYS, key=lambda k: -w[k])[:2]
+    line = fill(T["FREE"]["line"], first=f"your {zname(a)[4:]}", first_parts=ZONE[a]["parts"], second=f"your {zname(b)[4:]}", second_parts=ZONE[b]["parts"])
+    return {"figure": figure(g, w, unknown, planets=False), "line": line, "note": T["FREE"]["note"]}
 
 
 def body(C, dasha, asks):

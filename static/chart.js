@@ -213,11 +213,8 @@ function chartLand(){
     <td>${GLYPH[b]} ${b}</td><td>${GLYPH[KT[i]]} ${KT[i]}</td></tr>`; }).join("");
   const karNote = C.karaka.Atmakaraka === KT[0] ? `${the(KT[0])[0].toUpperCase() + the(KT[0]).slice(1)} leads in both zodiacs.`
     : `The soul-planet is ${the(C.karaka.Atmakaraka)} among the stars and ${the(KT[0])} among the seasons. The sidereal order is the Jyotish reading.`;
-  /* the body map: every map laid onto the ladder's seven stations (static/medical.js); what it means is in the reading */
-  const MD = window.WyrdMedical, BG = MD ? MD.grid(C, rv.centres, unknown) : null;
-  const gly = bs => bs.map(b => b === "AC" ? "AC" : GLYPH[b]).join(" ");
-  const bodyRows = MD ? MD.ZONES.map(z => { const r = BG[z.key];
-    return `<tr><th><span class="mf-sw" style="background:${z.colour}"></span>${z.name.replace(/^The /, "")}</th><td>${gly(r.sign)}</td><td>${unknown ? "—" : gly(r.house)}</td><td>${gly(r.mansion)}</td><td>${r.centre.map(([c, on]) => `${c} ${on ? "●" : "○"}`).join(", ")}</td><td>${gly(r.trop)}</td></tr>`; }).join("") : "";
+  /* the body map: the stations on the body, sized; which planets land where, and what it means, is in the reading */
+  const BM = C.bodyMap;
   /* the numbers: what they are and which planets they sit on; what they mean is in the reading */
   const NB = window.WyrdNumbers, nums = NB ? NB.of(birth.date, birth.full_name, new Date().getFullYear()) : null;
   const numRows = nums ? NB.KINDS.filter(k => k in nums).map(k => { const n = nums[k], p = NB.planets(n);
@@ -245,9 +242,9 @@ function chartLand(){
       <dt>${g("centre", "Defined")}</dt><dd>${rv.centres.join(", ") || "—"}</dd><dt>Open</dt><dd>${rv.open.join(", ") || "—"}</dd>
       <dt>${g("channel", "Channels")}</dt><dd>${rv.channels.join(", ") || "—"}</dd></dl>
       <p class="fine">Drawn on your body and explained in <a href="#design">Your design →</a></p></div>
-    ${MD ? `<div class="fact wide"><h3>${g("bodymap", "Your body map")}</h3>
-      <table class="mini body-map"><tr><th></th><th>Sign</th><th>House</th><th>Mansion</th><th>Centre</th><th>Tropical</th></tr>${bodyRows}</table>
-      <p class="fine">Every map of the body the console reads, laid onto the ladder's seven stations from crown to root. Each column is one map, and the planets in it are the ones that land on that station by that map. AC is your rising sign; ● is a defined centre, ○ an open one. Where the maps pile up, what that part of you needs, your doshas, and what each period brings forward are in your reading, in The Body's Old Map. For reflection, not diagnosis.</p></div>` : ""}
+    ${BM ? `<div class="fact wide body-fig"><h3>${g("bodymap", "Your body map")}</h3>
+      <p class="bm-line">${BM.line}</p>${BM.figure}
+      <p class="fine">${BM.note}</p></div>` : ""}
     ${nums ? `<div class="fact"><h3>Your numbers</h3>
       <table class="mini"><tr><th></th><th></th><th>${g("stavefall", "Stavefall")}</th><th>${g("vedicnum", "Vedic")}</th></tr>${numRows}</table>
       <p class="fine">${birth.full_name ? "" : "Add your full name at birth when you cast your chart for three more: expression, soul urge and personality. "}What each number means, and where your life path's planets stand in your chart, is in your reading. <a href="/learn/numbers">How the numbers and their two planets work →</a></p></div>` : ""}

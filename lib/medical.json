@@ -465,5 +465,9 @@
       ]
     },
     "caption": "Your stations on the body, in their chakra colours. The larger the mark, the more your maps gather there; a ring and ◆ mark the two where they gather most. Engraving by J. Caldwall after John Brisbane, The Anatomy of Painting, 1769."
+  },
+  "FREE": {
+    "line": "Your chart gathers most at {first} ({first_parts}) and {second} ({second_parts}).",
+    "note": "Each mark is one of the seven stations from crown to root, in its chakra colour; the bigger the mark, the more of your chart lands there. Which planets land where, what each part of you needs, your doshas, and when each one comes forward are in your reading, in The Body's Old Map. For reflection, not diagnosis."
   }
 }
