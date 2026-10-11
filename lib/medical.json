@@ -2,9 +2,9 @@
   "_note": "The Body's Old Map: medical astrology for the paid reading and the free chart's body map. Plain and warm. It's for reflection and never a diagnosis; the NOTE says so and must stay. Placeholders in curly braces are filled in by the site; keep them.",
   "TITLE": "The Body's Old Map",
   "SUB": "which parts of your body your planets sit on",
-  "INTRO": "Astrologers have been mapping the sky onto the body for about two thousand years. In India the zodiac is laid over the body of Kalapurusha, the person of time, with Aries at the head and Pisces at the feet. Western astrologers drew the same figure and called it the zodiac man. Each planet has its own organs and systems too, and each of the twenty-seven mansions has a part of the body in an old list from the Brihat Samhita. Put together, they show which parts of you your chart keeps coming back to.",
+  "INTRO": "Every old system on this site has its own map of the body. They look like they disagree, but they're answering different questions, so here they're all laid onto one figure: the Planetary Ladder's seven stations, from the crown of your head down to the root. The zodiac already runs the same way, Aries at the head and Pisces at the feet, so every sign, house, mansion and centre has a station it belongs to. Where several maps land on the same station, that part of your body matters more for you.",
   "NOTE": "This is the old map, for reflection. It isn't a diagnosis and it can't tell you anything a doctor can't. If something in your body is bothering you, go and get it looked at.",
-  "TABLE_NOTE": "The sign is the sidereal one, which is what Jyotish reads. The house counts from your rising sign, so your 1st house is your head and your 12th is your feet. The tropical column is the sign Western medical astrology would use.",
+  "TABLE_NOTE": "Each row is a station on the ladder, top to bottom, and each column is one of the maps. The planets in a cell are the ones that land on that station by that map. AC is your rising sign. In the centre column, ● is a defined centre and ○ an open one.",
   "SIGN": {
     "Aries": {
       "part": "the head",
@@ -203,13 +203,11 @@
     "the sides",
     "the belly"
   ],
-  "PLANET_LINE": "{planet} looks after {rules}. Yours is in {sign}, on {part}, in your {house} house{station}. {plain} {how}",
-  "STATION_LINE": ", and on the Planetary Ladder it feeds {station}",
+  "PLANET_LINE": "{planet} looks after {rules}. Yours is in {sign}, {place}. {plain} {ladder}{how}",
   "NEUTRAL": "Nothing about its place pushes it either way.",
   "WEIGHT_H": "Where the weight falls",
-  "WEIGHT": "Counting your rising sign, your Moon and every planet by the sign it's in and the house it sits in, these are the parts of the body your chart comes back to most.",
-  "WEIGHT_TROP": "In the tropical zodiac the weight falls more on {part}, so if that rings truer, that's the Western reading of the same chart.",
-  "RISING": "Your rising sign is {sign}, so your body as a whole has a {sign} build. The old books say the 1st house is the body itself.",
+  "WEIGHT": "Adding up every map, with your rising sign counted three times and your Moon twice, this is where your chart gathers.",
+  "WEIGHT_TROP": "The tropical map puts more weight on {zone} ({parts}). If that's how your body feels from the inside, trust it: that's the experience, and the sidereal map is the build.",
   "STRAIN_H": "Planets under strain",
   "STRAIN": "A planet is under strain when it's in its weakest sign, or in the 6th, 8th or 12th house, the houses of illness, long trouble and rest. It's where your body asks for more care, not where something is wrong.",
   "STRAIN_NONE": "None of your planets is badly placed for the body. That doesn't mean nothing will ever go wrong, just that there's no one place the chart keeps pointing at.",
@@ -239,11 +237,192 @@
   "HOUSE_LINE": "{house_says}. Its ruler is {lord}, which sits in your {where} house.{in_it}",
   "HOUSE_IN": " {planets} {verb} in it.",
   "TIME_H": "The body in time",
-  "TIME_NOW": "Right now you're in {maha}'s long period with {antar}'s sub-period running inside it, until {to}. So this season brings forward {maha_short}, from {maha_name}, which sits on {maha_part} in your chart, and {antar_short}, from {antar}, which sits on {antar_part}.",
-  "TIME_SAME": "Right now you're in {maha}'s long period and its own sub-period, until {to}, so this season brings forward {maha_short}, and {maha_part}, where {maha_name} sits in your chart.",
+  "TIME_NOW": "Right now you're in {maha}'s long period with {antar}'s sub-period running inside it, until {to}. So this season brings forward {maha_short}, and {maha_zone}, where {maha_name} sits; and {antar_short}, and {antar_zone}, where {antar} sits.",
+  "TIME_SAME": "Right now you're in {maha}'s long period and its own sub-period, until {to}, so this season brings forward {maha_short}, and {maha_zone}, where {maha_name} sits.",
   "TIME_NEXT": "The next sub-periods, and the part of the body each one's planet sits on:",
-  "TIME_ROW": "{from}: {lord}, for {rules}. In your chart it sits on {part}.",
-  "ASK": "Your chart comes back to {part} more than anywhere else. What does that part of your body tell you when you're not listening?",
-  "STRAIN_ROW": "{planet} in {sign}, your {house} house{weak}. Look after {short}, and {part}, where it sits.",
-  "STRAIN_WEAK": ", its weakest sign"
+  "TIME_ROW": "{from}: {lord}, for {rules}. In your chart it sits at {zone}.",
+  "ASK": "Your chart gathers at {zone}: {parts}. What does that part of your body tell you when you're not listening?",
+  "STRAIN_ROW": "{planet} in {sign}, your {house} house{weak}. Look after {short}, and {zone}, where it sits.",
+  "STRAIN_WEAK": ", its weakest sign",
+  "LENSES_H": "How the maps fit together",
+  "LENSES": [
+    [
+      "The sign",
+      "the body you were given. This is the sidereal sign, the one Jyotish reads, and it's the main map."
+    ],
+    [
+      "The house",
+      "where your life lands in your body. It's counted from your rising sign, so the 1st house is your head and the 12th your feet."
+    ],
+    [
+      "The mansion",
+      "the fine detail: one small part of the body inside the bigger area."
+    ],
+    [
+      "The centre",
+      "how energy moves there, from your bodygraph. A defined centre runs steadily on its own; an open one takes in whatever is around it."
+    ],
+    [
+      "The tropical sign",
+      "how the body feels to live in. It's the Western map of the same figure, the same way the console reads the tropical zodiac everywhere else, as experience."
+    ],
+    [
+      "The planet",
+      "what kind of thing it is: heat, bone, nerves, fluids. The station says where; the planet says what."
+    ],
+    [
+      "The dosha",
+      "the temperament of the whole body. Each dosha has its home in one part of the ladder."
+    ],
+    [
+      "The period",
+      "when. Each planet's years bring forward the parts of the body it rules and sits on."
+    ]
+  ],
+  "ZONES": [
+    {
+      "key": "crown",
+      "name": "The crown",
+      "parts": "the top of the head, the skull and the brain",
+      "signs": [
+        "Aries"
+      ],
+      "centre": [
+        "Head"
+      ],
+      "dosha": "Kapha",
+      "line": "A lot of your life runs through your head. Pressure, headaches and sleepless thinking are the first signs you've done too much, and getting out of your head and into your body is the old cure."
+    },
+    {
+      "key": "brow",
+      "name": "The brow",
+      "parts": "the face, eyes, ears and nose",
+      "signs": [
+        "Aries"
+      ],
+      "centre": [
+        "Ajna"
+      ],
+      "dosha": "Kapha",
+      "line": "Your senses work hard. Eyes, sinuses and the tension between the brows are where strain shows up, and screens, noise and bright light cost you more than most."
+    },
+    {
+      "key": "throat",
+      "name": "The throat",
+      "parts": "the neck, mouth, jaw, teeth and voice",
+      "signs": [
+        "Taurus"
+      ],
+      "centre": [
+        "Throat"
+      ],
+      "dosha": "Kapha",
+      "line": "What you don't say goes to your throat. A tight jaw, a sore throat or a voice that goes when you're upset are the classic signs, and speaking up really does help your body."
+    },
+    {
+      "key": "heart",
+      "name": "The heart",
+      "parts": "the chest, heart, lungs, arms, hands and upper back",
+      "signs": [
+        "Gemini",
+        "Cancer",
+        "Leo"
+      ],
+      "centre": [
+        "G",
+        "Heart"
+      ],
+      "dosha": "Kapha",
+      "line": "You carry things in your chest and shoulders. Breath, posture and the heart are where life shows up in you, and real rest and real connection are the medicine."
+    },
+    {
+      "key": "solar",
+      "name": "The solar plexus",
+      "parts": "the stomach, belly, liver and digestion",
+      "signs": [
+        "Cancer",
+        "Virgo"
+      ],
+      "centre": [
+        "Solar",
+        "Spleen"
+      ],
+      "dosha": "Pitta",
+      "line": "Your gut is your second brain. Worry and feeling both go straight to your stomach, and regular meals and a calm table do more for you than they sound like they would."
+    },
+    {
+      "key": "sacrum",
+      "name": "The sacrum",
+      "parts": "the pelvis, hips, lower back, kidneys and reproductive organs",
+      "signs": [
+        "Libra",
+        "Scorpio",
+        "Sagittarius"
+      ],
+      "centre": [
+        "Sacral"
+      ],
+      "dosha": "Vata",
+      "line": "Your energy lives low in the body. The lower back, the kidneys and your cycles hold a lot, and they do best when you work with your energy instead of pushing past it."
+    },
+    {
+      "key": "root",
+      "name": "The root",
+      "parts": "the thighs, legs, knees, ankles, feet and bones",
+      "signs": [
+        "Sagittarius",
+        "Capricorn",
+        "Aquarius",
+        "Pisces"
+      ],
+      "centre": [
+        "Root"
+      ],
+      "dosha": "Vata",
+      "line": "Your body needs ground. Legs, knees, feet and bones carry the weight, and walking, standing and slow steady movement keep you well."
+    }
+  ],
+  "NAK_ZONE": [
+    "root",
+    "crown",
+    "sacrum",
+    "root",
+    "brow",
+    "crown",
+    "heart",
+    "throat",
+    "heart",
+    "brow",
+    "sacrum",
+    "sacrum",
+    "heart",
+    "brow",
+    "throat",
+    "heart",
+    "heart",
+    "throat",
+    "root",
+    "root",
+    "root",
+    "brow",
+    "heart",
+    "throat",
+    "solar",
+    "solar",
+    "solar"
+  ],
+  "AGREE": "{lenses} all point here.",
+  "AGREE_ONE": "Mostly {lenses} points here.",
+  "LENS_NAME": {
+    "sign": "your signs",
+    "house": "your houses",
+    "mansion": "your mansions",
+    "centre": "your bodygraph"
+  },
+  "LADDER_SAME": "It also feeds {station} on the ladder, so it's at home where it sits and counts double there. ",
+  "LADDER_OTHER": "On the ladder it feeds {station}, so it ties {station} to {zone}. ",
+  "RISING": "Your rising sign is {sign}, which sits at {zone}. The old books say the 1st house is the body itself, so that's where your body starts from.",
+  "DOSHA_HOME": "{dosha}'s home in the body is {zones}, so that's where it shows first.",
+  "PLACE": "on {part}, which is {zone} on the ladder",
+  "PLACE_SAME": "on {part}"
 }
