@@ -157,4 +157,4 @@ At `/admin/gifts` give anyone a Membership or Professional plan by email for 30 
 `/reports`, `/membership`, `/learn` and a page for every gate, nakshatra and sign are server-rendered with titles, descriptions, share previews and structured data (price, FAQ). `/sitemap.xml` and `/robots.txt` tell Google what to read; private pages send noindex. Add the site to Google Search Console and submit the sitemap.
 
 Tests: `python tests/members_check.py` (accounts, plans, Body Weather, weekly job, search pages; no Stripe calls).
-`python tests/together_check.py` (prices, checkout and the reading together). `python tests/gifts_check.py` (granting, expiry and revoking complimentary access; checks no checkout or subscription is ever made).
+`python tests/karaka_check.py` (the karakas in both zodiacs; needs node). `python tests/together_check.py` (prices, checkout and the reading together). `python tests/gifts_check.py` (granting, expiry and revoking complimentary access; checks no checkout or subscription is ever made).

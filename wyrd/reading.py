@@ -193,13 +193,24 @@ def build(chart, dasha, who):
     stations = [(1, "the body"), (9, "the dharma"), (10, "the public"), (12, "the ancestral"), (60, "the sum of karmas")]
     naks = [NAKS[E.nak_index(E.norm(n * l))][0] for n, _ in stations]
     rep = sorted({x for i, x in enumerate(naks) if naks.index(x) != i})
+    KT = C.get("karakaT") or E.karakas(C["trop"])
     rows = "".join(f"<tr{' class=hi' if k == 'Atmakaraka' else ''}><td>{k.replace('karaka', '')}</td>"
-                   f"<td>{GLYPH[b]} {b}</td><td>{E.deg_in(C['sid'][b]):.2f}°</td><td>{KGLOSS[k]}</td></tr>"
+                   f"<td>{GLYPH[b]} {b}</td><td>{E.deg_in(C['sid'][b]):.2f}°</td>"
+                   f"<td>{GLYPH[KT[k]]} {KT[k]} <small>{E.deg_in(C['trop'][KT[k]]):.2f}°</small></td><td>{KGLOSS[k]}</td></tr>"
                    for k, b in K.items())
+    akT, moved, th = KT["Atmakaraka"], sum(K[k] != KT[k] for k in K), MORE.the
+    tropical = (f"In the tropical zodiac, measured by the seasons rather than the stars, the same planet leads: {th(ak)} is the soul-planet in both, "
+                f"and the soul's errand is felt as plainly as it is fated." if akT == ak else
+                f"In the tropical zodiac, measured by the seasons rather than the stars, the cabinet reorders and <b>{th(akT)}</b> leads. "
+                f"This reading follows the sidereal order, where {th(ak)} holds the soul; {th(akT)} is how that errand is felt from the inside, "
+                f"the planet the life experiences as most its own.")
+    tropical += ("" if not moved else " All seven seats change hands between the two zodiacs." if moved == 7 else
+                 f" {['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][moved]} of the seven seats change{'s' if moved == 1 else ''} hands between the two zodiacs.")
     out.append(section(2, "The Soul-Planet", f"Atmakaraka {GLYPH[ak]} {ak} · {fmt_lon(l)} · {E.nak_of(l)}", f"""
       <p>{KGLOSS['Atmakaraka']}</p>
       <p class="rd-kenning">{CORPUS['KARAKA_METHOD']}</p>
-      <div class="rd-tw"><table><tr><th>Karaka</th><th>Body</th><th>Degree</th><th>Reads</th></tr>{rows}</table></div>
+      <div class="rd-tw"><table><tr><th>Karaka</th><th>Sidereal</th><th>Degree</th><th>Tropical</th><th>Reads</th></tr>{rows}</table></div>
+      <p class="rd-kenning">{tropical}</p>
       {pair(f"{ak} across the divisions", " · ".join(f"D{n} {naks[i]}" for i, (n, _) in enumerate(stations)))}
       {f'<p class="rd-kenning"><b>{", ".join(rep)}</b> repeats across divisions. A soul-planet that repeats a star, a house, or a rune is repeating the life\'s keynote.</p>' if rep else ''}      {MORE.karakas_more(C, dasha, asks)}"""))
 
