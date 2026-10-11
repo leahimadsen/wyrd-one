@@ -39,10 +39,11 @@ check("symmetric", all(S(a, b) == S(b, a) for a, _ in E.DASHA for b, _ in E.DASH
 
 # ---- the reading, from pretend charts ----
 SID = {b: (i * 37.3) % 360 for i, b in enumerate(["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"])}
-def person(name, asc, moon, ak, unknown=False):
-    C = {"ascS": asc, "sid": dict(SID, Moon=moon), "karaka": {"Atmakaraka": ak}, "jd": 2447000.0}
+def person(name, asc, moon, ak, unknown=False, gates=(26, 10, 20, 7, 31), date="1987-08-01", full_name=""):
+    natal = {"personality": {f"b{i}": {"gate": g, "line": 1} for i, g in enumerate(gates)}, "design": {}}
+    C = {"ascS": asc, "sid": dict(SID, Moon=moon), "karaka": {"Atmakaraka": ak}, "jd": 2447000.0, "natal": natal}
     if unknown: C["unknownTime"] = True
-    return {"name": name, "C": C, "dasha": E.dasha_tree(C, 2447000.0 + 35 * E.YEAR)}
+    return {"name": name, "C": C, "dasha": E.dasha_tree(C, 2447000.0 + 35 * E.YEAR), "date": date, "full_name": full_name}
 
 two = together.build([person("Freya", 10, 100, "Venus"), person("Odin <b>", 200, 250, "Saturn", unknown=True)])
 check("opens with the table story", two.index("Prologue: The Table") < two.index("Who Sits at the Table"))
@@ -53,8 +54,8 @@ check("unknown birth time is said", "houses are counted from the Sun" in two)
 check("no blank left unfilled", not re.findall(r"\{[a-z_]+\}", two))
 years = [int(y) for y in re.findall(r"<tr><td>(\d{4})</td>", two)]
 check("the next thirty years, in order", years and years == sorted(years) and years[-1] - years[0] <= 30)
-check("for two, each change says how the guests get on", "and the two guests are" in two)
-check("sections numbered I to V", all(f'<div class="rd-num">{n}</div>' in two for n in ("I", "II", "III", "IV", "V")))
+check("for two, every sub-period says how the shorter guests get on", "The two shorter guests are" in two)
+check("sections numbered I to VIII", all(f'<div class="rd-num">{n}</div>' in two for n in ("I", "II", "III", "IV", "V", "VI", "VII", "VIII")))
 
 nine = together.build([person(f"P{i}", i * 40, i * 33 + 5, ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"][i % 7]) for i in range(9)])
 check("nine people: everyone wakes the other eight", all(nine.count(f"What P{i} wakes") == 1 for i in range(9)) and nine.count("'s soul-planet, ") == 72)
@@ -74,7 +75,7 @@ cs = BOND.contacts(A, Bp)
 check("the strongest contact is written out", cs and BOND.contact_text(cs[0], {"name": "Freya"}, {"name": "Odin"}).split(" <em")[0][:60] in pair_html)
 check("every planet in the other's houses, in words", pair_html.count("in Odin's") >= 9 and pair_html.count("in Freya's") >= 9)
 check("the bond's question joins the questions", BOND.B["SUKUYO"][r["pair"]]["ask"] in pair_html.split("The Questions")[1])
-check("sections numbered I to V", all(f'<div class="rd-num">{n}</div>' in pair_html for n in ("I", "II", "III", "IV", "V")))
+check("sections numbered I to VIII", all(f'<div class="rd-num">{n}</div>' in pair_html for n in ("I", "II", "III", "IV", "V", "VI", "VII", "VIII")))
 check("the bond comes after the story and the table", pair_html.index("Prologue") < pair_html.index("Who Sits at the Table") < pair_html.index("<h2>The Bond</h2>"))
 check("no shuku, no Sukuyō, and nothing breaks", "Sukuyō ·" not in two and "The higher path" in two)
 

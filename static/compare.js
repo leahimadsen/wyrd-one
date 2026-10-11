@@ -209,6 +209,7 @@ function mount(host, X){
       ${saved.length ? `<label class="f-name">From your saved charts <select name="saved"><option value="">Choose…</option>${saved.map((s, i) => `<option value="${i}">${esc(s.name || "Unnamed")} · ${esc(s.date)}</option>`).join("")}</select></label>
         <p class="hint f-name">or enter someone new:</p>` : ""}
       <label class="f-name">Their name <span>optional</span><input name="name" maxlength="80"></label>
+      <label class="f-name">Their full name at birth <span>optional, for the numbers in the reading together</span><input name="full_name" maxlength="80" autocomplete="off"></label>
       <label>Date of birth <input name="date" type="date" min="1850-01-01" max="2149-12-31"></label>
       <label>Time of birth <input name="time" type="time"></label>
       <label class="f-unknown"><input type="checkbox" name="unknown"> Their birth time is unknown</label>
@@ -230,7 +231,7 @@ function mount(host, X){
       } else {
         if (!f.date.value || (!f.unknown.checked && !f.time.value)){ err.textContent = "Enter their date of birth, and time if known."; return; }
         if (!place){ err.textContent = "Choose their birthplace from the list as you type."; return; }
-        b = { name: f.name.value.trim(), date: f.date.value, time: f.unknown.checked ? "12:00" : f.time.value, unknown_time: f.unknown.checked || undefined,
+        b = { name: f.name.value.trim(), full_name: f.full_name.value.trim() || undefined, date: f.date.value, time: f.unknown.checked ? "12:00" : f.time.value, unknown_time: f.unknown.checked || undefined,
               place_id: place.id, lat: place.lat, lon: place.lon, tz: place.tz, place_label: place.label };
       }
       btn.disabled = true; btn.textContent = "Casting…";
