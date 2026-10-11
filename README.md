@@ -141,6 +141,8 @@ Body Weather's centre lines are drafts in `lib/body_weather.json` for The Völva
 
 ## The full reading
 
+Every reading opens with **a prologue**: a silly story of how you got here (who sent you, the costume you chose, the gift and the shadow packed with it, and the houseguests who arrive at each age), assembled from the chart. Its lines are drafts in `lib/story.json` for The Völva to rewrite; the numbered sections that follow decode it.
+
 Thirteen sections: the Seat, the Engine (Moon), **the Planets** (all twelve, each read sidereally for karma and reality and tropically for experience, with dignity, rune and gates), the Soul-Planet, **the Runes** (the lit runes ranked, and the dasha periods that wake each one), the Work, **the Body** (all nine centres, every channel and the mansion and pada that feeds each gate), **Where You Thrive** (culture, places, work), the Dharma Weave, the Path of Dharma, the Clock (with the whole life by period) and the Questions. The new sections draw on `lib/register_ext.json`, drafted for The Völva to edit.
 
 ## Gifts (admin only)
