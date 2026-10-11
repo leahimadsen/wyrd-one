@@ -217,7 +217,7 @@ function chartLand(){
   const MD = window.WyrdMedical, BG = MD ? MD.grid(C, rv.centres, unknown) : null;
   const gly = bs => bs.map(b => b === "AC" ? "AC" : GLYPH[b]).join(" ");
   const bodyRows = MD ? MD.ZONES.map(z => { const r = BG[z.key];
-    return `<tr><th>${z.name.replace(/^The /, "")}</th><td>${gly(r.sign)}</td><td>${unknown ? "—" : gly(r.house)}</td><td>${gly(r.mansion)}</td><td>${r.centre.map(([c, on]) => `${c} ${on ? "●" : "○"}`).join(", ")}</td><td>${gly(r.trop)}</td></tr>`; }).join("") : "";
+    return `<tr><th><span class="mf-sw" style="background:${z.colour}"></span>${z.name.replace(/^The /, "")}</th><td>${gly(r.sign)}</td><td>${unknown ? "—" : gly(r.house)}</td><td>${gly(r.mansion)}</td><td>${r.centre.map(([c, on]) => `${c} ${on ? "●" : "○"}`).join(", ")}</td><td>${gly(r.trop)}</td></tr>`; }).join("") : "";
   /* the numbers: what they are and which planets they sit on; what they mean is in the reading */
   const NB = window.WyrdNumbers, nums = NB ? NB.of(birth.date, birth.full_name, new Date().getFullYear()) : null;
   const numRows = nums ? NB.KINDS.filter(k => k in nums).map(k => { const n = nums[k], p = NB.planets(n);

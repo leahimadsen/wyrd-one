@@ -23,7 +23,9 @@ from .reading_more import dignity, ORD, E_year, LORD_OF_SIGN, the
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 T = json.load(open(os.path.join(HERE, "lib", "medical.json"), encoding="utf-8"))
-DEEP = json.load(open(os.path.join(HERE, "lib", "corpus.json"), encoding="utf-8"))["NAK_DEEP"]
+_C = json.load(open(os.path.join(HERE, "lib", "corpus.json"), encoding="utf-8"))
+DEEP = _C["NAK_DEEP"]
+COLOUR = [b["hex"] for b in _C["BIFROST"]]        # the chakra colours, crown violet down to root red, as on the ladder
 NINE = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"]
 GLYPH = {"Sun": "☉", "Moon": "☽", "Mercury": "☿", "Venus": "♀", "Mars": "♂", "Jupiter": "♃", "Saturn": "♄", "Rahu": "☊", "Ketu": "☋", "AC": "AC"}
 HARD = {6, 8, 12}
@@ -143,17 +145,21 @@ def figure(g, w, unknown=False):
     """The body diagram: the engraving, the ladder down its middle, a mark on each station sized by its weight,
     and to the side the planets that land there by sign (and by house, when the birth time is known)."""
     F = T["FIGURE"]; W, H = F["w"], F["h"]; X0 = W + 40; top = max(w.values()) or 1
-    pts = [F["at"][k] for k in KEYS]
+    pts = [F["at"][k] for k in KEYS]; heavy = sorted(w.values())[-2]
+    grad = "".join(f'<stop offset="{i / 6:.3f}" stop-color="{c}"/>' for i, c in enumerate(COLOUR))
     has = os.path.exists(os.path.join(HERE, F["src"].lstrip("/")))      # until the engraving is added, the ladder stands alone
-    out = [f'<image href="{F["src"]}" x="0" y="0" width="{W}" height="{H}"/>' if has else "",
-           f'<polyline class="mf-ladder" points="{" ".join(f"{x},{y}" for x, y in pts)}"/>']
+    out = [f'<defs><linearGradient id="mf-bow" x1="0" y1="{pts[0][1]}" x2="0" y2="{pts[-1][1]}" gradientUnits="userSpaceOnUse">{grad}</linearGradient></defs>',
+           f'<image href="{F["src"]}" x="0" y="0" width="{W}" height="{H}"/>' if has else "",
+           f'<polyline class="mf-ladder" stroke="url(#mf-bow)" points="{" ".join(f"{x},{y}" for x, y in pts)}"/>']
     for i, k in enumerate(KEYS):
         x, y = F["at"][k]; r = 6 + 12 * w[k] / top; ly = 40 + i * (H * 0.62 / 6)
         on = [b for b in g[k]["sign"]] + ([] if unknown else [b for b in g[k]["house"] if b not in g[k]["sign"]])
-        out.append(f'<path class="mf-lead" d="M{x + r},{y} L{X0 - 10},{ly}"/>'
-                   f'<circle class="mf-dot{" hi" if w[k] >= sorted(w.values())[-2] else ""}" cx="{x}" cy="{y}" r="{r:.1f}"/>'
-                   f'<text class="mf-name" x="{X0}" y="{ly - 4}">{ZONE[k]["name"].replace("The ", "")}</text>'
-                   f'<text class="mf-pl" x="{X0}" y="{ly + 22}">{cell(on) or "·"}</text>')
+        c = COLOUR[i]; hi = w[k] >= heavy
+        out.append(f'<path class="mf-lead" stroke="{c}" d="M{x + r},{y} L{X0 - 10},{ly}"/>'
+                   + (f'<circle class="mf-ring" stroke="{c}" cx="{x}" cy="{y}" r="{r + 6:.1f}"/>' if hi else "")
+                   + f'<circle class="mf-dot{" hi" if hi else ""}" fill="{c}" cx="{x}" cy="{y}" r="{r:.1f}"/>'
+                   f'<text class="mf-name" fill="{c}" x="{X0}" y="{ly - 4}">{ZONE[k]["name"].replace("The ", "")}{" ◆" if hi else ""}</text>'
+                   f'<text class="mf-pl" x="{X0}" y="{ly + 22}">' + ("".join(f'<tspan x="{X0}" dy="{0 if j == 0 else 30}">{cell(on[j:j + 5])}</tspan>' for j in range(0, len(on), 5)) or "·") + '</text>')
     return (f'<figure class="mf"><svg viewBox="0 0 {X0 + 230} {H}" role="img" aria-label="Your seven stations on the body">{"".join(out)}</svg>'
             f'<figcaption>{F["caption"] if has else F["caption"].split(" Engraving")[0]}</figcaption></figure>')
 
@@ -166,7 +172,7 @@ def body(C, dasha, asks):
 
     key = "".join(f"<dt>{a}</dt><dd>{cap(b)}</dd>" for a, b in T["LENSES"])
     centres = lambda row: ", ".join(f"{c} {'●' if on else '○'}" for c, on in row["centre"]) if C.get("natal") else "—"
-    trs = "".join(f"<tr{' class=hi' if k in order[:2] else ''}><th>{ZONE[k]['name']}<br><small>{ZONE[k]['parts']}</small></th>"
+    trs = "".join(f"<tr{' class=hi' if k in order[:2] else ''}><th><span class=mf-sw style='background:{COLOUR[KEYS.index(k)]}'></span>{ZONE[k]['name']}<br><small>{ZONE[k]['parts']}</small></th>"
                   f"<td>{cell(g[k]['sign'])}</td><td>{'—' if unknown else cell(g[k]['house'])}</td><td>{cell(g[k]['mansion'])}</td>"
                   f"<td>{centres(g[k])}</td><td>{cell(g[k]['trop'])}</td></tr>" for k in KEYS)
     table = (f'<div class="rd-tw"><table class="rd-zones"><tr><th>Station</th><th>Sign</th><th>House</th><th>Mansion</th><th>Centre</th><th>Tropical</th></tr>{trs}</table></div>'
