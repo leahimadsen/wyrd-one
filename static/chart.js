@@ -76,7 +76,7 @@ const LANDS = [
     teaser: "You and up to eight others", why: "How your chart meets someone else's.",
     terms: [], prompt: "The reading together writes your bond out in full: your story at one table, the old match, and the next thirty years." },
   { id: "reading",   name: "The Wyrd Reading",           short: "Reading", mark: "✦", gold: true,
-    teaser: "Your story, then fourteen sections that decode it, written for you", terms: [] },
+    teaser: "Your story, then fifteen sections that decode it, written for you", terms: [] },
   { id: "mandala",   name: "The Wyrd Mandala",       short: "Mandala", mark: "✺", explore: true, teaser: "The 108 stations, a card for each, your planets among them",
     terms: ["nakshatra", "pada", "navamsa"] },
   { id: "armillary", name: "The armillary",          short: "Armillary", mark: "◎", explore: true, teaser: "Your sky as a sphere you can open",
@@ -228,12 +228,8 @@ function chartLand(){
     const x = aspectBetween(C.sid[a], C.sid[b]);
     if (x) asp.push(`<li><span>${GLYPH[a]} ${a} · ${GLYPH[b]} ${b}</span><span style="color:${x.col}">${x.name}</span><span>${x.orb.toFixed(1)}°</span></li>`);
   }
+  /* what the chart is first (the day, the karakas, the aspects), then the design and the body it maps, then the numbers */
   $("facts").innerHTML = `
-    <div class="fact"><h3>Your Birth Design</h3>
-      <dl><dt>${g("type")}</dt><dd>${rv.type}</dd><dt>${g("strategy")}</dt><dd>${rv.strategy}</dd><dt>${g("authority")}</dt><dd>${rv.authority}</dd>
-      <dt>${g("definition")}</dt><dd>${rv.definition}</dd><dt>${g("profile")}</dt><dd>${rv.profile}</dd><dt>${g("cross", "Cross gates")}</dt><dd>${rv.cross}</dd>
-      <dt>${g("centre", "Defined")}</dt><dd>${rv.centres.join(", ") || "—"}</dd><dt>Open</dt><dd>${rv.open.join(", ") || "—"}</dd>
-      <dt>${g("channel", "Channels")}</dt><dd>${rv.channels.join(", ") || "—"}</dd></dl></div>
     ${P ? `<div class="fact"><h3>${g("panchanga", "Your birth day")}</h3>
       <dl><dt>${g("vara")}</dt><dd>${P.vara} <small>(${P.varaLord})</small></dd><dt>${g("tithi")}</dt><dd>${P.paksha} ${P.tithiName} <small>(${P.tithi} of 30)</small></dd>
       <dt>Mansion</dt><dd>${unknown && C.moonSpan && C.moonSpan.length > 1 ? C.moonSpan.join(" or ") : P.nakshatra}</dd><dt>${g("yoga")}</dt><dd>${P.yoga}</dd><dt>${g("karana")}</dt><dd>${P.karana}</dd>
@@ -241,13 +237,20 @@ function chartLand(){
     <div class="fact"><h3>${g("karaka", "The seven karakas")}</h3>
       <table class="mini kar-both"><tr><th></th><th>Sidereal</th><th>Tropical</th></tr>${kar}</table>
       <p class="fine">${karNote}${ROLES.some((k, i) => C.karaka[k] !== KT[i]) ? " Marked rows differ." : ""}</p>
-      ${nums ? `<h3 class="fact-h2">Your numbers</h3>
-      <table class="mini"><tr><th></th><th></th><th>${g("stavefall", "Stavefall")}</th><th>${g("vedicnum", "Vedic")}</th></tr>${numRows}</table>
-      <p class="fine">${birth.full_name ? "" : "Add your full name at birth when you cast your chart for three more: expression, soul urge and personality. "}What each number means, and where your life path's planets stand in your chart, is in your reading. <a href="/learn/numbers">How the numbers and their two planets work →</a></p>` : ""}
-      <h3 class="fact-h2">${g("aspect", "Aspects")}</h3><ul class="kar asp">${asp.join("") || "<li>None within orb</li>"}</ul></div>
-    ${MD ? `<div class="fact"><h3>${g("bodymap", "Your body map")}</h3>
+    </div>
+    <div class="fact"><h3>${g("aspect", "Aspects")}</h3><ul class="kar asp">${asp.join("") || "<li>None within orb</li>"}</ul></div>
+    <div class="fact"><h3>Your Birth Design</h3>
+      <dl><dt>${g("type")}</dt><dd>${rv.type}</dd><dt>${g("strategy")}</dt><dd>${rv.strategy}</dd><dt>${g("authority")}</dt><dd>${rv.authority}</dd>
+      <dt>${g("definition")}</dt><dd>${rv.definition}</dd><dt>${g("profile")}</dt><dd>${rv.profile}</dd><dt>${g("cross", "Cross gates")}</dt><dd>${rv.cross}</dd>
+      <dt>${g("centre", "Defined")}</dt><dd>${rv.centres.join(", ") || "—"}</dd><dt>Open</dt><dd>${rv.open.join(", ") || "—"}</dd>
+      <dt>${g("channel", "Channels")}</dt><dd>${rv.channels.join(", ") || "—"}</dd></dl>
+      <p class="fine">Drawn on your body and explained in <a href="#design">Your design →</a></p></div>
+    ${MD ? `<div class="fact wide"><h3>${g("bodymap", "Your body map")}</h3>
       <table class="mini body-map"><tr><th></th><th>Sign</th><th>House</th><th>Mansion</th><th>Centre</th><th>Tropical</th></tr>${bodyRows}</table>
       <p class="fine">Every map of the body the console reads, laid onto the ladder's seven stations from crown to root. Each column is one map, and the planets in it are the ones that land on that station by that map. AC is your rising sign; ● is a defined centre, ○ an open one. Where the maps pile up, what that part of you needs, your doshas, and what each period brings forward are in your reading, in The Body's Old Map. For reflection, not diagnosis.</p></div>` : ""}
+    ${nums ? `<div class="fact"><h3>Your numbers</h3>
+      <table class="mini"><tr><th></th><th></th><th>${g("stavefall", "Stavefall")}</th><th>${g("vedicnum", "Vedic")}</th></tr>${numRows}</table>
+      <p class="fine">${birth.full_name ? "" : "Add your full name at birth when you cast your chart for three more: expression, soul urge and personality. "}What each number means, and where your life path's planets stand in your chart, is in your reading. <a href="/learn/numbers">How the numbers and their two planets work →</a></p></div>` : ""}
     ${PL ? `<div class="fact"><h3>${g("placidus", "Placidus cusps")}</h3><p class="fine">Tropical. For comparison with the whole-sign houses this console reads.</p>
       <ol class="cusps">${PL.cusps.map((c, i) => `<li><span>${i + 1}</span>${SIGNS[Math.floor(norm(c) / 30)]} ${dm(c)}</li>`).join("")}</ol></div>` : ""}`;
 }

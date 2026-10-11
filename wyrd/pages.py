@@ -57,12 +57,12 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=11100,
 <p class="lede">Start with the free birth chart: the whole path, in both zodiacs, with your design, runes and timing. When you want it read, there are four ways in.</p>
 <div class="plans">
   <section class="plan lead"><h2>The Wyrd Reading</h2><div class="price">{m(price_cents)}<small> once</small></div>
-    <p class="muted">A natal astrology reading in fourteen sections, written for your placements and nobody else's. It opens with the story of how you got here; the sections decode it.</p>
+    <p class="muted">A natal astrology reading in fifteen sections, written for your placements and nobody else's. It opens with the story of how you got here; the sections decode it.</p>
     <ul><li>The Seat you rise from, the engine of your Moon, and the Matrix your Saturn builds</li>
     <li>Every planet in both zodiacs, and how they feed each other; your Soul-Planet and its cabinet</li>
-    <li>Your runes and the years each one wakes</li>
-    <li>Your Birth Design and Dharma Design, drawn and read, and the Path of Dharma step by step</li>
-    <li>Your whole life by Vimshottari era, and every question your chart asks</li></ul>
+    <li>Your whole life by Vimshottari era, and your runes and the years each one wakes</li>
+    <li>Your Birth Design and Dharma Design, drawn and read, and every old map of the body on one figure</li>
+    <li>The Path of Dharma step by step, your numbers, and every question your chart asks</li></ul>
     <a class="btn-buy" href="/">Cast your chart, then get the reading</a>
     <a class="alt" href="/sample">Read a sample reading first</a></section>
   <section class="plan"><h2>The Reading Together</h2><div class="price">{m(together_cents)}<small> for two</small></div>

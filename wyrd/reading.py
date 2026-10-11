@@ -9,18 +9,21 @@ which passages a chart calls for and lays them out.
   III  The Matrix          Saturn as the builder of your reality, and the world seen from the Moon
   IV   The Planets         every planet: sidereal (karma, reality) and tropical (experience)
   V    The Soul-Planet     the Atmakaraka and its cabinet of seven
-  VI   The Runes           the runes the chart lights, ranked, and the periods that wake them
-  VII  The Work            personality and design Suns and Earths, from the register
-  VIII The Body            centres, channels, and the mansions and padas that feed them
-  IX   The Body's Old Map  medical astrology: signs, houses, mansions and planets on the body (wyrd/medical.py)
-  X    Where You Thrive    culture, places and work
-  XI   The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
-  XII  The Path of Dharma  Mission, Illuminations, the Diamond
-  XIII The Clock           the periods running now, and the whole life by period
+  VI   The Clock           the periods running now, and the whole life by period
+  VII  The Runes           the runes the chart lights, ranked, and the periods that wake them
+  VIII The Work            personality and design Suns and Earths, from the register
+  IX   The Body            centres, channels, and the mansions and padas that feed them
+  X    The Body's Old Map  medical astrology: every map of the body on the ladder's seven stations (wyrd/medical.py)
+  XI   Where You Thrive    culture, places and work
+  XII  The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
+  XIII The Path of Dharma  Mission, Illuminations, the Diamond
   XIV  The Numbers         life path, birthday, personal year, and the name's numbers, each on two planets
   XV   The Questions       every question the chart asked, gathered
 
 Sections refer to each other by name ({{SEC:The Work}}); the numbers are filled in last.
+
+The order builds: the story first, then the parts it named in the order it named them (Seat, Engine,
+Soul-Planet, Clock), so every later section can lean on the periods.
 
 The planets, runes, body and thriving sections draw on lib/register_ext.json too.
 """
@@ -234,6 +237,24 @@ def build(chart, dasha, who):
       {pair(f"{ak} across the divisions", " · ".join(f"D{n} {naks[i]}" for i, (n, _) in enumerate(stations)))}
       {f'<p class="rd-kenning"><b>{", ".join(rep)}</b> repeats across divisions. A soul-planet that repeats a star, a house, or a rune is repeating the life\'s keynote.</p>' if rep else ''}      {MORE.karakas_more(C, dasha, asks)}"""))
 
+    # ---------- the clock: right after the Soul-Planet, as in the story; the sections after it lean on the periods ----------
+    cur, a, p = dasha["cur"], dasha["curA"], dasha["curP"]
+    role = {b: k for k, b in K.items()}
+    def lord(b): return f"{GLYPH.get(b, '')} {b}" + (f" · your {role[b].replace('karaka', '')}karaka" if b in role else "")
+    out.append(section(6, "The Clock", "Vimshottari, from the Moon's mansion", f"""
+      <p>These are the houseguests from your story. The mansion your Moon was in when you were born sets a clock of
+      planetary periods, and each planet runs a stretch of your life in turn: a long period of years, with shorter
+      sub-periods inside it. Whose period it is decides which parts of your chart come forward, so the sections after
+      this one keep coming back to it: when your runes wake, when the steps of your path open, what your body asks for,
+      and when your numbers' planets are strongest.</p>
+      {pair("Mahadasha", f"{lord(cur['lord'])} · {jd_date(cur['from'])} – {jd_date(cur['to'])}")}
+      {pair("Antardasha", f"{lord(a['lord'])} · {jd_date(a['from'])} – {jd_date(a['to'])}")}
+      {pair("Pratyantar", f"{lord(p['lord'])} · {jd_date(p['from'])} – {jd_date(p['to'])}")}
+      <div class="rd-tw"><table><tr><th>Period</th><th>From</th><th>To</th></tr>{''.join(
+        f"<tr{' class=hi' if m['now'] else ''}><td>{GLYPH.get(m['lord'], '')} {m['lord']}</td><td>{jd_date(m['from'])}</td><td>{jd_date(m['to'])}</td></tr>"
+        for m in dasha['maha'])}</table></div>
+      <h3 class="rd-tier">Your life by period</h3>{MORE.periods(C, dasha)}"""))
+
     # ---------- the runes ----------
     out.append(section(0, "The Runes", "which runes your chart lights, and when they wake", MORE.runes(C, dasha)))
 
@@ -336,19 +357,6 @@ def build(chart, dasha, who):
       <p>The same eleven positions read on the Dharma Design. Where a sphere repeats a gate across both paths the
       repetition is load-bearing. Where they differ, the difference is the maturation: the same spectrum, walked further.</p>{mature(N, Dh)}
       {pair("Load-bearing", " · ".join(shared) + " repeat across both paths" if shared else "no sphere repeats — every one matures")}"""))
-
-    # ---------- VII · the clock ----------
-    cur, a, p = dasha["cur"], dasha["curA"], dasha["curP"]
-    role = {b: k for k, b in K.items()}
-    def lord(b): return f"{GLYPH.get(b, '')} {b}" + (f" · your {role[b].replace('karaka', '')}karaka" if b in role else "")
-    out.append(section(6, "The Clock", "Vimshottari, from the Moon's mansion", f"""
-      {pair("Mahadasha", f"{lord(cur['lord'])} · {jd_date(cur['from'])} – {jd_date(cur['to'])}")}
-      {pair("Antardasha", f"{lord(a['lord'])} · {jd_date(a['from'])} – {jd_date(a['to'])}")}
-      {pair("Pratyantar", f"{lord(p['lord'])} · {jd_date(p['from'])} – {jd_date(p['to'])}")}
-      <div class="rd-tw"><table><tr><th>Period</th><th>From</th><th>To</th></tr>{''.join(
-        f"<tr{' class=hi' if m['now'] else ''}><td>{GLYPH.get(m['lord'], '')} {m['lord']}</td><td>{jd_date(m['from'])}</td><td>{jd_date(m['to'])}</td></tr>"
-        for m in dasha['maha'])}</table></div>
-      <h3 class="rd-tier">Your life by period</h3>{MORE.periods(C, dasha)}"""))
 
     # ---------- the numbers ----------
     out.append(section(0, NUMBERS.T["TITLE"], NUMBERS.T["SUB"], NUMBERS.body(C, dasha, who, asks)))
