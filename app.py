@@ -6,7 +6,7 @@
 """
 import html, hmac, json, math, os, re, time
 from collections import defaultdict, deque
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from flask import Flask, abort, jsonify, request, send_from_directory, Response, redirect, session
 from urllib.parse import urlencode
@@ -902,7 +902,8 @@ def pro_reading():
 # ---------------- gifts, from the admin only ----------------
 from itsdangerous import URLSafeTimedSerializer, BadSignature as _BadSig
 GIFT_READING_DAYS = 730
-GIFT_LENGTHS = {"1": 1, "3": 3, "6": 6, "12": 12, "forever": None}
+GIFT_LENGTHS = {"30d": "30 days", "1": 1, "3": 3, "6": 6, "12": 12, "forever": None}
+GIFT_DEFAULT = "30d"            # complimentary access for creators: no card, nothing charged
 
 def gift_signer():
     return URLSafeTimedSerializer(config.SECRET_KEY, salt="wyrd-gift-reading")
@@ -911,16 +912,19 @@ def admin_only():
     if not is_admin(): abort(404)
     if request.method == "POST" and not same_origin(): abort(403)
 
-def gift_until(choice):
+def gift_until(choice, today=None):
+    """The gift's last day (YYYY-MM-DD, UTC) or "forever". It works through that whole day
+    and has ended the day after."""
+    d = today or datetime.now(timezone.utc).date()
+    if choice == "30d": return (d + timedelta(days=30)).isoformat()
     months = GIFT_LENGTHS.get(choice, 12)
     if months is None: return "forever"
-    d = datetime.now(timezone.utc).date()
     y, m = divmod(d.month - 1 + months, 12)
     import calendar as _cal
     return f"{d.year + y:04d}-{m + 1:02d}-{min(d.day, _cal.monthrange(d.year + y, m + 1)[1]):02d}"
 
 def nice_until(u):
-    return "for good" if u == "forever" else "until " + datetime.strptime(u, "%Y-%m-%d").strftime("%-d %B %Y")
+    return "for good" if u == "forever" else "until the end of " + datetime.strptime(u, "%Y-%m-%d").strftime("%-d %B %Y")
 
 @app.get("/admin/gifts")
 def admin_gifts():
@@ -939,11 +943,11 @@ def admin_gifts():
             problem = f'<p class="err">Couldn\'t load the list from Stripe: {esc(e)}</p>'
     else:
         problem = '<p class="muted">Gifted memberships work once your Stripe key is set.</p>'
-    lengths = "".join(f'<option value="{k}"{" selected" if k == "12" else ""}>{"For good" if v is None else f"{v} month" + ("s" if v > 1 else "")}</option>' for k, v in GIFT_LENGTHS.items())
+    lengths = "".join(f'<option value="{k}"{" selected" if k == GIFT_DEFAULT else ""}>{"For good" if v is None else v if isinstance(v, str) else f"{v} month" + ("s" if v > 1 else "")}</option>' for k, v in GIFT_LENGTHS.items())
     return private("Gifts", f"""<p class="crumbs"><a href="/admin">Admin</a></p><h1>Gifts</h1>
 {f'<p class="note-box">{msg}</p>' if msg else ""}
 <h2>Give a membership</h2>
-<p class="muted">Nothing is charged. They get an email inviting them to sign in, and everything the plan includes works straight away.</p>
+<p class="muted">Nothing is charged and no card is asked for. They get an email inviting them to sign in, and everything the plan includes works straight away. When it ends they are back on the free site, unless they pay for a plan of their own, which a gift never changes.</p>
 <form class="pg-form" method="post" action="/admin/gift/membership">
 <label>Their email <input name="email" type="email" required maxlength="254"></label>
 <label>Plan <select name="tier"><option value="member">Membership</option><option value="pro">Professional</option></select></label>
@@ -959,8 +963,9 @@ def admin_gift_membership():
     email = accounts.clean_email(request.form.get("email"))
     tier = request.form.get("tier") if request.form.get("tier") in ("member", "pro") else "member"
     if not email: return redirect("/admin/gifts?" + urlencode({"done": "That email address doesn't look right."}))
-    until = gift_until(request.form.get("length", "12"))
+    until = gift_until(request.form.get("length", GIFT_DEFAULT))
     try:
+        paying = [p for p in billing.status(config.STRIPE_SECRET, email, fresh=True)["plans"] if p["status"] in billing.LIVE]
         billing.give(config.STRIPE_SECRET, email, tier, until)
     except stripe_api.StripeError as e:
         return redirect("/admin/gifts?" + urlencode({"done": f"Stripe said: {e}"}))
@@ -971,7 +976,9 @@ def admin_gift_membership():
         f"<p>{esc(config.AUTHOR)} has given you {plan}, {nice_until(until)}.</p>" + (f"<p><i>{esc(note)}</i></p>" if note else "") +
         f'<p><a href="{esc(link)}">Sign in to start</a> (this link works for {accounts.LINK_MINUTES} minutes; after that, sign in at {esc(config.BASE_URL)}/signin with this email).</p>',
         f"{config.AUTHOR} has given you {plan}, {nice_until(until)}.\n\n{note}\n\nSign in: {config.BASE_URL}/signin with this email address.")
-    return redirect("/admin/gifts?" + urlencode({"done": f"Given to {email}, {nice_until(until)}." + ("" if sent else " Email isn't set up, so tell them to sign in with this address.")}))
+    also = (" They already pay for " + " and ".join("Professional" if p["tier"] == "pro" else "Membership" for p in paying) +
+            "; that subscription is untouched and keeps billing as before.") if paying else ""
+    return redirect("/admin/gifts?" + urlencode({"done": f"Given to {email}, {nice_until(until)}." + also + ("" if sent else " Email isn't set up, so tell them to sign in with this address.")}))
 
 @app.post("/admin/gift/end")
 def admin_gift_end():
