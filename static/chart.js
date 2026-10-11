@@ -213,6 +213,10 @@ function chartLand(){
     <td>${GLYPH[b]} ${b}</td><td>${GLYPH[KT[i]]} ${KT[i]}</td></tr>`; }).join("");
   const karNote = C.karaka.Atmakaraka === KT[0] ? `${the(KT[0])[0].toUpperCase() + the(KT[0]).slice(1)} leads in both zodiacs.`
     : `The soul-planet is ${the(C.karaka.Atmakaraka)} among the stars and ${the(KT[0])} among the seasons. The sidereal order is the Jyotish reading.`;
+  /* the body map: which part of the body each planet sits on; what it means is in the reading */
+  const MD = window.WyrdMedical, NINE = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"];
+  const bodyRows = MD ? NINE.map(b => { const l = C.sid[b], h = houseOf(l, C.ascS);
+    return `<tr><th>${GLYPH[b]} ${b}</th><td>${MD.SIGN[signOf(l)]}</td><td>${unknown ? "—" : MD.SIGN[SIGNS[h - 1]]}</td><td>${MD.NAK[Math.floor(norm(l) / NAK_ARC) % 27]}</td><td>${MD.SIGN[signOf(C.trop[b])]}</td></tr>`; }).join("") : "";
   /* the numbers: what they are and which planets they sit on; what they mean is in the reading */
   const NB = window.WyrdNumbers, nums = NB ? NB.of(birth.date, birth.full_name, new Date().getFullYear()) : null;
   const numRows = nums ? NB.KINDS.filter(k => k in nums).map(k => { const n = nums[k], p = NB.planets(n);
@@ -240,6 +244,9 @@ function chartLand(){
       <table class="mini"><tr><th></th><th></th><th>${g("stavefall", "Stavefall")}</th><th>${g("vedicnum", "Vedic")}</th></tr>${numRows}</table>
       <p class="fine">${birth.full_name ? "" : "Add your full name at birth when you cast your chart for three more: expression, soul urge and personality. "}What each number means, and where your life path's planets stand in your chart, is in your reading. <a href="/learn/numbers">How the numbers and their two planets work →</a></p>` : ""}
       <h3 class="fact-h2">${g("aspect", "Aspects")}</h3><ul class="kar asp">${asp.join("") || "<li>None within orb</li>"}</ul></div>
+    ${MD ? `<div class="fact"><h3>${g("bodymap", "Your body map")}</h3>
+      <table class="mini body-map"><tr><th></th><th>Sign</th><th>House</th><th>Mansion</th><th>Tropical</th></tr>${bodyRows}</table>
+      <p class="fine">The part of the body each planet sits on: by its sidereal sign, by its house from your rising sign, by its mansion, and by its tropical sign. Which parts your chart comes back to most, your doshas, and what each period brings forward are in your reading, in The Body's Old Map. For reflection, not diagnosis.</p></div>` : ""}
     ${PL ? `<div class="fact"><h3>${g("placidus", "Placidus cusps")}</h3><p class="fine">Tropical. For comparison with the whole-sign houses this console reads.</p>
       <ol class="cusps">${PL.cusps.map((c, i) => `<li><span>${i + 1}</span>${SIGNS[Math.floor(norm(c) / 30)]} ${dm(c)}</li>`).join("")}</ol></div>` : ""}`;
 }

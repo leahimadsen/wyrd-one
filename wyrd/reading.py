@@ -12,12 +12,13 @@ which passages a chart calls for and lays them out.
   VI   The Runes           the runes the chart lights, ranked, and the periods that wake them
   VII  The Work            personality and design Suns and Earths, from the register
   VIII The Body            centres, channels, and the mansions and padas that feed them
-  IX   Where You Thrive    culture, places and work
-  X    The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
-  XI   The Path of Dharma  Mission, Illuminations, the Diamond
-  XII  The Clock           the periods running now, and the whole life by period
-  XIII The Numbers         life path, birthday, personal year, and the name's numbers, each on two planets
-  XIV  The Questions       every question the chart asked, gathered
+  IX   The Body's Old Map  medical astrology: signs, houses, mansions and planets on the body (wyrd/medical.py)
+  X    Where You Thrive    culture, places and work
+  XI   The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
+  XII  The Path of Dharma  Mission, Illuminations, the Diamond
+  XIII The Clock           the periods running now, and the whole life by period
+  XIV  The Numbers         life path, birthday, personal year, and the name's numbers, each on two planets
+  XV   The Questions       every question the chart asked, gathered
 
 Sections refer to each other by name ({{SEC:The Work}}); the numbers are filled in last.
 
@@ -32,6 +33,7 @@ from . import rave as RV
 from . import reading_more as MORE
 from . import story as STORY
 from . import reading_numbers as NUMBERS
+from . import medical as MEDICAL
 
 CORPUS = json.load(open(os.path.join(os.path.dirname(__file__), "..", "lib", "corpus.json"), encoding="utf-8"))
 REG, ENG, NAKS, DEEP = CORPUS["REGISTER"], CORPUS["ENGINE"], CORPUS["NAKSHATRA"], CORPUS["NAK_DEEP"]
@@ -249,6 +251,7 @@ def build(chart, dasha, who):
 
     # ---------- the body ----------
     out.append(section(0, "The Body", "your centres and channels, and the mansions that feed them", MORE.body(C)))
+    out.append(section(0, MEDICAL.T["TITLE"], MEDICAL.T["SUB"], MEDICAL.body(C, dasha, asks)))
     out.append(section(0, "Where You Thrive", "culture, places and work", MORE.thrive(C)))
 
     # ---------- V · the dharma weave ----------
