@@ -430,8 +430,8 @@
   "STRAIN_TAG": "under strain",
   "STRONG_TAG": "strong",
   "FIGURE": {
-    "_note": "The engraving under the body diagram: static/look/anatomy.jpg, its size, and where each station sits on it (pixels). Swap the image and update these to fit.",
-    "src": "/static/look/anatomy.jpg",
+    "_note": "The engraving under the body diagram: static/look/anatomy.png, cut out of its paper with tools/engraving.py so only the ink shows. Its size, and where each station sits on it (pixels). Swap the image and update these to fit.",
+    "src": "/static/look/anatomy.png",
     "w": 681,
     "h": 900,
     "at": {

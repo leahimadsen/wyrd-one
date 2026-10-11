@@ -8,7 +8,7 @@
                   glowing pale-cyan lettering (the front page, the chart)
    Art in /static/look/ is cut from her images. Edit the colours below.
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=UnifrakturMaguntia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=UnifrakturMaguntia&family=Silkscreen:wght@400;700&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root{
   --ink:#1d1712; --ink-soft:rgba(29,23,18,.72); --paper:#eee8db;
@@ -18,6 +18,21 @@
   --fell:'IM Fell English','Iowan Old Style',Georgia,serif;
   --fellsc:'IM Fell English SC','IM Fell English',Georgia,serif;
 }
+
+/* ---------------- the type: two hands ----------------
+   The reading (body.codex) is the manuscript and keeps the medieval hand: blackletter
+   titles, old press type. Everywhere else is the website, in a 90s/2000s computer hand:
+   pixel titles (Silkscreen), a clean grown-up text face (Space Grotesk), and a terminal
+   mono for the chrome: tabs, buttons, labels (Space Mono). Change the names here to change it. */
+body:not(.codex){
+  --pixel:'Silkscreen','Courier New',monospace;
+  --black:var(--pixel);
+  --fell:'Space Grotesk','Trebuchet MS',Verdana,sans-serif;
+  --fellsc:'Space Mono','Courier New',monospace;
+  --serif:'Space Grotesk','Trebuchet MS',Verdana,sans-serif;
+}
+body:not(.codex) h1,body:not(.codex) h2,body:not(.codex) .night-title,body:not(.codex) .seat h1 .seat-mark{font-family:var(--pixel)!important;font-weight:400;letter-spacing:.02em;overflow-wrap:anywhere}
+body:not(.codex) h3{font-family:var(--fell);font-weight:700}
 
 /* ---------------- the night ---------------- */
 body:not(.paper){
