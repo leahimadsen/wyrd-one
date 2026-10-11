@@ -159,8 +159,38 @@ function mount(host, X){
   host.innerHTML = `${Wyrd.glossTerms(["synastry", "sukuyo", "shuku", "sanku", "aspect", "house", "channel"])}
     <div class="cp-people" aria-live="polite"></div>
     <div class="cp-add" hidden></div>
+    <div class="cp-buy" hidden></div>
     <div class="cp-out"></div>`;
   const peopleEl = host.querySelector(".cp-people"), addEl = host.querySelector(".cp-add"), out = host.querySelector(".cp-out");
+
+  /* the paid reading together: $22 for two, each extra person adds to it; members' prices come from /api/me */
+  const buyEl = host.querySelector(".cp-buy");
+  let price = null;
+  const dollars = c => "$" + (c % 100 ? (c / 100).toFixed(2) : c / 100);
+  fetch("/api/me").then(r => r.json()).then(d => { price = d.together ? { ...d.together, member: d.member } : null; drawBuy(); }).catch(() => {});
+  function drawBuy(){
+    buyEl.hidden = !price || people.length < 2;
+    if (buyEl.hidden) return;
+    const n = people.length, total = price.two + price.extra * (n - 2);
+    buyEl.innerHTML = `<div class="cp-buybox"><h3 class="cp-h">The reading together</h3>
+      <p>The paid side of Compare: a story of how ${n === 2 ? "the two of you" : `all ${n} of you`} ended up at one table, what each of you wakes in the ${n === 2 ? "other" : "others"}, and the seasons you share, year by year for the next thirty.</p>
+      <button type="button" class="btn-cast cp-buybtn">Get our reading together — ${dollars(total)}${price.member ? ", your member price" : ""}</button>
+      <p class="muted">${dollars(price.two)} for two${n < price.max ? `, and ${dollars(price.extra)} for each person you add, up to ${price.max}` : ""}.</p>
+      <p class="err" role="alert"></p></div>`;
+  }
+  buyEl.addEventListener("click", async e => {
+    const btn = e.target.closest(".cp-buybtn"); if (!btn) return;
+    const err = buyEl.querySelector(".err"), label = btn.textContent; err.textContent = "";
+    btn.disabled = true; btn.textContent = "Opening checkout…";
+    if (Wyrd.pulseNow) Wyrd.pulseNow("act", "buy-together");
+    try {
+      const r = await fetch("/api/checkout-together", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ people: people.map(p => ({ ...p.birth, name: p.birth.name || p.name })) }) });
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error || "Checkout couldn't open.");
+      location.href = j.url;
+    } catch (x) { err.textContent = x instanceof TypeError ? "You're offline. Checkout needs a connection." : x.message; btn.disabled = false; btn.textContent = label; }
+  });
 
   function drawPeople(){
     peopleEl.innerHTML = people.map((p, i) => `<span class="cp-chip${p.self ? " self" : ""}"><b>${esc(p.name)}</b>
@@ -220,7 +250,7 @@ function mount(host, X){
     host.querySelectorAll("[data-pair]").forEach(b => b.setAttribute("aria-pressed", b.dataset.pair === pairSel));
   }
   function draw(){
-    drawPeople(); drawForm();
+    drawPeople(); drawForm(); drawBuy();
     if (people.length < 2){ out.innerHTML = `<p class="cp-empty">Add someone to see how you meet: by ${g("sukuyo", "Sukuyō")}, by the contacts between your planets, and by where each of you lands in the other's houses. Add more people, up to nine in all, to see your unit.</p>`; return; }
     if (people.length === 2){ out.innerHTML = `<div class="cp-pair-host"></div>`; pairSel = "0-1"; showPair(out.querySelector(".cp-pair-host")); return; }
     out.innerHTML = unitView(people); showPair(out.querySelector(".cp-pair-host"));

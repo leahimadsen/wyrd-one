@@ -165,6 +165,8 @@
 .cp-x { font: inherit; font-size: 18px; line-height: 1; color: var(--ivory-dim); background: none; border: 0; cursor: pointer; padding: 0 6px; }
 .cp-addbtn { font: inherit; font-size: 15px; color: #eef3ef; background: var(--jade-deep); border: 1px solid var(--jade); border-radius: 22px; padding: 8px 16px; cursor: pointer; }
 .cp-add select { font: inherit; font-size: 16px; color: var(--ivory); background: rgba(2,2,10,.7); border: 1px solid rgba(156,180,166,.25); padding: 10px; color-scheme: dark; }
+.cp-buybox { border: 1px solid rgba(201,168,90,.35); border-radius: 6px; padding: 4px 18px 10px; margin: 0 0 26px; background: rgba(8,8,22,.6); }
+.cp-buybox .muted { color: var(--ivory-dim); font-size: 14px; }
 .cp-empty { color: var(--ivory-dim); font-style: italic; max-width: 60ch; }
 .cp-h { font-weight: 400; font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin: 30px 0 12px; }
 .sk-card { padding: 16px 18px; border: 1px solid rgba(150,130,230,.25); border-radius: 3px; background: rgba(8,8,22,.55); max-width: 70ch; }
