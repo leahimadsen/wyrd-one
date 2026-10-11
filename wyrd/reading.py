@@ -122,8 +122,8 @@ def register_entry(gate, line, side, label, asks):
     if R.get("gandanta"):
         flags += '<span class="rd-flag gand">⟁ gandanta — read gently</span>'
     asks.append((f"{label} · gate {gate}.{line}", R["a"], design))
-    held = ('<div class="rd-held">The question is held — design-side runs unnamed until it is spoken. '
-            'It waits for you at the end.</div>') if design else f'<div class="rd-ask">{R["a"]}</div>'
+    held = MORE.once(("held",), '<div class="rd-held">The question is held — design-side runs unnamed until it is spoken. '
+                     'It waits for you at the end.</div>', '<div class="rd-held">Its question waits at the end.</div>') if design else f'<div class="rd-ask">{R["a"]}</div>'
     return f"""<div class="rd-entry">
       <h3>{esc(label)} · {gate}.{line} · {R['t']}
         <span class="rd-side {'d' if design else 'p'}">{'design · unconscious' if design else 'personality · conscious'}</span></h3>
@@ -168,6 +168,7 @@ def dharma_table(N, Dh):
       <div class="rd-tw"><table><tr><th>Body</th><th>Birth</th><th>Dharma</th><th></th></tr>{''.join(rows)}</table></div>"""
 
 def build(chart, dasha, who):
+    MORE.reset()                                    # each stock line once per reading
     C = chart
     asks = []
     out = []
@@ -320,7 +321,7 @@ def build(chart, dasha, who):
                 t = R.get("t", GATE_NAME.get(str(g["gate"]), ""))
                 act = activation(g["gate"], g["line"], C, dasha, n)
                 if col == "design":
-                    q = '<p class="rd-step-q held">This is design-side. Read the gate\'s engine in section {{SEC:The Work}} or {{SEC:The Dharma Weave}} first; its question waits in section {{SEC:The Questions}}.</p>'
+                    q = MORE.once(("step-held",), '<p class="rd-step-q held">This is design-side. Read the gate\'s engine in section {{SEC:The Work}} or {{SEC:The Dharma Weave}} first; its question waits in section {{SEC:The Questions}}.</p>', '<p class="rd-step-q held">Design-side: its question waits at the end.</p>')
                 else:
                     q = f'<p class="rd-step-q">The question to carry: <em>{R.get("a", "")}</em></p>' if R.get("a") else ""
                 out.append(f"""<div class="rd-step"><div class="rd-sn">Step {k}</div>
