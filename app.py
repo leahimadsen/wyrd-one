@@ -21,7 +21,7 @@ from wyrd.extras import extras
 from wyrd import calendar as wcal
 from wyrd import pulse
 from wyrd import accounts, billing, mailer, pages, weather
-from wyrd import together, sukuyo
+from wyrd import together, together_more, sukuyo
 import atexit
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -409,12 +409,14 @@ def pack_person(d, b):
     p = {"n": (d.get("name") or "").strip()[:40], "d": d["date"], "t": d["time"], "la": round(b["place"]["lat"], 4),
          "lo": round(b["place"]["lon"], 4), "tz": b["place"]["tz"], "pl": (b["place"]["label"] or "")[:80]}
     if d.get("unknown_time"): p["u"] = 1
+    if isinstance(d.get("full_name"), str) and d["full_name"].strip(): p["fn"] = d["full_name"].strip()[:80]   # for the numbers
     return json.dumps(p, ensure_ascii=False, separators=(",", ":"))
 
 def unpack_person(v):
     p = json.loads(v)
     meta = {"name": p.get("n", ""), "date": p["d"], "time": p["t"], "lat": p["la"], "lon": p["lo"], "tz": p["tz"], "place_label": p.get("pl", "")}
     if p.get("u"): meta["unknown_time"] = "1"
+    if p.get("fn"): meta["full_name"] = p["fn"]
     return meta
 
 def together_people(meta):
@@ -461,7 +463,8 @@ def render_together(meta, banner=""):
         if m.get("unknown_time"): c = dict(c); c["sid"], c["trop"] = dict(c["sid"]), dict(c["trop"]); unknown_time(c)
         try: shuku = sukuyo.birth_shuku(EPH, b["y"], b["mo"], b["d"])       # for the bond by the lunar mansions
         except Exception: shuku = None
-        people.append({"name": m["name"] or f"Person {len(people) + 1}", "C": c, "dasha": engine.dasha_tree(c, jd_now()), "b": b, "shuku": shuku})
+        people.append({"name": m["name"] or f"Person {len(people) + 1}", "C": c, "dasha": engine.dasha_tree(c, jd_now()), "b": b, "shuku": shuku,
+                       "date": m["date"], "full_name": m.get("full_name", ""), "marks": together_more.sky_marks(EPH, c, jd_now())})
     body = together.build(people)
     who = html.escape(together.names_line([p["name"] for p in people]))
     born = " · ".join(f"{html.escape(p['name'])}, {p['b']['y']:04d}-{p['b']['mo']:02d}-{p['b']['d']:02d}" for p in people)
