@@ -1036,6 +1036,7 @@ function bodyGlossary(b){
   const rune = half === "ingress" ? hh.ingress : hh.egress;
   const kar = Object.keys(CHART.karakas || CHART.karaka || {}).find(k =>
     (CHART.karaka || {})[k] === b);
+  const karT = Object.keys(CHART.karakaT || {}).find(k => CHART.karakaT[k] === b);
   const st = STATIONS.find(s => s.feeder === b);
   const seatNum = Object.keys(NUM_SEAT).find(n => NUM_SEAT[n].graha === b);
   const D = dashaTree();
@@ -1067,7 +1068,7 @@ function bodyGlossary(b){
           color:rgba(217,212,196,.5)">design ${gD.gate}.${gD.line}</span>` : ""}</dd></div>
         <div class="gr"><dt>Veð</dt><dd>${v.doorpost !== undefined
           ? `Doorpost ${v.doorpost}° — no pledge` : `${v.world} · k=${v.k}`}</dd></div>
-        ${kar ? `<div class="gr"><dt>Karaka</dt><dd>${kar.replace("karaka","")}</dd></div>` : ""}
+        ${kar ? `<div class="gr"><dt>Karaka</dt><dd>${kar.replace("karaka","")}${karT && karT !== kar ? ` <small>· tropical ${karT.replace("karaka","")}</small>` : ""}</dd></div>` : ""}
         ${st ? `<div class="gr"><dt>Feeds</dt><dd>${st.station} · ${st.world} · ${
           st.bifrost}<br><span style="font-size:11.5px;color:rgba(217,212,196,.5)">${
           st.hz.toFixed(2)} Hz · ${st.operator}</span></dd></div>` : ""}

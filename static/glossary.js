@@ -34,7 +34,7 @@ const G = {
   ownsign: ["Own sign", "A sign the planet rules. The Sun and Moon rule one sign each; the other five classical planets rule two."],
   tarot: ["Cards", "The Völva's mandala reads the tarot's 36 decans on both rings. The Buddhist deck (Double Vajras, Jewels, Vajras, Lotuses) runs on the sidereal ring, where a planet's influence comes from; the Nordic deck (Wands, Shields, Swords, Cups) runs on the tropical ring, where it is received. So each planet has two cards: one for its sidereal place, one for its tropical place. The Fool stands at the gate, 0° sidereal Aries."],
   moolatrikona: ["Root sign", "A stretch of a planet's own sign where it works most purely as itself (in Sanskrit, moolatrikona). Between exalted and own sign in strength."],
-  karaka: ["Karakas", "In Jyotish, the seven classical planets ranked by how far each has travelled through its sign. The furthest is the atmakaraka, the significator of the self; the rest follow in order."],
+  karaka: ["Karakas", "In Jyotish, the seven classical planets ranked by how far each has travelled through its sign. The furthest is the atmakaraka, the significator of the self; the rest follow in order. Jyotish ranks them in the sidereal signs; ranked in the tropical signs instead, the order can change, so the console shows both."],
   atmakaraka: ["Atmakaraka", "The planet furthest through its sign. In Jyotish it is the significator of the soul."],
   /* the mansions */
   nakshatra: ["Mansion (nakshatra)", "One of twenty-seven 13°20′ divisions of the sidereal zodiac, older than the signs. The Moon spends about a day in each. Each has a ruling planet and a deity."],

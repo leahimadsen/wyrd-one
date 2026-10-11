@@ -115,11 +115,13 @@ def dasha_tree(chart, now):
             "antars": antars, "praty": praty, "cur": cur, "curA": curA, "curP": curP, "now": now}
 
 # ---- karakas: seven, by decision. No Rahu, no Pitrikaraka. ----
+# Ranked by degree within the sign. "karaka" is the sidereal ranking (the Jyotish reading, used
+# everywhere a soul-planet is named); "karakaT" ranks the same planets in their tropical signs.
 KARAKA7 = ["Atmakaraka","Amatyakaraka","Bhratrikaraka","Matrikaraka",
            "Putrakaraka","Gnatikaraka","Darakaraka"]
 
-def karakas(sid):
-    rows = [{"body": k, "deg": deg_in(sid[k])}
+def karakas(lons):
+    rows = [{"body": k, "deg": deg_in(lons[k])}
             for k in ["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn"]]
     rows.sort(key=lambda r: -r["deg"])     # stable, like the console's sort
     return {KARAKA7[i]: r["body"] for i, r in enumerate(rows) if i < 7}
@@ -198,7 +200,7 @@ def cast(eph, y, mo, d, h_ut, lat, lon_e, now_jd=None):
         "trop": trop, "sid": sid, "nav": nav, "navAsc": varga(ascS, 9),
         "ascT": ascT, "ascS": ascS, "mcT": mcT, "mcS": mcS,
         "natal": natal, "dharma": dharma,
-        "karaka": karakas(sid),
+        "karaka": karakas(sid), "karakaT": karakas(trop),
         "dasha": vimshottari(sid["Moon"], jd, now_jd or jd),
         "moonNak": nak_of(sid["Moon"]),
         "lat": lat, "lon": lon_e,

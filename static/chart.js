@@ -203,7 +203,16 @@ function chartLand(){
     const c = WyrdTarot.at(T, +td.dataset.card, +td.dataset.trop);
     td.innerHTML = c ? `<span title="Buddhist deck, sidereal">${c.buddhist.minor} <small>· ${c.buddhist.trump}</small></span><br><span title="Nordic deck, tropical">${c.nordic.minor} <small>· ${c.nordic.trump}</small></span>` : "—"; }));
   const rv = WyrdWheel.rave(C), P = X.panchanga;
-  const kar = Object.entries(C.karaka).map(([k, b]) => `<li><span>${k === "Atmakaraka" ? g("atmakaraka", "Atma") : k.replace("karaka", "")}</span>${GLYPH[b]} ${b}</li>`).join("");
+  /* the karakas in both zodiacs: the same rank by degree within the sign, among the stars and among the seasons */
+  const SEVEN = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"];
+  const rank = L => SEVEN.map(b => [b, norm(L[b]) % 30]).sort((a, b) => b[1] - a[1]).map(r => r[0]);
+  /* in rank order, Atma first (the server's JSON arrives with its keys sorted A to Z) */
+  const ROLES = ["Atmakaraka", "Amatyakaraka", "Bhratrikaraka", "Matrikaraka", "Putrakaraka", "Gnatikaraka", "Darakaraka"];
+  const KT = rank(C.trop), the = b => b === "Sun" || b === "Moon" ? "the " + b : b;
+  const kar = ROLES.map((k, i) => { const b = C.karaka[k]; return `<tr${b !== KT[i] ? ' class="kar-diff"' : ""}><th>${k === "Atmakaraka" ? g("atmakaraka", "Atma") : k.replace("karaka", "")}</th>
+    <td>${GLYPH[b]} ${b}</td><td>${GLYPH[KT[i]]} ${KT[i]}</td></tr>`; }).join("");
+  const karNote = C.karaka.Atmakaraka === KT[0] ? `${the(KT[0])[0].toUpperCase() + the(KT[0]).slice(1)} leads in both zodiacs.`
+    : `The soul-planet is ${the(C.karaka.Atmakaraka)} among the stars and ${the(KT[0])} among the seasons. The sidereal order is the Jyotish reading.`;
   const asp = [];
   for (let i = 0; i < BODIES.length; i++) for (let k = i + 1; k < BODIES.length; k++){
     const [a, b] = [BODIES[i], BODIES[k]]; if (a === "Rahu" && b === "Ketu") continue;
@@ -220,7 +229,9 @@ function chartLand(){
       <dl><dt>${g("vara")}</dt><dd>${P.vara} <small>(${P.varaLord})</small></dd><dt>${g("tithi")}</dt><dd>${P.paksha} ${P.tithiName} <small>(${P.tithi} of 30)</small></dd>
       <dt>Mansion</dt><dd>${unknown && C.moonSpan && C.moonSpan.length > 1 ? C.moonSpan.join(" or ") : P.nakshatra}</dd><dt>${g("yoga")}</dt><dd>${P.yoga}</dd><dt>${g("karana")}</dt><dd>${P.karana}</dd>
       ${P.sunrise && !unknown ? `<dt>Sunrise</dt><dd>${P.sunrise}${P.beforeSunrise ? " <small>(born before it: still the previous Vedic day)</small>" : ""}</dd>` : ""}</dl></div>` : ""}
-    <div class="fact"><h3>${g("karaka", "The seven karakas")}</h3><ul class="kar">${kar}</ul>
+    <div class="fact"><h3>${g("karaka", "The seven karakas")}</h3>
+      <table class="mini kar-both"><tr><th></th><th>Sidereal</th><th>Tropical</th></tr>${kar}</table>
+      <p class="fine">${karNote}${ROLES.some((k, i) => C.karaka[k] !== KT[i]) ? " Marked rows differ." : ""}</p>
       <h3 class="fact-h2">${g("aspect", "Aspects")}</h3><ul class="kar asp">${asp.join("") || "<li>None within orb</li>"}</ul></div>
     ${PL ? `<div class="fact"><h3>${g("placidus", "Placidus cusps")}</h3><p class="fine">Tropical. For comparison with the whole-sign houses this console reads.</p>
       <ol class="cusps">${PL.cusps.map((c, i) => `<li><span>${i + 1}</span>${SIGNS[Math.floor(norm(c) / 30)]} ${dm(c)}</li>`).join("")}</ol></div>` : ""}`;
