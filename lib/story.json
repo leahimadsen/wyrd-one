@@ -1,0 +1,59 @@
+{
+  "_note": "DRAFT story for The Völva to rewrite: the silly tale that opens every reading. It is assembled from these lines by the chart: who sent you (the Atmakaraka), the costume (the rising sign, or the Sun's sign when the birth time is unknown), the gift and its shadow (the Moon's mansion, its shakti taken from corpus.json), and the houseguests (the Vimshottari periods, with the ages they arrive). Placeholders in curly braces are filled in by the site; keep them. Change any line and every reading changes with it.",
+
+  "TITLE": "Prologue: How You Got Here",
+  "SUB": "a silly story, and a true one. The rest of the reading is how to decode it.",
+
+  "OPENING": "Before you were born{named}, you stood in the queue at the Well of Urðr, where the three Norns sit under the World Tree spinning everybody's thread. The queue was very long. Somebody ahead of you was arguing about their moon. Eventually it was your turn.",
+  "NAMED": ", before you were even called {name}, which came later and was not your idea",
+
+  "SOUL_INTRO": "Urðr, the eldest, who keeps what has already happened, looked you up in her book and found the name of whoever had sent you.",
+  "SOUL": {
+    "Sun": "The Sun had sent you. The Sun sends everyone eventually, but it had sent you personally, with a note pinned to your coat that said THIS ONE IS SUPPOSED TO SHINE, which has been embarrassing ever since. Your errand: to become entirely, unapologetically yourself.",
+    "Moon": "The Moon had sent you, with a packed lunch and far too many feelings. Your errand: to look after people, which you took rather more literally than was intended, and to learn that you are one of the people.",
+    "Mars": "Mars had sent you, mostly by throwing you. The errand was scratched on the back of a shield: go and do the brave thing, and stop asking whether it is the brave thing.",
+    "Mercury": "Mercury had sent you, talking the whole way down. Your errand was a message to deliver, and nobody mentioned that you would have to understand it first.",
+    "Jupiter": "Jupiter had sent you, generously, with a reading list. Your errand: to find out what is true and then, regrettably, to teach it.",
+    "Venus": "Venus had sent you, after a long conversation about what you would wear. Your errand: to love something properly, all the way through, including the parts that bore you.",
+    "Saturn": "Saturn had sent you, eventually, once the paperwork cleared. Your errand: to build something that lasts. Saturn gave you the slow way to do it, on purpose, because Saturn does not trust the fast way."
+  },
+
+  "COSTUME_INTRO": "Then Verðandi, who keeps what is happening now, took you to the dressing room. There were twelve rails of costumes, and you chose {costume}.",
+  "COSTUME_UNKNOWN": " (Nobody wrote down the exact minute you came through the door, so the costume is read from your Sun's sign. It still fits.)",
+  "COSTUME": {
+    "Aries": "a helmet, slightly too big, with the visor already up and a dent in it from something you have not done yet",
+    "Taurus": "a heavy velvet cloak and very good boots, chosen for comfort, which you have refused to be hurried out of ever since",
+    "Gemini": "two costumes, because you couldn't decide, and you still wear them on alternate days and sometimes at once",
+    "Cancer": "a shell, soft on the inside, with deep pockets for other people's things",
+    "Leo": "a mane, a crown and a small portable spotlight, none of which you remember ordering",
+    "Virgo": "a perfectly pressed apron with a tiny sewing kit in the pocket, in case anything in the universe needs mending",
+    "Libra": "something beautiful that went with everyone else's, chosen after consulting the whole queue",
+    "Scorpio": "a long dark coat with an inside pocket that nobody else has ever seen into",
+    "Sagittarius": "travelling clothes, a bow, and boots already muddy from somewhere you haven't been yet",
+    "Capricorn": "a sensible coat that looks as if it has been in the family for nine hundred years, and has",
+    "Aquarius": "something nobody had ever worn before, which several people in the queue said would never catch on",
+    "Pisces": "a costume made almost entirely of water, which is lovely, and very hard to keep on"
+  },
+
+  "GIFT": "Before you left, Verðandi packed your gift. She wrote <b>{mansion}</b> on the label, and inside she put {shakti}, which the old books call <i>{shakti_name}</i>. Then, being scrupulously fair, she folded a shadow into the same bag, so that the gift and its misuse would always travel together. You found the shadow later. Everybody does.",
+
+  "TIMING_INTRO": "The youngest Norn, Skuld, keeps what shall be, and she had already done your appointment book. Nobody is born into an empty house: there is always a planet in residence, and the rest arrive one by one, each staying for years and rearranging the furniture.",
+  "FIRST": "When you arrived, somebody was already in the house: {visitor}. They stayed until you were {age}.",
+  "FIRST_BRIEF": "When you arrived, somebody was already in the house, just leaving: {visitor}. They were gone before your first birthday.",
+  "NEXT": "At {age} comes {visitor}.",
+  "NOW": " That is who is in the house now.",
+  "VISITOR": {
+    "Ketu": "Ketu, who arrives without luggage, moves nothing, and leaves you with the strong feeling that you have done all this before",
+    "Venus": "Venus, who stays twenty years, redecorates, and brings the people you will love",
+    "Sun": "the Sun, brief and bright, who wants to know what you have actually made of yourself",
+    "Moon": "the Moon, who moves the furniture of your feelings about and calls it tidying",
+    "Mars": "Mars, who arrives already running and needs a project, a fight, or both",
+    "Rahu": "Rahu, hungry, who wants more of everything and especially of whatever you were told not to have",
+    "Jupiter": "Jupiter, who brings teachers, children, luck, and a long talk about meaning",
+    "Saturn": "Saturn, who stays nineteen years and makes you do it properly this time",
+    "Mercury": "Mercury, who brings the trade, the talking, the learning, and the endless lists"
+  },
+  "UNTIL_AGE": 96,
+
+  "CLOSING": "And that is how you got here. It is a silly story, and every word of it is true in the way that matters. The costume is <b>The Seat</b>. The gift and its shadow are <b>The Engine</b>. Whoever sent you is <b>The Soul-Planet</b>. The houseguests, and when they come, are <b>The Clock</b>. Everything that follows is the decoder ring."
+}
