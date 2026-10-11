@@ -30,6 +30,7 @@ body:not(.paper){
 .seat h1 .seat-mark,.night-title{font-family:var(--fell);color:#c9fbff;
   text-shadow:0 0 6px #49e8ff,0 0 18px rgba(73,232,255,.55),0 0 40px rgba(154,107,255,.6)}
 .seat h1 .seat-h{color:#ffd9a0}
+.seat h1 .seat-old{display:block;font-family:var(--fellsc);font-size:clamp(16px,2.6vw,20px);letter-spacing:.22em;color:#ff9be8;margin-bottom:6px;text-shadow:0 0 8px rgba(255,79,216,.6)}
 .seat-what li::before{content:"✶";color:var(--magenta)}
 .masthead{display:block;width:100%;height:auto;aspect-ratio:1344/256;object-fit:cover;margin:0 auto;border-bottom:3px ridge #8f7ce0}
 
@@ -111,3 +112,25 @@ body.paper .bg-fig figcaption,body.paper .bg-fig text{color:#eaf3ff}
   body.paper{background:#fff}
   body.paper .pg-main::before,body.paper .pg-main::after,body.paper .wrap::before,body.paper .wrap::after{display:none}
 }
+
+/* ---------------- the night, on the chart ---------------- */
+body:not(.paper) #who,body:not(.paper) .land-panel>h2,body:not(.paper) .land-panel h2[id^="h-"]{font-family:var(--fell);color:#c9fbff;font-weight:400;
+  text-shadow:0 0 6px #49e8ff,0 0 18px rgba(73,232,255,.45)}
+body:not(.paper) .tabs{border-top:3px solid transparent;border-image:var(--rainbow) 1;background:#09021c}
+body:not(.paper) .tab[aria-current="page"]{color:#fff;text-shadow:0 0 8px #49e8ff}
+body:not(.paper) .tab[aria-current="page"]::after{background:var(--rainbow)!important;height:3px!important}
+/* the big drawings sit in framed windows */
+body:not(.paper) #bodyHost,body:not(.paper) #dashaHost{padding:10px 14px}
+body:not(.paper) .wx-stage,body:not(.paper) #bodyHost,body:not(.paper) #dashaHost{border:4px ridge #8f7ce0;background:rgba(6,1,26,.55);box-shadow:8px 8px 0 rgba(0,0,0,.5)}
+/* panels and offers as 90s windows */
+body:not(.paper) .fact{padding:14px 16px!important}
+body:not(.paper) .fact,body:not(.paper) .offer,body:not(.paper) .wx-card,body:not(.paper) .cp-buybox,body:not(.paper) .sk-card{
+  border:3px outset #a99bf0!important;border-radius:0!important;background:#120533!important;box-shadow:6px 6px 0 rgba(0,0,0,.5)}
+body:not(.paper) .offer h2{font-family:var(--fell);color:#ffd9a0}
+/* chips and small tools: bevelled */
+body:not(.paper) .tz-chip,body:not(.paper) .ctool,body:not(.paper) .wx-lv,body:not(.paper) .wx-dl,body:not(.paper) .cal-chip,body:not(.paper) .cp-addbtn{
+  border:2px outset #a99bf0!important;border-radius:0!important;background:#2a0f6e!important;color:#eaf3ff!important}
+body:not(.paper) .tz-chip[aria-pressed="false"]{border-style:inset!important;background:#0d0430!important;color:rgba(234,243,255,.6)!important}
+body:not(.paper) .tz-chip.open{background:#c2410c!important;border-color:#ffb27a!important}
+body:not(.paper) .wx-lv[aria-pressed="true"],body:not(.paper) .ctool[aria-pressed="true"]{border-style:inset!important;background:#4b1d9e!important}
+body:not(.paper) .topbar,body:not(.paper) .pg-top{background:#09021c;border-bottom:3px solid transparent;border-image:var(--rainbow) 1}
