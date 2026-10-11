@@ -60,6 +60,18 @@ check("no blank left unfilled", not re.findall(r"\{[a-z_]+\}", html))
 no_name = RN.body(C, d, {"date": "1990-05-17"}, [], year=2026)
 check("without a full name: asks for it, shows no name numbers", "Add your full name at birth" in no_name and "Soul urge" not in no_name)
 
+# ---- the learn page and the glossary ----
+from wyrd import pages
+title, desc, body, ld = pages.numbers_learn("https://example")
+check("the learn page shows all nine with both planets", all(f"<td><b>{n}</b></td>" in body for n in range(1, 10))
+      and all(f"{N.STAVEFALL[n][0]} <span" in body for n in range(1, 10)) and "Rahu</td>" in body)
+check("it teaches both seatings and the worked example", "Stavefall: the console" in body and "Vedic numerology" in body and "Life path 5" in body)
+check("the shadows stay in the reading", not any(pages.NUMS["NUMBER"][str(n)]["shadow"] in body for n in (1, 5, 9, 11)))
+check("it's in the sitemap and on the Learn page", "/learn/numbers" in pages.sitemap("https://x") and "/learn/numbers" in pages.learn_index("https://x")[2])
+gl = open(os.path.join(ROOT, "static", "glossary.js"), encoding="utf-8").read()
+check("every number term can be tapped for a definition",
+      all(f"  {k}: [" in gl for k in ("stavefall", "vedicnum", "lifepath", "birthdaynum", "personalyear", "expression", "soulurge", "personalitynum", "masternum")))
+
 # ---- the browser does the same sums ----
 random.seed(3)
 NAMES = ["John Smith", "Lynn", "José María Ñúñez", "Mary-Anne O'Neil", "", "Freya Ann Test", "Yvy", "Siobhán Ní Bhriain", "Bryn Wyn"]

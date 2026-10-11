@@ -635,6 +635,10 @@ def learn_rune(s):
     if not p: abort(404)
     return page(*p)
 
+@app.get("/learn/numbers")
+def learn_numbers():
+    return page(*pages.numbers_learn(config.BASE_URL))
+
 @app.get("/learn/dharma")
 def learn_dharma():
     return page(*pages.dharma_index(config.BASE_URL))

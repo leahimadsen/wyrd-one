@@ -108,6 +108,7 @@ def learn_index(base):
 <h2 id="nakshatras">The 27 nakshatras (lunar mansions)</h2><ul class="terms">{naks}</ul>
 <h2 id="gates">The 64 gates</h2><ul class="terms">{gates}</ul>
 <h2>Go further</h2><ul class="terms"><li><a href="/learn/runes">Learn the runes: the 24 runes of the Elder Futhark</a></li>
+<li><a href="/learn/numbers">Learn the numbers: life path, name numbers, Stavefall and Vedic</a></li>
 <li><a href="/learn/dharma">Learn the Dharma Design: the 64 gates of dharma</a></li></ul>{_cta()}"""
     return ("Learn Astrology: Signs, Nakshatras, the 64 Gates, Runes & Dharma · The Wyrd Console",
             "A free guide to the twelve sidereal signs, the twenty-seven nakshatras and the sixty-four gates, written by The Völva.",
@@ -176,7 +177,7 @@ def sign(base, s):
 def sitemap(base):
     urls = ["/", "/reports", "/membership", "/today", "/mandala", "/sample", "/learn"]
     urls += [f"/learn/gates/{g}" for g in GATES] + [f"/learn/nakshatras/{s}" for s, _ in NAKS] + [f"/learn/signs/{s}" for s, _ in SIGNS]
-    urls += ["/learn/runes"] + [f"/learn/runes/{r[0]}" for r in RUNES] + ["/learn/dharma"] + [f"/learn/dharma/gates/{g}" for g in GATES]
+    urls += ["/learn/runes"] + [f"/learn/runes/{r[0]}" for r in RUNES] + ["/learn/numbers", "/learn/dharma"] + [f"/learn/dharma/gates/{g}" for g in GATES]
     rows = "".join(f"<url><loc>{e(base + u)}</loc></url>" for u in urls)
     return f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{rows}</urlset>'
 
@@ -290,3 +291,37 @@ def dharma_gate(base, g):
     return (f"Gate {g} of Dharma: {name} · Dharma Design · The Wyrd Console",
             f"Gate {g}, {name}, in the Dharma Design: {first(r.get('e'))}"[:300],
             body, _crumbs(base, [("Learn", "/learn"), ("Dharma Design", "/learn/dharma"), (f"Gate {g}", f"/learn/dharma/gates/{g}")]))
+
+
+# ---------------- the numbers ----------------
+NUMS = json.load(open(os.path.join(HERE, "lib", "numbers.json"), encoding="utf-8"))
+_GLYPH = {"Sun": "☉", "Moon": "☽", "Mercury": "☿", "Venus": "♀", "Mars": "♂", "Jupiter": "♃", "Saturn": "♄", "Rahu": "☊", "Ketu": "☋"}
+
+
+def numbers_learn(base):
+    """How the numbers are counted and the two seatings, Stavefall and Vedic. Each number's light is a taste;
+    its shadow, and where its planets stand in a chart, are the reading's."""
+    from .numbers import STAVEFALL, VEDIC
+    T, N = NUMS["LEARN"], NUMS["NUMBER"]
+    ps = lambda xs: "".join(f"<p>{e(x)}</p>" for x in xs)
+    rows = "".join(
+        f'<tr><td><b>{n}</b></td><td>{e(N[str(n)]["name"])}</td><td>{_GLYPH[STAVEFALL[n][0]]} {STAVEFALL[n][0]} <span class="muted">· {STAVEFALL[n][1].lower()}</span></td>'
+        f'<td>{_GLYPH[VEDIC[n]]} {VEDIC[n]}</td></tr>' for n in range(1, 10))
+    masters = "".join(f'<tr><td><b>{n}</b></td><td>{e(N[str(n)]["name"])}</td><td colspan="2" class="muted">sits where {r} sits</td></tr>'
+                      for n, r in ((11, 2), (22, 4), (33, 6)))
+    lit = "".join(f'<li><b>{n} · {e(N[str(n)]["name"])}.</b> {e(N[str(n)]["light"])}</li>' for n in (*range(1, 10), 11, 22, 33))
+    body = f"""<p class="crumbs"><a href="/learn">Learn</a></p>
+<h1>{e(T["TITLE"])}</h1><p class="lede">{e(T["LEDE"])}</p>
+<h2>{e(T["TABLE_H"])}</h2>
+<div class="tw"><table class="mini"><tr><th>Number</th><th></th><th>Stavefall</th><th>Vedic</th></tr>{rows}{masters}</table></div>
+<h3>Each number, lit well</h3><ul class="ln-list">{lit}</ul>
+<h2>{e(T["COUNT_H"])}</h2>{ps(T["COUNT"])}
+<h2>{e(T["NAME_H"])}</h2>{ps(T["NAME"])}
+<h2>{e(T["MASTER_H"])}</h2><p>{e(T["MASTER"])}</p>
+<h2>{e(T["SEATS_H"])}</h2>
+<h3>{e(T["STAVEFALL_H"])}</h3>{ps(T["STAVEFALL"])}
+<h3>{e(T["VEDIC_H"])}</h3>{ps(T["VEDIC"])}
+<h2>{e(T["READ_H"])}</h2><p>{e(T["READ"])}</p>
+<p class="muted">Your free chart shows your numbers and both their planets. What each one means for you, its shadow, and where its planets stand in your own chart, is in the reading.</p>{_cta()}"""
+    return ("Numerology: Life Path, Name Numbers, Stavefall and Vedic · The Wyrd Console", T["DESC"], body,
+            _crumbs(base, [("Learn", "/learn"), ("Numbers", "/learn/numbers")]))
