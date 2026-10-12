@@ -364,7 +364,7 @@ const HighSky = (() => {
 
   function start(){
     const host = document.getElementById("skyHost");
-    if (!host) return;
+    if (!host || host.classList.contains("desk")) return;      /* the chart's hub has its own 90s wallpaper instead */
     if (!cv){
       cv = document.createElement("canvas");
       cv.className = "sky-cv";

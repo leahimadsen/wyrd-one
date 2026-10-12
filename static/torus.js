@@ -20,6 +20,9 @@ const LAYERS = [
   { id: "tropical", name: "Tropical signs" }, { id: "houses", name: "Houses" }, { id: "signs", name: "Sidereal signs" },
   { id: "runes", name: "Runes" }, { id: "gates", name: "Gates" }, { id: "mansions", name: "Mansions" },
 ];
+/* the houses run the rainbow, red for the 1st round to magenta for the 12th; every sign's glyph
+   takes the colour of the house it stands in */
+const RAINBOW = ["#ff2a2a", "#ff7a00", "#ffd400", "#a3e635", "#22c55e", "#14d8a8", "#22d3ee", "#3b82f6", "#5b4bff", "#8b5cf6", "#d946ef", "#ff2fa8"];
 const NU = 96, PER = 6, R = 1, r = 0.44;
 const hex = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
 
@@ -33,29 +36,48 @@ function mount(host, C, opts = {}){
   let built = reduce ? Infinity : performance.now();
   let yaw = 0, pitch = 1.02, spin = reduce ? 0 : 0.0016, raf = null, W = 0, H = 0, dpr = 1, quads = [], pick = null;
 
-  /* ---------- what each cell is ---------- */
-  const cusp = Math.floor(norm(C.ascS) / 30) * 30;
+  /* ---------- what each cell is ----------
+     The torus is read in one zodiac at a time (Z): sidereal, as Jyotish reads it, or tropical.
+     The ring, the houses, the main sign band and the planets follow Z; the band through the hole
+     shows the other zodiac. Gates are always tropical and mansions always sidereal. */
+  let Z = opts.zodiac === "tropical" ? "tropical" : "sidereal";
   const pg = new Set(Object.values(C.natal.personality).map(v => v.gate)), dg = new Set(Object.values(C.natal.design).map(v => v.gate));
-  const litRunes = new Set(WyrdWheel.WHEEL_BODIES.map(b => Math.floor(norm(C.sid[b] - cusp) / 15)));
   const moonNak = nakIndex(C.sid.Moon);
   const gateAt = trop => GATE_ORDER[Math.floor(norm(trop - 302) / 5.625)];
-  function cell(layer, lon){                     /* lon: sidereal longitude of the cell's centre */
-    const into = norm(lon - cusp), trop = norm(lon + C.ay);
+  let pos, cusp, litRunes;
+  const cuspSid = Math.floor(norm(C.ascS) / 30) * 30;            // runes are always counted in the sidereal houses
+  const fromSid = lon => Z === "tropical" ? norm(lon + C.ay) : lon;
+  const other = () => Z === "sidereal" ? "tropical" : "sidereal";
+  const toSid = lon => Z === "tropical" ? norm(lon - C.ay) : lon, toTrop = lon => Z === "tropical" ? lon : norm(lon + C.ay);
+  const houseOfLon = lon => Math.floor(norm(lon - cusp) / 30);
+  function seat(){
+    pos = b => Z === "tropical" ? C.trop[b] : C.sid[b];
+    cusp = Math.floor(norm(Z === "tropical" ? C.ascS + C.ay : C.ascS) / 30) * 30;
+    litRunes = new Set(WyrdWheel.WHEEL_BODIES.map(b => Math.floor(norm(C.sid[b] - cuspSid) / 15)));
+    LAYERS.find(l => l.id === "signs").name = Z === "tropical" ? "Tropical signs" : "Sidereal signs";
+    LAYERS.find(l => l.id === "tropical").name = Z === "tropical" ? "Sidereal signs" : "Tropical signs";
+  }
+  seat();
+  function cell(layer, lon){                     /* lon: the cell's centre, in the zodiac the torus is read in */
+    const into = norm(lon - cusp), trop = toTrop(lon);
     switch (layer){
-      case "houses": { const h = Math.floor(into / 30); return { rgb: hex(HOUSES[h].hex), a: .95, label: `House ${h + 1} · ${HOUSES[h].phase}` }; }
-      case "signs": { const s = Math.floor(norm(lon) / 30); return { rgb: s % 2 ? [210, 170, 90] : [230, 195, 120], a: 1, label: `${SIGNS[s]} (sidereal)` }; }
-      case "runes": { const k = Math.floor(into / 15), rn = HOUSES[Math.floor(k / 2)][k % 2 ? "egress" : "ingress"], lit = litRunes.has(k);
+      case "houses": { const h = Math.floor(into / 30); return { rgb: hex(RAINBOW[h]), a: .95, label: `House ${h + 1} · ${HOUSES[h].phase}` }; }
+      case "signs": { const s = Math.floor(norm(lon) / 30), c = hex(RAINBOW[houseOfLon(s * 30 + 15)]);
+        return { rgb: c.map(v => Math.round(v * (s % 2 ? .78 : .92))), a: 1, label: `${SIGNS[s]} (${Z})` }; }
+      case "runes": { const k = Math.floor(norm(toSid(lon) - cuspSid) / 15), rn = HOUSES[Math.floor(k / 2)][k % 2 ? "egress" : "ingress"], lit = litRunes.has(k);
         return { lit, rgb: lit ? [255, 236, 190] : k % 2 ? [120, 110, 190] : [140, 125, 210], a: 1, label: `${rn[0]} ${rn[1]}${lit ? " · a planet stands here" : ""}` }; }
       case "gates": { const g = gateAt(trop), p = pg.has(g), d = dg.has(g);
         return { lit: p || d, rgb: p && d ? [255, 205, 120] : p ? [240, 236, 225] : d ? [110, 230, 196] : [70, 130, 150], a: 1, label: `Gate ${g}${GATE_NAME[g] ? " · " + GATE_NAME[g] : ""}${p ? " · lit at birth" : ""}${d ? " · lit in design" : ""}` }; }
-      case "mansions": { const n = nakIndex(lon); return { lit: n === moonNak, rgb: n === moonNak ? [150, 255, 220] : n % 2 ? [70, 110, 170] : [90, 130, 190], a: 1, label: `${NAKSHATRA[n][0]}${n === moonNak ? " · your Moon's mansion" : ""}` }; }
-      case "tropical": { const s = Math.floor(trop / 30); return { rgb: s % 2 ? [150, 110, 240] : [175, 140, 255], a: 1, label: `${SIGNS[s]} (tropical)` }; }
+      case "mansions": { const n = nakIndex(toSid(lon)); return { lit: n === moonNak, rgb: n === moonNak ? [150, 255, 220] : n % 2 ? [70, 110, 170] : [90, 130, 190], a: 1, label: `${NAKSHATRA[n][0]}${n === moonNak ? " · your Moon's mansion" : ""}` }; }
+      case "tropical": { const o = other() === "tropical" ? trop : toSid(lon), s = Math.floor(o / 30);
+        return { rgb: s % 2 ? [150, 110, 240] : [175, 140, 255], a: 1, label: `${SIGNS[s]} (${other()})` }; }
     }
   }
   /* precompute colours: they never change */
   const NV = LAYERS.length * PER;
-  const COL = [];
-  for (let i = 0; i < NU; i++){ const lon = norm(cusp + (i + .5) * 360 / NU); COL.push(LAYERS.map(L => cell(L.id, lon))); }
+  let COL = [];
+  const paint = () => { COL = []; for (let i = 0; i < NU; i++){ const lon = norm(cusp + (i + .5) * 360 / NU); COL.push(LAYERS.map(L => cell(L.id, lon))); } };
+  paint();
 
   /* ---------- geometry ---------- */
   const uOf = i => i / NU * TAU;                              // angle round the ring; 0 = the 1st house's cusp
@@ -85,8 +107,6 @@ function mount(host, C, opts = {}){
     });
     draw(); raf = requestAnimationFrame(frame);
   }
-  /* the field: points of light flowing through the tube, up through the hole and out over the top */
-  const FLOW = Array.from({ length: 110 }, (_, n) => ({ u: (n * 2.399) % TAU, v: (n * 1.731) % TAU, sp: .006 + (n % 7) * .0012 }));
   const glow = (rgb, k) => rgb.map(c => Math.min(255, Math.round(c + (255 - c) * k)));
   function draw(){
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
@@ -109,48 +129,50 @@ function mount(host, C, opts = {}){
       ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); ctx.closePath(); ctx.fill();
       if (front) quads.push({ pts: [a, b, c, d], z: (a[2] + b[2] + c[2] + d[2]) / 4, col, i, k });
     }
-    /* the grid, as threads of light: the boundaries between layers, and every sign */
-    ctx.lineWidth = 1;
+    /* the armature, in neon: the rings between layers glow cyan, and a magenta meridian marks every sign */
+    ctx.globalCompositeOperation = "source-over"; ctx.lineWidth = 1.6; ctx.shadowBlur = 8;
     for (let k = 0; k < LAYERS.length; k++){
       const vis = Math.max(shown[LAYERS[k].id], k ? shown[LAYERS[k - 1].id] : shown[LAYERS[LAYERS.length - 1].id]); if (vis <= .01) continue;
-      ctx.strokeStyle = `rgba(190,220,255,${(.16 * vis).toFixed(3)})`; ctx.beginPath();
+      ctx.shadowColor = "rgba(73,232,255,.9)"; ctx.strokeStyle = `rgba(127,246,255,${(.55 * vis).toFixed(3)})`; ctx.beginPath();
       for (let i = 0; i <= NU; i++){ const q = P[i][k * PER]; i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.stroke();
     }
+    ctx.lineWidth = 1.2; ctx.shadowColor = "rgba(255,79,216,.9)";
     for (let m = 0; m < 12; m++){
-      const i = Math.round(m * NU / 12); ctx.strokeStyle = "rgba(210,190,255,.10)"; ctx.beginPath();
-      for (let j = 0; j <= NV; j++){ if (shown[LAYERS[Math.min(LAYERS.length - 1, Math.floor(j / PER))].id] <= .01) continue; const q = P[i][j]; j ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.stroke();
+      const i = Math.round(m * NU / 12); ctx.strokeStyle = "rgba(255,120,230,.42)"; ctx.beginPath(); let started = false;
+      for (let j = 0; j <= NV; j++){ if (shown[LAYERS[Math.min(LAYERS.length - 1, Math.floor(j / PER))].id] <= .01){ started = false; continue; }
+        const q = P[i][j]; started ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); started = true; } ctx.stroke();
     }
-    /* the flow */
+    ctx.shadowBlur = 0;
     const R0 = Math.min(W, H);
-    for (const f of FLOW){
-      if (!reduce) f.v -= f.sp;
-      const p = proj(point(f.u, f.v, .015)), n = rot(Math.cos(f.v) * Math.cos(f.u), Math.cos(f.v) * Math.sin(f.u), Math.sin(f.v));
-      const a = (n[2] > 0 ? .6 : .22), rad = R0 * .0055;
-      const g = ctx.createRadialGradient(p[0], p[1], 0, p[0], p[1], rad * 3);
-      g.addColorStop(0, `rgba(225,245,238,${a})`); g.addColorStop(1, "rgba(120,200,180,0)");
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p[0], p[1], rad * 3, 0, TAU); ctx.fill();
-    }
     /* the markings: house numbers, sign glyphs, the runes, written in light */
     const fs = Math.max(10, R0 * .032);
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    const carve = (layerId, lon, text, strong) => {
+    const carve = (layerId, lon, text, strong, rgb) => {
       const k = LAYERS.findIndex(l => l.id === layerId), vis = shown[layerId]; if (vis <= .05) return;
       const u = norm(lon - cusp) / 360 * TAU, v = vOf(k * PER + PER / 2);
       const n = rot(Math.cos(v) * Math.cos(u), Math.cos(v) * Math.sin(u), Math.sin(v)); if (n[2] < .1) return;
       const p = proj(point(u, v, .004)), a = vis * Math.min(1, (n[2] - .1) * 3);
       ctx.font = `${Math.round(fs)}px Texturina, serif`;
+      if (rgb){                                    // a sign's glyph, in its house's colour, lit like neon
+        ctx.font = `bold ${Math.round(fs * 1.25)}px Texturina, serif`;
+        ctx.shadowColor = `rgba(${rgb.join(",")},1)`; ctx.shadowBlur = 14; ctx.fillStyle = `rgba(${glow(rgb, .45).join(",")},${a})`;
+        ctx.fillText(text, p[0], p[1]); ctx.shadowBlur = 4; ctx.fillStyle = `rgba(255,255,255,${a * .55})`; ctx.fillText(text, p[0], p[1]); return;
+      }
       ctx.shadowColor = strong ? "rgba(255,240,200,.9)" : "rgba(180,220,255,.7)"; ctx.shadowBlur = strong ? 12 : 6;
       ctx.fillStyle = strong ? `rgba(255,246,222,${a})` : `rgba(226,236,255,${a * .8})`; ctx.fillText(text, p[0], p[1]);
     };
     ctx.globalCompositeOperation = "source-over";
-    for (let h = 0; h < 12; h++) carve("houses", cusp + h * 30 + 15, String(h + 1), false);
-    for (let sI = 0; sI < 12; sI++) carve("signs", sI * 30 + 15, SIGN_GLYPH[sI] + "︎", false);
-    for (let k = 0; k < 24; k++){ const rn = HOUSES[Math.floor(k / 2)][k % 2 ? "egress" : "ingress"]; carve("runes", cusp + k * 15 + 7.5, rn[0], litRunes.has(k)); }
-    for (let sI = 0; sI < 12; sI++) carve("tropical", norm(sI * 30 + 15 - C.ay), SIGN_GLYPH[sI] + "︎", false);
+    for (let h = 0; h < 12; h++) carve("houses", cusp + h * 30 + 15, String(h + 1), false, [255, 255, 255]);
+    for (let sI = 0; sI < 12; sI++) carve("signs", sI * 30 + 15, SIGN_GLYPH[sI] + "︎", false, hex(RAINBOW[houseOfLon(sI * 30 + 15)]));
+    for (let k = 0; k < 24; k++){ const rn = HOUSES[Math.floor(k / 2)][k % 2 ? "egress" : "ingress"]; carve("runes", fromSid(cuspSid + k * 15 + 7.5), rn[0], litRunes.has(k)); }
+    for (let sI = 0; sI < 12; sI++){                       // the other zodiac's signs, seated in this one
+      const lon = norm(sI * 30 + 15 + (Z === "sidereal" ? -C.ay : C.ay));
+      carve("tropical", lon, SIGN_GLYPH[sI] + "︎", false, hex(RAINBOW[houseOfLon(lon)]));
+    }
     ctx.shadowBlur = 0;
     /* the planets: orbs of light on the outer equator */
     const marks = WyrdWheel.WHEEL_BODIES.map(b => {
-      const u = norm(C.sid[b] - cusp) / 360 * TAU, n = rot(Math.cos(u), Math.sin(u), 0);
+      const u = norm(pos(b) - cusp) / 360 * TAU, n = rot(Math.cos(u), Math.sin(u), 0);
       return { b, p: proj(point(u, 0, .08)), front: n[2] > -0.15, z: n[2] };
     }).sort((a, b) => a.z - b.z);
     for (const m of marks){
@@ -196,8 +218,8 @@ function mount(host, C, opts = {}){
     if (!q){ pick = null; cap.textContent = ""; return; }
     pick = { i: q.i, k: q.k };
     const lon = norm(cusp + (q.i + .5) * 360 / NU);
-    const here = WyrdWheel.WHEEL_BODIES.filter(b => Math.abs(((C.sid[b] - lon + 540) % 360) - 180) < 360 / NU);
-    cap.textContent = `${LAYERS[q.k].name}: ${q.col.label} · ${signOf(lon)} ${Math.floor(norm(lon) % 30)}°${here.length ? " · " + here.join(", ") : ""}`;
+    const here = WyrdWheel.WHEEL_BODIES.filter(b => Math.abs(((pos(b) - lon + 540) % 360) - 180) < 360 / NU);
+    cap.textContent = `${LAYERS[q.k].name}: ${q.col.label} · ${signOf(lon)} ${Math.floor(norm(lon) % 30)}° ${Z}${here.length ? " · " + here.join(", ") : ""}`;
     if (reduce) draw();
     if (window.Wyrd && Wyrd.pulse) Wyrd.pulse("tap", { houses: "house", signs: "sign", runes: "rune", gates: "gate", mansions: "nak", tropical: "trop" }[LAYERS[q.k].id]);
   }
@@ -209,6 +231,9 @@ function mount(host, C, opts = {}){
     stop(){ if (raf){ cancelAnimationFrame(raf); raf = null; } },
     toggle(id, v){ on[id] = v; if (v){ built = performance.now() - LAYERS.findIndex(l => l.id === id) * 350; } if (reduce){ shown[id] = v ? 1 : 0; draw(); } },
     get layers(){ return LAYERS.map(l => ({ ...l, on: on[l.id] })); },
+    get zodiac(){ return Z; },
+    setZodiac(z){ Z = z === "tropical" ? "tropical" : "sidereal"; seat(); paint(); pick = null; cap.textContent = "";
+      if (!reduce){ built = performance.now(); LAYERS.forEach(l => { shown[l.id] = 0; }); } draw(); },
   };
 }
 
