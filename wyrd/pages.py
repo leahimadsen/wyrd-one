@@ -95,11 +95,11 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=9900, 
     ld = _ld({"@context": "https://schema.org", "@graph": [
         {"@type": "Product", "name": "The Wyrd Reading: a natal astrology reading", "brand": {"@type": "Brand", "name": "The Wyrd Console"},
          "description": "A personal astrology report written from your birth chart by The Völva: sidereal signs, nakshatras, the 64 gates, the Birth and Dharma Designs, the runes, and the Vimshottari eras of a life.",
-         "url": base + "/reports", "image": base + "/static/icons/icon-512.png",
+         "url": base + "/reports", "image": base + "/static/icons/icon-512.png?v=2",
          "offers": {"@type": "Offer", "price": f"{p:.2f}", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": base + "/reports"}},
         {"@type": "Product", "name": "The Reading Together: a relationship astrology reading", "brand": {"@type": "Brand", "name": "The Wyrd Console"},
          "description": "A synastry reading for two to nine people by The Völva: the bond by Sukuyō and the planets, the eight-fold match, how your designs meet, your numbers, and the next thirty years together.",
-         "url": base + "/reports", "image": base + "/static/icons/icon-512.png",
+         "url": base + "/reports", "image": base + "/static/icons/icon-512.png?v=2",
          "offers": {"@type": "Offer", "price": f"{together_cents / 100:.2f}", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": base + "/reports"}},
         {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}]})
     return ("Astrology Readings & Birth Chart Reports · The Wyrd Console",
