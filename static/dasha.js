@@ -9,8 +9,8 @@
    Interpretation of the periods stays in the paid reading.
    ============================================================ */
 (() => {
-const COL = { Ketu:"#8a5340", Venus:"#b0702e", Sun:"#b8924a", Moon:"#9cb4a6", Mars:"#a4423a",
-              Rahu:"#5b5d99", Jupiter:"#ad9436", Saturn:"#46738f", Mercury:"#5a8f5c" };
+const COL = { Ketu:"#ff7a8a", Venus:"#ff8c1a", Sun:"#ffcc33", Moon:"#c8f7ff", Mars:"#ff3b4e",
+              Rahu:"#6b6bff", Jupiter:"#ffd400", Saturn:"#22b8ff", Mercury:"#22e07a" };
 const YRS = Object.fromEntries(DASHA_SEQ);
 let root = null, D = null, selM = 0, selA = 0;
 

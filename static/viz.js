@@ -22,29 +22,29 @@ const houseOf = (l, ascLon) =>
    Row order: Kylver, closing Dagaz (ingress) then Othala (egress).
    ============================================================ */
 const HOUSES = [
-  { n:1,  color:"Red",         hex:"#a4423a", phase:"Arrival; the self at the gate",
+  { n:1,  color:"Red",         hex:"#ff3b4e", phase:"Arrival; the self at the gate",
     ingress:["ᚠ","Fehu","wealth-fire at the gate"],   egress:["ᚢ","Uruz","the raw vitality behind it"] },
-  { n:2,  color:"Red-orange",  hex:"#ab5a33", phase:"Holding; resources and the voice",
+  { n:2,  color:"Red-orange",  hex:"#ff6a1f", phase:"Holding; resources and the voice",
     ingress:["ᚦ","Thurisaz","the thorn that defends the holdings"], egress:["ᚨ","Ansuz","the god-voice that spends them as speech"] },
-  { n:3,  color:"Orange",      hex:"#b0702e", phase:"Effort; craft, siblings, movement",
+  { n:3,  color:"Orange",      hex:"#ff8c1a", phase:"Effort; craft, siblings, movement",
     ingress:["ᚱ","Raidho","the road of effort"],      egress:["ᚲ","Kenaz","the torch of craft"] },
-  { n:4,  color:"Yellow-orange",hex:"#b08a30",phase:"The hearth; foundation and root",
+  { n:4,  color:"Yellow-orange",hex:"#ffb31a",phase:"The hearth; foundation and root",
     ingress:["ᚷ","Gebo","the gift-exchange of the hearth"], egress:["ᚹ","Wunjo","its joy"] },
-  { n:5,  color:"Yellow",      hex:"#ad9436", phase:"Radiance; creation, children, merit",
+  { n:5,  color:"Yellow",      hex:"#ffd400", phase:"Radiance; creation, children, merit",
     ingress:["ᚺ","Hagalaz","the hail that clears the creative field"], egress:["ᚾ","Nauthiz","the need-fire that disciplines it"] },
-  { n:6,  color:"Yellow-green",hex:"#8d9440", phase:"Cultivation; service, the daily year",
+  { n:6,  color:"Yellow-green",hex:"#a3e635", phase:"Cultivation; service, the daily year",
     ingress:["ᛁ","Isa","stills the daily root"],      egress:["ᛃ","Jera","turns the daily year"] },
-  { n:7,  color:"Green",       hex:"#5a8f5c", phase:"The covenant; the other, the heart-house",
+  { n:7,  color:"Green",       hex:"#22e07a", phase:"The covenant; the other, the heart-house",
     ingress:["ᛇ","Eihwaz","the axis arriving at the covenant door"], egress:["ᛈ","Perthro","the honest lot-cup of partnership"] },
-  { n:8,  color:"Blue-green",  hex:"#4a8d84", phase:"The depths; shared resource, transformation",
+  { n:8,  color:"Blue-green",  hex:"#14e0c0", phase:"The depths; shared resource, transformation",
     ingress:["ᛉ","Algiz","wards the descent"],        egress:["ᛋ","Sowilo","the sun found there"] },
-  { n:9,  color:"Blue",        hex:"#46738f", phase:"Doctrine; the far view, dharma",
+  { n:9,  color:"Blue",        hex:"#22b8ff", phase:"Doctrine; the far view, dharma",
     ingress:["ᛏ","Tiwaz","the oath kept at cost"],    egress:["ᛒ","Berkano","the birch that regrows what the oath spent"] },
-  { n:10, color:"Blue-violet", hex:"#5b5d99", phase:"The crown of work; vocation, authority",
+  { n:10, color:"Blue-violet", hex:"#6b6bff", phase:"The crown of work; vocation, authority",
     ingress:["ᛖ","Ehwaz","the horse that carries the work into public"], egress:["ᛗ","Mannaz","the human crown of the vocation"] },
-  { n:11, color:"Violet",      hex:"#7d5896", phase:"The many; networks, gains, transmission",
+  { n:11, color:"Violet",      hex:"#b05cff", phase:"The many; networks, gains, transmission",
     ingress:["ᛚ","Laguz","the water given to the many"], egress:["ᛜ","Ingwaz","the seed banked among them"] },
-  { n:12, color:"Magenta",     hex:"#9a4a7e", phase:"The seam; dissolution, the hidden, release",
+  { n:12, color:"Magenta",     hex:"#ff2fa8", phase:"The seam; dissolution, the hidden, release",
     ingress:["ᛞ","Dagaz","day-break; the seam where night trades places with morning"],
     egress:["ᛟ","Othala","the inheritance that closes the wheel"] }
 ];
@@ -54,49 +54,49 @@ const HOUSES = [
    ============================================================ */
 const STATIONS = [
   { id:"asgard", world:"Asgard", station:"Crown", tag:"Crown", place:"Axis", axis:true,
-    x:450, y:186, side:"L", leadY:146, band:"#7d5896", roman:"I",
+    x:450, y:186, side:"L", leadY:146, band:"#b05cff", roman:"I",
     operator:"Önd", opGloss:"the spark · breath-spirit, the intelligence that descends into a life",
     feeder:"Sun", hz:126.22, hd:"Head — pressure to know", bifrost:"Violet",
     kenning:"The seat above the seat. What descends here was decided before you arrived.",
     ask:"The scan opens at the brow. The crown is not interrogated — it is admitted.",
     ratios:[[0.5,"1:2"],[1,"1:1"],[1.5,"3:2"],[2,"2:1"],[3,"3:1"]] },
   { id:"alfheim", world:"Alfheim", station:"Brow", tag:"Brow", place:"Axis", axis:true,
-    x:450, y:212, side:"R", leadY:238, band:"#5b5d99", roman:"II",
+    x:450, y:212, side:"R", leadY:238, band:"#6b6bff", roman:"II",
     operator:"Hugr", opGloss:"the mind · the commanding light of thought",
     feeder:"Moon", hz:210.42, hd:"Ajna — conceptualising", bifrost:"Blue-violet",
     kenning:"Light before form. The image arrives whole, and then asks to be argued with.",
     ask:"Is this thought ripe, or still under pressure?",
     ratios:[[0.5,"1:2"],[1,"1:1"],[1.125,"9:8"],[1.5,"3:2"],[2,"2:1"]] },
   { id:"vanaheim", world:"Vanaheim", station:"Throat", tag:"Throat", place:"Ring · west", axis:false,
-    x:450, y:250, side:"L", leadY:294, band:"#46738f", roman:"III",
+    x:450, y:250, side:"L", leadY:294, band:"#22b8ff", roman:"III",
     operator:"Minni", opGloss:"memory sent · the one faculty whose whole purpose is to leave the body",
     feeder:"Saturn", hz:147.85, hd:"Throat — manifestation", bifrost:"Blue",
     kenning:"The narrow gate. Everything the body knows must fit through here to become real.",
     ask:"Was I called, or am I pushing?",
     ratios:[[0.25,"1:4"],[0.5,"1:2"],[1,"1:1"],[1.5,"3:2"],[2,"2:1"]] },
   { id:"midgard", world:"Midgard", station:"Heart", tag:"Heart", place:"Axis · hub", axis:true,
-    x:450, y:305, side:"R", leadY:334, band:"#5a8f5c", roman:"IV",
+    x:450, y:305, side:"R", leadY:334, band:"#22e07a", roman:"IV",
     operator:"Hamr", opGloss:"the field · the integrating form, the heart's own torus",
     feeder:"Jupiter", hz:183.58, hd:"G centre — identity and direction", bifrost:"Green",
     kenning:"Where the axis crosses the ring. The master oscillator: strike this and the rest tunes itself.",
     ask:"What have I promised that was never mine to prove?",
     ratios:[[0.5,"1:2"],[1,"1:1"],[1.25,"5:4"],[1.5,"3:2"],[2,"2:1"],[3,"3:1"]] },
   { id:"muspelheim", world:"Muspelheim", station:"Solar plexus", tag:"Solar plexus", place:"Ring · south", axis:false,
-    x:450, y:352, side:"L", leadY:398, band:"#ad9436", roman:"V",
+    x:450, y:352, side:"L", leadY:398, band:"#ffd400", roman:"V",
     operator:"Óðr", opGloss:"the fire · the gut-burn that rises and will not be argued with",
     feeder:"Mars", hz:144.72, hd:"Solar plexus — the emotional wave", bifrost:"Yellow",
     kenning:"First fire, and it does not ask permission. The wave has to finish before the answer is true.",
     ask:"Whose emotion is this?",
     ratios:[[0.5,"1:2"],[1,"1:1"],[1.2,"6:5"],[1.5,"3:2"],[2,"2:1"]] },
   { id:"nidavellir", world:"Nidavellir", station:"Sacrum", tag:"Sacrum", place:"Axis", axis:true,
-    x:450, y:406, side:"R", leadY:438, band:"#b0702e", roman:"VI",
+    x:450, y:406, side:"R", leadY:438, band:"#ff8c1a", roman:"VI",
     operator:"Hamingja", opGloss:"the forge · the inherited power and luck of the line",
     feeder:"Venus", hz:221.23, hd:"Sacral — life force and response", bifrost:"Orange",
     kenning:"The dwarves' forge under the mountain. Work is made here or it is not made.",
     ask:"What did I last respond to, and was there satisfaction?",
     ratios:[[0.5,"1:2"],[1,"1:1"],[1.25,"5:4"],[1.667,"5:3"],[2,"2:1"]] },
   { id:"hel", world:"Hel", station:"Root", tag:"Root", place:"Axis", axis:true,
-    x:450, y:434, side:"L", leadY:498, band:"#a4423a", roman:"VII",
+    x:450, y:434, side:"L", leadY:498, band:"#ff3b4e", roman:"VII",
     operator:"Fylgja", opGloss:"the follower · the one that walks with every incarnation",
     feeder:"Mercury", hz:141.27, hd:"Root — adrenal pressure", bifrost:"Red",
     kenning:"The ancestral dead and the floor of the world. Nothing that ends here is lost; it is kept.",
@@ -449,10 +449,10 @@ const HUE_ELEMENT = ["Fire","Earth","Air","Water","Fire","Earth","Air","Water","
 
 /* four grahas carry a hue; three change value and saturation instead */
 const CHROMATIC = {
-  Mars:    { hue:"Red",              hex:"#a4423a", seat:1 },
-  Sun:     { hue:"Copper, red-orange", hex:"#ab5a33", seat:2 },
-  Jupiter: { hue:"Yellow, gold",     hex:"#ad9436", seat:5 },
-  Mercury: { hue:"Green",            hex:"#5a8f5c", seat:7 }
+  Mars:    { hue:"Red",              hex:"#ff3b4e", seat:1 },
+  Sun:     { hue:"Copper, red-orange", hex:"#ff6a1f", seat:2 },
+  Jupiter: { hue:"Yellow, gold",     hex:"#ffd400", seat:5 },
+  Mercury: { hue:"Green",            hex:"#22e07a", seat:7 }
 };
 const ACHROMATIC = {
   Moon:   { adds:"White", op:"Tint",
@@ -673,8 +673,8 @@ const RESONANCE = {
   "great enemy":  { interval:"Tritone",       ratio:[45,32],  state:"Dissonance",
                     reads:"Heavy friction. The interval will not resolve where it stands. Shedding; the tearing down of a structure that has outlived its terms." }
 };
-const RESON_COL = { "self":"#9cb4a6", "great friend":"#74c3a4", "friend":"#5f9c86",
-                    "neutral":"#8d9440", "enemy":"#b8924a", "great enemy":"#b0574a" };
+const RESON_COL = { "self":"#c8f7ff", "great friend":"#74c3a4", "friend":"#5f9c86",
+                    "neutral":"#a3e635", "enemy":"#ffcc33", "great enemy":"#b0574a" };
 
 /** The full resonance state between the two active lords. */
 function resonanceState(){
@@ -738,10 +738,10 @@ const angleHouse = h => HOUSE_ONE_ANGLE + (h - 1) * 30;
    ============================================================ */
 const ARM_RINGS = [
   { id:"trop",  r:250, tilt:  0, spin:0,   n:12, tag:"TROPICAL",  col:"#d9d4c4", op:.55 },
-  { id:"sid",   r:214, tilt: 17, spin:0,   n:12, tag:"SIDEREAL",  col:"#b8924a", op:.7  },
+  { id:"sid",   r:214, tilt: 17, spin:0,   n:12, tag:"SIDEREAL",  col:"#ffcc33", op:.7  },
   { id:"gate",  r:180, tilt:-14, spin:0,   n:64, tag:"64 GATES",  col:"#5f9c86", op:.6  },
   { id:"nak",   r:146, tilt: 28, spin:0,   n:27, tag:"27 MANSIONS", col:"#7fb3c4", op:.6 },
-  { id:"rune",  r:112, tilt:-25, spin:0,   n:24, tag:"24 RUNES",  col:"#9cb4a6", op:.5  }
+  { id:"rune",  r:112, tilt:-25, spin:0,   n:24, tag:"24 RUNES",  col:"#c8f7ff", op:.5  }
 ];
 /* Two states. Closed, every ring lies in one plane and the thing is an
    ordinary flat wheel — which is what you want ninety percent of the
@@ -800,12 +800,12 @@ function vajraSVG(){
   /* the shaft along the nodal axis */
   o += `<line class="vaj" x1="${axT.x.toFixed(1)}" y1="${axT.y.toFixed(1)}"
       x2="${axB.x.toFixed(1)}" y2="${axB.y.toFixed(1)}"
-      stroke="#b8924a" stroke-width="2.4" opacity=".8"/>`;
+      stroke="#ffcc33" stroke-width="2.4" opacity=".8"/>`;
   /* the two lotus knots */
   for (const e of [axT, axB]){
     const dx = (e.x - cx) * 0.42, dy = (e.y - cy) * 0.42;
     o += `<ellipse cx="${(cx + dx).toFixed(1)}" cy="${(cy + dy).toFixed(1)}" rx="7" ry="4.5"
-      fill="none" stroke="#b8924a" stroke-width="1.1" opacity=".7"
+      fill="none" stroke="#ffcc33" stroke-width="1.1" opacity=".7"
       transform="rotate(${(Math.atan2(e.y - cy, e.x - cx) * 180 / Math.PI + 90).toFixed(1)} ${
         (cx + dx).toFixed(1)} ${(cy + dy).toFixed(1)})"/>`;
   }
@@ -818,7 +818,7 @@ function vajraSVG(){
     const tipX = cx + nx * (len + 8 + 22 * armMorph), tipY = cy + ny * (len + 8 + 22 * armMorph);
     o += `<line class="vaj" x1="${(cx + nx * len * .78).toFixed(1)}"
         y1="${(cy + ny * len * .78).toFixed(1)}" x2="${tipX.toFixed(1)}" y2="${tipY.toFixed(1)}"
-        stroke="#b8924a" stroke-width="1.8" opacity=".85"/>`;
+        stroke="#ffcc33" stroke-width="1.8" opacity=".85"/>`;
     for (const s of [-1, -0.45, 0.45, 1]){
       const sp = 5 + 8 * armMorph;
       const bx = cx + nx * len * .78 + px * s * sp;
@@ -827,18 +827,18 @@ function vajraSVG(){
       const my = cy + ny * (len + 6) + py * s * (sp + 4);
       o += `<path class="vaj" d="M${bx.toFixed(1)},${by.toFixed(1)}
         Q${mx.toFixed(1)},${my.toFixed(1)} ${(tipX - nx * 7).toFixed(1)},${(tipY - ny * 7).toFixed(1)}"
-        stroke="#b8924a" stroke-width="1.15" opacity="${0.42 + Math.abs(s) * 0.2}"/>`;
+        stroke="#ffcc33" stroke-width="1.15" opacity="${0.42 + Math.abs(s) * 0.2}"/>`;
     }
   }
   /* the hub sphere */
   o += `<circle cx="${cx}" cy="${cy}" r="${(15 + 4 * (1 - armMorph)).toFixed(1)}"
-      fill="#020405" stroke="#b8924a" stroke-width="1.3" opacity=".9"/>
+      fill="#020405" stroke="#ffcc33" stroke-width="1.3" opacity=".9"/>
     <circle cx="${cx}" cy="${cy}" r="15" fill="url(#vajGlow)"/>
     <circle cx="${cx}" cy="${cy}" r="6.5" fill="none" stroke="#5f9c86" stroke-width=".9" opacity=".8"/>
     <circle cx="${cx}" cy="${cy}" r="2.2" fill="#d9d4c4"/>
     <defs><radialGradient id="vajGlow">
-      <stop offset="0%" stop-color="#b8924a" stop-opacity=".4"/>
-      <stop offset="100%" stop-color="#b8924a" stop-opacity="0"/></radialGradient></defs></g>`;
+      <stop offset="0%" stop-color="#ffcc33" stop-opacity=".4"/>
+      <stop offset="100%" stop-color="#ffcc33" stop-opacity="0"/></radialGradient></defs></g>`;
   return o;
 }
 
@@ -895,7 +895,7 @@ function armillarySVG(){
       <line class="spoke" x1="500" y1="400" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}"
         opacity="${near ? .12 : .05}"/>
       <circle class="pl-dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5.5"
-        fill="#020405" stroke="${near ? "#9cb4a6" : "rgba(156,180,166,.3)"}" stroke-width="1"/>
+        fill="#020405" stroke="${near ? "#c8f7ff" : "rgba(156,180,166,.3)"}" stroke-width="1"/>
       <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="14" fill="transparent"/>
       <text class="pl-gl" x="${p.x.toFixed(1)}" y="${(p.y + 4).toFixed(1)}"
         opacity="${near ? 1 : .32}">${GLYPH[b]}</text></g>`;
@@ -1013,8 +1013,8 @@ const HARMONICS = [
   { n:1, deg:0,   name:"Conjunction", orb:8, col:"#d9d4c4" },
   { n:2, deg:180, name:"Opposition",  orb:8, col:"#b0574a" },
   { n:3, deg:120, name:"Trine",       orb:7, col:"#5f9c86" },
-  { n:4, deg:90,  name:"Square",      orb:7, col:"#b8924a" },
-  { n:6, deg:60,  name:"Sextile",     orb:5, col:"#8d9440" }
+  { n:4, deg:90,  name:"Square",      orb:7, col:"#ffcc33" },
+  { n:6, deg:60,  name:"Sextile",     orb:5, col:"#a3e635" }
 ];
 function aspectBetween(a, b){
   let d = Math.abs(norm(a - b));
@@ -1407,7 +1407,7 @@ function hueWheelSVG(){
       const [bx,by] = P(RI-4, angleHouse(j + 1) + 15);
       o += `<path class="lnk" data-from="${i+1}" data-d="${d}"
         d="M${ax},${ay} Q${C},${C} ${bx},${by}"
-        stroke="${d===6?"#d9d4c4":d===4?"#5f9c86":"#b8924a"}"/>`;
+        stroke="${d===6?"#d9d4c4":d===4?"#5f9c86":"#ffcc33"}"/>`;
     }
   }
   o += `</g><circle cx="${C}" cy="${C}" r="${RI-6}" fill="var(--void)" opacity=".9"/>
@@ -1581,7 +1581,7 @@ function colourLab(){
             CHROMATIC[g] ? `<span class="sw" style="background:${CHROMATIC[g].hex}"></span>` :
             ACHROMATIC[g] ? `<span class="sw" style="background:${
               g==="Moon"?"#e8ece6":g==="Saturn"?"#12100e":"#6d716c"}"></span>` :
-            `<span class="sw" style="background:linear-gradient(90deg,#a4423a,#5a8f5c,#5b5d99)"></span>`
+            `<span class="sw" style="background:linear-gradient(90deg,#ff3b4e,#22e07a,#6b6bff)"></span>`
           }${GLYPH[g]} ${g}</button>`).join("")}</div>
         <div class="lab-label">Standing in house</div>
         <div class="picker" id="labHouses">${

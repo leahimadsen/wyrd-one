@@ -194,3 +194,37 @@ body:not(.paper) .tz-chip.tz-z[aria-pressed="true"]{background:linear-gradient(9
 .taskbar .tb-clock{margin-left:auto;padding:2px 10px;border:2px inset #fff;background:#e8e4fb}
 .taskbar .tb-start,.taskbar .tb-clock{white-space:nowrap;flex:none}
 @media (max-width:520px){.taskbar{font-size:12px;gap:5px}.taskbar .tb-task{flex:1 1 auto;padding:2px 8px}}
+
+/* ---------------- electric charts: the wheels in neon on the night pages ---------------- */
+body:not(.paper) .wh-back{fill:#0a0228}
+body:not(.paper) .wh-cell{stroke:rgba(127,246,255,.22)}
+body:not(.paper) .wh-tro{fill:#1c0b46} body:not(.paper) .wh-tro.alt{fill:#251057}
+body:not(.paper) .wh-sid{fill:#150a3c} body:not(.paper) .wh-sid.alt{fill:#1d0e4c}
+body:not(.paper) .wh-run{fill:#100733} body:not(.paper) .wh-run.lit{fill:#4c1d95;stroke:#7ff6ff;stroke-width:2}
+body:not(.paper) .wh-gate{fill:#0d0628}
+body:not(.paper) .wh-gate.pers{fill:#a21caf} body:not(.paper) .wh-gate.des{fill:#0e7490}
+body:not(.paper) .wh-gate.both{fill:#a21caf;stroke:#ffd400;stroke-width:2.5}
+body:not(.paper) .wh-nak{fill:#0e0730} body:not(.paper) .wh-nak.alt{fill:#140a3a} body:not(.paper) .wh-nak.moon{fill:#0f766e}
+body:not(.paper) .wh-house{opacity:.92;stroke:rgba(0,0,0,.45)}
+body:not(.paper) .wh-badge{fill:#6d28d9;stroke:#c4b5fd}
+body:not(.paper) .wh-abbr{fill:#ffd400}
+body:not(.paper) .wh-tiny{fill:rgba(200,225,255,.6)}
+body:not(.paper) .wh-rune{fill:rgba(190,215,255,.65)} body:not(.paper) .wh-rune.lit{fill:#fff;filter:drop-shadow(0 0 4px #7ff6ff)}
+body:not(.paper) .wh-gn{fill:rgba(190,215,255,.5)} body:not(.paper) .wh-gn.pers,body:not(.paper) .wh-gn.both{fill:#fff} body:not(.paper) .wh-gn.des{fill:#a5f3fc}
+body:not(.paper) .wh-nk{fill:rgba(190,215,255,.6)} body:not(.paper) .wh-nk.moon{fill:#5ef3d0}
+body:not(.paper) .wh-ang{stroke:rgba(127,246,255,.55)} body:not(.paper) .wh-ang.main{stroke:#ff9be8;filter:drop-shadow(0 0 3px #ff4fd8)}
+body:not(.paper) .wh-angn{fill:#ff9be8}
+body:not(.paper) .wh-glyph{fill:#fff;filter:drop-shadow(0 0 4px #49e8ff)} body:not(.paper) .wh-glyph.des{fill:#5ef3d0;filter:drop-shadow(0 0 4px #14e0c0)}
+body:not(.paper) .wh-deg{fill:rgba(200,225,255,.7)}
+body:not(.paper) .wh-core{fill:#0a0228;stroke:#7ff6ff;stroke-width:1.6}
+body:not(.paper) .wh-c1{fill:#fff} body:not(.paper) .wh-c2{fill:#c4b5fd}
+
+/* the body map's engraving, bright on the night: white ink with a pink glow */
+.body-fig .mf image{filter:invert(1) brightness(1.15) drop-shadow(0 0 1.5px #ffd1f3) drop-shadow(0 0 6px rgba(255,79,216,.6))!important;opacity:1!important}
+
+/* the Vimshottari bands in full colour: every period bright, the past a touch quieter, the one running now lit */
+body:not(.paper) .vd-seg{opacity:.78;box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
+body:not(.paper) .vd-seg.past{opacity:.42}
+body:not(.paper) .vd-seg.now{opacity:1;box-shadow:0 0 12px 1px var(--c),inset 0 0 0 1px rgba(255,255,255,.6)}
+body:not(.paper) .vd-seg.sel{opacity:1;outline:2px solid #fff}
+body:not(.paper) .vd-seg:hover{opacity:1}

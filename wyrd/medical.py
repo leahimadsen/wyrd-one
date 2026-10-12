@@ -165,13 +165,23 @@ def figure(g, w, unknown=False, planets=True):
             + (f'<figcaption>{cap}</figcaption>' if planets else "") + '</figure>')
 
 
+# the night pages show the stations in electric chakra colours; the parchment reading keeps the corpus's
+ELECTRIC = ["#c084fc", "#818cf8", "#22d3ee", "#4ade80", "#facc15", "#fb923c", "#ff3b4e"]
+
+
 def free(C):
     """The free chart's body map: the figure with the stations sized, no planets, and one plain line."""
     unknown = C.get("unknownTime"); g = grid(C, defined_centres(C), unknown); w, _ = weight(g)
+    swap = lambda html: _electric(html)
     a, b = sorted(KEYS, key=lambda k: -w[k])[:2]
     line = fill(T["FREE"]["line"], first=f"your {zname(a)[4:]}", first_parts=ZONE[a]["parts"], second=f"your {zname(b)[4:]}", second_parts=ZONE[b]["parts"])
-    return {"figure": figure(g, w, unknown, planets=False), "line": line, "note": T["FREE"]["note"],
-            "full": figure(g, w, unknown), "memberNote": T["FREE"]["member"]}          # members see the planets on each station
+    return {"figure": swap(figure(g, w, unknown, planets=False)), "line": line, "note": T["FREE"]["note"],
+            "full": swap(figure(g, w, unknown)), "memberNote": T["FREE"]["member"]}
+
+
+def _electric(html):
+    for a, b in zip(COLOUR, ELECTRIC): html = html.replace(a, b)
+    return html
 
 
 def body(C, dasha, asks):
