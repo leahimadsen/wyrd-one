@@ -42,6 +42,9 @@ function mount(host, C, opts = {}){
      shows the other zodiac. Gates are always tropical and mansions always sidereal. */
   let Z = opts.zodiac === "tropical" ? "tropical" : "sidereal";
   const pg = new Set(Object.values(C.natal.personality).map(v => v.gate)), dg = new Set(Object.values(C.natal.design).map(v => v.gate));
+  /* the Dharma Design's gates (cast from the sidereal navamsa), lit in their own violet on the same wheel */
+  const gatesOf = side => Object.values(side || {}).filter(v => v && typeof v === "object" && "gate" in v).map(v => v.gate);
+  const dh = new Set(C.dharma ? [...gatesOf(C.dharma.personality), ...gatesOf(C.dharma.design)] : []);
   const moonNak = nakIndex(C.sid.Moon);
   const gateAt = trop => GATE_ORDER[Math.floor(norm(trop - 302) / 5.625)];
   let pos, cusp, litRunes;
@@ -66,8 +69,10 @@ function mount(host, C, opts = {}){
         return { rgb: c.map(v => Math.round(v * (s % 2 ? .78 : .92))), a: 1, label: `${SIGNS[s]} (${Z})` }; }
       case "runes": { const k = Math.floor(norm(toSid(lon) - cuspSid) / 15), rn = HOUSES[Math.floor(k / 2)][k % 2 ? "egress" : "ingress"], lit = litRunes.has(k);
         return { lit, rgb: lit ? [255, 236, 190] : k % 2 ? [120, 110, 190] : [140, 125, 210], a: 1, label: `${rn[0]} ${rn[1]}${lit ? " · a planet stands here" : ""}` }; }
-      case "gates": { const g = gateAt(trop), p = pg.has(g), d = dg.has(g);
-        return { lit: p || d, rgb: p && d ? [255, 205, 120] : p ? [240, 236, 225] : d ? [110, 230, 196] : [70, 130, 150], a: 1, label: `Gate ${g}${GATE_NAME[g] ? " · " + GATE_NAME[g] : ""}${p ? " · lit at birth" : ""}${d ? " · lit in design" : ""}` }; }
+      case "gates": { const g = gateAt(trop), p = pg.has(g), d = dg.has(g), m = dh.has(g), birth = p || d;
+        const rgb = p && d ? [255, 205, 120] : p ? [240, 236, 225] : d ? [110, 230, 196] : m ? [167, 139, 250] : [70, 130, 150];
+        return { lit: birth || m, rgb: birth && m ? rgb.map((c, n) => Math.round((c + [167, 139, 250][n]) / 2)) : rgb, a: 1,
+          label: `Gate ${g}${GATE_NAME[g] ? " · " + GATE_NAME[g] : ""}${p ? " · lit at birth" : ""}${d ? " · lit in design" : ""}${m ? " · lit in your Dharma Design" : ""}` }; }
       case "mansions": { const n = nakIndex(toSid(lon)); return { lit: n === moonNak, rgb: n === moonNak ? [150, 255, 220] : n % 2 ? [70, 110, 170] : [90, 130, 190], a: 1, label: `${NAKSHATRA[n][0]}${n === moonNak ? " · your Moon's mansion" : ""}` }; }
       case "tropical": { const o = other() === "tropical" ? trop : toSid(lon), s = Math.floor(o / 30);
         return { rgb: s % 2 ? [150, 110, 240] : [175, 140, 255], a: 1, label: `${SIGNS[s]} (${other()})` }; }

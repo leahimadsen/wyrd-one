@@ -23,20 +23,30 @@
 <body>
 <a class="skip" href="#today">Skip to content</a>
 <nav class="topbar" aria-label="Site"><a href="/" class="tb-home">The Wyrd Console</a><span class="tb-links"><a href="/reports">Readings</a><a href="/membership">The Order</a><a href="/learn">Learn</a><a href="/today">Today's sky</a><a href="/account" class="tb-acct" data-acct>Sign in</a></span></nav>
-<header class="hub" id="skyHost">
+<header class="hub desk desk-big" id="skyHost">
   <div class="hub-in">
     <h1>Today's sky</h1>
     <p class="meta" id="when"></p>
     <p class="seat-links" style="justify-content:center"><a href="#" data-install hidden>Install the app →</a></p>
+    <nav class="desk-icons" aria-label="Desktop">
+      <a href="/"><span class="di">☉</span>My chart</a><a href="/reports"><span class="di">✦</span>Readings</a>
+      <a href="/membership"><span class="di">ᛟ</span>The Order</a><a href="/learn"><span class="di">ᚨ</span>Learn</a><a href="/mandala"><span class="di">✺</span>Mandala</a>
+    </nav>
+    <div class="tz-win sky-win">
+      <div class="tz-bar" aria-hidden="true"><span class="tz-title">✦ todays_sky.exe</span><span class="tz-btns"><i>_</i><i>□</i><i>×</i></span></div>
+      <div class="tz-screen">
     <div class="st-wrap" id="tdSky">
       <div class="st-ctl" role="group" aria-label="How to show the sky">
         <button type="button" class="tz-chip" data-st="flat" aria-pressed="true">◎ Flat wheel</button>
         <button type="button" class="tz-chip" data-st="3d" aria-pressed="false">⤢ 3D, around the Earth</button>
       </div>
       <div class="td-wheel" id="tdWheel"></div>
-      <p class="tz-cap" id="tdCap" aria-live="polite">Outer band: the sidereal signs. Inner bands: the mansions, the gates, the tropical signs and the mandala’s cards. Tap a planet or a band to see what is there; tap the empty sky to fold it in or out.</p>
+      <p class="tz-cap" id="tdCap" aria-live="polite">Outer band: the sidereal signs. Inner bands: the mansions, the gates, the tropical signs and the mandala’s cards. Each sign glows in its colour of the natural zodiac, Aries red round to Pisces magenta. Tap a planet or a band to see what is there; tap the empty sky to fold it in or out.</p>
+    </div>
+      </div>
     </div>
   </div>
+  <div class="taskbar" aria-hidden="true"><a class="tb-start" href="/" tabindex="-1">✦ Start</a><span class="tb-task">✦ todays_sky.exe</span><span class="tb-clock" id="tbClock"></span></div>
 </header>
 <main id="today" class="td" tabindex="-1">
   <section class="land-panel">
@@ -59,6 +69,7 @@
 <script src="/static/tarot.js"></script>
 <script src="/static/skytorus.js"></script>
 <script src="/static/today.js"></script>
+<script>(()=>{const c=document.getElementById("tbClock");if(!c)return;const t=()=>{c.textContent=new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})};t();setInterval(t,15000)})()</script>
 <script>fetch("/api/me").then(r=>r.json()).then(d=>{if(d.signedIn)for(const a of document.querySelectorAll("[data-acct]"))a.textContent="Your account"}).catch(()=>{})</script>
 </body>
 </html>

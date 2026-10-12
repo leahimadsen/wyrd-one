@@ -18,6 +18,8 @@
    ============================================================ */
 (() => {
 const { norm, nakIndex, GLYPH, NAKSHATRA } = Wyrd.helpers;
+const RAINBOW = ["#ff2a2a", "#ff7a00", "#ffd400", "#a3e635", "#22c55e", "#14d8a8", "#22d3ee", "#3b82f6", "#5b4bff", "#8b5cf6", "#d946ef", "#ff2fa8"];
+const hexRGB = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
 const TAU = Math.PI * 2, D2R = Math.PI / 180;
 const SIGNS_ = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
 const SG = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"].map(g => g + "︎");
@@ -49,7 +51,7 @@ function mount(host, opts){
     const trop = norm(lon + ay);
     switch (layer){
       case "signs": { const s = Math.floor(norm(lon) / 30), here = bodiesIn(s * 30, s * 30 + 30);
-        return { lit: here.length > 0, rgb: here.length ? [255, 222, 150] : s % 2 ? [205, 165, 90] : [228, 192, 118], label: `${SIGNS_[s]} (sidereal)${here.length ? " · " + here.join(", ") : ""}` }; }
+        return { lit: here.length > 0, rgb: here.length ? [255, 222, 150] : hexRGB(RAINBOW[s]).map(v => Math.round(v * (s % 2 ? .7 : .85))), label: `${SIGNS_[s]} (sidereal)${here.length ? " · " + here.join(", ") : ""}` }; }
       case "mansions": { const n = nakIndex(lon);
         return { lit: n === moonNak, rgb: n === moonNak ? [150, 255, 220] : n % 2 ? [70, 110, 170] : [92, 132, 192], label: `${NAKSHATRA[n][0]}${n === moonNak ? " · the Moon's mansion today" : ""}` }; }
       case "gates": { const g = GATE_AT(trop), lit = skyGates.has(g), who = rows.filter(x => x.gate === g).map(x => x.body);
@@ -138,28 +140,32 @@ function mount(host, opts){
     earth();
     ctx.globalCompositeOperation = "lighter";
     for (const q of nearer) paint(q, true);
-    /* threads: the layer edges and every sign */
-    ctx.lineWidth = 1;
+    /* the armature, in neon: cyan rings between the bands, a magenta meridian for every sign */
+    ctx.globalCompositeOperation = "source-over"; ctx.lineWidth = 1.6; ctx.shadowBlur = 8; ctx.shadowColor = "rgba(73,232,255,.9)";
     for (let k = 0; k <= LAYERS.length; k++){
-      ctx.strokeStyle = "rgba(190,220,255,.18)"; ctx.beginPath();
+      ctx.strokeStyle = "rgba(127,246,255,.5)"; ctx.beginPath();
       for (let i = 0; i <= NU; i++){ const q = P[i][Math.min(NV, k * PER)]; i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.stroke();
     }
+    ctx.lineWidth = 1.2; ctx.shadowColor = "rgba(255,79,216,.9)";
     for (let s = 0; s < 12; s++){
-      const i = s * NU / 12; ctx.strokeStyle = "rgba(210,190,255,.16)"; ctx.beginPath();
+      const i = s * NU / 12; ctx.strokeStyle = "rgba(255,120,230,.4)"; ctx.beginPath();
       for (let j = 0; j <= NV; j++){ const q = P[i][j]; j ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.stroke();
     }
+    ctx.shadowBlur = 0;
     ctx.globalCompositeOperation = "source-over";
     /* the sign glyphs, written on the sidereal band and the tropical band */
     const R0 = Math.min(W, H), fs = Math.max(11, R0 * .036);
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    const write = (k, lon, text, a0) => {
+    const write = (k, lon, text, a0, rgb) => {
       const u = lon * D2R, v = vOf(k * PER + PER / 2), nz = m < .35 ? 1 : normal(u, v)[2]; if (nz < .05) return;
       const p = P3(u, v, .004), a = a0 * Math.min(1, (nz - .05) * 3);
-      ctx.font = `${Math.round(fs * (k ? .62 : .72))}px Texturina, serif`; ctx.shadowColor = "rgba(180,220,255,.7)"; ctx.shadowBlur = 6;
-      ctx.fillStyle = `rgba(236,240,255,${a})`; ctx.fillText(text, p[0], p[1]);
+      ctx.font = `bold ${Math.round(fs * (k ? .66 : .78))}px Texturina, serif`; ctx.shadowColor = `rgba(${rgb.join(",")},1)`; ctx.shadowBlur = 12;
+      ctx.fillStyle = `rgba(${glow(rgb, .5).join(",")},${a})`; ctx.fillText(text, p[0], p[1]);
     };
-    /* each sign named on both bands: sidereal on the outer, tropical on the inner */
-    for (let s = 0; s < 12; s++){ write(0, s * 30 + 15, `${SG[s]} ${SIGNS_[s].slice(0, 3)}`, .95); write(3, norm(s * 30 + 15 - ay), `${SG[s]} ${SIGNS_[s].slice(0, 3)}`, .7); }
+    /* each sign named on both bands, sidereal on the outer and tropical on the inner, in the rainbow of the
+       natural zodiac: Aries, the natural 1st house, red, round to Pisces in magenta */
+    for (let s = 0; s < 12; s++){ const c = hexRGB(RAINBOW[s]);
+      write(0, s * 30 + 15, `${SG[s]} ${SIGNS_[s].slice(0, 3)}`, .95, c); write(3, norm(s * 30 + 15 - ay), `${SG[s]} ${SIGNS_[s].slice(0, 3)}`, .75, c); }
     ctx.shadowBlur = 0;
     /* the planets: today's on the outer edge, the birth chart's on the inner */
     const place = (lon, v, lift) => { const u = lon * D2R; return { p: P3(u, v, lift), z: normal(u, v)[2] }; };
