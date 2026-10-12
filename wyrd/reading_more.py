@@ -496,7 +496,10 @@ def karakas_more(C, dasha, asks=None):
             elif r9 < r1: out.append(KA["STRENGTH"]["nav_down"])
         return " ".join(out) or once(("plain",), KA["STRENGTH"]["plain"], "Neither strong nor weak, as above.")
 
-    out = [f'<h3 class="rd-tier">Your cabinet, one by one</h3><p>{KA["INTRO"]}</p>']
+    out = [f'<h3 class="rd-tier">Your cabinet, one by one</h3><p>{KA["INTRO"]} {KA["WIELDS"]}</p>']
+    wields = lambda d: (f'<div class="rd-gifts"><div class="light"><h5>Light wield</h5><p>{d["light"]}</p></div>'
+                        f'<div class="dark"><h5>{KA["DARK_LABEL"]}</h5><p>{d["dark"]}</p></div></div>'
+                        f'<div class="rd-repair"><h5>{KA["DISTORTION_LABEL"]}</h5><p>{d["distortion"]}</p></div>')
     for role, b in K.items():
         R = KA["ROLES"][role]; d = D[role]; l = C["sid"][b]; si = sign_i(l); s9 = nav(l)
         h = E.house_of(l, asc); n = NAKS[E.nak_index(l)]
@@ -504,31 +507,33 @@ def karakas_more(C, dasha, asks=None):
                             + (" · now" if m["now"] else "")
                             for m in dasha["maha"] if m["lord"] == b and (m["from"] - born) / E.YEAR < 100)
         fruit = re.sub(r"^it ripens into ", "", VG.W["FRUIT"][s9])
-        ripen = fill(KA["RIPEN"], sign=E.SIGNS[s9]) + " "
-        if role == "Atmakaraka":
-            ripen += f'This is your Karakamsa. {KA["KARAKAMSA_INTRO"]} {KA["KARAKAMSA"][s9]}'
-        elif role == "Amatyakaraka":
-            ripen += KA["WORK"][s9] + (" It keeps that sign from the Rashi, so the work it shows is doubly yours." if s9 == si else f' In the Rashi it stands in {E.SIGNS[si]}: {KA["WORK"][si].split(": ", 1)[-1]}')
-        elif role == "Darakaraka":
-            ripen += KA["PARTNER"][s9] + (" It keeps that sign from the Rashi, so the partner it shows is doubly so." if s9 == si else f' On the surface, in the Rashi: {KA["PARTNER"][si].split(": ", 1)[-1]}')
-        else:
-            ripen += KA["NAV"][role][s9]
-        ripen += f" Underneath, it ripens into {fruit}"
-        extra = woven(C, b, l) if role == "Atmakaraka" else ""
         now = " · running now" if b == cur else ""
+        years = pair("In your life", R["people"]) + pair("Its years", periods or "its period falls after age 100")
+        if role != "Atmakaraka":
+            # the cabinet, compact: who it is, where it sits, how it stands to the soul, what it ripens into, its wields
+            st = strength(b, l); st = "" if st.startswith("Neither") or st == KA["STRENGTH"]["plain"] else " " + st
+            line = (KA["WORK"][s9] if role == "Amatyakaraka" else KA["PARTNER"][s9] if role == "Darakaraka" else KA["NAV"][role][s9])
+            out.append(f"""<div class="rd-entry rd-cab"><h3>{role} · {GLYPH[b]} {b} <span class="rd-side p">{deg(l)} into {E.SIGNS[si]}{now}</span></h3>
+          <div class="rd-hdr">{R["rules"]}</div>
+          <p><b>{KA["ROLE_PLANET"][role][b]}</b> {fill(KA["CAB_PLACE"], house=ORD(h), life=X["HOUSE_LIFE"][h - 1])}{st} {from_soul(role, l)}</p>
+          <p>{fill(KA["CAB_RIPEN"], sign=E.SIGNS[s9])} {line} Underneath, it ripens into {fruit}</p>
+          {wields(d)}{years}
+          <p class="rd-kenning">{d["ask"]}</p></div>""")
+            if asks is not None: asks.append((f"{role} · {b}", d["ask"], False))
+            continue
+        ripen = fill(KA["RIPEN"], sign=E.SIGNS[s9]) + " " + f'This is your Karakamsa. {KA["KARAKAMSA_INTRO"]} {KA["KARAKAMSA"][s9]}'
+        ripen += f" Underneath, it ripens into {fruit}"
+        extra = woven(C, b, l)
         out.append(f"""<div class="rd-entry"><h3>{role} · {GLYPH[b]} {b} <span class="rd-side p">{deg(l)} into {E.SIGNS[si]}{now}</span></h3>
           <div class="rd-hdr">{R["rules"]}</div>
           <p>{d["body"]}</p>
           <p><b>{KA["ROLE_PLANET"][role][b]}</b></p>
           <div class="rd-body"><h5>Where it lives</h5><p>It stands in sidereal {E.SIGNS[si]}, your {ORD(h)} house, the house of {X["HOUSE_LIFE"][h - 1]}: this part of your life plays out there. Its star is {n[0]}, pada {pada_of(l)}{(": " + q) if (q := once(("nak", E.nak_index(l)), n[6])) else "."}</p></div>
           <div class="rd-body"><h5>Its strength</h5><p>{strength(b, l)}</p></div>
-          {"" if role == "Atmakaraka" else f'<div class="rd-body"><h5>How it stands to the soul</h5><p>{from_soul(role, l)}</p></div>'}
           <div class="rd-body"><h5>What it ripens into</h5><p>{ripen}</p></div>
           {extra}
-          <div class="rd-gifts"><div class="light"><h5>Light wield</h5><p>{d["light"]}</p></div><div class="dark"><h5>Dark wield</h5><p>{d["dark"]}</p></div></div>
-          <div class="rd-repair"><h5>Distortion</h5><p>{d["distortion"]}</p></div>
-          {pair("In your life", R["people"])}
-          {pair("Its years", periods or "its period falls after age 100")}
+          {wields(d)}
+          {years}
           <p class="rd-kenning">{d["ask"]}</p></div>""")
         if asks is not None: asks.append((f"{role} · {b}", d["ask"], False))
 
