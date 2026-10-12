@@ -1,0 +1,261 @@
+{
+  "_note": "DRAFTS for The Völva. One 'In short' line per gate, shown at the top of each gate in the reading once it's approved. To approve a line, set \"ok\": true (edit the line first if you like). Lines left at false don't appear.",
+  "GATES": {
+    "1": {
+      "short": "Making things as a kind of devotion, and keeping at it whether or not inspiration shows up.",
+      "ok": false
+    },
+    "2": {
+      "short": "Knowing which way to go, and growing that path so well that others want to follow it.",
+      "ok": false
+    },
+    "3": {
+      "short": "Bringing order to something brand new while it's still messy, and doing it where people can see.",
+      "ok": false
+    },
+    "4": {
+      "short": "Coming up with answers, and enjoying the questions more than being right.",
+      "ok": false
+    },
+    "5": {
+      "short": "Keeping a daily rhythm that feeds you, rather than one you just put up with.",
+      "ok": false
+    },
+    "6": {
+      "short": "Choosing who to let close, and using conflict to make the bond better.",
+      "ok": false
+    },
+    "7": {
+      "short": "Leading as someone who carries a role for others, and planting direction in people so they move on their own.",
+      "ok": false
+    },
+    "8": {
+      "short": "Finding where your work truly belongs, and staying long enough to weave it in.",
+      "ok": false
+    },
+    "9": {
+      "short": "Breaking a huge job into small pieces, and finding the one that actually matters.",
+      "ok": false
+    },
+    "10": {
+      "short": "Being yourself, at your own size, without performing; that's what makes you hard to knock down.",
+      "ok": false
+    },
+    "11": {
+      "short": "Having ideas to give away, so other people can think better, without needing to carry them out yourself.",
+      "ok": false
+    },
+    "12": {
+      "short": "Speaking when people are ready to hear it, which is why your words land so hard when they do.",
+      "ok": false
+    },
+    "13": {
+      "short": "Listening in a way that heals, while making sure someone is looking after you too.",
+      "ok": false
+    },
+    "14": {
+      "short": "Winning resources and then using them for the people around you, not for show.",
+      "ok": false
+    },
+    "15": {
+      "short": "Making room for people who move too fast or too slow, including yourself on your up and down days.",
+      "ok": false
+    },
+    "16": {
+      "short": "Getting good at something by practising with real enthusiasm, and noticing when you've got it.",
+      "ok": false
+    },
+    "17": {
+      "short": "Seeing how things should be organised, and offering that view only when it's actually wanted.",
+      "ok": false
+    },
+    "18": {
+      "short": "Fixing what's been handed down with care for it, and knowing when something should be let go instead.",
+      "ok": false
+    },
+    "19": {
+      "short": "Sensing what people need and actually providing it, from a place where your own needs are met.",
+      "ok": false
+    },
+    "20": {
+      "short": "Saying what's true right now, simply and clearly, while you're paying full attention.",
+      "ok": false
+    },
+    "21": {
+      "short": "Taking charge quickly when something needs fixing, then handing control back once it's done.",
+      "ok": false
+    },
+    "22": {
+      "short": "Making a room feel good by noticing what each person actually needs.",
+      "ok": false
+    },
+    "23": {
+      "short": "Taking a strange new idea and putting it in words other people can grow something from.",
+      "ok": false
+    },
+    "24": {
+      "short": "Going over the same thoughts until you've sorted what's worth keeping and given it room to grow.",
+      "ok": false
+    },
+    "25": {
+      "short": "Loving without keeping score, through endings and new beginnings alike.",
+      "ok": false
+    },
+    "26": {
+      "short": "Selling an idea honestly, to people you actually know, by showing how to get from here to there.",
+      "ok": false
+    },
+    "27": {
+      "short": "Caring for people in a way that makes them stronger, not more dependent.",
+      "ok": false
+    },
+    "28": {
+      "short": "Fighting for something that means something, and knowing what you're fighting for.",
+      "ok": false
+    },
+    "29": {
+      "short": "Saying yes with your whole self, but only to what you really want, and on clear terms.",
+      "ok": false
+    },
+    "30": {
+      "short": "Wanting things deeply, and pointing that wanting at something worth burning for.",
+      "ok": false
+    },
+    "31": {
+      "short": "Leading with your voice, aware of the people who held the role before you.",
+      "ok": false
+    },
+    "32": {
+      "short": "Sensing what will last, and backing it through the lean years.",
+      "ok": false
+    },
+    "33": {
+      "short": "Stepping back to remember and learn from what happened, then telling the story when the time is right.",
+      "ok": false
+    },
+    "34": {
+      "short": "Using your strength to clear away what needs to go, so something new can grow.",
+      "ok": false
+    },
+    "35": {
+      "short": "Wanting new experiences and living each one fully before moving on.",
+      "ok": false
+    },
+    "36": {
+      "short": "Getting through hard times and then helping other people through theirs.",
+      "ok": false
+    },
+    "37": {
+      "short": "Being steady and warm for your family, with fair, spoken agreements about what each person gives.",
+      "ok": false
+    },
+    "38": {
+      "short": "Standing up for what matters, and using the disagreement to understand the other person better.",
+      "ok": false
+    },
+    "39": {
+      "short": "Poking people just enough to wake them up to what they care about.",
+      "ok": false
+    },
+    "40": {
+      "short": "Working hard on a fair deal, and actually taking the rest and thanks you've earned.",
+      "ok": false
+    },
+    "41": {
+      "short": "Starting things: picking the dream worth chasing, and taking the first real step.",
+      "ok": false
+    },
+    "42": {
+      "short": "Finishing things properly, so what you've learned carries into what comes next.",
+      "ok": false
+    },
+    "43": {
+      "short": "Knowing something deep down, keeping it safe until it's ready, and then saying it with authority.",
+      "ok": false
+    },
+    "44": {
+      "short": "Spotting people's patterns and talents, and helping them land where they'll do well.",
+      "ok": false
+    },
+    "45": {
+      "short": "Gathering resources, and then sharing them with the people you're responsible for.",
+      "ok": false
+    },
+    "46": {
+      "short": "Living fully in your body: listening to what it needs, and building a life that suits it.",
+      "ok": false
+    },
+    "47": {
+      "short": "Working through confusing memories bit by bit until they start to make sense.",
+      "ok": false
+    },
+    "48": {
+      "short": "Sharing what you know freely and early, before you feel completely ready.",
+      "ok": false
+    },
+    "49": {
+      "short": "Changing the rules when they stop working, and drawing a fairer circle of who belongs.",
+      "ok": false
+    },
+    "50": {
+      "short": "Looking after the values and rules that keep a group healthy, and testing them to see they still work.",
+      "ok": false
+    },
+    "51": {
+      "short": "Shaking people awake on purpose, and staying around to help afterwards.",
+      "ok": false
+    },
+    "52": {
+      "short": "Being still in a way that's restful and focused, and taking in the bigger picture.",
+      "ok": false
+    },
+    "53": {
+      "short": "Starting things that are worth committing to, and following through on what you start.",
+      "ok": false
+    },
+    "54": {
+      "short": "Being ambitious without shame, and rising by really listening to the people who help you.",
+      "ok": false
+    },
+    "55": {
+      "short": "Riding your moods, the fiery highs and the heavy lows, without thinking either one is the whole truth.",
+      "ok": false
+    },
+    "56": {
+      "short": "Telling stories that draw people in, and letting them mean more as you grow.",
+      "ok": false
+    },
+    "57": {
+      "short": "Trusting your gut about what's coming, and acting on it in small ways straight away.",
+      "ok": false
+    },
+    "58": {
+      "short": "Enjoying making things better, one clear, winnable improvement at a time.",
+      "ok": false
+    },
+    "59": {
+      "short": "Getting close to people openly and warmly, on honest terms.",
+      "ok": false
+    },
+    "60": {
+      "short": "Accepting your limits and getting creative inside them.",
+      "ok": false
+    },
+    "61": {
+      "short": "Listening deeply for what's true, and then passing it on.",
+      "ok": false
+    },
+    "62": {
+      "short": "Finding the right words for things, so feelings and ideas can actually be worked with.",
+      "ok": false
+    },
+    "63": {
+      "short": "Questioning everything fairly, your own ideas included, so things can get better.",
+      "ok": false
+    },
+    "64": {
+      "short": "Letting confusing ideas settle on their own until they make sense, without panicking.",
+      "ok": false
+    }
+  }
+}
