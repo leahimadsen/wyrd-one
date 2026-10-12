@@ -110,6 +110,27 @@ def section(n, title, sub, body):
 def pair(k, v):
     return f'<div class="rd-pair"><em>{k}</em><span>{v}</span></div>'
 
+SHORT = json.load(open(os.path.join(os.path.dirname(__file__), "..", "lib", "gate_short.json"), encoding="utf-8"))["GATES"]
+
+
+def repair(r):
+    """The register's distortion and repair, laid out to read, word for word: each flood or freeze starts its own
+    paragraph, and each medicine stands on its own line."""
+    import re
+    paras, cur = [], []
+    for sen in re.split(r"(?<=[.!?])\s+(?=[A-Z<])", r.strip()):
+        bare = re.sub(r"<[^>]+>", "", sen)
+        if bare.startswith("Medicine"):
+            if cur: paras.append(("p", " ".join(cur))); cur = []
+            paras.append(("med", re.sub(r"^((?:<[^>]+>)*)Medicine", r"\1<b>Medicine</b>", sen, 1)))
+            continue
+        m = re.match(r"(Flood|Freeze)", bare)
+        if m and cur: paras.append(("p", " ".join(cur))); cur = []
+        cur.append(re.sub(r"^((?:<[^>]+>)*)(Flood|Freeze)", r"\1<b>\2</b>", sen, 1) if m else sen)
+    if cur: paras.append(("p", " ".join(cur)))
+    return "".join(f'<p class="rd-med">{t}</p>' if k == "med" else f"<p>{t}</p>" for k, t in paras)
+
+
 def register_entry(gate, line, side, label, asks):
     R = REG.get(str(gate))
     if not R:
@@ -127,11 +148,12 @@ def register_entry(gate, line, side, label, asks):
     return f"""<div class="rd-entry">
       <h3>{esc(label)} · {gate}.{line} · {R['t']}
         <span class="rd-side {'d' if design else 'p'}">{'design · unconscious' if design else 'personality · conscious'}</span></h3>
+      {f'<p class="rd-short"><b>In short:</b> {esc(SHORT[str(gate)]["short"])}</p>' if SHORT.get(str(gate), {}).get("ok") else ""}
       <div class="rd-hdr">{R['h']} {flags}</div>
       <p>{R['e']}</p>
       <div class="rd-gifts"><div class="light"><h5>Light gift</h5><p>{R['l']}</p></div>
         <div class="dark"><h5>Dark gift</h5><p>{R['d']}</p></div></div>
-      <div class="rd-repair"><h5>Distortion &amp; repair</h5><p>{R['r']}</p></div>
+      <div class="rd-repair"><h5>Distortion &amp; repair</h5>{repair(R['r'])}</div>
       {held}</div>"""
 
 def dharma_defines(N, Dh):
