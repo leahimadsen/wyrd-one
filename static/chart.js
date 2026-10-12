@@ -25,6 +25,7 @@ if (!fresh(saved.result) && navigator.onLine !== false){       // cast by an old
   try { const j = await cast(saved.birth); keep(saved.birth, j); saved = { birth: saved.birth, result: j }; } catch (_) {}
 }
 const { birth, result: J } = saved, C = J.chart, T = C.dashaTree, unknown = !!C.unknownTime;
+let MEMBER = false;                    /* set from /api/me: members see every rune in full and the planets on the body map */
 const X = C.extras || {};
 Wyrd.setChart(C);
 
@@ -243,8 +244,8 @@ function chartLand(){
       <dt>${g("channel", "Channels")}</dt><dd>${rv.channels.join(", ") || "—"}</dd></dl>
       <p class="fine">Drawn on your body and explained in <a href="#design">Your design →</a></p></div>
     ${BM ? `<div class="fact wide body-fig"><h3>${g("bodymap", "Your body map")}</h3>
-      <p class="bm-line">${BM.line}</p>${BM.figure}
-      <p class="fine">${BM.note}</p></div>` : ""}
+      <p class="bm-line">${BM.line}</p><div class="bm-free"${MEMBER ? " hidden" : ""}>${BM.figure}</div><div class="bm-full"${MEMBER ? "" : " hidden"}>${BM.full || ""}</div>
+      <p class="fine bm-note"${MEMBER ? " hidden" : ""}>${BM.note}</p><p class="fine bm-member"${MEMBER ? "" : " hidden"}>${BM.memberNote || ""}</p></div>` : ""}
     ${nums ? `<div class="fact"><h3>Your numbers</h3>
       <table class="mini"><tr><th></th><th></th><th>${g("stavefall", "Stavefall")}</th><th>${g("vedicnum", "Vedic")}</th></tr>${numRows}</table>
       <p class="fine">${birth.full_name ? "" : "Add your full name at birth when you cast your chart for three more: expression, soul urge and personality. "}What each number means, and where your life path's planets stand in your chart, is in your reading. <a href="/learn/numbers">How the numbers and their two planets work →</a></p></div>` : ""}
@@ -323,7 +324,7 @@ const BUILD = {
   clock: () => { window.WyrdDasha && WyrdDasha.mount($("dashaHost"));
     if (unknown) $("dashaHost").insertAdjacentHTML("afterbegin", `<p class="unknown-note">The clock is set by the Moon. Without a birth time your Moon could be anywhere in a day's travel, so these dates may be out by months.</p>`); },
   design: designLand,
-  runes: () => WyrdRunes.mount($("runesHost"), C),
+  runes: () => WyrdRunes.mount($("runesHost"), C, { all: MEMBER }),
   mandala: () => {
     const pl = Object.fromEntries(BODIES.map(b => [b, C.sid[b]]));
     if (!unknown){ pl.Ascendant = C.ascS; pl.Midheaven = C.mcS; }
@@ -398,13 +399,20 @@ $("buyBtn").addEventListener("click", async () => {
     location.href = j.url;
   } catch (x) { err.textContent = x.message; btn.disabled = false; btn.textContent = buyLabel; }
 });
+/* members see more on their chart: every rune in full, and the planets on the body map */
+function becomeMember(){
+  MEMBER = true;
+  for (const [sel, show] of [[".bm-free", false], [".bm-full", true], [".bm-note", false], [".bm-member", true]]) { const el = document.querySelector(sel); if (el) el.hidden = !show; }
+  const rh = $("runesHost"); if (rh && rh.innerHTML.trim()) WyrdRunes.mount(rh, C, { all: true });
+}
+
 /* members pay less: say so on the button before they click */
 let buyLabel = $("buyBtn").textContent;
 fetch("/api/me").then(r => r.json()).then(d => {
   for (const el of document.querySelectorAll("[data-price]")) if (d.prices && d.prices[el.dataset.price]) el.textContent = d.prices[el.dataset.price];
   if (d.readingPrice) buyLabel = d.member ? `Get my reading — ${d.readingPrice}, your member price` : `Get my reading — ${d.readingPrice}`;
   $("buyBtn").textContent = buyLabel;
-  if (d.member) document.querySelector(".offer-member").hidden = true;
+  if (d.member) { document.querySelector(".offer-member").hidden = true; becomeMember(); }
 }).catch(() => {});
 if (new URLSearchParams(location.search).get("cancelled")) $("buyErr").textContent = "Checkout was cancelled — your chart is still here whenever you're ready.";
 })();

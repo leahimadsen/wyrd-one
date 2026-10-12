@@ -170,7 +170,8 @@ def free(C):
     unknown = C.get("unknownTime"); g = grid(C, defined_centres(C), unknown); w, _ = weight(g)
     a, b = sorted(KEYS, key=lambda k: -w[k])[:2]
     line = fill(T["FREE"]["line"], first=f"your {zname(a)[4:]}", first_parts=ZONE[a]["parts"], second=f"your {zname(b)[4:]}", second_parts=ZONE[b]["parts"])
-    return {"figure": figure(g, w, unknown, planets=False), "line": line, "note": T["FREE"]["note"]}
+    return {"figure": figure(g, w, unknown, planets=False), "line": line, "note": T["FREE"]["note"],
+            "full": figure(g, w, unknown), "memberNote": T["FREE"]["member"]}          # members see the planets on each station
 
 
 def body(C, dasha, asks):

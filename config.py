@@ -48,7 +48,7 @@ READING_CLOSING = (
 # to be set up in the Stripe dashboard. Change a number here to change a price
 # for new subscribers; people already subscribed keep what they signed up at. ---
 MEMBER_MONTHLY_CENTS = int(os.environ.get("MEMBER_MONTHLY_CENTS", "1100"))     # $11 a month
-MEMBER_YEARLY_CENTS  = int(os.environ.get("MEMBER_YEARLY_CENTS", "11100"))     # $111 a year
+MEMBER_YEARLY_CENTS  = int(os.environ.get("MEMBER_YEARLY_CENTS", "9900"))      # $99 a year, three months free
 MEMBER_READING_CENTS = int(os.environ.get("MEMBER_READING_CENTS", "3520"))     # the $44 reading at 20% off for members
 PRO_MONTHLY_CENTS    = int(os.environ.get("PRO_MONTHLY_CENTS", "3300"))        # Professional, $33 a month
 PRO_READINGS_A_MONTH = int(os.environ.get("PRO_READINGS_A_MONTH", "30"))       # client readings included each month

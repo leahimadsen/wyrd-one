@@ -169,3 +169,4 @@ main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
 .body-fig .mf-lead{stroke-width:1.4;opacity:.6;fill:none}.body-fig .mf-dot{fill-opacity:.85;stroke:#fff;stroke-width:1.5}.body-fig .mf-ring{fill:none;stroke-width:3}
 .body-fig .mf-name{font-family:var(--fellsc,monospace);font-size:30px}
 .body-fig .mf-name{filter:brightness(1.7)}
+.body-fig .mf-pl{fill:#eaf3ff;font-size:30px}
