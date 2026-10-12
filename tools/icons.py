@@ -1,4 +1,4 @@
-"""Draw the site icon: a little 90s window with a neon torus inside. One SVG, rendered to every size.
+"""Draw the site icon: a little window and a torus, in neon outline. One SVG, rendered to every size.
 
     python tools/icons.py
 
@@ -10,40 +10,22 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "static", "icons")
 
 def svg(scale=1.0, small=False, bg=True):
-    """scale: how much of the square the window fills (the maskable icon wants it smaller). small: bolder lines for 16-32px."""
-    w = 512 * scale; x0 = (512 - w) / 2; y0 = x0 + (6 if scale < 1 else 0)
-    k = w / 512                                    # everything below is drawn in a 512 window, then scaled
-    sw = 1.8 if small else 1.0                     # line weight multiplier for tiny sizes
-    grid = "" if small else "".join(f'<line x1="{x}" y1="112" x2="{x}" y2="470" stroke="#7ff6ff" stroke-opacity=".10" stroke-width="2"/>' for x in range(64, 470, 40)) + \
-                             "".join(f'<line x1="42" y1="{y}" x2="470" y2="{y}" stroke="#7ff6ff" stroke-opacity=".10" stroke-width="2"/>' for y in range(140, 470, 40))
-    meridians = "" if small else "".join(
-        f'<path d="M{256 + dx} {232 + abs(dx) * .1} q{dx * .08} 70 {dx * .02} 128" fill="none" stroke="#ff7ae0" stroke-width="3" stroke-opacity=".7" filter="url(#glow)"/>'
-        for dx in (-150, -95, -40, 40, 95, 150))
-    btns = "" if small else "".join(f'<rect x="{x}" y="42" width="34" height="30" fill="#d9d4f5" stroke="#fff" stroke-width="3"/>' for x in (366, 406, 446))
+    """The neon-outline window: a magenta frame with its title rule and three coloured dots, and a cyan torus inside.
+    scale: how much of the square the window fills (the maskable icon wants it smaller). small: bolder lines for tabs."""
+    w = 1.6 if small else 1.0; sd = 10 if small else 6
+    t = f"translate({256 * (1 - scale)} {256 * (1 - scale)}) scale({scale})"
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <defs>
-    <linearGradient id="bar" x1="0" x2="1"><stop offset="0" stop-color="#ff2a2a"/><stop offset=".18" stop-color="#ff7a00"/><stop offset=".34" stop-color="#ffd400"/>
-      <stop offset=".5" stop-color="#22c55e"/><stop offset=".66" stop-color="#22d3ee"/><stop offset=".82" stop-color="#5b4bff"/><stop offset="1" stop-color="#ff2fa8"/></linearGradient>
-    <linearGradient id="ring" x1="0" x2="1"><stop offset="0" stop-color="#ff2fa8"/><stop offset=".33" stop-color="#ffd400"/><stop offset=".66" stop-color="#22d3ee"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
-    <radialGradient id="core" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6d8"/><stop offset=".45" stop-color="#ffb43a"/><stop offset="1" stop-color="#ffb43a" stop-opacity="0"/></radialGradient>
-    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="{6 * sw}" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-  </defs>
-  {'<rect width="512" height="512" rx="0" fill="#0b0322"/>' if bg else ''}
-  <g transform="translate({x0} {y0}) scale({k})">
-    <!-- the window: a bevelled frame, a rainbow title bar, the three buttons -->
-    <rect x="16" y="16" width="480" height="480" fill="#120533"/>
-    <path d="M16 496 V16 H496" fill="none" stroke="#e9e4ff" stroke-width="{12 * (1.3 if small else 1)}"/>
-    <path d="M16 496 H496 V16" fill="none" stroke="#2a1170" stroke-width="{12 * (1.3 if small else 1)}"/>
-    <rect x="30" y="30" width="452" height="{62 if not small else 78}" fill="url(#bar)"/>
-    {btns}
-    <rect x="34" y="{104 if not small else 120}" width="444" height="{372 if not small else 356}" fill="#05011a" stroke="#6b5bd6" stroke-width="4"/>
-    {grid}
-    <!-- the torus, in neon: the outer ring in rainbow, the hole and the tube's far edge in cyan -->
-    <ellipse cx="256" cy="296" rx="186" ry="{96 if not small else 104}" fill="none" stroke="url(#ring)" stroke-width="{14 * sw}" filter="url(#glow)"/>
-    <ellipse cx="256" cy="{280 if not small else 284}" rx="{74 if not small else 70}" ry="{26 if not small else 28}" fill="#05011a" stroke="#7ff6ff" stroke-width="{10 * sw}" filter="url(#glow)"/>
-    {'' if small else '<path d="M86 300 Q256 400 426 300" fill="none" stroke="#7ff6ff" stroke-width="5" stroke-opacity=".75" filter="url(#glow)"/>'}
-    {meridians}
-    <circle cx="256" cy="{278 if not small else 282}" r="{20 if not small else 24}" fill="url(#core)"/>
+  <defs><filter id="g" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="{sd}" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  {'<rect width="512" height="512" fill="#0b0322"/>' if bg else ''}
+  <g transform="{t}">
+    <g filter="url(#g)" fill="none">
+      <rect x="60" y="72" width="392" height="368" rx="14" stroke="#ff4fd8" stroke-width="{12 * w}"/>
+      <line x1="60" y1="130" x2="452" y2="130" stroke="#ff4fd8" stroke-width="{10 * w}"/>
+      <ellipse cx="256" cy="292" rx="140" ry="74" stroke="#7ff6ff" stroke-width="{16 * w}"/>
+      <ellipse cx="256" cy="282" rx="50" ry="17" stroke="#7ff6ff" stroke-width="{10 * w}"/>
+    </g>
+    <circle cx="334" cy="101" r="{9 * w}" fill="#22d3ee"/><circle cx="366" cy="101" r="{9 * w}" fill="#ffd400"/><circle cx="398" cy="101" r="{9 * w}" fill="#ff4fd8"/>
   </g>
 </svg>'''
 
