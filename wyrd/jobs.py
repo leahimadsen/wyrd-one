@@ -47,7 +47,7 @@ def weekly(eph, cast_for, birth_from, config):
         try:
             b = json.loads(meta["wyrd_birth"])
             report = weather.render(weather.week(eph, cast_for(birth_from(b))), (b.get("name") or "").split(" ")[0])
-            link = f'<p style="font:14px sans-serif;color:#5f5a73;margin-top:30px">Read it on the site any time: <a href="{config.BASE_URL}/account/weather">your account</a>. Manage your membership from <a href="{config.BASE_URL}/account">your account</a>.</p>'
+            link = f'<p style="font:14px sans-serif;color:#5f5a73;margin-top:30px">Read it on the site any time: <a href="{config.BASE_URL}/account/weather">your account</a>. Manage your place in the Order from <a href="{config.BASE_URL}/account">your account</a>.</p>'
             if mailer.send(c["email"], "Your Body Weather for the week", report + link):
                 stripe_api.update_customer_metadata(secret, c["id"], {"bw_week": week}); sent += 1
             else:
@@ -60,7 +60,7 @@ def weekly(eph, cast_for, birth_from, config):
         tiers = {}
         for s in subs: tiers[s["metadata"]["tier"]] = tiers.get(s["metadata"]["tier"], 0) + 1
         rows = "".join(f"<tr><td>{html.escape(k)}</td><td>{html.escape(str(v))}</td></tr>" for k, v in
-                       [("Members", tiers.get("member", 0)), ("Professionals", tiers.get("pro", 0)), ("Gifted", len(gifts)),
+                       [("The Order", tiers.get("member", 0)), ("The Inner Circle", tiers.get("pro", 0)), ("Gifted", len(gifts)),
                         ("Readings sold, last 7 days", summary["readings"]), ("Sales, last 7 days", f'${summary["revenue"] / 100:.2f}'),
                         ("Body Weather sent", sent), ("Body Weather failed", failed)])
         mailer.send(config.OWNER_EMAIL, f"Wyrd Console: your week ({week})",

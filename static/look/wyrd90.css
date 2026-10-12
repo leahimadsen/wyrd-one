@@ -152,3 +152,5 @@ body:not(.paper) .tz-chip.open{background:#c2410c!important;border-color:#ffb27a
 body:not(.paper) .wx-lv[aria-pressed="true"],body:not(.paper) .ctool[aria-pressed="true"]{border-style:inset!important;background:#4b1d9e!important}
 body:not(.paper) .topbar,body:not(.paper) .pg-top{background:#09021c;border-bottom:3px solid transparent;border-image:var(--rainbow) 1}
 body.paper .tw table td,body.paper .tw table th{padding:5px 14px 5px 0}
+/* plan cards: the pixel title fits its card and never breaks mid-word */
+body:not(.codex) .plan h2{font-size:clamp(18px,1.7vw,24px)!important;overflow-wrap:normal!important;word-break:normal;hyphens:none;line-height:1.25;margin-top:4px}

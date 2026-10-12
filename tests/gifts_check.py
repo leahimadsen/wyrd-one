@@ -104,7 +104,7 @@ st = status("creator@x.co")
 check("access is on", st["pro"] and st["gift"]["until"] == "2026-11-10" and not st["plans"])
 check("the practice desk opens", as_user("creator@x.co").get("/pro").status_code == 200)
 listed = admin.get("/admin/gifts").get_data(as_text=True)
-check("the admin sees the account and its expiry", "creator@x.co · Professional until the end of 10 November 2026" in listed
+check("the admin sees the account and its expiry", "creator@x.co · The Inner Circle until the end of 10 November 2026" in listed
       and "active" in listed)
 check("their account page says when it ends", "until the end of 10 November 2026" in as_user("creator@x.co").get("/account").get_data(as_text=True))
 
@@ -132,7 +132,7 @@ CUST["cus_paid"] = {"id": "cus_paid", "email": "payer@x.co", "metadata": {"wyrd"
 paid("cus_paid", "member")
 before = [dict(s) for s in SUBS]
 done = grant("payer@x.co", "pro", "30d")
-check("the admin is told their subscription is untouched", "already pay for Membership" in done and "untouched" in done)
+check("the admin is told their subscription is untouched", "already pay for The Order" in done and "untouched" in done)
 st = status("payer@x.co")
 check("gift adds Professional on top of the paid membership", st["pro"] and st["member"])
 TODAY[0] = "2026-11-11"

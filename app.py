@@ -353,7 +353,7 @@ def checkout():
         s = stripe_api.create_checkout(config.STRIPE_SECRET, base_url=config.BASE_URL,
                                        price_id=None if member else config.STRIPE_PRICE_ID,
                                        price_cents=config.MEMBER_READING_CENTS if member else config.PRICE_CENTS,
-                                       product_name=config.PRODUCT_NAME + (" (member price)" if member else ""), metadata=meta,
+                                       product_name=config.PRODUCT_NAME + (" (Order price)" if member else ""), metadata=meta,
                                        email=email or (d.get("email") or None), customer=customer)
     except stripe_api.StripeError as e:
         app.logger.error("stripe: %s", e)
@@ -454,7 +454,7 @@ def checkout_together():
             member, customer = st["member"] or st["pro"], st["customer"]
         s = stripe_api.create_checkout(config.STRIPE_SECRET, base_url=config.BASE_URL, price_id=None,
                                        price_cents=together_cents(len(people), member),
-                                       product_name=f"{config.TOGETHER_NAME}, for {len(people)}" + (" (member price)" if member else ""),
+                                       product_name=f"{config.TOGETHER_NAME}, for {len(people)}" + (" (Order price)" if member else ""),
                                        metadata=meta, email=email, customer=customer, cancel="/chart?cancelled=1#compare")
     except stripe_api.StripeError as e:
         app.logger.error("stripe: %s", e)
@@ -483,7 +483,7 @@ def render_together(meta, banner=""):
                     mimetype="text/html")
 
 SAMPLE_FOOT = f"""<footer class="sample-cta"><p><b>That was a sample, cast for a made-up birth.</b> Yours is written for your own placements, every section of it.</p>
-  <p><a href="/">Cast your free chart →</a> · <a href="/reports">Get your reading, {"$" + str(config.PRICE_CENTS // 100)} →</a> · <a href="/membership">Membership →</a></p>
+  <p><a href="/">Cast your free chart →</a> · <a href="/reports">Get your reading, {"$" + str(config.PRICE_CENTS // 100)} →</a> · <a href="/membership">The Order →</a></p>
   <p>Written by {config.AUTHOR} · The Web of Wyrd</p></footer>"""
 
 # ---------------- the private admin ----------------
@@ -707,7 +707,7 @@ def signin_page():
 <form class="pg-form" method="post" action="/signin"><input type="hidden" name="next" value="{esc(nxt)}">
 <label>Email <input name="email" type="email" required autocomplete="email" maxlength="254"></label>
 <button class="btn-cast" type="submit">Email me a sign-in link</button></form>
-<p class="muted">Use the same email you paid with, and your membership is found automatically.</p>""")
+<p class="muted">Use the same email you paid with, and your place in the Order is found automatically.</p>""")
 
 @app.post("/signin")
 def signin_send():
@@ -761,6 +761,12 @@ def months_free(m, y):
     n = round((12 * m - y) / m) if m else 0
     return f", {['', 'one', 'two', 'three', 'four', 'five', 'six'][n]} month{'s' if n > 1 else ''} free" if 0 < n <= 6 else ""
 
+@app.get("/order")
+def order_page(): return membership_page()          # the Order's own address; /membership still works
+
+@app.get("/inner-circle")
+def inner_circle(): return redirect("/membership#pro")
+
 @app.get("/membership")
 def membership_page():
     on = selling()
@@ -769,10 +775,10 @@ def membership_page():
         return (f'<form method="post" action="/api/subscribe"><input type="hidden" name="plan" value="{plan}">'
                 f'<button class="{"btn-buy" if lead else "btn-cast"}" type="submit">{label}</button></form>')
     m, y, pr = config.MEMBER_MONTHLY_CENTS, config.MEMBER_YEARLY_CENTS, config.PRO_MONTHLY_CENTS
-    body = f"""<h1>Wyrd Membership</h1>
+    body = f"""<h1>The Order</h1>
 <p class="lede">Your design's weather, every week: a letter by email each Monday on how the planets move through your Birth Design and your Dharma Design, written in The Völva's words.</p>
 <div class="plans">
-  <section class="plan lead"><h2>Membership</h2><div class="price">{money(m)}<small> a month</small></div>
+  <section class="plan lead" data-line="Your weather, every week."><h2>The Order</h2><div class="price">{money(m)}<small> a month</small></div>
     <p class="muted">or {money(y)} a year{months_free(m, y)}</p>
     <ul><li><b>Body Weather by email every Monday:</b> which centres the week's sky switches on in your Birth Design and your Dharma Design, which stay open, and which of your gates it lights</li>
       <li>The Moon's mansion day by day, the week's stations and sign changes, and the Vimshottari era and chapter you're in</li>
@@ -780,25 +786,25 @@ def membership_page():
       <li>One chart saved to your account, for your weekly letter</li>
       <li><b>Learning the Mandala</b>, the course on working with the Wyrd Mandala, included when it opens</li>
       <li>The Wyrd Reading for {money(config.MEMBER_READING_CENTS)} instead of {money(config.PRICE_CENTS)}, and {config.TOGETHER_MEMBER_OFF}% off the reading together</li></ul>
-    {buy("member-month", f"Join for {money(m)} a month", True)}
+    {buy("member-month", f"Join the Order for {money(m)} a month", True)}
     {buy("member-year", f"Or {money(y)} a year") if on else ""}</section>
-  <section class="plan" id="pro"><h2>Professional</h2><div class="price">{money(pr)}<small> a month</small></div>
+  <section class="plan" id="pro" data-line="For those who read for others."><h2>The Inner Circle</h2><div class="price">{money(pr)}<small> a month</small></div>
     <ul><li>For astrologers, coaches and practitioners working with clients</li>
       <li>Generate The Wyrd Reading for your clients: {config.PRO_READINGS_A_MONTH} a month included</li>
       <li>This week's Body Weather for any client, as often as you like</li>
-      <li>Everything in the membership</li></ul>
+      <li>Everything in the Order</li></ul>
     {buy("pro-month", f"Subscribe for {money(pr)} a month")}
-    <p class="muted">Already a Professional? <a href="/signin?next=/pro">Sign in to your practice desk</a>.</p></section>
+    <p class="muted">Already in the Inner Circle? <a href="/signin?next=/pro">Sign in to your practice desk</a>.</p></section>
 </div>
-<p class="muted">The free chart stays free, with or without a membership: the whole path, the Wyrd Mandala, Compare for up to nine people, today's sky and the year ahead.
+<p class="muted">The free chart stays free, whether or not you join the Order: the whole path, the Wyrd Mandala, Compare for up to nine people, today's sky and the year ahead.
 Cancel any time from your account. Payments are handled by Stripe. Prefer one reading? <a href="/reports">The Wyrd Reading is {money(config.PRICE_CENTS)}, once</a>,
-and <a href="/reports">the reading together</a> is {money(config.TOGETHER_CENTS)} for two ({config.TOGETHER_MEMBER_OFF}% off for members).</p>"""
+and <a href="/reports">the reading together</a> is {money(config.TOGETHER_CENTS)} for two ({config.TOGETHER_MEMBER_OFF}% off for the Order).</p>"""
     ld = pages._ld({"@context": "https://schema.org", "@type": "Product", "name": config.MEMBER_NAME,
                     "description": "Weekly Body Weather astrology letter for your Birth Design and Dharma Design.",
                     "brand": {"@type": "Brand", "name": "The Wyrd Console"},
                     "offers": {"@type": "Offer", "price": f"{m / 100:.2f}", "priceCurrency": "USD", "url": config.BASE_URL + "/membership"}})
-    return page("Weekly Astrology Membership & Professional Plan · The Wyrd Console",
-                f"A weekly astrology letter for your own chart: how the week's planets move through your Birth Design and Dharma Design. {money(m)} a month or {money(y)} a year from The Völva; Professional for practitioners.",
+    return page("Join the Order: a Weekly Astrology Letter, and the Inner Circle for Practitioners · The Wyrd Console",
+                f"A weekly astrology letter for your own chart: how the week's planets move through your Birth Design and Dharma Design. {money(m)} a month or {money(y)} a year from The Völva; the Inner Circle for practitioners.",
                 body, ld)
 
 @app.post("/api/subscribe")
@@ -863,9 +869,9 @@ def welcome():
 <p><a class="btn-cast" href="/account?joined=1">Go to your account</a></p>""")
     token = accounts.make_token(config.SECRET_KEY, email, "/account?joined=1")
     link = f"{config.BASE_URL}/auth/{token}"
-    mailer.send(email, "Your Wyrd Membership: sign in",
-        f'<p>Your membership is active. <a href="{esc(link)}">Sign in to your account</a> (this link works for {accounts.LINK_MINUTES} minutes).</p>',
-        f"Your membership is active. Sign in: {link}")
+    mailer.send(email, "The Order: sign in",
+        f'<p>You\'re in the Order. <a href="{esc(link)}">Sign in to your account</a> (this link works for {accounts.LINK_MINUTES} minutes).</p>',
+        f"You're in the Order. Sign in: {link}")
     return private("Welcome", f"""<h1>Welcome</h1><p class="lede">Your payment went through.</p>
 <p>We've sent a sign-in link to {esc(email)}. Open it to reach your account.</p>""")
 
@@ -897,15 +903,15 @@ def account_page():
         live = p["status"] in billing.LIVE
         end = datetime.fromtimestamp(p["periodEnd"], timezone.utc).strftime("%-d %B %Y") if p.get("periodEnd") else ""
         when = (f" · ends {end}" if p["cancelAtEnd"] else f" · renews {end}") if live and end else ""
-        rows.append(f'<li>{"Professional" if p["tier"] == "pro" else "Membership"} ({p.get("interval") or "month"}ly) '
+        rows.append(f'<li>{"The Inner Circle" if p["tier"] == "pro" else "The Order"} ({p.get("interval") or "month"}ly) '
                     f'<span class="status {"on" if live else "off"}">{esc(p["status"].replace("_", " "))}</span>{when}</li>')
     joined = '<p class="note-box">Welcome. Your payment went through.</p>' if request.args.get("joined") else ""
     g = st.get("gift")
     if g and g["live"]:
-        rows.insert(0, f'<li>{"Professional" if g["tier"] == "pro" else "Membership"}, a gift from {esc(config.AUTHOR)}, {nice_until(g["until"])} <span class="status on">active</span></li>')
+        rows.insert(0, f'<li>{"The Inner Circle" if g["tier"] == "pro" else "The Order"}, a gift from {esc(config.AUTHOR)}, {nice_until(g["until"])} <span class="status on">active</span></li>')
     portal_btn = '<form method="post" action="/billing/portal"><button class="alt" type="submit">Manage or cancel, change card, see receipts</button></form>' if st["plans"] else ""
     plans = f'<ul>{"".join(rows)}</ul>{portal_btn}' if rows else \
-            '<p>You have no membership yet. <a href="/membership">See the membership</a>.</p>'
+            '<p>You\'re not in the Order yet. <a href="/membership">See the Order</a>.</p>'
     member = st["member"] or st["pro"]
     chart = ""
     if member:
@@ -915,7 +921,7 @@ def account_page():
 <p id="useCurrent" hidden><button class="btn-cast" type="button">Use the chart open in this browser</button></p>
 <p class="muted" id="noCurrent">To change it, <a href="/">cast the chart</a>, then come back here.</p>
 {WEEK_LINK if b else ""}"""
-    pro = f'<h2>Professional</h2><p><a href="/pro">Open your practice desk →</a> {st["proUse"]} of {config.PRO_READINGS_A_MONTH} client readings used this month.</p>' if st["pro"] else ""
+    pro = f'<h2>The Inner Circle</h2><p><a href="/pro">Open your practice desk →</a> {st["proUse"]} of {config.PRO_READINGS_A_MONTH} client readings used this month.</p>' if st["pro"] else ""
     script = """<script src="/static/common.js"></script><script>
 (() => { const c = WyrdCommon.current(), box = document.getElementById("useCurrent"); if (!c || !box) return;
   box.hidden = false; document.getElementById("noCurrent").hidden = true;
@@ -937,7 +943,7 @@ def account_chart():
     email = signed_in()
     if not email or not same_origin(): return jsonify(error="Sign in first."), 401
     st = account_status(email)
-    if not st or not (st["member"] or st["pro"]): return jsonify(error="For members."), 403
+    if not st or not (st["member"] or st["pro"]): return jsonify(error="For the Order."), 403
     d = request.get_json(force=True, silent=True) or {}
     b = {k: str(d.get(k, ""))[:80] for k in BIRTH_KEYS if d.get(k) not in (None, "")}
     try: birth_from(b)
@@ -995,7 +1001,7 @@ def pro_reading():
         if st["proUse"] >= config.PRO_READINGS_A_MONTH:
             return private("Practice desk", f'<h1>This month\'s readings are used</h1><p>Your plan includes {config.PRO_READINGS_A_MONTH} client readings a month. They renew on the 1st.</p>', status=402)
         billing.count_pro_reading(config.STRIPE_SECRET, email)
-        return render_reading(meta, "Prepared with The Wyrd Console Professional · written by The Völva. Save it as a PDF from your browser's print menu.")
+        return render_reading(meta, "Prepared in the Inner Circle of The Wyrd Console · written by The Völva. Save it as a PDF from your browser's print menu.")
     except (BadInput, ValueError) as e:
         return private("Practice desk", f'<h1>Check the details</h1><p>{esc(str(e) or BAD_BIRTH)} <a href="/pro">Back</a></p>', status=400)
     except stripe_api.StripeError:
@@ -1037,22 +1043,22 @@ def admin_gifts():
         try:
             for c in billing.gifted(config.STRIPE_SECRET):
                 g = billing.gift_of(c.get("metadata") or {})
-                rows.append(f'<li>{esc(c.get("email"))} · {"Professional" if g["tier"] == "pro" else "Membership"} {nice_until(g["until"])} '
+                rows.append(f'<li>{esc(c.get("email"))} · {"The Inner Circle" if g["tier"] == "pro" else "The Order"} {nice_until(g["until"])} '
                             f'<span class="status {"on" if g["live"] else "off"}">{"active" if g["live"] else "ended"}</span> '
                             f'<form method="post" action="/admin/gift/end" style="display:inline"><input type="hidden" name="email" value="{esc(c.get("email"))}">'
                             f'<button class="alt" type="submit">End</button></form></li>')
         except stripe_api.StripeError as e:
             problem = f'<p class="err">Couldn\'t load the list from Stripe: {esc(e)}</p>'
     else:
-        problem = '<p class="muted">Gifted memberships work once your Stripe key is set.</p>'
+        problem = '<p class="muted">Gifts of the Order work once your Stripe key is set.</p>'
     lengths = "".join(f'<option value="{k}"{" selected" if k == GIFT_DEFAULT else ""}>{"For good" if v is None else v if isinstance(v, str) else f"{v} month" + ("s" if v > 1 else "")}</option>' for k, v in GIFT_LENGTHS.items())
     return private("Gifts", f"""<p class="crumbs"><a href="/admin">Admin</a></p><h1>Gifts</h1>
 {f'<p class="note-box">{msg}</p>' if msg else ""}
-<h2>Give a membership</h2>
+<h2>Give a place in the Order</h2>
 <p class="muted">Nothing is charged and no card is asked for. They get an email inviting them to sign in, and everything the plan includes works straight away. When it ends they are back on the free site, unless they pay for a plan of their own, which a gift never changes.</p>
 <form class="pg-form" method="post" action="/admin/gift/membership">
 <label>Their email <input name="email" type="email" required maxlength="254"></label>
-<label>Plan <select name="tier"><option value="member">Membership</option><option value="pro">Professional</option></select></label>
+<label>Plan <select name="tier"><option value="member">The Order</option><option value="pro">The Inner Circle</option></select></label>
 <label>For <select name="length">{lengths}</select></label>
 <label>A note from you (optional) <input name="note" maxlength="300"></label>
 <button class="btn-cast" type="submit">Give it</button></form>
@@ -1071,14 +1077,14 @@ def admin_gift_membership():
         billing.give(config.STRIPE_SECRET, email, tier, until)
     except stripe_api.StripeError as e:
         return redirect("/admin/gifts?" + urlencode({"done": f"Stripe said: {e}"}))
-    plan = "Wyrd Console Professional" if tier == "pro" else "a Wyrd Membership"
+    plan = "a place in the Inner Circle" if tier == "pro" else "a place in the Order"
     note = request.form.get("note", "").strip()[:300]
     link = f"{config.BASE_URL}/auth/{accounts.make_token(config.SECRET_KEY, email, '/account')}"
     sent = mailer.send(email, f"A gift from {config.AUTHOR}: {plan}",
         f"<p>{esc(config.AUTHOR)} has given you {plan}, {nice_until(until)}.</p>" + (f"<p><i>{esc(note)}</i></p>" if note else "") +
         f'<p><a href="{esc(link)}">Sign in to start</a> (this link works for {accounts.LINK_MINUTES} minutes; after that, sign in at {esc(config.BASE_URL)}/signin with this email).</p>',
         f"{config.AUTHOR} has given you {plan}, {nice_until(until)}.\n\n{note}\n\nSign in: {config.BASE_URL}/signin with this email address.")
-    also = (" They already pay for " + " and ".join("Professional" if p["tier"] == "pro" else "Membership" for p in paying) +
+    also = (" They already pay for " + " and ".join("The Inner Circle" if p["tier"] == "pro" else "The Order" for p in paying) +
             "; that subscription is untouched and keeps billing as before.") if paying else ""
     return redirect("/admin/gifts?" + urlencode({"done": f"Given to {email}, {nice_until(until)}." + also + ("" if sent else " Email isn't set up, so tell them to sign in with this address.")}))
 

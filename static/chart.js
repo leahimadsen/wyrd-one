@@ -410,7 +410,7 @@ function becomeMember(){
 let buyLabel = $("buyBtn").textContent;
 fetch("/api/me").then(r => r.json()).then(d => {
   for (const el of document.querySelectorAll("[data-price]")) if (d.prices && d.prices[el.dataset.price]) el.textContent = d.prices[el.dataset.price];
-  if (d.readingPrice) buyLabel = d.member ? `Get my reading — ${d.readingPrice}, your member price` : `Get my reading — ${d.readingPrice}`;
+  if (d.readingPrice) buyLabel = d.member ? `Get my reading — ${d.readingPrice}, your Order price` : `Get my reading — ${d.readingPrice}`;
   $("buyBtn").textContent = buyLabel;
   if (d.member) { document.querySelector(".offer-member").hidden = true; becomeMember(); }
 }).catch(() => {});
