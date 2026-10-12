@@ -1,300 +1,305 @@
 {
- "_note": "DRAFT for The Völva to edit. The seven chara karakas in depth: each role, each planet in each role, the Karakamsa (the soul-planet's navamsa sign), the partner from the Darakaraka and the work from the Amatyakaraka.",
- "INTRO": "Seven planets are ranked by how far each has travelled through its sign. The one furthest along becomes the Atmakaraka, the soul's own planet; the others become its cabinet, each with a portfolio. These roles are personal: no one else with your planets in the same signs need have the same cabinet. Read each karaka as a person in your life and a part of you at once.",
- "ROLES": {
-  "Atmakaraka": {
-   "rules": "The soul and what it came here to learn.",
-   "asks": "This planet's lesson is the life's main lesson. Whatever it struggles with, you struggle with until it is learned; whatever it masters becomes your gift to others.",
-   "people": "You, at your deepest; and the teachers who show you yourself."
+  "_note": "DRAFT for The Völva to edit. The seven chara karakas in depth: each role, each planet in each role, the Karakamsa (the soul-planet's navamsa sign), the partner from the Darakaraka and the work from the Amatyakaraka.",
+  "INTRO": "Seven planets are ranked by how far each has travelled through its sign. The one furthest along becomes the Atmakaraka, the soul's own planet; the others become its cabinet, each with a portfolio. These roles are personal: no one else with your planets in the same signs need have the same cabinet. Read each karaka as a person in your life and a part of you at once.",
+  "WIELDS": "Each karaka has a light wield, a dark wield and a distortion. The dark wield is a choice, made knowing: you see what you're doing and do it anyway. The distortion is unconscious: it runs until it's seen.",
+  "DARK_LABEL": "Dark wield · a choice, made knowing",
+  "DISTORTION_LABEL": "Distortion · unconscious",
+  "CAB_PLACE": "It sits in your {house} house, the house of {life}.",
+  "CAB_RIPEN": "It ripens in {sign}.",
+  "ROLES": {
+    "Atmakaraka": {
+      "rules": "The soul and what it came here to learn.",
+      "asks": "This planet's lesson is the life's main lesson. Whatever it struggles with, you struggle with until it is learned; whatever it masters becomes your gift to others.",
+      "people": "You, at your deepest; and the teachers who show you yourself."
+    },
+    "Amatyakaraka": {
+      "rules": "Career, means and how the soul's work gets done.",
+      "asks": "This planet is the minister who carries out the soul's orders. Its nature is the nature of the work that suits you and of the people who employ, advise or fund you.",
+      "people": "Bosses, advisers, patrons, colleagues."
+    },
+    "Bhratrikaraka": {
+      "rules": "Siblings, courage, initiative and the guru.",
+      "asks": "This planet shows who stands beside you and how you find the nerve to act. In the tradition it also shows the teacher who walks with you.",
+      "people": "Brothers, sisters, close friends, mentors."
+    },
+    "Matrikaraka": {
+      "rules": "The mother, nourishment, home and education.",
+      "asks": "This planet shows how you were nourished and how you nourish yourself. Its condition is the condition of your emotional foundation.",
+      "people": "Your mother and anyone who mothers you."
+    },
+    "Putrakaraka": {
+      "rules": "Children, students, creativity and intelligence.",
+      "asks": "This planet shows what you generate and pass on: children, students, ideas, works. Its nature is the nature of your creative intelligence.",
+      "people": "Children, students, protégés."
+    },
+    "Gnatikaraka": {
+      "rules": "Rivals, illness, debts and daily friction.",
+      "asks": "This planet shows where friction comes from and what it teaches. Handled well, it makes you strong and skilled; ignored, it wears you down.",
+      "people": "Competitors, opponents, difficult relatives."
+    },
+    "Darakaraka": {
+      "rules": "The partner and every close one-to-one bond.",
+      "asks": "This planet shows not who you want but who arrives, and what partnership teaches you. Its nature is the nature of your significant other.",
+      "people": "Spouse, partners, business partners."
+    }
   },
-  "Amatyakaraka": {
-   "rules": "Career, means and how the soul's work gets done.",
-   "asks": "This planet is the minister who carries out the soul's orders. Its nature is the nature of the work that suits you and of the people who employ, advise or fund you.",
-   "people": "Bosses, advisers, patrons, colleagues."
+  "ROLE_PLANET": {
+    "Atmakaraka": {
+      "Sun": "The Sun as soul-planet: the lesson is ego and authority. You are here to shine without needing to dominate, and to lead without needing to be seen.",
+      "Moon": "The Moon as soul-planet: the lesson is feeling and care. You are here to nourish without drowning, and to trust emotions without being ruled by them.",
+      "Mars": "Mars as soul-planet: the lesson is anger and force. You are here to fight only for what is right, and to master your own aggression.",
+      "Mercury": "Mercury as soul-planet: the lesson is speech and intelligence. You are here to tell the truth and use cleverness in service of others.",
+      "Jupiter": "Jupiter as soul-planet: the lesson is wisdom and faith. You are here to teach and guide, and to stay humble before what you don't know.",
+      "Venus": "Venus as soul-planet: the lesson is desire and love. You are here to love purely and to enjoy beauty without attachment.",
+      "Saturn": "Saturn as soul-planet: the lesson is suffering and duty. You are here to endure, to serve, and to free yourself from fear through patience."
+    },
+    "Amatyakaraka": {
+      "Sun": "The Sun as minister: work in leadership, government, authority or medicine. Bosses are powerful and proud; you rise through visibility.",
+      "Moon": "The Moon as minister: work with the public, care, food, hospitality or emotional service. Your career moves with tides.",
+      "Mars": "Mars as minister: work with force, engineering, the body, defence, surgery or sport. You rise by competing.",
+      "Mercury": "Mercury as minister: work with words, trade, teaching, writing, accounts or technology. You rise by thinking well.",
+      "Jupiter": "Jupiter as minister: work in teaching, law, counsel, finance or ministry. You rise by being trusted.",
+      "Venus": "Venus as minister: work in art, beauty, design, luxury, diplomacy or relationships. You rise through grace and taste.",
+      "Saturn": "Saturn as minister: work that is slow and structured: administration, labour, land, law or service to the many. You rise late and last."
+    },
+    "Bhratrikaraka": {
+      "Sun": "The Sun here: a strong, proud sibling or mentor; your courage comes from conviction.",
+      "Moon": "The Moon here: a caring, changeable sibling or companion; your courage comes from feeling.",
+      "Mars": "Mars here: a bold or combative sibling; your courage is physical and quick.",
+      "Mercury": "Mercury here: a clever, talkative sibling or friend; your courage is in words and wit.",
+      "Jupiter": "Jupiter here: a wise sibling or a true guru walks beside you; your courage comes from faith.",
+      "Venus": "Venus here: a graceful, artistic sibling or friend; your courage comes from love.",
+      "Saturn": "Saturn here: responsibility for or distance from siblings; your courage is endurance."
+    },
+    "Matrikaraka": {
+      "Sun": "The Sun here: a strong, authoritative mother; you were nourished through structure and pride.",
+      "Moon": "The Moon here: a deeply caring, emotional mother; nourishment came through feeling.",
+      "Mars": "Mars here: a fierce, protective or demanding mother; nourishment came through strength.",
+      "Mercury": "Mercury here: a clever, talkative, youthful mother; nourishment came through learning.",
+      "Jupiter": "Jupiter here: a wise, generous, devout mother; nourishment came through faith and teaching.",
+      "Venus": "Venus here: a beautiful, gracious, pleasure-loving mother; nourishment came through comfort.",
+      "Saturn": "Saturn here: a serious, burdened or distant mother; nourishment came through duty, and you learned to feed yourself."
+    },
+    "Putrakaraka": {
+      "Sun": "The Sun here: proud, bright children or students; your creativity wants to lead.",
+      "Moon": "The Moon here: sensitive, nurturing children; your creativity is emotional and intuitive.",
+      "Mars": "Mars here: energetic, headstrong children; your creativity is bold and physical.",
+      "Mercury": "Mercury here: clever, quick children or students; your creativity is verbal and inventive.",
+      "Jupiter": "Jupiter here: wise, fortunate children or students; your creativity teaches.",
+      "Venus": "Venus here: artistic, charming children; your creativity is beautiful and sensual.",
+      "Saturn": "Saturn here: children come late or bring responsibility; your creativity is patient and builds things that last."
+    },
+    "Gnatikaraka": {
+      "Sun": "The Sun here: friction with authority, ego clashes, the heart and eyes to watch. You grow by humbling pride.",
+      "Moon": "The Moon here: friction through moods and family, the stomach and nerves to watch. You grow by steadying feeling.",
+      "Mars": "Mars here: open rivals, accidents, inflammation, fights. You grow strong by fighting cleanly.",
+      "Mercury": "Mercury here: friction through words, contracts and nerves. You grow by speaking precisely.",
+      "Jupiter": "Jupiter here: friction through excess, debts, teachers or beliefs. You grow by keeping measure.",
+      "Venus": "Venus here: friction through pleasure, partners or money spent. You grow by choosing well.",
+      "Saturn": "Saturn here: long, slow obstacles, chronic issues, old debts. You grow by enduring and paying them off."
+    },
+    "Darakaraka": {
+      "Sun": "The Sun as partner: a proud, strong, visible partner, sometimes dominant; partnership teaches you about authority.",
+      "Moon": "The Moon as partner: a caring, emotional, changeable partner; partnership teaches you about nourishment.",
+      "Mars": "Mars as partner: an energetic, passionate, combative partner; partnership teaches you about conflict and desire.",
+      "Mercury": "Mercury as partner: a youthful, clever, talkative partner; partnership teaches you through conversation.",
+      "Jupiter": "Jupiter as partner: a wise, generous, often older or teacherly partner; partnership teaches you faith.",
+      "Venus": "Venus as partner: a beautiful, artistic, affectionate partner; partnership teaches you pleasure and grace.",
+      "Saturn": "Saturn as partner: a serious, older or burdened partner, a slow-building bond; partnership teaches you commitment."
+    }
   },
-  "Bhratrikaraka": {
-   "rules": "Siblings, courage, initiative and the guru.",
-   "asks": "This planet shows who stands beside you and how you find the nerve to act. In the tradition it also shows the teacher who walks with you.",
-   "people": "Brothers, sisters, close friends, mentors."
-  },
-  "Matrikaraka": {
-   "rules": "The mother, nourishment, home and education.",
-   "asks": "This planet shows how you were nourished and how you nourish yourself. Its condition is the condition of your emotional foundation.",
-   "people": "Your mother and anyone who mothers you."
-  },
-  "Putrakaraka": {
-   "rules": "Children, students, creativity and intelligence.",
-   "asks": "This planet shows what you generate and pass on: children, students, ideas, works. Its nature is the nature of your creative intelligence.",
-   "people": "Children, students, protégés."
-  },
-  "Gnatikaraka": {
-   "rules": "Rivals, illness, debts and daily friction.",
-   "asks": "This planet shows where friction comes from and what it teaches. Handled well, it makes you strong and skilled; ignored, it wears you down.",
-   "people": "Competitors, opponents, difficult relatives."
-  },
-  "Darakaraka": {
-   "rules": "The partner and every close one-to-one bond.",
-   "asks": "This planet shows not who you want but who arrives, and what partnership teaches you. Its nature is the nature of your significant other.",
-   "people": "Spouse, partners, business partners."
-  }
- },
- "ROLE_PLANET": {
-  "Atmakaraka": {
-   "Sun": "The Sun as soul-planet: the lesson is ego and authority. You are here to shine without needing to dominate, and to lead without needing to be seen.",
-   "Moon": "The Moon as soul-planet: the lesson is feeling and care. You are here to nourish without drowning, and to trust emotions without being ruled by them.",
-   "Mars": "Mars as soul-planet: the lesson is anger and force. You are here to fight only for what is right, and to master your own aggression.",
-   "Mercury": "Mercury as soul-planet: the lesson is speech and intelligence. You are here to tell the truth and use cleverness in service of others.",
-   "Jupiter": "Jupiter as soul-planet: the lesson is wisdom and faith. You are here to teach and guide, and to stay humble before what you don't know.",
-   "Venus": "Venus as soul-planet: the lesson is desire and love. You are here to love purely and to enjoy beauty without attachment.",
-   "Saturn": "Saturn as soul-planet: the lesson is suffering and duty. You are here to endure, to serve, and to free yourself from fear through patience."
-  },
-  "Amatyakaraka": {
-   "Sun": "The Sun as minister: work in leadership, government, authority or medicine. Bosses are powerful and proud; you rise through visibility.",
-   "Moon": "The Moon as minister: work with the public, care, food, hospitality or emotional service. Your career moves with tides.",
-   "Mars": "Mars as minister: work with force, engineering, the body, defence, surgery or sport. You rise by competing.",
-   "Mercury": "Mercury as minister: work with words, trade, teaching, writing, accounts or technology. You rise by thinking well.",
-   "Jupiter": "Jupiter as minister: work in teaching, law, counsel, finance or ministry. You rise by being trusted.",
-   "Venus": "Venus as minister: work in art, beauty, design, luxury, diplomacy or relationships. You rise through grace and taste.",
-   "Saturn": "Saturn as minister: work that is slow and structured: administration, labour, land, law or service to the many. You rise late and last."
-  },
-  "Bhratrikaraka": {
-   "Sun": "The Sun here: a strong, proud sibling or mentor; your courage comes from conviction.",
-   "Moon": "The Moon here: a caring, changeable sibling or companion; your courage comes from feeling.",
-   "Mars": "Mars here: a bold or combative sibling; your courage is physical and quick.",
-   "Mercury": "Mercury here: a clever, talkative sibling or friend; your courage is in words and wit.",
-   "Jupiter": "Jupiter here: a wise sibling or a true guru walks beside you; your courage comes from faith.",
-   "Venus": "Venus here: a graceful, artistic sibling or friend; your courage comes from love.",
-   "Saturn": "Saturn here: responsibility for or distance from siblings; your courage is endurance."
-  },
-  "Matrikaraka": {
-   "Sun": "The Sun here: a strong, authoritative mother; you were nourished through structure and pride.",
-   "Moon": "The Moon here: a deeply caring, emotional mother; nourishment came through feeling.",
-   "Mars": "Mars here: a fierce, protective or demanding mother; nourishment came through strength.",
-   "Mercury": "Mercury here: a clever, talkative, youthful mother; nourishment came through learning.",
-   "Jupiter": "Jupiter here: a wise, generous, devout mother; nourishment came through faith and teaching.",
-   "Venus": "Venus here: a beautiful, gracious, pleasure-loving mother; nourishment came through comfort.",
-   "Saturn": "Saturn here: a serious, burdened or distant mother; nourishment came through duty, and you learned to feed yourself."
-  },
-  "Putrakaraka": {
-   "Sun": "The Sun here: proud, bright children or students; your creativity wants to lead.",
-   "Moon": "The Moon here: sensitive, nurturing children; your creativity is emotional and intuitive.",
-   "Mars": "Mars here: energetic, headstrong children; your creativity is bold and physical.",
-   "Mercury": "Mercury here: clever, quick children or students; your creativity is verbal and inventive.",
-   "Jupiter": "Jupiter here: wise, fortunate children or students; your creativity teaches.",
-   "Venus": "Venus here: artistic, charming children; your creativity is beautiful and sensual.",
-   "Saturn": "Saturn here: children come late or bring responsibility; your creativity is patient and builds things that last."
-  },
-  "Gnatikaraka": {
-   "Sun": "The Sun here: friction with authority, ego clashes, the heart and eyes to watch. You grow by humbling pride.",
-   "Moon": "The Moon here: friction through moods and family, the stomach and nerves to watch. You grow by steadying feeling.",
-   "Mars": "Mars here: open rivals, accidents, inflammation, fights. You grow strong by fighting cleanly.",
-   "Mercury": "Mercury here: friction through words, contracts and nerves. You grow by speaking precisely.",
-   "Jupiter": "Jupiter here: friction through excess, debts, teachers or beliefs. You grow by keeping measure.",
-   "Venus": "Venus here: friction through pleasure, partners or money spent. You grow by choosing well.",
-   "Saturn": "Saturn here: long, slow obstacles, chronic issues, old debts. You grow by enduring and paying them off."
-  },
-  "Darakaraka": {
-   "Sun": "The Sun as partner: a proud, strong, visible partner, sometimes dominant; partnership teaches you about authority.",
-   "Moon": "The Moon as partner: a caring, emotional, changeable partner; partnership teaches you about nourishment.",
-   "Mars": "Mars as partner: an energetic, passionate, combative partner; partnership teaches you about conflict and desire.",
-   "Mercury": "Mercury as partner: a youthful, clever, talkative partner; partnership teaches you through conversation.",
-   "Jupiter": "Jupiter as partner: a wise, generous, often older or teacherly partner; partnership teaches you faith.",
-   "Venus": "Venus as partner: a beautiful, artistic, affectionate partner; partnership teaches you pleasure and grace.",
-   "Saturn": "Saturn as partner: a serious, older or burdened partner, a slow-building bond; partnership teaches you commitment."
-  }
- },
- "KARAKAMSA_INTRO": "The navamsa sign of your soul-planet is the Karakamsa: what the soul is reaching toward in this life, its deepest wish.",
- "KARAKAMSA": [
-  "Karakamsa in Aries: the soul wants courage and independence; it reaches toward leading and beginning.",
-  "Karakamsa in Taurus: the soul wants peace, beauty and abundance; it reaches toward building what lasts.",
-  "Karakamsa in Gemini: the soul wants knowledge; it reaches toward learning, writing and sharing.",
-  "Karakamsa in Cancer: the soul wants belonging; it reaches toward home, care and devotion.",
-  "Karakamsa in Leo: the soul wants to shine; it reaches toward creation, leadership and the heart.",
-  "Karakamsa in Virgo: the soul wants purity and skill; it reaches toward service and healing.",
-  "Karakamsa in Libra: the soul wants harmony; it reaches toward partnership, justice and art.",
-  "Karakamsa in Scorpio: the soul wants truth beneath the surface; it reaches toward transformation and the occult.",
-  "Karakamsa in Sagittarius: the soul wants meaning; it reaches toward dharma, teaching and the far horizon.",
-  "Karakamsa in Capricorn: the soul wants to master duty; it reaches toward structure, work and responsibility.",
-  "Karakamsa in Aquarius: the soul wants to serve the many; it reaches toward community, ideals and the future.",
-  "Karakamsa in Pisces: the soul wants liberation; it reaches toward devotion, compassion and release."
- ],
- "PARTNER": [
-  "Partner energy in Aries: direct, independent, quick and courageous.",
-  "Partner energy in Taurus: steady, sensual, loyal, fond of comfort.",
-  "Partner energy in Gemini: curious, talkative, youthful, restless.",
-  "Partner energy in Cancer: caring, protective, emotional, home-centred.",
-  "Partner energy in Leo: warm, proud, generous, wants to be admired.",
-  "Partner energy in Virgo: practical, careful, helpful, sometimes critical.",
-  "Partner energy in Libra: graceful, fair, sociable, partnership-minded.",
-  "Partner energy in Scorpio: intense, private, loyal, transforming.",
-  "Partner energy in Sagittarius: free, frank, philosophical, adventurous.",
-  "Partner energy in Capricorn: responsible, ambitious, reserved, steady.",
-  "Partner energy in Aquarius: independent, unusual, friendly, idealistic.",
-  "Partner energy in Pisces: gentle, dreamy, devoted, spiritual."
- ],
- "WORK": [
-  "Work in Aries: pioneering, competitive, physical; you do best starting things.",
-  "Work in Taurus: building value: finance, food, land, beauty, craft.",
-  "Work in Gemini: communication: writing, trade, media, teaching, technology.",
-  "Work in Cancer: care: home, hospitality, food, healing, the public.",
-  "Work in Leo: leadership, performance, creative direction, government.",
-  "Work in Virgo: analysis, health, service, editing, systems.",
-  "Work in Libra: law, diplomacy, design, partnerships, trade.",
-  "Work in Scorpio: research, psychology, crisis work, finance, the hidden.",
-  "Work in Sagittarius: teaching, law, publishing, travel, religion.",
-  "Work in Capricorn: management, administration, building institutions.",
-  "Work in Aquarius: networks, science, technology, social causes.",
-  "Work in Pisces: healing, art, spirituality, charity, the sea."
- ],
- "PAIR_AK_AMK": "Your soul-planet and its minister stand together or face each other directly. The tradition calls this a mark of rising: what the soul wants and the work you do are aligned.",
- "PAIR_AK_DK": "Your soul-planet and your partner-planet stand together or face each other directly. Partnership is central to your soul's work: you learn who you are through the one beside you.",
- "DEEP": {
-  "Atmakaraka": {
-   "body": "The king of the chart. The planet furthest through its sign has travelled furthest toward its lesson, so it carries the soul's own question. Every other karaka serves it, and when it is troubled the whole cabinet is troubled with it.",
-   "light": "The lesson learned and given away: what hurt becomes what you teach.",
-   "dark": "The lesson refused: the same wound met in a new costume, year after year.",
-   "distortion": "Mistaking the lesson for the life: making the wound an identity so it never has to heal.",
-   "ask": "What does your life keep handing back to you until you learn it?",
-   "domain": "the soul's own lesson"
-  },
-  "Amatyakaraka": {
-   "body": "The minister. Second furthest through its sign, it carries out what the soul decides: your means, your work, the advisers and employers you draw. Read it for how your purpose earns its keep.",
-   "light": "Work that serves the soul's lesson and pays for it.",
-   "dark": "Work that pays and serves nothing: competence used to avoid the question.",
-   "distortion": "The minister ruling the king: the career deciding who you are.",
-   "ask": "Does your work serve your soul, or stand in for it?",
-   "domain": "the work"
-  },
-  "Bhratrikaraka": {
-   "body": "The one who walks beside you. It governs courage and initiative, brothers and sisters, and the teacher who arrives as an equal; in Jaimini's reading it is also the guide. It shows where your nerve comes from and who lends it to you.",
-   "light": "Courage that comes from company: you go further with someone at your side.",
-   "dark": "Rivalry where there should be kinship.",
-   "distortion": "Waiting for a guide instead of becoming one.",
-   "ask": "Who walks beside you, and whom do you walk beside?",
-   "domain": "courage and companions"
-  },
-  "Matrikaraka": {
-   "body": "The mother, and everything that holds you: home, land, the inner settledness that lets you rest. It shows how you were nourished, and so how you nourish.",
-   "light": "Shelter given freely: a home others can rest in.",
-   "dark": "Holding too tightly: care that keeps.",
-   "distortion": "Never leaving the first home, inside or out.",
-   "ask": "What holds you, and what are you holding onto?",
-   "domain": "home and what holds you"
-  },
-  "Putrakaraka": {
-   "body": "The child: everything that comes out of you and lives on. Children, students, creative work, and the intelligence that makes things. It also reads past merit, the good you arrive carrying.",
-   "light": "Making that outlives the maker.",
-   "dark": "Creating to be admired rather than to give life.",
-   "distortion": "Living through what you made.",
-   "ask": "What are you making that will not need you?",
-   "domain": "what you create"
-  },
-  "Gnatikaraka": {
-   "body": "The kin you do not choose: rivals, obstacles, illness, debt, the difficult relative. Not an enemy so much as a whetstone. What it brings against you is what sharpens you.",
-   "light": "Opposition turned into strength; the healer who knows the illness from inside.",
-   "dark": "A life organised around a grievance.",
-   "distortion": "Needing the enemy to know who you are.",
-   "ask": "What opposes you, and what is it sharpening?",
-   "domain": "opposition and healing"
-  },
-  "Darakaraka": {
-   "body": "The spouse. The planet with the least distance travelled has the most still to learn, so you learn it through another person. It shows the partner you draw and the partnership that teaches you.",
-   "light": "A partnership that completes the soul's lesson.",
-   "dark": "Choosing the same partner under different names.",
-   "distortion": "Looking in another for what the soul must grow itself.",
-   "ask": "What are you learning through the one beside you?",
-   "domain": "partnership"
-  }
- },
- "NAV": {
-  "Bhratrikaraka": [
-   "Courage comes as initiative: you are braver going first.",
-   "Courage comes as endurance: you are braver holding ground.",
-   "Courage comes in words: you are braver saying it, and the saying is the act.",
-   "Courage comes as protection: you are bravest for someone else.",
-   "Courage comes as presence: you are braver when seen.",
-   "Courage comes as competence: you are brave once you know how.",
-   "Courage comes as fairness: you are bravest defending what is just.",
-   "Courage comes from the depths: you are brave where others will not look.",
-   "Courage comes as faith: you are brave when you believe.",
-   "Courage comes as discipline: you are brave by staying.",
-   "Courage comes as conviction: you are brave on behalf of the many.",
-   "Courage comes as surrender: you are brave by letting go."
+  "KARAKAMSA_INTRO": "The navamsa sign of your soul-planet is the Karakamsa: what the soul is reaching toward in this life, its deepest wish.",
+  "KARAKAMSA": [
+    "Karakamsa in Aries: the soul wants courage and independence; it reaches toward leading and beginning.",
+    "Karakamsa in Taurus: the soul wants peace, beauty and abundance; it reaches toward building what lasts.",
+    "Karakamsa in Gemini: the soul wants knowledge; it reaches toward learning, writing and sharing.",
+    "Karakamsa in Cancer: the soul wants belonging; it reaches toward home, care and devotion.",
+    "Karakamsa in Leo: the soul wants to shine; it reaches toward creation, leadership and the heart.",
+    "Karakamsa in Virgo: the soul wants purity and skill; it reaches toward service and healing.",
+    "Karakamsa in Libra: the soul wants harmony; it reaches toward partnership, justice and art.",
+    "Karakamsa in Scorpio: the soul wants truth beneath the surface; it reaches toward transformation and the occult.",
+    "Karakamsa in Sagittarius: the soul wants meaning; it reaches toward dharma, teaching and the far horizon.",
+    "Karakamsa in Capricorn: the soul wants to master duty; it reaches toward structure, work and responsibility.",
+    "Karakamsa in Aquarius: the soul wants to serve the many; it reaches toward community, ideals and the future.",
+    "Karakamsa in Pisces: the soul wants liberation; it reaches toward devotion, compassion and release."
   ],
-  "Matrikaraka": [
-   "You are nourished by freedom and movement: a home that lets you go.",
-   "You are nourished by comfort, food and beauty: a home you can touch.",
-   "You are nourished by talk and learning: a home full of voices and books.",
-   "You are nourished by belonging: a home that is a family.",
-   "You are nourished by warmth and recognition: a home you are proud of.",
-   "You are nourished by order and usefulness: a home that works.",
-   "You are nourished by harmony and company: a home that is beautiful and shared.",
-   "You are nourished by depth and privacy: a home that keeps secrets safe.",
-   "You are nourished by meaning and wide horizons: a home that is a road.",
-   "You are nourished by structure and earned security: a home built to last.",
-   "You are nourished by friendship and space: a home among your people, not only your blood.",
-   "You are nourished by quiet and the sacred: a home that is a sanctuary."
+  "PARTNER": [
+    "Partner energy in Aries: direct, independent, quick and courageous.",
+    "Partner energy in Taurus: steady, sensual, loyal, fond of comfort.",
+    "Partner energy in Gemini: curious, talkative, youthful, restless.",
+    "Partner energy in Cancer: caring, protective, emotional, home-centred.",
+    "Partner energy in Leo: warm, proud, generous, wants to be admired.",
+    "Partner energy in Virgo: practical, careful, helpful, sometimes critical.",
+    "Partner energy in Libra: graceful, fair, sociable, partnership-minded.",
+    "Partner energy in Scorpio: intense, private, loyal, transforming.",
+    "Partner energy in Sagittarius: free, frank, philosophical, adventurous.",
+    "Partner energy in Capricorn: responsible, ambitious, reserved, steady.",
+    "Partner energy in Aquarius: independent, unusual, friendly, idealistic.",
+    "Partner energy in Pisces: gentle, dreamy, devoted, spiritual."
   ],
-  "Putrakaraka": [
-   "You make by starting: first drafts, new ventures, children who lead.",
-   "You make things that last and can be held.",
-   "You make with words and ideas; your students repeat you.",
-   "You make by nurturing; what you raise is well fed.",
-   "You make to shine: performance, art, a line with a name.",
-   "You make carefully, by craft and correction.",
-   "You make in partnership; your best work has two authors.",
-   "You make by transforming: what you create changes whoever touches it.",
-   "You make by teaching; your children are your students and your students your children.",
-   "You make slowly, and what you make carries weight.",
-   "You make for the many: systems, movements, inventions.",
-   "You make from vision and dream; the work arrives rather than being built."
+  "WORK": [
+    "Work in Aries: pioneering, competitive, physical; you do best starting things.",
+    "Work in Taurus: building value: finance, food, land, beauty, craft.",
+    "Work in Gemini: communication: writing, trade, media, teaching, technology.",
+    "Work in Cancer: care: home, hospitality, food, healing, the public.",
+    "Work in Leo: leadership, performance, creative direction, government.",
+    "Work in Virgo: analysis, health, service, editing, systems.",
+    "Work in Libra: law, diplomacy, design, partnerships, trade.",
+    "Work in Scorpio: research, psychology, crisis work, finance, the hidden.",
+    "Work in Sagittarius: teaching, law, publishing, travel, religion.",
+    "Work in Capricorn: management, administration, building institutions.",
+    "Work in Aquarius: networks, science, technology, social causes.",
+    "Work in Pisces: healing, art, spirituality, charity, the sea."
   ],
-  "Gnatikaraka": [
-   "Opposition comes head-on: open rivals, fevers, quick fights.",
-   "Opposition comes through money and possessions, and the slowness of things.",
-   "Opposition comes through words: contracts, gossip, nervous strain.",
-   "Opposition comes from family and feeling: the old home, the old hurt.",
-   "Opposition comes from pride and authority: those above you, and your own.",
-   "Opposition comes through work and health: detail, debt, the body's small complaints.",
-   "Opposition comes through partners and the law: the other side of the contract.",
-   "Opposition comes hidden: secrets, crises, what is done in the dark.",
-   "Opposition comes through belief: teachers, institutions, rival creeds.",
-   "Opposition comes through time and duty: delays, burdens, the long grind.",
-   "Opposition comes from groups: the crowd, the system, the friend turned rival.",
-   "Opposition comes through loss and confusion: what slips away, what cannot be named."
-  ]
- },
- "FROM_SOUL": {
-  "together": "It stands in the same sign as your soul-planet. The {role} and the soul share a room: what this karaka governs is not a side matter for you, it is the soul's own business.",
-  "trine": "It stands in the {n} from your soul-planet, in trine. They are in harmony: this part of life flows toward the soul's lesson without being forced.",
-  "angle": "It stands in the {n} from your soul-planet, at an angle. It pushes: this is where the soul's lesson turns into action.",
-  "opposite": "It faces your soul-planet across the chart. A mirror: you meet the soul's lesson here as though it were someone else's.",
-  "hidden": "It stands in the {n} from your soul-planet, a place the two do not see each other easily. This part of life needs a bridge built on purpose; left alone, it works against the soul's grain.",
-  "feeds": "It stands in the {n} from your soul-planet, a place of supply. It feeds the soul, bringing resources and gains to its lesson.",
-  "effort": "It stands in the {n} from your soul-planet. It gives the soul nerve and effort: the will to try."
- },
- "STRENGTH": {
-  "exalted": "It is exalted here: this karaka works at full strength, and its part of life comes easily.",
-  "own": "It is in its own sign: at home, reliable, speaking in its own voice.",
-  "debilitated": "It is fallen in this sign: its part of life costs effort. That effort, made honestly, is the mastery.",
-  "vargottama": "It keeps its sign in the navamsa (vargottama). What it is now, it remains: its role in your life is steady from first to last.",
-  "nav_up": "In the navamsa it rises to {d}: this part of life gets better with age.",
-  "nav_down": "In the navamsa it falls: this part of life starts well and asks more of you later.",
-  "plain": "It stands in neither strength nor weakness: an ordinary officer, as good as the use you make of it."
- },
- "RIPEN": "In the navamsa, the fruit, it ripens in {sign}.",
- "CABINET_H": "The cabinet at work",
- "CABINET_INTRO": "Seven ministers, one king. Read them together and the chart becomes a court: who answers to whom, who is quarrelling, and who holds the floor this year.",
- "NOW_MAHA": "<b>Holding the floor now:</b> your {era} era belongs to {glyph} {planet}, your {role}. For these years, {domain} is the cabinet's business in hand.",
- "NOW_ANTAR": "Within it, the current chapter belongs to {glyph} {planet}, your {role}: {domain} is the matter in front of you.",
- "NOW_NONE": "Your current era belongs to {planet}, who holds no seat in the cabinet: these are years the court watches rather than leads, and the soul's lesson works through the world rather than through you.",
- "ELEMENT": "The cabinet leans {el}: {n} of the seven sit in {el_l} signs. {note}",
- "ELEMENT_NOTE": {
-  "Fire": "It is a court that acts first and deliberates after.",
-  "Earth": "It is a court that builds, keeps accounts and moves slowly.",
-  "Air": "It is a court that talks, plans and connects.",
-  "Water": "It is a court that feels its way, loyal and deep."
- },
- "SHARED": "<b>Sharing a sign:</b> {list}. Ministers in one room share a portfolio; in your life these matters arrive together.",
- "CLOSE": "The roles are yours alone: someone with your planets in the same signs, a degree differently placed, sits a different court."
+  "PAIR_AK_AMK": "Your soul-planet and its minister stand together or face each other directly. The tradition calls this a mark of rising: what the soul wants and the work you do are aligned.",
+  "PAIR_AK_DK": "Your soul-planet and your partner-planet stand together or face each other directly. Partnership is central to your soul's work: you learn who you are through the one beside you.",
+  "DEEP": {
+    "Atmakaraka": {
+      "body": "The king of the chart. The planet furthest through its sign has travelled furthest toward its lesson, so it carries the soul's own question. Every other karaka serves it, and when it is troubled the whole cabinet is troubled with it.",
+      "light": "The lesson learned and given away: what hurt becomes what you teach.",
+      "dark": "The lesson refused: the same wound met in a new costume, year after year.",
+      "distortion": "Mistaking the lesson for the life: making the wound an identity so it never has to heal.",
+      "ask": "What does your life keep handing back to you until you learn it?",
+      "domain": "the soul's own lesson"
+    },
+    "Amatyakaraka": {
+      "body": "The minister. Second furthest through its sign, it carries out what the soul decides: your means, your work, the advisers and employers you draw. Read it for how your purpose earns its keep.",
+      "light": "Work that serves the soul's lesson and pays for it.",
+      "dark": "Work that pays and serves nothing: competence used to avoid the question.",
+      "distortion": "The minister ruling the king: the career deciding who you are.",
+      "ask": "Does your work serve your soul, or stand in for it?",
+      "domain": "the work"
+    },
+    "Bhratrikaraka": {
+      "body": "The one who walks beside you. It governs courage and initiative, brothers and sisters, and the teacher who arrives as an equal; in Jaimini's reading it is also the guide. It shows where your nerve comes from and who lends it to you.",
+      "light": "Courage that comes from company: you go further with someone at your side.",
+      "dark": "Rivalry where there should be kinship.",
+      "distortion": "Waiting for a guide instead of becoming one.",
+      "ask": "Who walks beside you, and whom do you walk beside?",
+      "domain": "courage and companions"
+    },
+    "Matrikaraka": {
+      "body": "The mother, and everything that holds you: home, land, the inner settledness that lets you rest. It shows how you were nourished, and so how you nourish.",
+      "light": "Shelter given freely: a home others can rest in.",
+      "dark": "Holding too tightly: care that keeps.",
+      "distortion": "Never leaving the first home, inside or out.",
+      "ask": "What holds you, and what are you holding onto?",
+      "domain": "home and what holds you"
+    },
+    "Putrakaraka": {
+      "body": "The child: everything that comes out of you and lives on. Children, students, creative work, and the intelligence that makes things. It also reads past merit, the good you arrive carrying.",
+      "light": "Making that outlives the maker.",
+      "dark": "Creating to be admired rather than to give life.",
+      "distortion": "Living through what you made.",
+      "ask": "What are you making that will not need you?",
+      "domain": "what you create"
+    },
+    "Gnatikaraka": {
+      "body": "The kin you do not choose: rivals, obstacles, illness, debt, the difficult relative. Not an enemy so much as a whetstone. What it brings against you is what sharpens you.",
+      "light": "Opposition turned into strength; the healer who knows the illness from inside.",
+      "dark": "A life organised around a grievance.",
+      "distortion": "Needing the enemy to know who you are.",
+      "ask": "What opposes you, and what is it sharpening?",
+      "domain": "opposition and healing"
+    },
+    "Darakaraka": {
+      "body": "The spouse. The planet with the least distance travelled has the most still to learn, so you learn it through another person. It shows the partner you draw and the partnership that teaches you.",
+      "light": "A partnership that completes the soul's lesson.",
+      "dark": "Choosing the same partner under different names.",
+      "distortion": "Looking in another for what the soul must grow itself.",
+      "ask": "What are you learning through the one beside you?",
+      "domain": "partnership"
+    }
+  },
+  "NAV": {
+    "Bhratrikaraka": [
+      "Courage comes as initiative: you are braver going first.",
+      "Courage comes as endurance: you are braver holding ground.",
+      "Courage comes in words: you are braver saying it, and the saying is the act.",
+      "Courage comes as protection: you are bravest for someone else.",
+      "Courage comes as presence: you are braver when seen.",
+      "Courage comes as competence: you are brave once you know how.",
+      "Courage comes as fairness: you are bravest defending what is just.",
+      "Courage comes from the depths: you are brave where others will not look.",
+      "Courage comes as faith: you are brave when you believe.",
+      "Courage comes as discipline: you are brave by staying.",
+      "Courage comes as conviction: you are brave on behalf of the many.",
+      "Courage comes as surrender: you are brave by letting go."
+    ],
+    "Matrikaraka": [
+      "You are nourished by freedom and movement: a home that lets you go.",
+      "You are nourished by comfort, food and beauty: a home you can touch.",
+      "You are nourished by talk and learning: a home full of voices and books.",
+      "You are nourished by belonging: a home that is a family.",
+      "You are nourished by warmth and recognition: a home you are proud of.",
+      "You are nourished by order and usefulness: a home that works.",
+      "You are nourished by harmony and company: a home that is beautiful and shared.",
+      "You are nourished by depth and privacy: a home that keeps secrets safe.",
+      "You are nourished by meaning and wide horizons: a home that is a road.",
+      "You are nourished by structure and earned security: a home built to last.",
+      "You are nourished by friendship and space: a home among your people, not only your blood.",
+      "You are nourished by quiet and the sacred: a home that is a sanctuary."
+    ],
+    "Putrakaraka": [
+      "You make by starting: first drafts, new ventures, children who lead.",
+      "You make things that last and can be held.",
+      "You make with words and ideas; your students repeat you.",
+      "You make by nurturing; what you raise is well fed.",
+      "You make to shine: performance, art, a line with a name.",
+      "You make carefully, by craft and correction.",
+      "You make in partnership; your best work has two authors.",
+      "You make by transforming: what you create changes whoever touches it.",
+      "You make by teaching; your children are your students and your students your children.",
+      "You make slowly, and what you make carries weight.",
+      "You make for the many: systems, movements, inventions.",
+      "You make from vision and dream; the work arrives rather than being built."
+    ],
+    "Gnatikaraka": [
+      "Opposition comes head-on: open rivals, fevers, quick fights.",
+      "Opposition comes through money and possessions, and the slowness of things.",
+      "Opposition comes through words: contracts, gossip, nervous strain.",
+      "Opposition comes from family and feeling: the old home, the old hurt.",
+      "Opposition comes from pride and authority: those above you, and your own.",
+      "Opposition comes through work and health: detail, debt, the body's small complaints.",
+      "Opposition comes through partners and the law: the other side of the contract.",
+      "Opposition comes hidden: secrets, crises, what is done in the dark.",
+      "Opposition comes through belief: teachers, institutions, rival creeds.",
+      "Opposition comes through time and duty: delays, burdens, the long grind.",
+      "Opposition comes from groups: the crowd, the system, the friend turned rival.",
+      "Opposition comes through loss and confusion: what slips away, what cannot be named."
+    ]
+  },
+  "FROM_SOUL": {
+    "together": "It stands in the same sign as your soul-planet. The {role} and the soul share a room: what this karaka governs is not a side matter for you, it is the soul's own business.",
+    "trine": "It stands in the {n} from your soul-planet, in trine. They are in harmony: this part of life flows toward the soul's lesson without being forced.",
+    "angle": "It stands in the {n} from your soul-planet, at an angle. It pushes: this is where the soul's lesson turns into action.",
+    "opposite": "It faces your soul-planet across the chart. A mirror: you meet the soul's lesson here as though it were someone else's.",
+    "hidden": "It stands in the {n} from your soul-planet, a place the two do not see each other easily. This part of life needs a bridge built on purpose; left alone, it works against the soul's grain.",
+    "feeds": "It stands in the {n} from your soul-planet, a place of supply. It feeds the soul, bringing resources and gains to its lesson.",
+    "effort": "It stands in the {n} from your soul-planet. It gives the soul nerve and effort: the will to try."
+  },
+  "STRENGTH": {
+    "exalted": "It is exalted here: this karaka works at full strength, and its part of life comes easily.",
+    "own": "It is in its own sign: at home, reliable, speaking in its own voice.",
+    "debilitated": "It is fallen in this sign: its part of life costs effort. That effort, made honestly, is the mastery.",
+    "vargottama": "It keeps its sign in the navamsa (vargottama). What it is now, it remains: its role in your life is steady from first to last.",
+    "nav_up": "In the navamsa it rises to {d}: this part of life gets better with age.",
+    "nav_down": "In the navamsa it falls: this part of life starts well and asks more of you later.",
+    "plain": "It stands in neither strength nor weakness: an ordinary officer, as good as the use you make of it."
+  },
+  "RIPEN": "In the navamsa, the fruit, it ripens in {sign}.",
+  "CABINET_H": "The cabinet at work",
+  "CABINET_INTRO": "Seven ministers, one king. Read them together and the chart becomes a court: who answers to whom, who is quarrelling, and who holds the floor this year.",
+  "NOW_MAHA": "<b>Holding the floor now:</b> your {era} era belongs to {glyph} {planet}, your {role}. For these years, {domain} is the cabinet's business in hand.",
+  "NOW_ANTAR": "Within it, the current chapter belongs to {glyph} {planet}, your {role}: {domain} is the matter in front of you.",
+  "NOW_NONE": "Your current era belongs to {planet}, who holds no seat in the cabinet: these are years the court watches rather than leads, and the soul's lesson works through the world rather than through you.",
+  "ELEMENT": "The cabinet leans {el}: {n} of the seven sit in {el_l} signs. {note}",
+  "ELEMENT_NOTE": {
+    "Fire": "It is a court that acts first and deliberates after.",
+    "Earth": "It is a court that builds, keeps accounts and moves slowly.",
+    "Air": "It is a court that talks, plans and connects.",
+    "Water": "It is a court that feels its way, loyal and deep."
+  },
+  "SHARED": "<b>Sharing a sign:</b> {list}. Ministers in one room share a portfolio; in your life these matters arrive together.",
+  "CLOSE": "The roles are yours alone: someone with your planets in the same signs, a degree differently placed, sits a different court."
 }

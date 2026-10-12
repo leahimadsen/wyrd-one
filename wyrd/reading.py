@@ -221,7 +221,7 @@ def build(chart, dasha, who):
     KT = C.get("karakaT") or E.karakas(C["trop"])
     rows = "".join(f"<tr{' class=hi' if k == 'Atmakaraka' else ''}><td>{k.replace('karaka', '')}</td>"
                    f"<td>{GLYPH[b]} {b}</td><td>{E.deg_in(C['sid'][b]):.2f}°</td>"
-                   f"<td>{GLYPH[KT[k]]} {KT[k]} <small>{E.deg_in(C['trop'][KT[k]]):.2f}°</small></td><td>{KGLOSS[k]}</td></tr>"
+                   f"<td>{GLYPH[KT[k]]} {KT[k]} <small>{E.deg_in(C['trop'][KT[k]]):.2f}°</small></td><td>{'The soul itself, as above.' if k == 'Atmakaraka' else KGLOSS[k]}</td></tr>"
                    for k, b in K.items())
     akT, moved, th = KT["Atmakaraka"], sum(K[k] != KT[k] for k in K), MORE.the
     tropical = (f"If you rank the planets in the tropical zodiac instead, which follows the seasons rather than the stars, the same planet comes out on top. "
