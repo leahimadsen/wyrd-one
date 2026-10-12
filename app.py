@@ -6,7 +6,7 @@
 """
 import html, hmac, json, math, os, re, time
 from collections import defaultdict, deque
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 
 from flask import Flask, abort, jsonify, request, send_from_directory, Response, redirect, session
 from urllib.parse import urlencode
@@ -756,6 +756,11 @@ PLANS = {
 def money(c): return f"${c / 100:.0f}" if c % 100 == 0 else f"${c / 100:.2f}"
 pages.PRICE = money(config.PRICE_CENTS)
 
+def months_free(m, y):
+    """', three months free' when the yearly price is worth saying so."""
+    n = round((12 * m - y) / m) if m else 0
+    return f", {['', 'one', 'two', 'three', 'four', 'five', 'six'][n]} month{'s' if n > 1 else ''} free" if 0 < n <= 6 else ""
+
 @app.get("/membership")
 def membership_page():
     on = selling()
@@ -768,12 +773,13 @@ def membership_page():
 <p class="lede">Your design's weather, every week: a letter by email each Monday on how the planets move through your Birth Design and your Dharma Design, written in The Völva's words.</p>
 <div class="plans">
   <section class="plan lead"><h2>Membership</h2><div class="price">{money(m)}<small> a month</small></div>
-    <p class="muted">or {money(y)} a year, two months free</p>
+    <p class="muted">or {money(y)} a year{months_free(m, y)}</p>
     <ul><li><b>Body Weather by email every Monday:</b> which centres the week's sky switches on in your Birth Design and your Dharma Design, which stay open, and which of your gates it lights</li>
       <li>The Moon's mansion day by day, the week's stations and sign changes, and the Vimshottari era and chapter you're in</li>
+      <li><b>Your chart, opened up:</b> every activated rune read in full through its mansion, and the planets on each station of your body map</li>
       <li>One chart saved to your account, for your weekly letter</li>
       <li><b>Learning the Mandala</b>, the course on working with the Wyrd Mandala, included when it opens</li>
-      <li>The Wyrd Reading for {money(config.MEMBER_READING_CENTS)} instead of {money(config.PRICE_CENTS)}</li></ul>
+      <li>The Wyrd Reading for {money(config.MEMBER_READING_CENTS)} instead of {money(config.PRICE_CENTS)}, and {config.TOGETHER_MEMBER_OFF}% off the reading together</li></ul>
     {buy("member-month", f"Join for {money(m)} a month", True)}
     {buy("member-year", f"Or {money(y)} a year") if on else ""}</section>
   <section class="plan" id="pro"><h2>Professional</h2><div class="price">{money(pr)}<small> a month</small></div>
@@ -1011,7 +1017,7 @@ def admin_only():
 def gift_until(choice, today=None):
     """The gift's last day (YYYY-MM-DD, UTC) or "forever". It works through that whole day
     and has ended the day after."""
-    d = today or datetime.now(timezone.utc).date()
+    d = today or date.fromisoformat(billing.today())      # the same clock the gift is checked against
     if choice == "30d": return (d + timedelta(days=30)).isoformat()
     months = GIFT_LENGTHS.get(choice, 12)
     if months is None: return "forever"
