@@ -15,6 +15,9 @@ def check(name, ok):
 
 REG = json.load(open(os.path.join(ROOT, "lib", "corpus.json"), encoding="utf-8"))["REGISTER"]
 check("a draft 'In short' for all 64 gates", sorted(map(int, R.SHORT)) == list(range(1, 65)) and all(v["short"].strip() for v in R.SHORT.values()))
+asks0 = []
+check("all 64 approved and showing at the top of their gate",
+      all(v["ok"] for v in R.SHORT.values()) and all("In short:" in R.register_entry(g, 1, "personality", "Sun", asks0) for g in range(1, 65)))
 bare = lambda t: re.sub(r"\s+", "", re.sub(r"<[^>]+>", "", t))
 check("the repair layout keeps every word of the register", all(bare(R.repair(v["r"])) == bare(v["r"]) for v in REG.values()))
 check("each medicine stands on its own line", all(R.repair(v["r"]).count('class="rd-med"') >= 1 for v in REG.values() if "Medicine" in v["r"]))
