@@ -3,7 +3,7 @@
     python tests/medical_check.py
 
 Pretend charts, so no ephemeris; needs node for the free chart's copy of the tables."""
-import json, os, random, re, subprocess, sys
+import json, os, random, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from wyrd import engine as E, medical as M
@@ -30,16 +30,10 @@ check("every bodygraph centre has its station", sorted(c for z in T["ZONES"] for
 check("every dosha has a home on the ladder", {z["dosha"] for z in T["ZONES"]} == set(M.DOSHAS))
 check("every map is explained", [l[0] for l in T["LENSES"]] == ["The sign", "The house", "The mansion", "The centre", "The tropical sign", "The planet", "The dosha", "The period"])
 
-# the free chart's copy of the tables, read in node
-js = open(os.path.join(ROOT, "static", "medical.js"), encoding="utf-8").read()
-out = subprocess.run(["node"], input="const window = {};" + js + "process.stdout.write(JSON.stringify(window.WyrdMedical));",
-                     capture_output=True, text=True, check=True).stdout
-MD = json.loads(out)
-check("the free chart's body map uses the same tables", MD["SIGN"] == {k: v["part"] for k, v in T["SIGN"].items()} and MD["NAK"] == T["NAK"]
-      and MD["NAK_ZONE"] == T["NAK_ZONE"] and [z["signs"] for z in MD["ZONES"]] == [z["signs"] for z in T["ZONES"]] and [z["centre"] for z in MD["ZONES"]] == [z["centre"] for z in T["ZONES"]])
+# the free chart: the figure and one plain line, built on the server
 src = open(os.path.join(ROOT, "static", "chart.js"), encoding="utf-8").read()
-check("the free chart shows it, and points to the reading for the meaning", "WyrdMedical" in src and "The Body's Old Map" in src)
-check("the page loads the tables", "/static/medical.js" in open(os.path.join(ROOT, "static", "chart.html"), encoding="utf-8").read())
+check("the free chart shows the figure and points to the reading for the detail", "C.bodyMap" in src and "The Body's Old Map" in T["FREE"]["note"])
+check("the free chart no longer prints the map-by-map grid", "body-map" not in src)
 
 # pretend charts
 NOW = 2461325.0
@@ -77,17 +71,12 @@ check("Jupiter in Cancer, its best sign and not in a hard house, is strong", M.f
 w, parts = M.weight(M.grid(C, []))
 check("the rising sign counts three at its station", parts["crown"]["sign"] >= 1.5 and parts["brow"]["sign"] >= 1.5)
 
-# the free chart and the reading lay the maps out alike
-random.seed(11)
-NAMES = [v[0] for v in RV.CENTRES.values()]
-cases = []
-for i in range(500):
-    C, _ = chart(1000 + i, unknown=i % 7 == 0)
-    cases.append((C, random.sample(NAMES, random.randint(0, 9)), bool(C.get("unknownTime"))))
-prog = js + f"process.stdout.write(JSON.stringify({json.dumps([[c, d, u] for c, d, u in cases])}.map(([C, d, u]) => window.WyrdMedical.grid(C, d, u))));"
-browser = json.loads(subprocess.run(["node"], input="const window = {};" + prog, capture_output=True, text=True, check=True).stdout)
-server = [json.loads(json.dumps(M.grid(C, d, u))) for C, d, u in cases]
-check("the free chart and the reading put every planet on the same station, 500 charts", browser == server)
+# the free body map: stations sized, no planets, one line naming the two heaviest
+C, d = chart(4); fr = M.free(C)
+check("the free figure marks the seven stations but names no planets", fr["figure"].count('class="mf-dot') == 7 and "mf-pl" not in fr["figure"] and not any(gl in fr["figure"] for gl in "☉☽♂☿♃♀♄"))
+g = M.grid(C, M.defined_centres(C)); w, _ = M.weight(g); top2 = sorted(M.KEYS, key=lambda k: -w[k])[:2]
+check("the free line names the two stations the chart gathers at", all(M.ZONE[k]["parts"] in fr["line"] for k in top2) and "{" not in fr["line"])
+
 C, d = chart(3); g = M.grid(C, ["G", "Heart"])
 w, parts = M.weight(g)
 check("all the weight is accounted for: rising 3, Moon 2, eight planets, nine houses, nine mansions at a half, a station with its centres defined",
@@ -101,7 +90,6 @@ check("every station on the diagram has a place on the figure", set(T["FIGURE"][
 check("the two heaviest stations stand out", fig.count('mf-dot hi') >= 2 and fig.count("mf-ring") >= 2)
 check("each station in its chakra colour, violet crown to red root", [z for z in M._C["BIFROST"]][0]["band"] == "Violet" and M._C["BIFROST"][-1]["band"] == "Red"
       and all(f'fill="{c}"' in fig for c in M.COLOUR))
-check("the free chart uses the same colours", [z["colour"] for z in MD["ZONES"]] == M.COLOUR)
 
 # the full reading carries it
 src = open(os.path.join(ROOT, "wyrd", "reading.py"), encoding="utf-8").read()
