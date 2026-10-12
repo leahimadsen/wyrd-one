@@ -110,14 +110,16 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=9900, 
 # ---------------- learning pages ----------------
 def learn_index(base):
     gates = "".join(f'<li><a href="/learn/gates/{g}">Gate {g} · {e(C["GATE_NAME"][str(g)])}</a></li>' for g in GATES)
-    naks = "".join(f'<li><a href="/learn/nakshatras/{s}">{e(C["NAKSHATRA"][i][0])}</a></li>' for s, i in NAKS)
+    naks = "".join(f'<li><a href="/learn/nakshatras/{s}">{e(C["NAKSHATRA"][i][0])}</a> <span class="muted">· {e(C["NAKSHATRA"][i][6])}</span></li>' for s, i in NAKS)
     signs = "".join(f'<li><a href="/learn/signs/{s}">{e(C["SIGN_FRAME"][i][0])}</a></li>' for s, i in SIGNS)
     body = f"""<h1>Learn astrology with the Wyrd Console</h1>
 <p class="lede">The building blocks of your birth chart: the twelve sidereal signs, the twenty-seven nakshatras, the sixty-four gates and the twenty-four runes, each in The Völva's words.</p>
 <div class="cta"><p><b>New to charts?</b> The quickest way in is your own: cast it, then walk it in short steps, one ring at a time.</p>
 <p><a class="btn-cast" href="/">Cast your chart and start the walk</a></p></div>
 <h2 id="signs">The 12 sidereal signs</h2><ul class="terms">{signs}</ul>
-<h2 id="nakshatras">The 27 nakshatras (lunar mansions)</h2><ul class="terms">{naks}</ul>
+<h2 id="nakshatras">The 27 nakshatras (lunar mansions)</h2>
+<p>The oldest map of the sky in Jyotish: twenty-seven mansions of 13°20′ that the Moon passes through, one a day. Each has a ruling planet, a deity, a power of its own, and a part of the body. Each page reads one in full: what it's about, what it's good for, where it goes wrong, and its question.</p>
+<ul class="terms">{naks}</ul>
 <h2 id="gates">The 64 gates</h2><ul class="terms">{gates}</ul>
 <h2>Go further</h2><ul class="terms"><li><a href="/learn/runes">Learn the runes: the 24 runes of the Elder Futhark</a></li>
 <li><a href="/learn/numbers">Learn the numbers: life path, name numbers, Stavefall and Vedic</a></li>
@@ -146,26 +148,79 @@ def gate(base, g):
             body, _crumbs(base, [("Learn", "/learn"), (f"Gate {g}", f"/learn/gates/{g}")]))
 
 
+ORD27 = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth",
+         "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth", "nineteenth", "twentieth", "twenty-first", "twenty-second",
+         "twenty-third", "twenty-fourth", "twenty-fifth", "twenty-sixth", "twenty-seventh"]
+
+
 def nakshatra(base, s):
+    """A free reading of one lunar mansion: what it's about, what it's good for and where it goes wrong, what it
+    rules, the body and face it gives, its four padas, the gates that fall in it, and its question. Every line comes
+    from The Völva's corpus (NAKSHATRA, ENGINE, NAK_DEEP) and register_ext (GANA, AIMS)."""
+    from . import engine as E
+    from .reading_more import X as RX
     i = NAK_BY.get(s)
     if i is None: return None
-    n, d = C["NAKSHATRA"][i], C["NAK_DEEP"][i]
+    n, d, g = C["NAKSHATRA"][i], C["NAK_DEEP"][i], C["ENGINE"][i]
     names = [x[0] for x in C["NAKSHATRA"]]
-    start = i * 360 / 27
-    sign_a, sign_b = C["SIGN_FRAME"][int(start // 30)][0], C["SIGN_FRAME"][int((start + 13.3333) // 30) % 12][0]
-    deg = lambda x: f"{int(x % 30)}°{int(round((x % 1) * 60)):02d}′"
+    start = i * 360 / 27; arc = 40 / 3
+    sign_of = lambda x: C["SIGN_FRAME"][int(x // 30) % 12][0]
+    deg = lambda x: f"{int(x % 30)}°{int(round((x % 1) * 60)) % 60:02d}′"
+    years = dict(E.DASHA)[n[1]]
+    gana = d[2].split(" ·")[0]
+    sounds = d[9].split()
+    padas = "".join(f"<tr><td>{p + 1}</td><td>{deg(start + p * arc / 4)} {e(sign_of(start + p * arc / 4))}</td>"
+                    f"<td>{e(E.SIGNS[(i * 4 + p) % 12])}</td><td>{e(RX['AIMS'][(i * 4 + p) % 4]['aim'])}</td>"
+                    f"<td>{e(sounds[p]) if p < len(sounds) else '—'}</td></tr>" for p in range(4))
+    gates = sorted({gt for gt in GATES for ln in range(1, 7) if (m := E.gate_mansion(gt, ln)) and i in (m["primary"], m["secondary"])})
+    gate_links = ", ".join(f'<a href="/learn/gates/{gt}">{gt} {e(C["REGISTER"][str(gt)]["t"])}</a>' for gt in gates)
+    aims = "".join(f"<li><b>{e(a['aim'])}</b>: {e(a['says'])}</li>" for a in RX["AIMS"])
     body = f"""<p class="crumbs"><a href="/learn">Learn</a> › <a href="/learn#nakshatras">Nakshatras</a></p>
-<h1>{e(n[0])} nakshatra</h1>
+<h1>{e(n[0])}</h1>
 <p class="lede">{e(n[6])}</p>
+<p>{e(n[0])} is the {ORD27[i]} of the twenty-seven lunar mansions, running from {deg(start)} {e(sign_of(start))} to {deg(start + arc)} {e(sign_of(start + arc - 1e-6))} in the sidereal zodiac. Its stars are {e(d[1][0].lower() + d[1][1:])}. The Moon passes through it in about a day each month, so it colours a day, and it colours a whole life when it holds your Moon or your rising degree.</p>
+
+<h2>What it's about</h2>
+<p>{e(g[6])}</p>
+<p>Its power (shakti) is <b>{e(g[1])}</b>, {e(g[2])}. What comes down through it is {e(g[3])}; what rises from it is {e(g[4])}; and the fruit it bears is {e(g[5])}.</p>
+
+<h2>What it's good for</h2>
+<p>{e(d[12])}</p>
+<p><b>At its best:</b> {e(g[7])}</p>
+
+<h2>Where it goes wrong</h2>
+<p>{e(d[13])}</p>
+<p><b>The dark gift</b> (a choice, made knowing): {e(g[8])}</p>
+<p><b>The distortion</b> (unconscious): {e(g[9])}</p>
+
+<h2>What it rules, and what rules it</h2>
 <dl class="facts">
-  <dt>Position</dt><dd>{deg(start)} {e(sign_a)} to {deg(start + 40 / 3)} {e(sign_b)} (sidereal)</dd>
-  <dt>Ruled by</dt><dd>{e(n[1])}</dd><dt>Deity</dt><dd>{e(n[2])}</dd><dt>Symbol</dt><dd>{e(n[3])}</dd>
-  <dt>Nature</dt><dd>{e(n[4])}</dd><dt>Body</dt><dd>{e(n[5])}</dd>
-  <dt>Stars</dt><dd>{e(d[1])}</dd>
+  <dt>Ruling planet</dt><dd>{e(n[1])}. When the Moon is here at birth, life opens in {e(n[1])}'s period of the Vimshottari clock, which runs {years} years in full.</dd>
+  <dt>Deity</dt><dd>{e(n[2])}</dd><dt>Symbol</dt><dd>{e(n[3])}</dd>
+  <dt>In the body</dt><dd>{e(n[5])}</dd>
+  <dt>Nature</dt><dd>{e(d[2])}. {e(RX["GANA"].get(gana, ""))}</dd>
+  <dt>Animal</dt><dd>{e(d[3])}</dd>
+  <dt>Guna</dt><dd>{e(d[4])}</dd><dt>Dosha</dt><dd>{e(d[5])}</dd>
+  <dt>Caste</dt><dd>{e(d[6])}</dd><dt>Aim</dt><dd>{e(d[7])}</dd>
+  <dt>Motion</dt><dd>{e(d[8])}</dd><dt>Sounds</dt><dd>{e(d[9])}, one for each pada, used for names given under this mansion</dd>
 </dl>
+
+<h2>The body and the face it gives</h2>
+<p>When {e(n[0])} rises, or holds the Moon, this is the build the old descriptions give:</p>
+<p>{e(d[10])}</p><p>{e(d[11])}</p>
+
+<h2>Its four padas</h2>
+<p>Each mansion splits into four padas of 3°20′. Each pada falls in one sign of the navamsa, the ninefold chart, and works through one of the four aims of life.</p>
+<div class="tw"><table><tr><th>Pada</th><th>Begins</th><th>Navamsa</th><th>Aim</th><th>Sound</th></tr>{padas}</table></div>
+<ul class="kar-plain">{aims}</ul>
+{f'<h2>Gates in {e(n[0])}</h2><p>These gates of the wheel fall in this mansion, so it feeds them wherever they sit in a chart: {gate_links}.</p>' if gates else ""}
+
+<h2>Its question</h2>
+<p class="rd-ask"><i>{e(g[10])}</i></p>
+
 <p><a href="/learn/nakshatras/{slug(names[i - 1])}">← {e(names[i - 1])}</a> · <a href="/learn/nakshatras/{slug(names[(i + 1) % 27])}">{e(names[(i + 1) % 27])} →</a></p>{_cta()}"""
-    return (f"{n[0]} Nakshatra Meaning · Vedic Astrology · The Wyrd Console",
-            f"{n[0]} nakshatra in Vedic astrology: ruled by {n[1]}, deity {n[2]}. {n[6]}"[:300],
+    return (f"{n[0]} Nakshatra: Meaning, Ruler, Deity, Padas · The Wyrd Console",
+            f"{n[0]} nakshatra in Vedic astrology: ruled by {n[1]}, deity {n[2]}. {n[6]} What it's good for, where it goes wrong, its padas and its question."[:300],
             body, _crumbs(base, [("Learn", "/learn"), (n[0], f"/learn/nakshatras/{s}")]))
 
 

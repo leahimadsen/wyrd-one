@@ -6,7 +6,7 @@ root, and read together:
 
   the sign       the body you were given (sidereal, Kalapurusha: Aries at the head)
   the house      where your life lands in your body (the same figure from the rising sign)
-  the mansion    the fine detail (the Brihat Samhita's list)
+  the mansion    the fine detail (each mansion's part of the body, from the corpus)
   the centre     how energy moves there (the bodygraph: defined or open)
   the tropical   how the body feels to live in (the Western figure)
   the planet     what kind of thing: heat, bone, nerves
