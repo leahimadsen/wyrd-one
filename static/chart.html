@@ -29,14 +29,18 @@
 <nav class="topbar" aria-label="Site"><a href="/" class="tb-home">The Wyrd Console</a><span class="tb-links"><a href="/reports">Readings</a><a href="/membership">The Order</a><a href="/learn">Learn</a><a href="/today">Today's sky</a><a href="/account" class="tb-acct" data-acct>Sign in</a></span></nav>
 <!-- The hub: the whole chart as one shape (the torus), then the same chart opened
      one layer at a time, as a numbered path. Each step opens on its own tab. -->
-<header class="hub" id="skyHost">
+<header class="hub desk" id="skyHost">
   <div class="hub-in">
     <p class="hub-crumb"><a href="/">← Cast another chart</a></p>
     <h1 id="who">Your chart</h1>
     <p class="meta" id="chartMeta"></p>
     <div class="ctools" id="tools"></div>
     <p class="unknown-note" id="unknownNote" hidden></p>
-    <div class="hub-torus"><div class="map-core tz-core"></div></div>
+    <div class="hub-torus tz-win">
+      <div class="tz-bar" aria-hidden="true"><span class="tz-title">✦ your_chart.wyrd</span><span class="tz-btns"><i>_</i><i>□</i><i>×</i></span></div>
+      <div class="tz-screen"><div class="map-core tz-core"></div></div>
+    </div>
+    <div class="tz-zod" id="tzZodiac" role="group" aria-label="Which zodiac the torus is read in"></div>
     <div class="tz-layers" id="tzLayers" role="group" aria-label="Layers of the torus"></div>
     <p class="tz-cap" id="tzCap" aria-live="polite">Drag the torus to turn it. Tap it to see what is there.</p>
     <p class="map-hint">Your whole chart as one shape: the zodiac runs around the ring, your chart's layers wrap around the tube, and your planets ride its outer edge. Below, the same chart is opened one layer at a time. Each step builds on the one before.</p>

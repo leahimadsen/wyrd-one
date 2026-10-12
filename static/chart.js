@@ -158,6 +158,16 @@ function mountTorus(){
   const core = document.querySelector(".tz-core");
   try { TZ = WyrdTorus.mount(core, C, { caption: $("tzCap") }); }
   catch (_) { core.outerHTML = `<a class="map-core" href="#chart" aria-label="Open your chart">${WyrdWheel.svg(C, { compact: true, unknownTime: unknown })}</a>`; return; }
+  /* read the torus in either zodiac: sidereal (Jyotish) or tropical */
+  const zod = $("tzZodiac");
+  zod.innerHTML = ["sidereal", "tropical"].map(z => `<button type="button" class="tz-chip tz-z" data-zodiac="${z}" aria-pressed="${z === TZ.zodiac}">${z === "sidereal" ? "Sidereal" : "Tropical"}</button>`).join("");
+  zod.addEventListener("click", e => {
+    const b = e.target.closest("[data-zodiac]"); if (!b || TZ.zodiac === b.dataset.zodiac) return;
+    TZ.setZodiac(b.dataset.zodiac);
+    zod.querySelectorAll("[data-zodiac]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    $("tzLayers").querySelectorAll("[data-layer]").forEach(x => { const l = TZ.layers.find(l => l.id === x.dataset.layer); if (l) x.textContent = l.name; });
+    if (window.Wyrd && Wyrd.pulse) Wyrd.pulse("act", "zodiac-" + b.dataset.zodiac);
+  });
   $("tzLayers").innerHTML = TZ.layers.map(l => `<button type="button" class="tz-chip" data-layer="${l.id}" aria-pressed="true">${l.name}</button>`).join("")
     + `<a class="tz-chip open" href="#chart">Open your chart →</a>`;
   $("tzLayers").addEventListener("click", e => {
