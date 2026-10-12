@@ -254,7 +254,7 @@ function zodiacSVG(){
   }
   const [tnx,tny] = zp(R_TROP_OUT + 9, aTrop(0)), [snx,sny] = zp(R_SID_OUT - 6, aSid(0));
   o += `<text class="ring-name" x="${f2(tnx)}" y="${f2(tny)}" fill="#d9d4c4" opacity=".3">TROPICAL</text>
-        <text class="ring-name" x="${f2(snx)}" y="${f2(sny)}" fill="#b8924a" opacity=".45">SIDEREAL</text>`;
+        <text class="ring-name" x="${f2(snx)}" y="${f2(sny)}" fill="#ffcc33" opacity=".45">SIDEREAL</text>`;
   const a0 = aTrop(0);
   o += `<path class="ay-arc" d="${arc(R_SID_OUT + 4, a0, a0 + ay)}"/>`;
   const [ax,ayy] = zp(R_SID_OUT + 14, a0 + ay / 2);
