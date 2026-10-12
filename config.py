@@ -57,13 +57,13 @@ TOGETHER_CENTS       = int(os.environ.get("TOGETHER_CENTS", "2200"))           #
 TOGETHER_EXTRA_CENTS = int(os.environ.get("TOGETHER_EXTRA_CENTS", "1100"))     # $11 for each person after two
 TOGETHER_MEMBER_OFF  = int(os.environ.get("TOGETHER_MEMBER_OFF", "20"))        # members' discount, percent
 TOGETHER_NAME        = "Your Wyrd Reading Together"
-MEMBER_NAME          = "Wyrd Membership"
+MEMBER_NAME          = "The Order"
 # Real Stripe prices, so members can switch plans in the Stripe portal. When unset,
 # each checkout makes its price from the cents above instead.
 MEMBER_MONTHLY_PRICE = os.environ.get("STRIPE_MEMBER_MONTHLY_PRICE", "")
 MEMBER_YEARLY_PRICE  = os.environ.get("STRIPE_MEMBER_YEARLY_PRICE", "")
 PRO_MONTHLY_PRICE    = os.environ.get("STRIPE_PRO_MONTHLY_PRICE", "")
-PRO_NAME             = "Wyrd Console Professional"
+PRO_NAME             = "The Inner Circle"
 # Locks the weekly email job (POST /jobs/weekly) so only your scheduler can run it.
 JOBS_TOKEN           = os.environ.get("JOBS_TOKEN", "")
 OWNER_EMAIL          = os.environ.get("OWNER_EMAIL", "")       # where your Monday summary goes

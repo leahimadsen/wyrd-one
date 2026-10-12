@@ -56,7 +56,7 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=9900, 
 <h1>Astrology readings by The Völva</h1>
 <p class="lede">Start with the free birth chart: the whole path, in both zodiacs, with your design, runes and timing. When you want it read, there are four ways in.</p>
 <div class="plans">
-  <section class="plan lead"><h2>The Wyrd Reading</h2><div class="price">{m(price_cents)}<small> once</small></div>
+  <section class="plan lead" data-line="Your whole chart, read in full."><h2>The Wyrd Reading</h2><div class="price">{m(price_cents)}<small> once</small></div>
     <p class="muted">A natal astrology reading in fifteen sections, written for your placements and nobody else's. It opens with the story of how you got here; the sections decode it.</p>
     <ul><li>The Seat you rise from, the engine of your Moon, and the Matrix your Saturn builds</li>
     <li>Every planet in both zodiacs, and how they feed each other; your Soul-Planet and its cabinet</li>
@@ -65,29 +65,29 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=9900, 
     <li>The Path of Dharma step by step, your numbers, and every question your chart asks</li></ul>
     <a class="btn-buy" href="/">Cast your chart, then get the reading</a>
     <a class="alt" href="/sample">Read a sample reading first</a></section>
-  <section class="plan"><h2>The Reading Together</h2><div class="price">{m(together_cents)}<small> for two</small></div>
+  <section class="plan" data-line="Two or more charts, one story."><h2>The Reading Together</h2><div class="price">{m(together_cents)}<small> for two</small></div>
     <p class="muted">and {m(together_extra)} for each person you add, up to nine</p>
     <ul><li>A story about how you ended up together, and what your bond is for, how it lifts you and where it can struggle</li>
     <li>What each of you wakes in the other, the old eight-fold match, how your bodies meet, and your numbers side by side</li>
     <li>The next thirty years, chapter by chapter and year by year, with the years to watch</li></ul>
     <a class="btn-cast" href="/chart#compare">Add people in Compare, then get it</a></section>
-  <section class="plan"><h2>Membership</h2><div class="price">{m(month_cents)}<small> a month</small></div>
+  <section class="plan" data-line="Your weather, every week."><h2>The Order</h2><div class="price">{m(month_cents)}<small> a month</small></div>
     <p class="muted">or {m(year_cents)} a year</p>
     <ul><li>Body Weather by email every Monday: how the week's sky moves through your Birth Design and your Dharma Design</li>
     <li>Your chart opened up: every rune read in full, and the planets on your body map</li>
     <li>The Wyrd Reading for {m(member_cents)} instead of {m(price_cents)}, and {member_off}% off the reading together</li></ul>
-    <a class="btn-cast" href="/membership">See the membership</a></section>
-  <section class="plan"><h2>Professional</h2><div class="price">{m(pro_cents)}<small> a month</small></div>
+    <a class="btn-cast" href="/membership">See the Order</a></section>
+  <section class="plan" data-line="For those who read for others."><h2>The Inner Circle</h2><div class="price">{m(pro_cents)}<small> a month</small></div>
     <ul><li>For astrologers and practitioners: The Wyrd Reading for your clients, {pro_n} a month</li>
-    <li>This week's Body Weather for any client</li><li>Everything in the membership</li></ul>
-    <a class="btn-cast" href="/membership#pro">See Professional</a></section>
+    <li>This week's Body Weather for any client</li><li>Everything in the Order</li></ul>
+    <a class="btn-cast" href="/membership#pro">See the Inner Circle</a></section>
 </div>
 <p class="muted">A 1:1 consultation with The Völva on your chart: ask through <a href="https://thewebofwyrd.substack.com">The Web of Wyrd</a>.</p>
 <h2>Questions</h2>
 <h3>What do I need for an astrology reading?</h3><p>Your date, time and place of birth. If you don't know the time, the free chart still works with solar houses, and the reading tells you which parts depend on the time.</p>
 <h3>Is this sidereal or tropical astrology?</h3><p>Both. Signs, nakshatras and houses are sidereal (Lahiri). The 64 gates use the tropical zodiac, as Human Design does. Your Dharma Design is the ninth harmonic (D9) of the sidereal positions.</p>
 <h3>How do I get my reading?</h3><p>Straight after payment it opens in your browser. Save it as a PDF from your browser's print menu.</p>
-<h3>Can astrologers use these tools with their clients?</h3><p>Yes. Astrologers and practitioners can use these tools with their own clients through <a href="/membership#pro">Wyrd Console Professional</a>.</p>
+<h3>Can astrologers use these tools with their clients?</h3><p>Yes. Astrologers and practitioners can use these tools with their own clients through <a href="/membership#pro">the Inner Circle</a>.</p>
 """
     faq = [("What do I need for an astrology reading?", "Your date, time and place of birth. If you don't know the time, the free chart still works with solar houses."),
            ("Is this sidereal or tropical astrology?", "Both. Signs, nakshatras and houses are sidereal (Lahiri). The 64 gates use the tropical zodiac. The Dharma Design is the ninth harmonic (D9) of the sidereal positions."),

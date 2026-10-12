@@ -177,7 +177,7 @@ function mount(host, X){
     const n = people.length, total = price.two + price.extra * (n - 2);
     buyEl.innerHTML = `<div class="cp-buybox"><h3 class="cp-h">The reading together</h3>
       <p>A written reading for ${n === 2 ? "the two of you" : `all ${n} of you`}. It starts with a story about how you ended up together, then covers what you bring out in each other and how the next thirty years look for you, year by year.</p>
-      <button type="button" class="btn-cast cp-buybtn">Get our reading together — ${dollars(total)}${price.member ? ", your member price" : ""}</button>
+      <button type="button" class="btn-cast cp-buybtn">Get our reading together — ${dollars(total)}${price.member ? ", your Order price" : ""}</button>
       <p class="muted">${dollars(price.two)} for two${n < price.max ? `, and ${dollars(price.extra)} for each person you add, up to ${price.max}` : ""}.</p>
       <p class="err" role="alert"></p></div>`;
   }
