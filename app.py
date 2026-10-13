@@ -1094,7 +1094,9 @@ def admin_gifts():
     return private("Gifts", f"""<p class="crumbs"><a href="/admin">Admin</a></p><h1>Gifts</h1>
 {f'<p class="note-box">{msg}</p>' if msg else ""}
 <h2>Give a place in the Order</h2>
-<p class="note-box">To use the Order and the Inner Circle yourself: give <b>The Inner Circle</b>, <b>For good</b>, to your own email, then sign in with that email. You'll have the Hall, the weekly letter and the practice desk, with nothing charged.</p>
+<p class="note-box" id="enter">To use the Order and the Inner Circle yourself: give <b>The Inner Circle</b>, <b>For good</b>, to your own email{f" ({esc(config.OWNER_EMAIL)})" if config.OWNER_EMAIL else ""}, then open the Hall from here. No email needed.</p>
+{f'''<form method="post" action="/admin/enter"><button class="btn-cast" type="submit">Open the Hall as {esc(config.OWNER_EMAIL)}</button></form>''' if config.OWNER_EMAIL else
+ '<p class="muted">To open the Hall from here, add <b>OWNER_EMAIL</b> (your own email) to the site\'s environment in Render.</p>'}
 <p class="muted">Nothing is charged and no card is asked for. They get an email inviting them to sign in, and everything the plan includes works straight away. When it ends they are back on the free site, unless they pay for a plan of their own, which a gift never changes.</p>
 <form class="pg-form" method="post" action="/admin/gift/membership">
 <label>Their email <input name="email" type="email" required maxlength="254"></label>
@@ -1104,6 +1106,16 @@ def admin_gifts():
 <button class="btn-cast" type="submit">Give it</button></form>
 <h2>Given so far</h2>{problem}<ul>{"".join(rows) or ("<li class='muted'>None yet.</li>" if not problem else "")}</ul>
 <h2>Give a reading</h2><p>Use <a href="/admin">Generate a reading</a> and press <b>Make a gift link</b>. You get a private link to their full reading to send however you like.</p>""")
+
+@app.post("/admin/enter")
+def admin_enter():
+    """The admin, already in by password, signs in as the site's owner (OWNER_EMAIL) to use the Order and the
+    Inner Circle like any member, without waiting for a sign-in email. Only ever the owner's own address."""
+    admin_only()
+    email = accounts.clean_email(config.OWNER_EMAIL)
+    if not email: return redirect("/admin/gifts")
+    session["email"] = email
+    return redirect("/hall")
 
 @app.post("/admin/gift/membership")
 def admin_gift_membership():
@@ -1126,7 +1138,7 @@ def admin_gift_membership():
         f"{config.AUTHOR} has given you {plan}, {nice_until(until)}.\n\n{note}\n\nSign in: {config.BASE_URL}/signin with this email address.")
     also = (" They already pay for " + " and ".join("The Inner Circle" if p["tier"] == "pro" else "The Order" for p in paying) +
             "; that subscription is untouched and keeps billing as before.") if paying else ""
-    return redirect("/admin/gifts?" + urlencode({"done": f"Given to {email}, {nice_until(until)}." + also + ("" if sent else " Email isn't set up, so tell them to sign in with this address.")}))
+    return redirect("/admin/gifts?" + urlencode({"done": f"Given to {email}, {nice_until(until)}." + also + ("" if sent else " The email couldn't be sent" + (" (see the mail settings)" if mailer.ready() else ", as email isn't set up") + ", so tell them to sign in with this address.")}))
 
 @app.post("/admin/gift/end")
 def admin_gift_end():

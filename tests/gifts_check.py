@@ -165,5 +165,13 @@ TODAY[0] = "2026-11-11"
 st = status("two@x.co")
 check("and expires on its own date", not st["pro"] and st["member"])
 
+# ---- the admin opens the Hall as the owner, without a sign-in email ----
+site.config.OWNER_EMAIL = "Creator@X.co"
+r = admin.post("/admin/enter", headers=SAME)
+with admin.session_transaction() as sess: who, still = sess.get("email"), sess.get("admin")
+check("the admin enters the Hall as the owner", r.headers.get("Location") == "/hall" and who == "creator@x.co" and still)
+check("nobody else can", as_user("x@y.co").post("/admin/enter", headers=SAME).status_code == 404)
+site.config.OWNER_EMAIL = ""
+
 print("GIFTS CHECK", "PASSED" if not bad else f"FAILED ({bad})")
 sys.exit(1 if bad else 0)
