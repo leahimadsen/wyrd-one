@@ -141,15 +141,16 @@ def _antars(dasha, now, n=6):
 def cell(bs): return " ".join(GLYPH[b] for b in bs)
 
 
-def figure(g, w, unknown=False, planets=True):
+def figure(g, w, unknown=False, planets=True, light=False):
     """The body diagram: the engraving, the ladder down its middle, a mark on each station sized by its weight,
     and to the side the planets that land there by sign (and by house, when the birth time is known)."""
     F = T["FIGURE"]; W, H = F["w"], F["h"]; X0 = W + 40; top = max(w.values()) or 1
     pts = [F["at"][k] for k in KEYS]; heavy = sorted(w.values())[-2]
     grad = "".join(f'<stop offset="{i / 6:.3f}" stop-color="{c}"/>' for i, c in enumerate(COLOUR))
-    has = os.path.exists(os.path.join(HERE, F["src"].lstrip("/")))      # until the engraving is added, the ladder stands alone
+    src = F["src"].replace(".png", "-light.png") if light else F["src"]   # the night pages take the engraving in pale ink
+    has = os.path.exists(os.path.join(HERE, src.lstrip("/")))      # until the engraving is added, the ladder stands alone
     out = [f'<defs><linearGradient id="mf-bow" x1="0" y1="{pts[0][1]}" x2="0" y2="{pts[-1][1]}" gradientUnits="userSpaceOnUse">{grad}</linearGradient></defs>',
-           f'<image href="{F["src"]}" x="0" y="0" width="{W}" height="{H}"/>' if has else "",
+           f'<image href="{src}" x="0" y="0" width="{W}" height="{H}"/>' if has else "",
            f'<polyline class="mf-ladder" stroke="url(#mf-bow)" points="{" ".join(f"{x},{y}" for x, y in pts)}"/>']
     for i, k in enumerate(KEYS):
         x, y = F["at"][k]; r = 6 + 12 * w[k] / top; ly = 40 + i * (H * 0.62 / 6)
@@ -175,8 +176,8 @@ def free(C):
     swap = lambda html: _electric(html)
     a, b = sorted(KEYS, key=lambda k: -w[k])[:2]
     line = fill(T["FREE"]["line"], first=f"your {zname(a)[4:]}", first_parts=ZONE[a]["parts"], second=f"your {zname(b)[4:]}", second_parts=ZONE[b]["parts"])
-    return {"figure": swap(figure(g, w, unknown, planets=False)), "line": line, "note": T["FREE"]["note"],
-            "full": swap(figure(g, w, unknown)), "memberNote": T["FREE"]["member"]}
+    return {"figure": swap(figure(g, w, unknown, planets=False, light=True)), "line": line, "note": T["FREE"]["note"],
+            "full": swap(figure(g, w, unknown, light=True)), "memberNote": T["FREE"]["member"]}
 
 
 def _electric(html):
