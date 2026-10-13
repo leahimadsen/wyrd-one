@@ -19,6 +19,9 @@ import app as site
 import order_routes
 from wyrd import store, billing, mailer
 from flask import Response
+if os.environ.get("WYRD_TEST_DATABASE_URL"):           # a throwaway Postgres starts empty, every run
+    for t in ("letters", "kin", "practice", "clients", "readings"): store._run(f"DROP TABLE IF EXISTS {t}")
+    store.reset_for_tests()
 
 bad = 0
 def check(name, ok):
