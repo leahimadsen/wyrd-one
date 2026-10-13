@@ -20,7 +20,7 @@ const ARCANA = {
   reading:  { n: "I",   rune: "perthro", symbol: "sun" },        // your whole chart, read in full: the Sun, which lights all of it
   together: { n: "II",  rune: "gebo",    symbol: "cups" },       // two or more charts, one story: two cups raised together
   order:    { n: "III", rune: "othala",  symbol: "moon" },       // your weather, every week: the Moon and her dew
-  circle:   { n: "IV",  rune: "kenaz",   symbol: "pentacle" },   // for those who read for others: the practitioner's pentacle
+  circle:   { n: "IV",  rune: "kenaz",   symbol: "septagram" },  // for those who read for others: the seven-pointed star in its ring
 };
 const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
 
@@ -75,10 +75,10 @@ const SYMBOL = {
         <rect class="hatch-${id} ink-none" x="30" y="100" width="80" height="70"/></g>
       <path class="ink heavy" d="${crescent}" fill="none"/>${dew}`;
   },
-  pentacle(id) {
+  septagram(id) {
     let ticks = "";
     for (let i = 0; i < 40; i++) { const [x1, y1] = at(56, i * 9), [x2, y2] = at(62, i * 9); ticks += `<line class="ink hair" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`; }
-    const p = [0, 2, 4, 1, 3].map(k => at(52, k * 72 - 90).join(" "));
+    const p = [0, 3, 6, 2, 5, 1, 4].map(k => at(52, k * 360 / 7 - 90).join(" "));      // {7/3}: each point joined to the third along
     return `<defs><clipPath id="pc-${id}"><circle cx="100" cy="100" r="52"/></clipPath></defs>
       <circle class="tint ink heavy" cx="100" cy="100" r="66"/><circle class="wash ink" cx="100" cy="100" r="52"/>
       <g clip-path="url(#pc-${id})"><circle class="hatch-${id} ink-none" cx="132" cy="132" r="58"/><circle class="wash" cx="92" cy="92" r="50"/></g>
