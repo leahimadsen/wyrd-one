@@ -839,7 +839,7 @@ written in The Völva's words, and a Hall of your own on the site to keep it all
 <h2>Questions</h2>
 <div class="order-faq">
   <details><summary>Do I need to know my birth time?</summary><p>Yes, for Body Weather: the centres and gates it reads depend on the time. If you only know it roughly, cast your best guess; you can change the chart your letter is written for at any time in the Hall.</p></details>
-  <details><summary>What are the Birth Design and the Dharma Design?</summary><p>Your Birth Design is your chart in the sidereal zodiac, the sky as it stood. Your Dharma Design is the same moment read in the tropical zodiac, the seasons' wheel. The Order's letter reads the week through both.</p></details>
+  <details><summary>What are the Birth Design and the Dharma Design?</summary><p>Your Birth Design is your bodygraph as you were issued it: the planets at your birth and about eighty-eight days before. Your Dharma Design is those same moments in the sidereal zodiac, passed through the navamsa, the ninth harmonic of dharma: the shape your life matures toward. The Order's letter reads the week through both.</p></details>
   <details><summary>Can I cancel?</summary><p>Any time, from the Hall. You keep your place until the end of the month or year you've paid for, and the free chart stays yours either way.</p></details>
   <details><summary>Can I change from the Order to the Inner Circle?</summary><p>Yes. Press the Inner Circle's button while signed in and Stripe moves your plan across, charging only the difference.</p></details>
   <details><summary>Who writes the letters?</summary><p>The Völva. Every line of interpretation in the Wyrd Console is hers; the console sets it to your chart and the week's sky.</p></details>
