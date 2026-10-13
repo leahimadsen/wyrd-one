@@ -1088,6 +1088,7 @@ def admin_gifts():
     return private("Gifts", f"""<p class="crumbs"><a href="/admin">Admin</a></p><h1>Gifts</h1>
 {f'<p class="note-box">{msg}</p>' if msg else ""}
 <h2>Give a place in the Order</h2>
+<p class="note-box">To use the Order and the Inner Circle yourself: give <b>The Inner Circle</b>, <b>For good</b>, to your own email, then sign in with that email. You'll have the Hall, the weekly letter and the practice desk, with nothing charged.</p>
 <p class="muted">Nothing is charged and no card is asked for. They get an email inviting them to sign in, and everything the plan includes works straight away. When it ends they are back on the free site, unless they pay for a plan of their own, which a gift never changes.</p>
 <form class="pg-form" method="post" action="/admin/gift/membership">
 <label>Their email <input name="email" type="email" required maxlength="254"></label>
