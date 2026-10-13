@@ -9,7 +9,9 @@ from . import stripe_api
 
 PRICE_TIER = {p: t for p, t in ((os.environ.get("STRIPE_MEMBER_MONTHLY_PRICE"), "member"),
                                 (os.environ.get("STRIPE_MEMBER_YEARLY_PRICE"), "member"),
-                                (os.environ.get("STRIPE_PRO_MONTHLY_PRICE"), "pro")) if p}
+                                (os.environ.get("STRIPE_PRO_MONTHLY_PRICE"), "pro"),
+                                (os.environ.get("STRIPE_PATH_MONTHLY_PRICE"), "path")) if p}
+TIERS = ("member", "pro", "path")        # the Order, the Inner Circle, the Lightning Path (the monthly 1:1)
 
 LIVE = ("active", "trialing", "past_due")      # past_due: Stripe is still retrying the card
 CACHE_SECONDS = 300
@@ -42,7 +44,7 @@ def status(secret, email, fresh=False):
             for s in stripe_api.subscriptions(secret, c["id"]):
                 item = ((s.get("items") or {}).get("data") or [{}])[0]
                 tier = tier_of(s)
-                if tier not in ("member", "pro"): continue
+                if tier not in TIERS: continue
                 plan = {"id": s["id"], "tier": tier, "status": s.get("status"), "customer": c["id"],
                         "interval": ((item.get("price") or {}).get("recurring") or {}).get("interval"),
                         "periodEnd": s.get("current_period_end") or item.get("current_period_end"),
@@ -107,7 +109,7 @@ def count_pro_reading(secret, email):
 
 
 def _empty():
-    return {"customer": None, "member": False, "pro": False, "plans": [], "birth": None, "proUse": 0, "gift": None}
+    return {"customer": None, "member": False, "pro": False, "path": False, "plans": [], "birth": None, "proUse": 0, "gift": None}
 
 
 # ---------------- gifts: a membership or Professional plan given by The Völva ----------------

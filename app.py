@@ -629,7 +629,8 @@ def sitemap():
 def reports_page():
     return page(*pages.reports(config.BASE_URL, config.PRICE_CENTS, config.MEMBER_READING_CENTS,
                                config.MEMBER_MONTHLY_CENTS, config.MEMBER_YEARLY_CENTS, config.PRO_MONTHLY_CENTS, config.PRO_READINGS_A_MONTH,
-                               config.TOGETHER_CENTS, config.TOGETHER_EXTRA_CENTS, config.TOGETHER_MEMBER_OFF))
+                               config.TOGETHER_CENTS, config.TOGETHER_EXTRA_CENTS, config.TOGETHER_MEMBER_OFF,
+                               config.CONSULT_CENTS, config.PATH_MONTHLY_CENTS, config.PATH_CALLS))
 
 @app.get("/learn")
 def learn_page():
@@ -770,7 +771,11 @@ PLANS = {
     "member-month": ("member", config.MEMBER_NAME, lambda: config.MEMBER_MONTHLY_CENTS, "month", config.MEMBER_MONTHLY_PRICE),
     "member-year":  ("member", config.MEMBER_NAME + " (yearly)", lambda: config.MEMBER_YEARLY_CENTS, "year", config.MEMBER_YEARLY_PRICE),
     "pro-month":    ("pro", config.PRO_NAME, lambda: config.PRO_MONTHLY_CENTS, "month", config.PRO_MONTHLY_PRICE),
+    "path-month":   ("path", config.PATH_NAME, lambda: config.PATH_MONTHLY_CENTS, "month", config.PATH_MONTHLY_PRICE),
 }
+TIER_NAME = {"member": config.MEMBER_NAME, "pro": config.PRO_NAME, "path": config.PATH_NAME}
+HOME_OF = {"member": "/account", "pro": "/account", "path": "/path"}       # where each plan's members land after joining
+OFFER_OF = {"member": "/membership", "pro": "/membership", "path": "/work-with-me"}
 
 def money(c): return f"${c / 100:.0f}" if c % 100 == 0 else f"${c / 100:.2f}"
 pages.PRICE = money(config.PRICE_CENTS)
@@ -883,7 +888,7 @@ and <a href="/reports">the reading together</a> is {money(config.TOGETHER_CENTS)
 def subscribe():
     plan = PLANS.get(request.form.get("plan", ""))
     if not plan or not same_origin(): abort(400)
-    if not selling(): return redirect("/membership")
+    if not selling(): return redirect(OFFER_OF[plan[0]])
     email = signed_in()
     if limited(10): return private("Wait a minute", "<h1>Wait a minute</h1><p>Too many tries. Try again shortly.</p>", status=429)
     tier, name, cents, interval, price_id = plan
@@ -891,14 +896,14 @@ def subscribe():
         try:
             s = stripe_api.subscription_checkout(config.STRIPE_SECRET, base_url=config.BASE_URL, customer=None, tier=tier, name=name,
                                                  cents=cents(), interval=interval, success="/welcome?session_id={CHECKOUT_SESSION_ID}",
-                                                 cancel="/membership", price_id=price_id or None)
+                                                 cancel=OFFER_OF[tier], price_id=price_id or None)
         except stripe_api.StripeError as e:
             app.logger.error("stripe: %s", e)
-            return private("Try again", '<h1>Payment couldn\'t start</h1><p>Please <a href="/membership">try again</a>.</p>', status=502)
+            return private("Try again", f'<h1>Payment couldn\'t start</h1><p>Please <a href="{OFFER_OF[tier]}">try again</a>.</p>', status=502)
         return redirect(s["url"], code=303)
     try:
         st = billing.status(config.STRIPE_SECRET, email, fresh=True)
-        if st[tier]: return redirect("/account")                       # already has it
+        if st[tier]: return redirect(HOME_OF[tier])                    # already has it
         current = next((p for p in st["plans"] if p["status"] in billing.LIVE and p["tier"] == "member"), None)
         if tier == "pro" and current and price_id:                     # a member moves up in the portal, keeping one plan
             p = stripe_api.portal(config.STRIPE_SECRET, st["customer"], config.BASE_URL + "/account?joined=1", upgrade=current["id"])
@@ -906,7 +911,7 @@ def subscribe():
             return redirect(p["url"], code=303)
         cid = billing.customer_for(config.STRIPE_SECRET, email)
         s = stripe_api.subscription_checkout(config.STRIPE_SECRET, base_url=config.BASE_URL, customer=cid, tier=tier, name=name,
-                                             cents=cents(), interval=interval, success="/account?joined=1", cancel="/membership",
+                                             cents=cents(), interval=interval, success=HOME_OF[tier] + "?joined=1", cancel=OFFER_OF[tier],
                                              price_id=price_id or None)
     except stripe_api.StripeError as e:
         app.logger.error("stripe: %s", e)
@@ -924,6 +929,8 @@ def welcome():
     except stripe_api.StripeError:
         cs = None
     if not cs or cs.get("mode") != "subscription" or cs.get("status") != "complete": return redirect("/membership")
+    tier = (cs.get("metadata") or {}).get("tier") or "member"
+    home, plan_name = HOME_OF.get(tier, "/account") + "?joined=1", TIER_NAME.get(tier, config.MEMBER_NAME)
     cust = cs.get("customer") if isinstance(cs.get("customer"), dict) else {}
     email = accounts.clean_email((cs.get("customer_details") or {}).get("email") or cust.get("email"))
     if not email: return redirect("/signin")
@@ -936,14 +943,14 @@ def welcome():
         try: stripe_api.update_customer_metadata(config.STRIPE_SECRET, cust["id"], {"wyrd": "1"})
         except (stripe_api.StripeError, KeyError): pass
         # a page, not a redirect: the sign-in cookie is only sent on a navigation that starts on this site
-        return private("Welcome", f"""<meta http-equiv="refresh" content="1;url=/account?joined=1">
+        return private("Welcome", f"""<meta http-equiv="refresh" content="1;url={home}">
 <h1>Welcome</h1><p class="lede">Your payment went through and you're signed in as {esc(email)}.</p>
-<p><a class="btn-cast" href="/account?joined=1">Go to your account</a></p>""")
-    token = accounts.make_token(config.SECRET_KEY, email, "/account?joined=1")
+<p><a class="btn-cast" href="{home}">Go to {"your page" if tier == "path" else "your account"}</a></p>""")
+    token = accounts.make_token(config.SECRET_KEY, email, home)
     link = f"{config.BASE_URL}/auth/{token}"
-    mailer.send(email, "The Order: sign in",
-        f'<p>You\'re in the Order. <a href="{esc(link)}">Sign in to your account</a> (this link works for {accounts.LINK_MINUTES} minutes).</p>',
-        f"You're in the Order. Sign in: {link}")
+    mailer.send(email, f"{plan_name}: sign in",
+        f'<p>Welcome to {esc(plan_name)}. <a href="{esc(link)}">Sign in to your account</a> (this link works for {accounts.LINK_MINUTES} minutes).</p>',
+        f"Welcome to {plan_name}. Sign in: {link}")
     return private("Welcome", f"""<h1>Welcome</h1><p class="lede">Your payment went through.</p>
 <p>We've sent a sign-in link to {esc(email)}. Open it to reach your account.</p>""")
 
@@ -975,7 +982,7 @@ def account_page():
         live = p["status"] in billing.LIVE
         end = datetime.fromtimestamp(p["periodEnd"], timezone.utc).strftime("%-d %B %Y") if p.get("periodEnd") else ""
         when = (f" · ends {end}" if p["cancelAtEnd"] else f" · renews {end}") if live and end else ""
-        rows.append(f'<li>{"The Inner Circle" if p["tier"] == "pro" else "The Order"} ({p.get("interval") or "month"}ly) '
+        rows.append(f'<li>{esc(TIER_NAME.get(p["tier"], config.MEMBER_NAME))} ({p.get("interval") or "month"}ly) '
                     f'<span class="status {"on" if live else "off"}">{esc(p["status"].replace("_", " "))}</span>{when}</li>')
     joined = '<p class="note-box">Welcome. Your payment went through.</p>' if request.args.get("joined") else ""
     g = st.get("gift")
@@ -983,7 +990,7 @@ def account_page():
         rows.insert(0, f'<li>{"The Inner Circle" if g["tier"] == "pro" else "The Order"}, a gift from {esc(config.AUTHOR)}, {nice_until(g["until"])} <span class="status on">active</span></li>')
     portal_btn = '<form method="post" action="/billing/portal"><button class="alt" type="submit">Manage or cancel, change card, see receipts</button></form>' if st["plans"] else ""
     plans = f'<ul>{"".join(rows)}</ul>{portal_btn}' if rows else \
-            '<p>You\'re not in the Order yet. <a href="/membership">See the Order</a>.</p>'
+            '<p>You\'re not in the Order yet. <a href="/membership">See the Order</a>, or <a href="/work-with-me">work with me one to one</a>.</p>'
     member = st["member"] or st["pro"]
     chart = ""
     if member:
@@ -994,6 +1001,7 @@ def account_page():
 <p class="muted" id="noCurrent">To change it, <a href="/">cast the chart</a>, then come back here.</p>
 {WEEK_LINK if b else ""}"""
     pro = f'<h2>The Inner Circle</h2><p><a href="/pro">Open your practice desk →</a> {st["proUse"]} of {config.PRO_READINGS_A_MONTH} client readings used this month.</p>' if st["pro"] else ""
+    if st.get("path"): pro = f'<h2>{esc(config.PATH_NAME)}</h2><p><a href="/path">Book a call or write to me →</a></p>' + pro
     script = """<script src="/static/common.js"></script><script>
 (() => { const c = WyrdCommon.current(), box = document.getElementById("useCurrent"); if (!c || !box) return;
   box.hidden = false; document.getElementById("noCurrent").hidden = true;
@@ -1202,6 +1210,7 @@ def jobs_weekly():
     return jsonify(jobs.weekly(EPH, cast_for, birth_from, config))
 
 import order_routes  # noqa: E402,F401  (the Hall and the practice desk; uses the helpers above)
+import path_routes   # noqa: E402,F401  (working one to one, the Lightning Path, and the contact form)
 
 @app.get("/healthz")
 def health():

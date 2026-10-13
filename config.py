@@ -67,3 +67,12 @@ PRO_NAME             = "The Inner Circle"
 # Locks the weekly email job (POST /jobs/weekly) so only your scheduler can run it.
 JOBS_TOKEN           = os.environ.get("JOBS_TOKEN", "")
 OWNER_EMAIL          = os.environ.get("OWNER_EMAIL", "")       # where your Monday summary goes
+
+# --- The Lightning Path: the monthly 1:1 with The Völva, and the first consult ---
+PATH_NAME            = "The Lightning Path"
+PATH_MONTHLY_CENTS   = int(os.environ.get("PATH_MONTHLY_CENTS", "25000"))       # $250 a month
+PATH_CALLS           = int(os.environ.get("PATH_CALLS", "3"))                   # one-hour calls a month
+PATH_MONTHLY_PRICE   = os.environ.get("STRIPE_PATH_MONTHLY_PRICE", "")          # optional real Stripe price
+CONSULT_CENTS        = int(os.environ.get("CONSULT_CENTS", "10000"))            # the first 1:1 consult, $100 (shown; the Payment Link charges it)
+BOOKING_URL          = os.environ.get("BOOKING_URL", "").strip()                # your booking page for the calls (Calendly or similar)
+MESSAGES_TO          = os.environ.get("MESSAGES_TO", "").strip() or OWNER_EMAIL or "support@wyrdconsole.com"   # where members' messages go

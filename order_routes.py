@@ -76,13 +76,14 @@ def _plans_html(st):
         live = p["status"] in billing.LIVE
         end = datetime.fromtimestamp(p["periodEnd"], timezone.utc).strftime("%-d %B %Y") if p.get("periodEnd") else ""
         when = (f" · ends {end}" if p["cancelAtEnd"] else f" · renews {end}") if live and end else ""
-        rows.append(f'<li>{"The Inner Circle" if p["tier"] == "pro" else "The Order"} ({p.get("interval") or "month"}ly) '
+        rows.append(f'<li>{esc(A.TIER_NAME.get(p["tier"], config.MEMBER_NAME))} ({p.get("interval") or "month"}ly) '
                     f'<span class="status {"on" if live else "off"}">{esc(p["status"].replace("_", " "))}</span>{when}</li>')
     g = st.get("gift")
     if g and g["live"]:
         rows.insert(0, f'<li>{"The Inner Circle" if g["tier"] == "pro" else "The Order"}, a gift from {esc(config.AUTHOR)}, {A.nice_until(g["until"])} <span class="status on">active</span></li>')
     portal = '<form method="post" action="/billing/portal"><button class="alt" type="submit">Manage or cancel, change card, see receipts</button></form>' if st["plans"] else ""
-    return f'<ul>{"".join(rows)}</ul>{portal}'
+    path = f'<p><a href="/path">{esc(config.PATH_NAME)}: book a call or write to me →</a></p>' if st.get("path") else ""
+    return f'<ul>{"".join(rows)}</ul>{path}{portal}'
 
 
 USE_CURRENT = """<script src="/static/common.js"></script><script>

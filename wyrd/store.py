@@ -10,6 +10,7 @@ Tables, each keyed to the member's or practitioner's email:
   practice   a practitioner's practice name
   clients    a practitioner's clients: name, birth details, email, notes
   readings   every client reading generated, with a private token for its share link
+  messages   what a member of the Lightning Path has written to The Völva between calls
 """
 import json, os, secrets, sqlite3, threading, time
 
@@ -23,7 +24,10 @@ SCHEMA = [
          birth TEXT NOT NULL, notes TEXT, created DOUBLE PRECISION NOT NULL, updated DOUBLE PRECISION NOT NULL)""",
     """CREATE TABLE IF NOT EXISTS readings (token TEXT PRIMARY KEY, pro TEXT NOT NULL, client TEXT, name TEXT NOT NULL,
          birth TEXT NOT NULL, created DOUBLE PRECISION NOT NULL, sent_to TEXT)""",
+    """CREATE TABLE IF NOT EXISTS messages (id TEXT PRIMARY KEY, email TEXT NOT NULL, body TEXT NOT NULL,
+         created DOUBLE PRECISION NOT NULL)""",
     "CREATE INDEX IF NOT EXISTS kin_email ON kin (email)",
+    "CREATE INDEX IF NOT EXISTS messages_email ON messages (email)",
     "CREATE INDEX IF NOT EXISTS clients_pro ON clients (pro)",
     "CREATE INDEX IF NOT EXISTS readings_pro ON readings (pro)",
 ]
@@ -197,3 +201,17 @@ def reading_by_token(token):
 
 def mark_sent(pro, token, to):
     return _run("UPDATE readings SET sent_to = ? WHERE pro = ? AND token = ?", (_clean(to)[:120], _clean(pro), token))
+
+
+# ---------------- the Lightning Path: messages between calls ----------------
+MESSAGE_MAX = 5000           # characters in one message
+
+
+def add_message(email, body):
+    mid = _new_id()
+    _run("INSERT INTO messages (id, email, body, created) VALUES (?, ?, ?, ?)", (mid, _clean(email), body[:MESSAGE_MAX], time.time()))
+    return mid
+
+
+def messages(email, limit=50):
+    return _run("SELECT id, body, created FROM messages WHERE email = ? ORDER BY created DESC LIMIT ?", (_clean(email), int(limit)), "all")
