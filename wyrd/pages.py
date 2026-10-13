@@ -48,6 +48,11 @@ def _cta():
 
 
 # ---------------- the readings ----------------
+def _testimonials(where):
+    from . import testimonials
+    return testimonials.render(where)
+
+
 def reports(base, price_cents, member_cents, month_cents=1100, year_cents=9900, pro_cents=3300, pro_n=30,
             together_cents=2200, together_extra=1100, member_off=20):
     p = price_cents / 100
@@ -83,6 +88,7 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=9900, 
     <a class="btn-cast" href="/membership#pro">See the Inner Circle</a></section>
 </div>
 <p class="muted">A 1:1 consultation with The Völva on your chart: ask through <a href="https://thewebofwyrd.substack.com">The Web of Wyrd</a>.</p>
+{_testimonials("reports")}
 <h2>Questions</h2>
 <h3>What do I need for an astrology reading?</h3><p>Your date, time and place of birth. If you don't know the time, the free chart still works with solar houses, and the reading tells you which parts depend on the time.</p>
 <h3>Is this sidereal or tropical astrology?</h3><p>Both. Signs, nakshatras and houses are sidereal (Lahiri). The 64 gates use the tropical zodiac, as Human Design does. Your Dharma Design is the ninth harmonic (D9) of the sidereal positions.</p>

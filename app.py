@@ -94,7 +94,9 @@ def cast_for(b):
 # ---------------- pages ----------------
 @app.get("/")
 def home():
-    return send_from_directory(app.static_folder, "index.html")
+    from wyrd import testimonials
+    t = open(os.path.join(app.static_folder, "index.html"), encoding="utf-8").read()
+    return Response(t.replace("<!--TESTIMONIALS-->", testimonials.render("home")), mimetype="text/html")
 
 # ---------------- the installable app ----------------
 @app.get("/sw.js")
@@ -786,6 +788,7 @@ def membership_page():
         return (f'<form method="post" action="/api/subscribe"><input type="hidden" name="plan" value="{plan}">'
                 f'<button class="{"btn-buy" if lead else "btn-cast"}" type="submit">{label}</button></form>')
     m, y, pr = config.MEMBER_MONTHLY_CENTS, config.MEMBER_YEARLY_CENTS, config.PRO_MONTHLY_CENTS
+    from wyrd import testimonials
     sample = sample_weather()
     body = f"""<div class="order-hero"><p class="hall-kicker">Join</p><h1>The Order</h1>
 <p class="lede">Your design's weather, every week. A letter each Monday on how the planets move through your Birth Design and your Dharma Design,
@@ -813,6 +816,8 @@ written in The Völva's words, and a Hall of your own on the site to keep it all
   <li>Your first letter is waiting in the Hall at once, and a new one comes to your inbox every Monday.</li>
   <li>Add the people you love, and read their weather beside yours.</li>
 </ol>
+
+{testimonials.render("order")}
 
 <h2>Choose your place</h2>
 <div class="plans">
