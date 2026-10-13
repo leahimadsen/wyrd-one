@@ -2,8 +2,8 @@
 /* ============================================================
    THE PLANS AS TAROT CARDS
    Each .plan on the offers and Order pages becomes a card. Its face is a
-   dark arcanum of its own: a numeral, a drawn emblem with a rune at its
-   heart, the name, one line (data-line) and the price. Click or tap and it
+   arcanum of its own, on her paper in its own colour with her knotwork at
+   two corners: a numeral, a drawn emblem with a rune at its heart, the name, one line (data-line) and the price. Click or tap and it
    turns over to the full plan. Without this script the plans stay plain cards.
 
    Which card is which comes from data-arcanum on the .plan. To change a
@@ -17,7 +17,7 @@ if (!plans.length) return;
 const ARCANA = {
   reading:  { n: "I",   rune: "perthro", emblem: "wheel" },   // your whole chart: the wheel of 12 signs and 27 mansions
   together: { n: "II",  rune: "gebo",    emblem: "rings" },   // two or more charts, one story: interlaced rings
-  order:    { n: "III", rune: "jera",    emblem: "moons" },   // your weather, every week: seven moons
+  order:    { n: "III", rune: "othala",  emblem: "moons" },   // your weather, every week: seven moons
   circle:   { n: "IV",  rune: "kenaz",   emblem: "seats" },   // for those who read for others: nine seats in a ring
 };
 const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
@@ -26,7 +26,7 @@ const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
 const RUNE = {
   perthro: "M90 80V120M90 80L101 92L111 80M90 120L101 108L111 120",
   gebo:    "M87 80L113 120M113 80L87 120",
-  jera:    "M99 80L88 91L99 102M101 98L112 109L101 120",
+  othala:  "M100 80L112 94L90 119M100 80L88 94L110 119",
   kenaz:   "M109 82L91 100L109 118",
 };
 
@@ -66,16 +66,6 @@ const EMBLEM = {
   },
 };
 
-/* a few stars behind each card, the same every visit */
-function stars(seed) {
-  let h = 2166136261;
-  for (const c of seed) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
-  const rnd = () => ((h = Math.imul(h ^ (h >>> 15), 2246822507) ^ Math.imul(h ^ (h >>> 13), 3266489909)) >>> 0) / 4294967296;
-  let s = "";
-  for (let i = 0; i < 46; i++) s += `<circle cx="${f(rnd() * 70)}" cy="${f(rnd() * 120)}" r="${f(.12 + rnd() * .38)}" opacity="${f(.25 + rnd() * .65)}"/>`;
-  return `<svg class="tc-stars" viewBox="0 0 70 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">${s}</svg>`;
-}
-
 const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 plans.forEach((plan, i) => {
@@ -92,7 +82,7 @@ plans.forEach((plan, i) => {
   const face = document.createElement("button");
   face.type = "button"; face.className = "tc-face";
   face.setAttribute("aria-label", `${name ? name.textContent : "Plan"}: turn the card over to see what's in it`);
-  face.innerHTML = `${stars(key || String(i))}
+  face.innerHTML = `<span class="tc-knot tc-knot-tr" aria-hidden="true"></span><span class="tc-knot tc-knot-bl" aria-hidden="true"></span>
     <span class="tc-num">${A.n || ROMAN[i] || i + 1}</span>
     ${emblem}
     <span class="tc-name">${name ? name.textContent : ""}</span>

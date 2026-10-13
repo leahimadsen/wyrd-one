@@ -76,33 +76,45 @@ body.pg { background: var(--void); color: var(--ivory); font-family: var(--serif
 /* the face: a night of its own colour, framed in its light */
 .tc-face { all: unset; grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-sizing: border-box; cursor: pointer;
   position: relative; isolation: isolate; min-height: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-  gap: 10px; padding: 30px 20px 24px; text-align: center; border-radius: 12px; color: #f3ecff;
-  background: radial-gradient(ellipse 85% 60% at 50% 40%, var(--arc-mid), var(--arc-deep) 72%), var(--arc-deep);
-  border: 2px solid color-mix(in srgb, var(--arc-light) 70%, transparent);
-  box-shadow: 0 0 0 1px #000, inset 0 0 0 7px var(--arc-deep), inset 0 0 0 8px color-mix(in srgb, var(--arc-light) 38%, transparent),
-              6px 6px 0 rgba(29,23,18,.22), 0 10px 30px color-mix(in srgb, var(--arc-mid) 45%, transparent); }
+  gap: 10px; padding: 30px 20px 24px; text-align: center; border-radius: 10px; color: #f3ecff;
+  /* her paper, dyed the card's colour: the grain shows through, darker toward the edges like old card stock */
+  background: radial-gradient(ellipse 110% 85% at 50% 42%, transparent 40%, rgba(0,0,0,.58)),
+              url(/static/look/paper.jpg) center / 320px,
+              linear-gradient(170deg, color-mix(in srgb, var(--arc-mid) 82%, #000), var(--arc-deep) 82%);
+  background-blend-mode: normal, soft-light, normal;
+  border: 2px solid color-mix(in srgb, var(--arc-light) 55%, #000);
+  box-shadow: 0 0 0 1px #000, inset 0 0 0 7px rgba(0,0,0,.28), inset 0 0 0 8px color-mix(in srgb, var(--arc-light) 45%, transparent),
+              inset 0 0 0 11px rgba(0,0,0,.18), inset 0 0 0 12px color-mix(in srgb, var(--arc-light) 22%, transparent),
+              6px 6px 0 rgba(29,23,18,.28); }
+/* fine engraved hatching over the whole face, like a woodcut's shading */
+.tc-face::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .5;
+  background: repeating-linear-gradient(135deg, rgba(0,0,0,.22) 0 1px, transparent 1px 4px);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 42%, transparent 35%, #000 85%); mask-image: radial-gradient(ellipse 80% 70% at 50% 42%, transparent 35%, #000 85%); }
+/* her knotwork at two corners, in the card's light */
+.tc-knot { position: absolute !important; z-index: 0 !important; width: 44%; aspect-ratio: 1; pointer-events: none; background: var(--arc-light); opacity: .72;
+  -webkit-mask: center / contain no-repeat; mask: center / contain no-repeat; }
+.tc-knot-tr { top: 8px; right: 8px; -webkit-mask-image: url(/static/look/knot-tr.png); mask-image: url(/static/look/knot-tr.png); }
+.tc-knot-bl { bottom: 8px; left: 8px; -webkit-mask-image: url(/static/look/knot-bl.png); mask-image: url(/static/look/knot-bl.png); }
 .tc-face::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .3s;
-  background: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), color-mix(in srgb, var(--arc-light) 22%, transparent), transparent 46%); }
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgba(255,248,232,.13), transparent 46%); }
 .plan.leaning .tc-face::after { opacity: 1; }
 .tc-face > * { position: relative; z-index: 1; }
-.tc-face > .tc-stars { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; fill: var(--arc-light); opacity: .55; }
 .tc-face:focus-visible { outline: 3px solid var(--arc-light); outline-offset: 4px; }
 .tc-num { font-family: 'IM Fell English SC', 'IM Fell English', Georgia, serif; letter-spacing: .32em; font-size: 15px; color: var(--arc-light); opacity: .9; }
 .tc-sigil { width: 64%; max-width: 190px; height: auto; flex: 0 1 auto; min-height: 0; overflow: visible; margin: 4px 0 6px;
-  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--arc-light) 55%, transparent)); transition: filter .4s, transform .6s; }
-.tc-lines { fill: none; stroke: var(--arc-light); stroke-width: 1.6; stroke-linecap: round; }
+  filter: drop-shadow(1px 1.5px 0 rgba(0,0,0,.55)); transition: filter .4s, transform .6s; }
+.tc-lines { fill: none; stroke: var(--arc-light); stroke-width: 2; stroke-linecap: round; }
 .tc-lines .fine { stroke-width: .9; opacity: .55; }
 .tc-lines .dash { stroke-dasharray: 2 5; }
 .tc-lines .core { stroke-width: 1.2; opacity: .8; }
 .tc-lines .moon { stroke-width: 1; opacity: .7; }
 .tc-lines .lit { fill: var(--arc-light); stroke: none; }
-.tc-rune { fill: none; stroke: #fff; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round;
-  filter: drop-shadow(0 0 4px var(--arc-light)); }
-.tc-face:hover .tc-sigil, .tc-face:focus-visible .tc-sigil { filter: drop-shadow(0 0 10px var(--arc-light)); transform: scale(1.03); }
+.tc-rune { fill: none; stroke: #fff8e8; stroke-width: 3.6; stroke-linecap: square; stroke-linejoin: miter; }
+.tc-face:hover .tc-sigil, .tc-face:focus-visible .tc-sigil { filter: drop-shadow(1px 1.5px 0 rgba(0,0,0,.55)) drop-shadow(0 0 6px color-mix(in srgb, var(--arc-light) 45%, transparent)); transform: scale(1.03); }
 .tc-emblem { width: 46%; max-width: 150px; height: auto; opacity: .9; }
 .tc-name { font-family: 'UnifrakturMaguntia', serif; font-size: clamp(26px, 2.6vw, 34px); line-height: 1.1; color: #fff;
   min-height: 2.2em; display: flex; align-items: center; justify-content: center;   /* one line or two, the card keeps its shape */
-  text-shadow: 0 0 10px color-mix(in srgb, var(--arc-light) 70%, transparent), 0 0 28px color-mix(in srgb, var(--arc-light) 35%, transparent); }
+  text-shadow: 1px 2px 0 rgba(0,0,0,.6), 0 0 14px color-mix(in srgb, var(--arc-light) 30%, transparent); }
 .tc-line { font-family: 'IM Fell English', Georgia, serif; font-style: italic; font-size: 17px; max-width: 22ch; color: #ece4f7; }
 .tc-price { font-family: 'IM Fell English', Georgia, serif; font-size: 24px; color: var(--arc-light); }
 .tc-price small { font-size: 14px; opacity: .8; }
