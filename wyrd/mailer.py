@@ -19,22 +19,23 @@ def ready():
     return bool(RESEND_KEY or (SMTP_HOST and SMTP_USER and SMTP_PASSWORD))
 
 
-def send(to, subject, html, text=""):
+def send(to, subject, html, text="", reply_to=None):
     try:
-        if RESEND_KEY: return _resend(to, subject, html, text)
-        if SMTP_HOST and SMTP_USER and SMTP_PASSWORD: return _smtp(to, subject, html, text)
+        if RESEND_KEY: return _resend(to, subject, html, text, reply_to)
+        if SMTP_HOST and SMTP_USER and SMTP_PASSWORD: return _smtp(to, subject, html, text, reply_to)
     except Exception as e:                       # mail trouble never breaks a page
         log.error("mail failed: %s", e)
         return False
-    OUTBOX.append({"to": to, "subject": subject, "html": html, "text": text})
+    OUTBOX.append({"to": to, "subject": subject, "html": html, "text": text, "reply_to": reply_to})
     del OUTBOX[:-50]
     log.warning("mail not sent (no mail settings): %s -> %s", subject, to)
     return False
 
 
-def _resend(to, subject, html, text):
+def _resend(to, subject, html, text, reply_to=None):
     body = {"from": FROM, "to": [to], "subject": subject, "html": html}
     if text: body["text"] = text
+    if reply_to: body["reply_to"] = reply_to
     req = urllib.request.Request("https://api.resend.com/emails", data=json.dumps(body).encode(), method="POST",
                                  headers={"Authorization": f"Bearer {RESEND_KEY}", "Content-Type": "application/json",
                                           "User-Agent": "wyrd-console"})
@@ -42,9 +43,10 @@ def _resend(to, subject, html, text):
         return 200 <= r.status < 300
 
 
-def _smtp(to, subject, html, text):
+def _smtp(to, subject, html, text, reply_to=None):
     m = EmailMessage()
     m["From"], m["To"], m["Subject"] = FROM, to, subject
+    if reply_to: m["Reply-To"] = reply_to
     m.set_content(text or "Open this message in an email app that shows HTML.")
     m.add_alternative(html, subtype="html")
     if SMTP_PORT == 465:
