@@ -16,10 +16,11 @@ which passages a chart calls for and lays them out.
   X    The Body's Old Map  medical astrology: every map of the body on the ladder's seven stations (wyrd/medical.py)
   XI   Where You Thrive    culture, places and work
   XII  The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
-  XIII The Path of Dharma  Mission, Illuminations, the Diamond
-  XIV  The Numbers         life path, birthday, personal year, and the name's numbers, each on two planets
-  XV   The Questions       every question the chart asked, gathered
-  XVI  For the Record      the reference table: positions, mansions, runes, cards and gates
+  XIII The Dharma Gates   every gate the Dharma Design holds, and how to wake it (wyrd/dharma.py, lib/dharma.json)
+  XIV  The Path of Dharma  Mission, Illuminations, the Diamond
+  XV   The Numbers         life path, birthday, personal year, and the name's numbers, each on two planets
+  XVI  The Questions       every question the chart asked, gathered
+  XVII For the Record      the reference table: positions, mansions, runes, cards and gates
 
 Sections refer to each other by name ({{SEC:The Work}}, or {SEC:The Work} once an f-string has halved the braces); the numbers are filled in last.
 
@@ -38,6 +39,7 @@ from . import reading_more as MORE
 from . import story as STORY
 from . import reading_numbers as NUMBERS
 from . import medical as MEDICAL
+from . import dharma as DHARMA
 
 CORPUS = json.load(open(os.path.join(os.path.dirname(__file__), "..", "lib", "corpus.json"), encoding="utf-8"))
 REG, ENG, NAKS, DEEP = CORPUS["REGISTER"], CORPUS["ENGINE"], CORPUS["NAKSHATRA"], CORPUS["NAK_DEEP"]
@@ -46,7 +48,7 @@ GATE_NAME, KGLOSS, SEQ = CORPUS["GATE_NAME"], CORPUS["KARAKA_GLOSS"], CORPUS["SE
 
 GLYPH = {"Sun": "☉", "Moon": "☽", "Mercury": "☿", "Venus": "♀", "Mars": "♂", "Jupiter": "♃",
          "Saturn": "♄", "Uranus": "♅", "Neptune": "♆", "Pluto": "♇", "Rahu": "☊", "Ketu": "☋", "Earth": "⊕"}
-ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI"]
+ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII"]
 
 esc = html.escape
 
@@ -327,6 +329,7 @@ def build(chart, dasha, who):
       {dharma_table(N, Dh)}
       {VG.thread(C)}"""))
     asks.append(("From Rashi to Dharma", VG.W["ASK"], False))
+    out.append(section(0, DHARMA.T["TITLE"], DHARMA.T["SUB"], DHARMA.body(C, dasha, activation)))
 
     # ---------- VI · the Path of Dharma ----------
     def steps(rave):

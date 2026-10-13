@@ -1,0 +1,619 @@
+{
+ "_note": "DRAFT for The Völva to rewrite in her own words. The Dharma Gates section of the reading (wyrd/dharma.py): how to wake each gate, channel and centre the Dharma Design holds. To hide a gate's practice, set its \"ok\" to false; to change one, edit its text.",
+ "TITLE": "The Dharma Gates",
+ "SUB": "every gate your Dharma Design holds, and how to wake it",
+ "INTRO": [
+  "Your Birth Design is the equipment you were issued. Your Dharma Design is what that equipment is for: a second set of gates, the shape your life grows into. None of them arrives switched on. A dharma gate is a direction, and it wakes when you walk in it.",
+  "Below is every gate your Dharma Design holds, read one by one, gathered under the centre it belongs to. Each one says which of your planets carries it, whether it repeats your Birth Design, and how to wake it."
+ ],
+ "WAYS_TITLE": "Four ways a gate wakes",
+ "WAYS": [
+  [
+   "Practice",
+   "Each gate has a small, concrete practice. Do it on purpose, often, for a season."
+  ],
+  [
+   "Its line",
+   "The line a gate sits on says how you learn it: by study, by being called out, by trial and error, through friends, by solving a problem, or by living it over years."
+  ],
+  [
+   "Its other half",
+   "Every gate is half of a channel. Where your Birth Design already holds the other half, you have a bridge: live the two together and a steady current comes on."
+  ],
+  [
+   "Its time",
+   "Each gate opens in a period of your own clock, and the Sun lights it for a few days every year. Those are the windows when it wakes most easily."
+  ]
+ ],
+ "CH_DHARMA_TITLE": "Channels the Dharma completes",
+ "CH_DHARMA_INTRO": "These channels are whole in your Dharma Design: both of their gates are there. They're the steady currents your life matures into.",
+ "CH_DHARMA_NONE": "Your Dharma Design completes no channel on its own. It works through single gates, each one reaching for its other half. That's what makes the bridges below so important.",
+ "CH_BRIDGE_TITLE": "Channels your two designs make together",
+ "CH_BRIDGE_INTRO": "Neither design completes these alone. One gate is in your Birth Design and the other in your Dharma Design. They're the bridges between who you were issued as and who you're becoming: live the birth half on purpose while you practise the dharma half, and the channel comes on.",
+ "CH_BRIDGE_NONE": "No channel is completed by your two designs together. Your Dharma gates find their other halves in other people and in the sky, so the company you keep matters more than most.",
+ "GATES_TITLE": "Gate by gate",
+ "GATES_INTRO": "Read these in body order, from the Head down. Start with the gates that repeat your Birth Design: they're load-bearing, the ones your life won't outgrow.",
+ "LIVE": "How to live it",
+ "DO": "How to wake it",
+ "SIGN": "You'll know it's waking when {sign}",
+ "REPEATS": "repeats your Birth Design",
+ "NEW": "new in the Dharma",
+ "CARRIED": "Carried by your {who}.",
+ "IN_CROSS": "Part of your dharma cross: read in full in section {SEC:The Dharma Weave}.",
+ "DESIGN_ONLY": [
+  "It's carried only on the design side, so it runs below awareness. Wake it through the body and the practice, not by thinking about it.",
+  "Design side only: wake it through the body."
+ ],
+ "PARTNER_DHARMA": "It completes the channel {a}–{b}, {name}, inside your Dharma Design.",
+ "PARTNER_BIRTH": "Your Birth Design already holds its other half, gate {g} ({t}): a bridge. Live the two together and {name} comes on.",
+ "PARTNER_OPEN": [
+  "Its other half is gate {g} ({t}). It comes alive with people who carry that gate, and when the sky lights it.",
+  "Its other half, gate {g} ({t}), comes from other people and the sky."
+ ],
+ "SUN_WEEK": [
+  "The Sun lights this gate each year {when}: a good few days to practise it.",
+  "The Sun lights it {when}."
+ ],
+ "BW": "Members of the Order see in their weekly Body Weather which of these gates the sky is lighting.",
+ "CENTRE_SAME_DEF": "Defined in both designs.",
+ "CENTRE_SAME_OPEN": "Open in both designs.",
+ "LINE": {
+  "1": "Line 1, the foundation: you wake this gate by study. Learn how it works before you live it, and it holds.",
+  "2": "Line 2, the natural: you wake this gate by being called out. Do it for its own sake, and let others notice and ask.",
+  "3": "Line 3, the experimenter: you wake this gate by trial and error. What doesn't work teaches you what does.",
+  "4": "Line 4, the network: you wake this gate through the people you know. Share it with friends, and it spreads.",
+  "5": "Line 5, the problem-solver: you wake this gate by offering a practical answer to a real problem. Keep it practical, then step back.",
+  "6": "Line 6, the example: you wake this gate by living it over time. It ripens slowly; let others watch you become it."
+ },
+ "LINE_SHORT": {
+  "1": "Line 1: by study.",
+  "2": "Line 2: by being called out.",
+  "3": "Line 3: by trial and error.",
+  "4": "Line 4: through friends.",
+  "5": "Line 5: by solving a real problem.",
+  "6": "Line 6: by living it over years."
+ },
+ "CENTRES": {
+  "Head": {
+   "grow": "The Dharma defines your Head: you grow into a steady source of questions and inspiration, less pressured by other people's.",
+   "release": "Your Birth Design defines the Head, but the Dharma leaves it open: you mature into taking inspiration from many places, choosing which questions are worth your time."
+  },
+  "Ajna": {
+   "grow": "The Dharma defines your Ajna: you grow into a reliable way of thinking things through, your own way of making sense.",
+   "release": "The Dharma leaves your Ajna open: you mature out of fixed opinions and into a flexible mind that can see many sides."
+  },
+  "Throat": {
+   "grow": "The Dharma defines your Throat: you grow into a consistent voice, a way of speaking and acting that's recognisably yours.",
+   "release": "The Dharma leaves your Throat open: you mature into speaking when it's right, letting the moment and the room shape what you say."
+  },
+  "G": {
+   "grow": "The Dharma defines your G: you grow into a fixed sense of who you are and where you're going.",
+   "release": "The Dharma leaves your G open: you mature into finding direction through the people and places you choose. Choose them well."
+  },
+  "Heart": {
+   "grow": "The Dharma defines your Heart: you grow into keeping your promises with steady will, and knowing your worth.",
+   "release": "The Dharma leaves your Heart open: you mature out of proving yourself, and into making only the promises you mean."
+  },
+  "Spleen": {
+   "grow": "The Dharma defines your Spleen: you grow into a steady sense of what's healthy and safe, and trust in your instinct.",
+   "release": "The Dharma leaves your Spleen open: you mature into sensing others' wellbeing, and letting go of what isn't good for you."
+  },
+  "Solar": {
+   "grow": "The Dharma defines your Solar plexus: you grow into feelings that have their own tide, and learn to wait for clarity before deciding.",
+   "release": "The Dharma leaves your Solar plexus open: you mature into feeling others deeply without taking their feelings as your own."
+  },
+  "Sacral": {
+   "grow": "The Dharma defines your Sacral: you grow into sustainable energy for the work and people your gut says yes to.",
+   "release": "The Dharma leaves your Sacral open: you mature into knowing when enough is enough, and resting before you're spent."
+  },
+  "Root": {
+   "grow": "The Dharma defines your Root: you grow into a steady drive, handling pressure at your own pace.",
+   "release": "The Dharma leaves your Root open: you mature out of rushing, and into choosing which pressures to answer."
+  }
+ },
+ "CHANNELS": {
+  "1-8": {
+   "name": "the maker's mark",
+   "what": "Your own creative way, given a place where it belongs. What you make is meant to be seen and used, not kept.",
+   "live": "Finish things and put them where others meet them. Show the work before you think it's perfect."
+  },
+  "2-14": {
+   "name": "the keeper of direction",
+   "what": "Knowing which way to go, and having the resources to get there. Your path draws the means to walk it.",
+   "live": "Spend your energy only on work that points the way you know you're going. Money and help follow direction."
+  },
+  "3-60": {
+   "name": "the mutation",
+   "what": "New things break through in pulses, after long quiet stretches. You bring change that couldn't come any other way.",
+   "live": "Accept the waiting. Keep your limits clear, and when the new thing comes, give it order straight away."
+  },
+  "4-63": {
+   "name": "the questioning mind",
+   "what": "Doubt becomes questions, and questions become answers. Your mind tests things until they hold.",
+   "live": "Ask, guess, and test. Don't treat an answer as a decision: check it against what actually happens."
+  },
+  "5-15": {
+   "name": "the rhythm of life",
+   "what": "Your rhythm and the world's rhythm, moving together. You hold a natural pace that others fall into.",
+   "live": "Keep your routines and trust them. When life wants a different pace, flow with it for a while, then return."
+  },
+  "6-59": {
+   "name": "the closeness",
+   "what": "Making contact, and deciding how close to let it come. You open bonds that can create something new.",
+   "live": "Get close honestly, and wait for the feeling to settle before you commit. Intimacy works best with clear terms."
+  },
+  "7-31": {
+   "name": "the guiding voice",
+   "what": "Leadership spoken aloud. People look to you for direction when the future is open.",
+   "live": "Wait to be asked before you lead. When you are, speak a clear direction and let people move on their own."
+  },
+  "9-52": {
+   "name": "the steady focus",
+   "what": "Stillness turned into concentration. You can stay with one thing long enough to master it.",
+   "live": "Protect long stretches of focus. Choose the one detail that matters and stay with it."
+  },
+  "10-20": {
+   "name": "the awakened self",
+   "what": "Being yourself, out loud, in the present. Your way of being speaks for you.",
+   "live": "Say what is true for you now, as yourself. No borrowed voice, no performance."
+  },
+  "10-34": {
+   "name": "the power of being yourself",
+   "what": "Your strength follows your own convictions. You get things done by being exactly who you are.",
+   "live": "Act only on what's truly yours to do. When your strength serves your nature, it doesn't tire."
+  },
+  "10-57": {
+   "name": "the instinct to survive well",
+   "what": "A gut sense for how to live and stay whole. Your intuition protects your way of being.",
+   "live": "Listen to the first quiet knowing about people and places, and let it shape how you live."
+  },
+  "11-56": {
+   "name": "the storyteller",
+   "what": "Ideas turned into stories that stir people. You pass on what you've seen in a way that sticks.",
+   "live": "Tell what you've seen and imagined, as stories. Let people take from them what they need."
+  },
+  "12-22": {
+   "name": "the voice of feeling",
+   "what": "Feeling made into words at the right time. When you're ready, you can move a room.",
+   "live": "Speak from feeling only when your mood is right and the listener is ready. Timing is everything here."
+  },
+  "13-33": {
+   "name": "the keeper of stories",
+   "what": "Listening, remembering, and telling what it meant. You carry what people trust you with.",
+   "live": "Listen fully, then step back to reflect. Tell the story when the lesson is clear."
+  },
+  "16-48": {
+   "name": "the craft",
+   "what": "Depth plus practice. Talent turned into skill through repetition and love.",
+   "live": "Practise one craft for years. Share what you learn as you go."
+  },
+  "17-62": {
+   "name": "the organiser of thought",
+   "what": "Opinions made into clear details. You can explain how things fit together.",
+   "live": "Give your view as a picture with the details that support it. Offer it when it's wanted."
+  },
+  "18-58": {
+   "name": "the refiner",
+   "what": "The joy of making things better. You see what's off and want to correct it.",
+   "live": "Aim your correction at systems, not at people. Improve one thing at a time, with pleasure."
+  },
+  "19-49": {
+   "name": "the bond and its terms",
+   "what": "Needs met within fair agreements. You hold what makes a community work.",
+   "live": "Say what you need and what you'll give. Change the terms openly when they stop being fair."
+  },
+  "20-34": {
+   "name": "the busy hands",
+   "what": "Power expressed in the moment. You can do a great deal, right now.",
+   "live": "Respond to what's in front of you and let the doing be enough. Stop when your energy says stop."
+  },
+  "20-57": {
+   "name": "the quick knowing",
+   "what": "Intuition spoken in the moment. You often know and say the right thing straight away.",
+   "live": "Trust what comes to you instantly and say it simply. It doesn't need to be explained."
+  },
+  "21-45": {
+   "name": "the steward of resources",
+   "what": "Control and gathering. You manage what the group has and how it's shared.",
+   "live": "Take responsibility for the resources, then share them fairly. Let others hold their own parts."
+  },
+  "23-43": {
+   "name": "the insight",
+   "what": "Sudden knowing put into words. You bring new understanding that others haven't had yet.",
+   "live": "Wait until you can explain an insight simply, then say it. Clarity is what makes it land."
+  },
+  "24-61": {
+   "name": "the inspired mind",
+   "what": "Thinking that returns again and again to the great questions. Inspiration arrives in its own time.",
+   "live": "Give your mind space to wonder without demanding answers. Write down what comes."
+  },
+  "25-51": {
+   "name": "the brave heart",
+   "what": "Love that's tested by shocks. You go first into the unknown and open the way.",
+   "live": "Take the brave step when it's yours to take, and keep your heart open as you do."
+  },
+  "26-44": {
+   "name": "the trusted guide",
+   "what": "Instinct for people plus the skill to persuade. You know what people need and how to bring it to them.",
+   "live": "Use your sense of people to help them get where they're going. Keep your offers honest."
+  },
+  "27-50": {
+   "name": "the guardian",
+   "what": "Care and values. You look after people and the rules that keep them safe.",
+   "live": "Care for others without losing yourself. Keep the values living by testing them."
+  },
+  "28-38": {
+   "name": "the meaningful struggle",
+   "what": "Stubbornness in service of meaning. You fight for what makes life worth living.",
+   "live": "Choose struggles that mean something to you. Let go of the ones that don't."
+  },
+  "29-46": {
+   "name": "the commitment",
+   "what": "Saying yes and following it through the body. You discover by committing fully.",
+   "live": "Commit only to what your gut says yes to, then go all the way. Your body learns as it goes."
+  },
+  "30-41": {
+   "name": "the longing",
+   "what": "Desire that starts new experiences. You feel what could be, before it is.",
+   "live": "Let yourself want. Choose which dreams to start, and live them fully when they come."
+  },
+  "32-54": {
+   "name": "the ambition that lasts",
+   "what": "Drive for things that endure. You rise by building what will still stand.",
+   "live": "Ask what will last, and work toward that patiently. Let mentors help you up."
+  },
+  "34-57": {
+   "name": "the instinctive strength",
+   "what": "Power guided by gut sense. You know how to act to survive and thrive.",
+   "live": "Let your instinct direct your strength in the moment. Don't overthink it."
+  },
+  "35-36": {
+   "name": "the hunger for experience",
+   "what": "Moving through experiences and learning from their ups and downs. You grow by living.",
+   "live": "Go into new experiences when the feeling is right, and stay to the end. Then share what you learned."
+  },
+  "37-40": {
+   "name": "the community",
+   "what": "Belonging and the bargain behind it. You hold a group together through fair give and take.",
+   "live": "Make agreements clear: what you give, what you get. Keep your word, and take your rest."
+  },
+  "39-55": {
+   "name": "the emotional depth",
+   "what": "Moods with meaning. Your feelings stir up the spirit in you and others.",
+   "live": "Let your moods move through without acting on every one. Create from them when they settle."
+  },
+  "42-53": {
+   "name": "the full cycle",
+   "what": "Beginning, growing, and finishing. You carry things through their whole life.",
+   "live": "Start what you mean to finish. Complete each cycle and carry its lessons into the next."
+  },
+  "47-64": {
+   "name": "the making of sense",
+   "what": "Confusing images that settle into meaning. Your mind works on the past until it makes sense.",
+   "live": "Let ideas swirl without forcing them. Insight comes when it's ready, often suddenly."
+  }
+ },
+ "GATES": {
+  "1": {
+   "do": "Make one thing every day, small and finished, before you check how anyone feels about it.",
+   "sign": "you stop waiting to be in the mood and the work keeps coming anyway.",
+   "ok": true
+  },
+  "2": {
+   "do": "Write down the direction you already know you're going, and arrange one part of your week around it, as if it were certain.",
+   "sign": "people start asking how you knew which way to go.",
+   "ok": true
+  },
+  "3": {
+   "do": "Pick the messiest new thing in your life and give it one simple order: a name, a first rule, a shelf it lives on. Do it in view of others.",
+   "sign": "the confusion starts to feel like raw material instead of a threat.",
+   "ok": true
+  },
+  "4": {
+   "do": "Keep a page of questions you can't yet answer. Offer your best guesses out loud, and enjoy being wrong.",
+   "sign": "a good answer arrives and you don't need it to be yours.",
+   "ok": true
+  },
+  "5": {
+   "do": "Find the one time of day your body wants to do the same thing, and keep it, gently, for forty days.",
+   "sign": "your rhythm starts carrying you on the days your will can't.",
+   "ok": true
+  },
+  "6": {
+   "do": "Before letting someone closer, say one honest thing that might cause friction, and stay for what follows.",
+   "sign": "conflict starts making your bonds stronger instead of thinner.",
+   "ok": true
+  },
+  "7": {
+   "do": "Name the role you play for a group, and ask one person what they need from it. Then give them a direction, not instructions.",
+   "sign": "people move in a good direction without you pushing.",
+   "ok": true
+  },
+  "8": {
+   "do": "Ask of each project: where does this belong? Then take it there and stay long enough for it to take root.",
+   "sign": "your work stops being admired from a distance and starts being used.",
+   "ok": true
+  },
+  "9": {
+   "do": "Take your biggest job and cut it into pieces small enough to finish today. Do the one piece that matters most first.",
+   "sign": "your focus lands on the detail that changes everything.",
+   "ok": true
+  },
+  "10": {
+   "do": "Spend one day not performing at all: not bigger, not smaller, just your actual size. Notice who stays.",
+   "sign": "criticism stops knocking you over, because nothing in you is pretending.",
+   "ok": true
+  },
+  "11": {
+   "do": "Give one idea away each week to someone who can use it, and let go of whether they do.",
+   "sign": "your ideas stop crowding your head and start lighting up other people's.",
+   "ok": true
+  },
+  "12": {
+   "do": "Hold back what you want to say until you can see the listener is ready, then say it plainly, once.",
+   "sign": "your words start changing rooms instead of filling them.",
+   "ok": true
+  },
+  "13": {
+   "do": "Listen to someone fully, without fixing anything. Then make sure someone listens to you.",
+   "sign": "people tell you the true version, and you're not drained by holding it.",
+   "ok": true
+  },
+  "14": {
+   "do": "Put some of what you've earned, time or money or skill, to work for the people around you this month.",
+   "sign": "your resources grow as you spend them on what you believe in.",
+   "ok": true
+  },
+  "15": {
+   "do": "Let yourself have one slow day and one fast day this week without judging either. Then make room for someone else's pace.",
+   "sign": "you become a place where very different people can belong.",
+   "ok": true
+  },
+  "16": {
+   "do": "Choose one skill and practise it with real enthusiasm for a set time each day. Stop and notice when you've got it.",
+   "sign": "your enthusiasm turns into mastery others can rely on.",
+   "ok": true
+  },
+  "17": {
+   "do": "When you see how something should be organised, ask first if they want your view. If they do, give it in one clear picture.",
+   "sign": "people come back asking for your way of seeing.",
+   "ok": true
+  },
+  "18": {
+   "do": "Pick one thing you inherited, a habit, a tool, a family rule, and either mend it with care or set it down for good.",
+   "sign": "you correct without contempt, and things actually improve.",
+   "ok": true
+  },
+  "19": {
+   "do": "Meet one of your own needs first today. Then notice what someone near you needs, and provide it without being asked.",
+   "sign": "you can feel what's needed without being swamped by it.",
+   "ok": true
+  },
+  "20": {
+   "do": "Several times a day, stop and say out loud what is true right now, in one simple sentence.",
+   "sign": "you act at the right moment because you're actually present for it.",
+   "ok": true
+  },
+  "21": {
+   "do": "When something needs fixing, take charge cleanly, and set a date to hand the control back.",
+   "sign": "you can lead firmly without needing to keep the reins.",
+   "ok": true
+  },
+  "22": {
+   "do": "Before a gathering, ask yourself what each person will need to feel at ease. Give one of them exactly that.",
+   "sign": "rooms soften when you walk in, and you still have your own mood.",
+   "ok": true
+  },
+  "23": {
+   "do": "Take one strange idea you hold and keep rewriting it until a friend can repeat it back to you.",
+   "sign": "your oddest insights become simple enough for others to build on.",
+   "ok": true
+  },
+  "24": {
+   "do": "Give your circling thoughts a walk or a notebook. Keep what survives three passes, and drop the rest.",
+   "sign": "the loop stops being worry and starts being insight.",
+   "ok": true
+  },
+  "25": {
+   "do": "Do one loving thing today without keeping score. When something ends, mark it, and let the next thing start fresh.",
+   "sign": "you can love through change without closing your heart.",
+   "ok": true
+  },
+  "26": {
+   "do": "Tell someone you know honestly what you're offering, and show them the steps from where they are to where it takes them.",
+   "sign": "you can persuade without bending the truth.",
+   "ok": true
+  },
+  "27": {
+   "do": "Care for someone in a way that leaves them stronger: teach the skill instead of doing it for them. Then feed yourself.",
+   "sign": "your care makes people more able, not more dependent.",
+   "ok": true
+  },
+  "28": {
+   "do": "Write down what you'd struggle for even if you lost. Spend one hour this week on it.",
+   "sign": "the fight starts giving you meaning instead of taking it.",
+   "ok": true
+  },
+  "29": {
+   "do": "Before your next yes, ask your gut and name your terms. Then say yes with your whole self, or not at all.",
+   "sign": "your commitments carry you through to the end.",
+   "ok": true
+  },
+  "30": {
+   "do": "Name the one thing you want most this season, and feed that wanting on purpose instead of scattering it.",
+   "sign": "your desire becomes a fire that warms instead of one that burns you.",
+   "ok": true
+  },
+  "31": {
+   "do": "Speak for a group on something you care about, and honour the person who held that voice before you.",
+   "sign": "people follow your words because they feel heard in them.",
+   "ok": true
+  },
+  "32": {
+   "do": "Look at what you're building and ask what will still be worth it in seven years. Back that through the lean months.",
+   "sign": "you stop panicking about failure and start trusting what lasts.",
+   "ok": true
+  },
+  "33": {
+   "do": "After something big, step back and write what happened. Tell the story only when you've learned what it taught you.",
+   "sign": "your memories become wisdom other people can use.",
+   "ok": true
+  },
+  "34": {
+   "do": "Name what currently owns your strength. Then aim your strength at one thing that truly needs clearing, and finish it.",
+   "sign": "your power feels clean and well aimed, not restless.",
+   "ok": true
+  },
+  "35": {
+   "do": "Try one new experience this month and live it fully, all the way through, before reaching for the next.",
+   "sign": "your experience turns into something you can share with others.",
+   "ok": true
+  },
+  "36": {
+   "do": "Let a hard time be hard without rushing out of it. When you're through, tell someone who's still in theirs what helped.",
+   "sign": "your own crises turn into a map for other people.",
+   "ok": true
+  },
+  "37": {
+   "do": "Make one spoken agreement at home about who gives what, and keep your side of it warmly.",
+   "sign": "your family, by blood or by choice, feels steady and fair.",
+   "ok": true
+  },
+  "38": {
+   "do": "Choose one thing worth standing up for, and use the disagreement to understand the other person, not to beat them.",
+   "sign": "you can stay with a fight and come out with an ally.",
+   "ok": true
+  },
+  "39": {
+   "do": "Ask someone one question that pokes at what they care about, and then stay kind while they answer.",
+   "sign": "people wake up around you instead of getting defensive.",
+   "ok": true
+  },
+  "40": {
+   "do": "Do a fair day's work on something, then actually take the rest and the thanks you've earned.",
+   "sign": "you stop feeling used, and the work stays a gift.",
+   "ok": true
+  },
+  "41": {
+   "do": "From all your daydreams, choose one worth chasing, and take the first real step today.",
+   "sign": "your imagination starts turning into actual beginnings.",
+   "ok": true
+  },
+  "42": {
+   "do": "Finish one thing properly: close it, clean up after it, and write down what it taught you before you start the next.",
+   "sign": "each ending carries you into a better next cycle.",
+   "ok": true
+  },
+  "43": {
+   "do": "When you know something deep down, write it privately first. Say it only once you can explain it simply.",
+   "sign": "your insights land with authority instead of sounding odd.",
+   "ok": true
+  },
+  "44": {
+   "do": "Notice the patterns and talents in one person this week, and help them land somewhere they'll do well.",
+   "sign": "your instinct for people becomes something you're trusted for.",
+   "ok": true
+  },
+  "45": {
+   "do": "Gather something, money or tools or people, and then share it out fairly to those you're responsible for.",
+   "sign": "people trust you to hold resources because they see you share them.",
+   "ok": true
+  },
+  "46": {
+   "do": "Every day, ask your body what it needs and give it that one thing. Arrange one part of your life to suit it.",
+   "sign": "you feel at home in your body, and luck starts to find you.",
+   "ok": true
+  },
+  "47": {
+   "do": "When memories confuse you, write down one piece at a time without trying to solve it. Let the meaning come later.",
+   "sign": "the past starts making sense, and the pressure lifts.",
+   "ok": true
+  },
+  "48": {
+   "do": "Share what you know now, before you feel ready. Teach one thing this week, imperfectly.",
+   "sign": "your knowledge deepens as you give it away.",
+   "ok": true
+  },
+  "49": {
+   "do": "Name one rule in your life that's stopped working. Change it fairly, and say clearly who it's for.",
+   "sign": "change feels principled instead of reactive.",
+   "ok": true
+  },
+  "50": {
+   "do": "Look at the values that keep your household or group healthy. Test one: does it still serve? Keep it or change it.",
+   "sign": "people feel safe under your care because the rules are alive.",
+   "ok": true
+  },
+  "51": {
+   "do": "When you shake things up, do it on purpose, say why, and stay around to help with the aftershock.",
+   "sign": "your shocks become wake-up calls people thank you for.",
+   "ok": true
+  },
+  "52": {
+   "do": "Sit still for ten minutes a day without doing anything. Let your focus widen until you see the whole picture.",
+   "sign": "your stillness becomes a resource instead of a stuckness.",
+   "ok": true
+  },
+  "53": {
+   "do": "Start only what you're willing to follow through. Begin one such thing this week and plan its first three steps.",
+   "sign": "your beginnings start becoming endings you're proud of.",
+   "ok": true
+  },
+  "54": {
+   "do": "Name one ambition without shame. Then ask someone ahead of you what they did, and really listen.",
+   "sign": "you rise through people instead of past them.",
+   "ok": true
+  },
+  "55": {
+   "do": "When your mood swings, write a line about it and wait a day before acting. Notice the truth in both the high and the low.",
+   "sign": "you can feel everything without being run by it.",
+   "ok": true
+  },
+  "56": {
+   "do": "Tell one story from your life to someone, and notice what it means now that it didn't before.",
+   "sign": "your stories gather people and keep growing in meaning.",
+   "ok": true
+  },
+  "57": {
+   "do": "When your gut speaks, act on it in some small way straight away, within the hour.",
+   "sign": "you trust your intuition because you've watched it be right.",
+   "ok": true
+  },
+  "58": {
+   "do": "Pick one thing to make better and keep it small enough to win this week. Enjoy doing it.",
+   "sign": "improvement feels like joy instead of correction.",
+   "ok": true
+  },
+  "59": {
+   "do": "Let someone closer on honest terms: tell them what you want from the closeness, warmly and plainly.",
+   "sign": "intimacy feels safe because it's honest.",
+   "ok": true
+  },
+  "60": {
+   "do": "Name one limit you've been fighting. Accept it for a week and see what you can make inside it.",
+   "sign": "your limits start feeling like a frame for creation.",
+   "ok": true
+  },
+  "61": {
+   "do": "Spend time each day listening for what's true, in silence or nature or prayer. Write down what arrives and share one piece.",
+   "sign": "inspiration comes more easily, and you can pass it on.",
+   "ok": true
+  },
+  "62": {
+   "do": "Take one muddy feeling or idea and find the exact words for it. Name it, list it, put it on paper.",
+   "sign": "chaos becomes something you and others can work with.",
+   "ok": true
+  },
+  "63": {
+   "do": "Question one of your own beliefs as fairly as you'd question someone else's. Keep what holds.",
+   "sign": "your doubt becomes useful instead of anxious.",
+   "ok": true
+  },
+  "64": {
+   "do": "When ideas swirl, write them down and leave them. Come back in a day and see what has settled.",
+   "sign": "confusion turns into clarity on its own schedule, and you stop panicking.",
+   "ok": true
+  }
+ },
+ "LATE": "Its period, your {lord} mahadasha, falls beyond a usual lifespan, so it wakes by practice alone."
+}
