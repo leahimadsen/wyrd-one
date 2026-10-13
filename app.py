@@ -678,9 +678,12 @@ def selling():
 
 def account_status(email, fresh=False):
     try:
-        return billing.status(config.STRIPE_SECRET, email, fresh=fresh) if config.STRIPE_SECRET else billing._empty()
+        st = billing.status(config.STRIPE_SECRET, email, fresh=fresh) if config.STRIPE_SECRET else billing._empty()
     except stripe_api.StripeError:
         return None
+    if is_admin() and email == accounts.clean_email(config.OWNER_EMAIL):    # the owner, in by admin password: everything open
+        st = dict(st, member=True, pro=True)
+    return st
 
 def esc(v): return html.escape(str(v))
 
