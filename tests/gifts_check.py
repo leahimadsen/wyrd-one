@@ -171,6 +171,12 @@ r = admin.post("/admin/enter", headers=SAME)
 with admin.session_transaction() as sess: who, still = sess.get("email"), sess.get("admin")
 check("the admin enters the Hall as the owner", r.headers.get("Location") == "/hall" and who == "creator@x.co" and still)
 check("nobody else can", as_user("x@y.co").post("/admin/enter", headers=SAME).status_code == 404)
+site.config.OWNER_EMAIL = "Boss@X.co"                 # no gift, no plan: the admin still gets everything
+admin.post("/admin/enter", headers=SAME)
+check("the admin, as the owner, opens the Hall with no gift", admin.get("/hall").status_code == 200)
+check("and the practice desk", admin.get("/pro").status_code == 200)
+plain = as_user("boss@x.co")
+check("the same email without the admin password gets the Order's page", plain.get("/hall").headers.get("Location") == "/membership")
 site.config.OWNER_EMAIL = ""
 
 print("GIFTS CHECK", "PASSED" if not bad else f"FAILED ({bad})")

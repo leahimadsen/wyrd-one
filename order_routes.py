@@ -162,7 +162,8 @@ def hall():
     plan = f"""<section class="hall-sec"><h2>Your place in the Order</h2>{_plans_html(st)}
 <form method="post" action="/signout" style="margin-top:24px"><button class="alt" type="submit">Sign out</button></form></section>"""
     return A.private("The Hall", f"""<p class="hall-kicker">The Order</p><h1>The Hall</h1>
-<p class="lede">Welcome back, {esc(FIRST(b, email))}. This is your room in the Order: your weather, your letters, your people.</p>{joined}
+<p class="lede">Welcome back, {esc(FIRST(b, email))}. This is your room in the Order: your weather, your letters, your people.</p>
+<p class="muted">Signed in as {esc(email)}</p>{joined}
 {this_week}{chart}{letters + loved if db else SOON_HALL}{perks}{circle}{plan}""", script=USE_CURRENT)
 
 
