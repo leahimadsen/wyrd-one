@@ -164,7 +164,7 @@ main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
 /* the body figure on the night pages: the engraving's ink turned pale, the stations in their colours */
 .body-fig .bm-line{font-size:1.05em;margin:4px 0 10px}
 .body-fig .mf{margin:6px 0}.body-fig .mf svg{width:100%;max-width:560px;height:auto;display:block;margin:0 auto}
-.body-fig .mf image{filter:invert(1);opacity:.75}
+.body-fig .mf image{opacity:1}
 .body-fig .mf-ladder{fill:none;stroke-width:4;stroke-dasharray:2 6;opacity:.9}
 .body-fig .mf-lead{stroke-width:1.4;opacity:.6;fill:none}.body-fig .mf-dot{fill-opacity:.85;stroke:#fff;stroke-width:1.5}.body-fig .mf-ring{fill:none;stroke-width:3}
 .body-fig .mf-name{font-family:var(--fellsc,monospace);font-size:30px}
