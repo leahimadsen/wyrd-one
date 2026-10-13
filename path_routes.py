@@ -14,7 +14,7 @@ from flask import request, redirect
 
 A = sys.modules.get("app") or sys.modules["__main__"]
 app, config, billing, mailer, esc, money = A.app, A.config, A.billing, A.mailer, A.esc, A.money
-from wyrd import store, accounts
+from wyrd import store, accounts, testimonials
 
 MAX = 5000
 
@@ -69,6 +69,7 @@ def work_with_me():
     {path_btn}</section>
 </div>
 <p class="note-box">I recommend starting with a consult so we can get to know each other and see whether working together feels like a good fit.</p>
+{testimonials.render("work")}
 <h2>Questions</h2>
 <div class="order-faq">
   <details><summary>What do I need for the consult?</summary><p>Your date, time and place of birth, the time from your birth certificate if you can. You give them straight after booking.</p></details>
