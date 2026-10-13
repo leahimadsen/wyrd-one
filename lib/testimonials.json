@@ -1,5 +1,30 @@
 {
  "_note": "What people have said. Each one shows on the pages listed in 'where' (home, reports, order) in the order written here. Set \"ok\": false to hide one. Only use words the person agreed to share, credited the way they asked.",
  "TITLE": "What people say",
- "ITEMS": []
+ "ITEMS": [
+  {
+   "pull": "She won’t point or tell you where to go, she will give you a lantern so you can see the path more clearly.",
+   "quote": "A 1:1 with The Völva is no generic astrological reading, rather a mirroring session in a temple, where your reflection is shown to you clearly, and where no entity could interfere. She created a space in which I felt so secure and open going to the deepest crevices of the patterns of my life. She holds a container in which any performance or shield melt away and all that remains is, You.\nI appreciated feeling so open and held in sharing darker aspects of my experience and realizing how much we hold on to stories, and where these stories root from. She doesn’t project or pigeon hole one into an archetype(s), rather explains the intricate and subtle patterning, which as a result allows for us to free ourselves!\nThe console in itself is a magical portal and provides so much information, however, the report is a WHOLE detailed book, one that expanded my awareness of the mechanics of (my) patterns beyond anything else.\nBut above all I am grateful I did the 1:1 session, as connecting with The Völva was an initiatory process into getting closer to the heart of me and what truly is the path forward. If you feel like you are in the middle of the woods and not sure which direction to continue on, she won’t point or tell you where to go, she will give you a lantern so you can see the path more clearly. Thank you!",
+   "name": "Bootee",
+   "about": "musician · a 1:1 and The Wyrd Reading",
+   "where": [
+    "home",
+    "reports",
+    "order"
+   ],
+   "ok": true
+  },
+  {
+   "pull": "Her diamond mind system manages to bring astrology out of the conceptual and abstract realm down into the gritty awareness of where you are standing.",
+   "quote": "I have been a student and teacher of multiple types of astrology for eight years, after being steeped in metaphysical arts my whole life, and I must say that only someone with the renowned Asperger’s level of raw intellect Leah has could put together something as prolific and functional as the multidisciplinary system she has synthesized and packaged with the elegance of a fairytale book.\nIt’s not just her intellect, however, that delivers the goods. She also provides a maternal compassion that lacks in most with her intellect, the result being that she can both name precisely the secret quirks and misfortune of your particular life journey and also read it back to you in a way that helps you see how lucky you actually are because of what your innate astrological signature carries.\nHer diamond mind system manages to bring astrology out of the conceptual and abstract realm down into the gritty awareness of where you are standing, where you have been, and where you are going.",
+   "name": "Anjelika Orion",
+   "about": "Nymph Prayer School",
+   "where": [
+    "home",
+    "reports",
+    "order"
+   ],
+   "ok": true
+  }
+ ]
 }

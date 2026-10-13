@@ -229,14 +229,15 @@ body:not(.paper) .vd-seg.now{opacity:1;box-shadow:0 0 12px 1px var(--c),inset 0 
 body:not(.paper) .vd-seg.sel{opacity:1;outline:2px solid #fff}
 body:not(.paper) .vd-seg:hover{opacity:1}
 
-/* ---------------- what people say ---------------- */
+/* ---------------- what people say: a night window on every page ---------------- */
 .tm{margin:40px 0 10px}
-.tm-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
-.tm-card{position:relative;margin:0;padding:22px 22px 16px;border:3px double var(--ink);background:rgba(255,252,244,.6);box-shadow:6px 6px 0 rgba(29,23,18,.14)}
-.tm-card::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--rainbow);border-bottom:1px solid var(--ink)}
-.tm-mark{position:absolute;top:2px;right:14px;font-family:var(--black);font-size:64px;line-height:1;color:var(--violet);opacity:.35}
-.tm-card blockquote{margin:6px 0 12px;font-style:italic}.tm-card blockquote p{margin:0 0 8px}
-.tm-card figcaption{font-family:var(--fellsc);font-size:14px}.tm-card figcaption span{opacity:.75}
-body:not(.paper) .tm-card{border:3px outset #a99bf0;background:#120533;color:#eaf3ff;box-shadow:7px 7px 0 rgba(0,0,0,.5)}
-body:not(.paper) .tm-mark{color:#ff9be8;opacity:.6}
-body:not(.paper) .tm h2{color:#c9fbff}
+.tm-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:start}
+.tm-card{position:relative;margin:0;padding:26px 22px 16px;border:3px outset #a99bf0;background:#120533 radial-gradient(ellipse at 50% 0%,#2a0b78 0%,#120533 70%);
+  color:#eaf3ff;box-shadow:7px 7px 0 rgba(0,0,0,.45)}
+.tm-card::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--rainbow);border-bottom:1px solid #000}
+.tm-mark{position:absolute;top:4px;right:14px;font-family:var(--black);font-size:64px;line-height:1;color:#ff9be8;opacity:.6}
+.tm-pull{font-family:var(--black);font-size:22px;line-height:1.35;color:#c9fbff;margin:0 26px 12px 0;
+  text-shadow:0 0 6px #49e8ff,0 0 18px rgba(73,232,255,.4)}
+.tm-card blockquote{margin:0 0 12px;font-size:16px;line-height:1.6;color:rgba(234,243,255,.88)}.tm-card blockquote p{margin:0 0 10px}
+.tm-card details summary{cursor:pointer;font-family:var(--fellsc);font-size:14px;color:#ff9be8;margin:2px 0 8px}
+.tm-card figcaption{font-family:var(--fellsc);font-size:14px;color:#fff}.tm-card figcaption span{color:#c9b8ff}
