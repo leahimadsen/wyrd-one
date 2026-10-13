@@ -671,6 +671,10 @@ def learn_dharma_gate(g):
     if not p: abort(404)
     return page(*p)
 
+@app.get("/learn/signs")
+def learn_signs():
+    return page(*pages.signs_index(config.BASE_URL))
+
 @app.get("/learn/signs/<s>")
 def learn_sign(s):
     p = pages.sign(config.BASE_URL, s)
