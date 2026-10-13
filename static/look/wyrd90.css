@@ -355,8 +355,6 @@ body.room .pg-top,body.room .pg-main,body.room .pg-foot{position:relative;z-inde
 .rm-side{position:absolute;bottom:0;height:100vh;width:auto;max-width:28vw;opacity:.9;
   filter:drop-shadow(0 0 18px var(--room-glow))}
 .rm-l{left:0}.rm-r{right:0}
-.rm-niche{animation:rmBreathe 9s ease-in-out infinite}
-.rm-bust{animation:rmGlow 11s ease-in-out infinite}
 .rm-mist{position:absolute;width:70vw;height:70vw;border-radius:50%;filter:blur(60px);opacity:.35;mix-blend-mode:screen}
 .rm-mist.m1{background:radial-gradient(circle,var(--room) 0%,transparent 65%);left:-20vw;top:10vh;animation:rmDrift1 48s ease-in-out infinite alternate}
 .rm-mist.m2{background:radial-gradient(circle,var(--lamp) 0%,transparent 65%);right:-25vw;top:40vh;opacity:.22;animation:rmDrift2 62s ease-in-out infinite alternate}
@@ -366,7 +364,6 @@ body.room .pg-top,body.room .pg-main,body.room .pg-foot{position:relative;z-inde
 @keyframes rmDrift2{to{transform:translate(-16vw,-14vh) scale(.9)}}
 @keyframes rmSweep{from{transform:translateX(-60%)}to{transform:translateX(60%)}}
 @keyframes rmBreathe{50%{opacity:.82}}
-@keyframes rmGlow{0%,100%{filter:drop-shadow(0 0 4px var(--room-glow))}50%{filter:drop-shadow(0 0 18px var(--room))}}
 /* the windows become marble-veined glass */
 body.room .hall-sec{backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
   background:rgba(8,2,10,.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.03' numOctaves='5' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 -3 0 0 0 1.6'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)' opacity='.09'/%3E%3C/svg%3E")}
@@ -374,4 +371,21 @@ body.room-circle .hall-sec{background-color:rgba(1,14,16,.58)}
 body.room .hall-sec{background-size:100% 100%;background-repeat:no-repeat}
 @media (max-width:1100px){.rm-side{opacity:.35;max-width:22vw}}
 @media (max-width:700px){.rm-side{display:none}}
-@media (prefers-reduced-motion:reduce){.rm-mist,.rm-sweep,.rm-niche,.rm-bust{animation:none}}
+@media (prefers-reduced-motion:reduce){.rm-mist,.rm-sweep{animation:none}}
+/* the statues (static/look/statues): marble figures standing in the side light */
+.rm-statue{position:absolute;bottom:3vh;margin:0;height:min(76vh,720px);width:clamp(120px,calc((100vw - 880px) / 2 - 50px),340px);
+  display:flex;align-items:flex-end;justify-content:center;animation:rmFloat 14s ease-in-out infinite}
+.rm-sl{left:70px}.rm-sr{right:70px;animation-delay:-7s}
+.rm-statue img{position:relative;z-index:1;max-width:100%;max-height:100%;object-fit:contain;object-position:bottom;
+  filter:drop-shadow(0 0 10px var(--room-glow)) drop-shadow(0 0 2px rgba(255,255,255,.6)) brightness(.96);animation:rmLit 11s ease-in-out infinite}
+.rm-sr img{animation-delay:-5s}
+.rm-halo{position:absolute;left:50%;top:6%;width:150%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(circle,var(--room-glow) 0%,transparent 62%);opacity:.8;animation:rmBreathe 9s ease-in-out infinite}
+.rm-pedestal{position:absolute;bottom:-3vh;left:50%;width:120%;height:5vh;transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(ellipse,var(--room) 0%,var(--room-glow) 35%,transparent 70%);opacity:.55;filter:blur(6px)}
+@keyframes rmFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes rmLit{0%,100%{filter:drop-shadow(0 0 10px var(--room-glow)) drop-shadow(0 0 2px rgba(255,255,255,.6)) brightness(.92)}
+  50%{filter:drop-shadow(0 0 22px var(--room)) drop-shadow(0 0 3px rgba(255,255,255,.8)) brightness(1.04)}}
+@media (max-width:1250px){.rm-statue{opacity:.28;width:200px}.rm-sl{left:2vw}.rm-sr{right:2vw}}
+@media (max-width:700px){.rm-statue{display:none}}
+@media (prefers-reduced-motion:reduce){.rm-statue,.rm-statue img,.rm-halo{animation:none}}
