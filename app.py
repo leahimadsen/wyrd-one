@@ -581,11 +581,21 @@ def admin_insights_save():
     return redirect("/admin/insights")
 
 # ---------------- public pages search engines read ----------------
+# the members' rooms have their own look: the Order in magenta, the Inner Circle in turquoise
+ROOM_COLOR = {"order": "#2a0624", "circle": "#03262b"}
+
+def room_of(path):
+    if path == "/hall" or path.startswith("/hall/"): return "order"
+    if path == "/pro" or path.startswith("/pro/"): return "circle"
+    return None
+
 def page(title, desc, body, ld="", robots="index, follow", script="", status=200):
     """A server-made page in the console's look, with its own title, description and share preview."""
     t = open(os.path.join(HERE, "static", "page.html"), encoding="utf-8").read()
     who = (f'<a href="/account">Your account</a>' if signed_in() else '<a href="/signin">Sign in</a>')
-    fill = {"TITLE": html.escape(title), "DESC": html.escape(desc), "ROBOTS": robots, "LD": ld, "BODY": body,
+    room = room_of(request.path)
+    fill = {"BODYCLASS": f"pg room room-{room}" if room else "pg paper", "THEMECOLOR": ROOM_COLOR.get(room, "#e9e1d2"),
+            "TITLE": html.escape(title), "DESC": html.escape(desc), "ROBOTS": robots, "LD": ld, "BODY": body,
             "CANON": html.escape(config.BASE_URL + request.path), "BASE": html.escape(config.BASE_URL), "WHO": who, "SCRIPT": script}
     for k, v in fill.items(): t = t.replace("{{" + k + "}}", v)
     return Response(t, status=status, mimetype="text/html")
