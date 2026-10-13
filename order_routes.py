@@ -36,10 +36,19 @@ def _member():
     return (email, st), None
 
 
+def _safe(fn, *a, default=None):
+    """A read from the database that never takes the page down: if the database can't be reached
+    (a free database waking up, say), the page shows without that part."""
+    try: return fn(*a)
+    except Exception as e:
+        app.logger.error("store: %s", e)
+        return default
+
+
 def _week_letter(email, b):
     """This week's Body Weather, kept in the archive the first time it's made."""
     week = weather.monday().isoformat()
-    have = store.letter(email, week)
+    have = _safe(store.letter, email, week)
     if have: return week, have["html"]
     html = A.weather_for(b)
     try: store.save_letter(email, week, html)
@@ -111,11 +120,11 @@ def hall():
 <p class="muted" id="noCurrent"><a href="/">Cast your chart</a>, then come back here to choose it.</p></section>"""
         chart = ""
 
-    past = [l for l in store.letters(email) if not b or l["week"] != weather.monday().isoformat()]
+    past = [l for l in (_safe(store.letters, email, default=[]) or []) if not b or l["week"] != weather.monday().isoformat()]
     archive = "".join(f'<li><a href="/hall/letters/{l["week"]}">The week of {datetime.strptime(l["week"], "%Y-%m-%d").strftime("%-d %B %Y")}</a></li>' for l in past)
     letters = f"""<section class="hall-sec"><h2>Past letters</h2>{f'<ul class="hall-list">{archive}</ul>' if archive else '<p class="muted">Each week\'s letter is kept here once it\'s written, so you can go back to it.</p>'}</section>"""
 
-    kin = store.kin(email)
+    kin = _safe(store.kin, email, default=[]) or []
     kin_rows = "".join(f"""<li><b>{esc(k["label"])}</b> <span class="muted">· {esc(k["birth"].get("date", ""))}</span>
   <a href="/hall/kin/{k["id"]}">This week's Body Weather</a> · <a href="{_chart_link(k["birth"])}">Open chart</a>
   <form method="post" action="/hall/kin/{k["id"]}/remove" class="inline"><button class="linkish" type="submit">Remove</button></form></li>""" for k in kin)
