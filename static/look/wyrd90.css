@@ -300,3 +300,49 @@ body.paper .hall-sec .cast .btn-cast{justify-self:start}
 .tm-card blockquote{margin:0 0 12px;font-size:16px;line-height:1.6;color:rgba(234,243,255,.88)}.tm-card blockquote p{margin:0 0 10px}
 .tm-card details summary{cursor:pointer;font-family:var(--fellsc);font-size:14px;color:#ff9be8;margin:2px 0 8px}
 .tm-card figcaption{font-family:var(--fellsc);font-size:14px;color:#fff}.tm-card figcaption span{color:#c9b8ff}
+
+/* ---------------- the members' rooms ----------------
+   The public pages are parchment; inside, each room is its own night.
+   The Order (the Hall): magenta, lit with turquoise. The Inner Circle (the practice desk): turquoise, lit with magenta. */
+body.room-order{--room:#ff3ad6;--room-glow:rgba(255,58,214,.35);--room-mid:#5c0d52;--room-deep:#1c0419;--lamp:#3ff3e2;
+  background:#1c0419 radial-gradient(ellipse at 50% -10%,#6e1263 0%,#3a0835 30%,#1c0419 70%) fixed;color:#fdeefa}
+body.room-circle{--room:#2ff0dc;--room-glow:rgba(47,240,220,.3);--room-mid:#0a5a63;--room-deep:#021c20;--lamp:#ff4fdc;
+  background:#021c20 radial-gradient(ellipse at 50% -10%,#0d6b74 0%,#063840 30%,#021c20 70%) fixed;color:#e8fffc}
+body.room{--ivory:#fff;--ivory-dim:rgba(255,255,255,.74);--dim:rgba(255,255,255,.7)}
+body.room .pg-top{background:rgba(0,0,0,.4);border-bottom:3px solid;border-image:linear-gradient(90deg,var(--room),var(--lamp),var(--room)) 1}
+body.room .pg-top a{color:#fff!important}
+body.room .pg-home{text-shadow:0 0 8px var(--room)}
+body.room .pg-main a:not(.btn-cast):not(.alt){color:var(--lamp)}
+body.room h1{color:#fff;text-shadow:0 0 6px var(--room),0 0 22px var(--room),0 0 44px var(--room-glow)}
+body.room h2{color:var(--room);text-shadow:0 0 10px var(--room-glow)}
+body.room .hall-kicker{color:var(--lamp);text-shadow:0 0 8px var(--lamp)}
+body.room .lede,body.room .muted,body.room .crumbs{color:rgba(255,255,255,.74)!important}
+body.room .hall-sec{background:rgba(0,0,0,.38);border:2px solid var(--room);box-shadow:0 0 0 1px #000,0 0 26px var(--room-glow),7px 7px 0 rgba(0,0,0,.5)}
+body.room .hall-sec::before{background:linear-gradient(90deg,var(--room),var(--lamp),var(--room));border-bottom:1px solid #000}
+body.room .hall-list li{border-bottom-color:rgba(255,255,255,.16)}
+body.room .hall-list li::before{color:var(--lamp)}
+body.room .hall-letter{background:rgba(0,0,0,.45);border:2px inset var(--room-mid);color:#fff}
+body.room .weather{background:rgba(0,0,0,.42);color:#fff;border:1px solid var(--room-mid)}
+body.room .hall-letter.weather{border:2px inset var(--room-mid)}
+body.room .pg-main .weather h1,body.room .pg-main .weather h2,body.room .weather h3{color:var(--room)}
+body.room .weather a{color:var(--lamp)}
+body.room .btn-cast,body.room a.btn-cast{background:var(--room-mid)!important;border-color:var(--room)!important;color:#fff!important;
+  box-shadow:0 0 14px var(--room-glow),4px 4px 0 rgba(0,0,0,.5)!important;text-shadow:0 0 6px var(--room)}
+body.room button.alt,body.room a.alt,body.room .desk-btn{background:rgba(0,0,0,.4)!important;color:var(--lamp)!important;border-color:var(--room-mid)!important}
+body.room .linkish{color:var(--lamp)!important}
+body.room input:not([type=hidden]),body.room textarea,body.room select{background:rgba(0,0,0,.55)!important;color:#fff!important;
+  border:2px inset var(--room-mid)!important;color-scheme:dark}
+body.room input::placeholder,body.room textarea::placeholder{color:rgba(255,255,255,.45)}
+body.room .cast label,body.paper.room .cast label{color:var(--room)!important}
+body.room .cast label span,body.room .kin-form label span{color:rgba(255,255,255,.6)!important}
+body.room .desk-meter{background:rgba(0,0,0,.45);border:3px outset var(--lamp);color:#fff;box-shadow:0 0 18px var(--room-glow)}
+body.room .desk-meter b{color:var(--room);text-shadow:0 0 8px var(--room)}
+body.room .desk-clients td,body.room table td,body.room table th{border-color:rgba(255,255,255,.16)!important;color:#fff}
+body.room .note-box{background:rgba(0,0,0,.4)!important;border:2px solid var(--lamp)!important;color:#fff!important}
+body.room .status.on{color:var(--lamp);border-color:var(--lamp)}
+body.room .share-link{background:rgba(0,0,0,.55)}
+body.room .pg-foot,body.room .pg-foot a{color:rgba(255,255,255,.6)}
+body.room #placeList{background:var(--room-deep);color:#fff;border:1px solid var(--room-mid)}
+body.room .weather p,body.room .weather li,body.room .weather span,body.room .weather b,body.room .weather i,body.room .weather em,body.room .weather small,body.room .weather div{color:rgba(255,255,255,.86)!important}
+body.room .weather b,body.room .weather strong{color:#fff!important}
+body.room .cast{background:rgba(0,0,0,.32)!important;border:2px solid var(--room-mid)!important;box-shadow:none!important}
