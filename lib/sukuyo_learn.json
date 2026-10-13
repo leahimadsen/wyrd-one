@@ -1,0 +1,55 @@
+{
+ "_note": "DRAFT for The Völva to edit. The free page about Sukuyō: what it is, where it comes from, how the birth shuku is found, and the ring of the three nines. It gives each relation its name and one-line label only (the same words as static/dynamics.js); what a relation means is the paid writing in lib/bond.json and stays in the reading together.",
+ "LEDE": "Sukuyō (宿曜) is the Japanese art of the lunar mansions: twenty-seven shuku (宿), one for each day of the Moon's circuit, read from the old lunar calendar. It is best known for what it says about two people: how each stands to the other.",
+ "ORIGIN": [
+  "Its source is the Sukuyō-kyō (宿曜経), a sutra on the lunar mansions, the planets and the days, translated into Chinese in the eighth century by the Buddhist master Amoghavajra (Fukū in Japanese). Kūkai brought it to Japan in 806, on his return from China.",
+  "Through the Heian period it was practised by monks trained in it, the sukuyōshi, who cast horoscopes and chose days for the court. Sukuyō is its own tradition, with its own calendar and its own way of pairing people, and this page teaches it on its own terms."
+ ],
+ "STARS": "The shuku are the same groups of stars as India's nakshatras and China's xiu. Sukuyō counts twenty-seven, leaving out the Ox (牛), and begins with the Pleiades (昴), as the oldest Indian lists of the mansions also did. The table pairs each shuku with the nakshatra of the same stars. That is a meeting of the stars, not of the meanings: each tradition reads them its own way.",
+ "CALENDAR": [
+  "Here Sukuyō parts from Jyotish. Your nakshatra is where the Moon actually stood when you were born. Your birth shuku comes from the calendar: every month of the old Japanese lunar calendar opens on a fixed shuku, and the shuku moves on by one each day of the month.",
+  "So your shuku is read from your birth date alone. It needs no birth time, and it often differs from your Moon's nakshatra by a mansion or more."
+ ],
+ "METHOD": "To find it, the console rebuilds the old calendar for your birth year. Each month begins on the day of the new moon, kept in Japan time. A month takes its number from the principal solar term (chūki) it contains, and the month holding the winter solstice is the eleventh. In a year of thirteen months, the first month with no chūki repeats the number before it as a leap month (閏月) and opens on the same shuku.",
+ "JAPAN_TIME": "Because the calendar keeps Japan's time, it now and then names a month differently from the Chinese lunar calendar. In 2017 a solar term fell just after midnight in Japan and just before midnight in China, so Japan's leap month followed the fifth month and China's the sixth.",
+ "RING": [
+  "Two people's shuku are compared by the sanku no hihō (三九の秘法), the secret method of the three nines. Count from your own shuku round the twenty-seven, and every shuku takes one of eleven names.",
+  "Your own shuku is 命, Life. The ninth on from it is 業, Karma, and the eighteenth is 胎, Womb. In each of the three rounds of nine they open, the same eight names follow in order: 栄 Prosperity, 衰 Decline, 安 Peace, 危 Danger, 成 Completion, 壊 Destruction, 友 Friendship and 親 Intimacy."
+ ],
+ "PAIRS_INTRO": "The names come in pairs. If someone stands on your 栄, you stand on their 親, so any two people make one of six relations.",
+ "DISTANCE": "Every relation except 命 and 業胎 also has a distance, counted by how many shuku apart the two of you are, whichever way round is shorter: near is one to four apart, far is five to eight, and middle is ten to thirteen.",
+ "PAIRS": {
+  "命": {
+   "title": "Mei · Life",
+   "short": "the mirror",
+   "how": "the same shuku"
+  },
+  "業胎": {
+   "title": "Gyōtai · Karma and Womb",
+   "short": "the bond with history",
+   "how": "9 on, counting either way"
+  },
+  "栄親": {
+   "title": "Eishin · Prosperity and Intimacy",
+   "short": "the kindest bond",
+   "how": "1, 10 or 19 on, counting either way"
+  },
+  "友衰": {
+   "title": "Yūsui · Friendship and Decline",
+   "short": "the companions",
+   "how": "2, 11 or 20 on, counting either way"
+  },
+  "安壊": {
+   "title": "Ankai · Peace and Destruction",
+   "short": "the charged bond",
+   "how": "3, 12 or 21 on, counting either way"
+  },
+  "危成": {
+   "title": "Kisei · Danger and Completion",
+   "short": "the different ones",
+   "how": "4, 13 or 22 on, counting either way"
+  }
+ },
+ "FIND": "Find your shuku. Give a birth date, and a second one to see how two people stand.",
+ "CTA": "What your relation means for the two of you, how it lifts you, where it can drag, and the question it asks, is written in the Reading Together, with the rest of your charts read side by side."
+}

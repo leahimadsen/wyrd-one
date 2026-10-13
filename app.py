@@ -684,6 +684,28 @@ def learn_dharma_gate(g):
     if not p: abort(404)
     return page(*p)
 
+@app.get("/learn/sukuyo")
+def learn_sukuyo():
+    from wyrd import sukuyo_learn
+    return page(*sukuyo_learn.index_page(config.BASE_URL))
+
+@app.get("/learn/sukuyo/find")
+def learn_sukuyo_find():
+    """A birth shuku, or two people's Sukuyō relation, from birth dates alone."""
+    from wyrd import sukuyo_learn
+    if limited(20): return private("Wait a minute", "<h1>Wait a minute</h1><p>Too many tries. Try again shortly.</p>", status=429)
+    try:
+        r = sukuyo_learn.find_page(EPH, request.args.get("a", ""), request.args.get("b", ""))
+    except (ValueError, OverflowError):
+        r = None
+    if not r:
+        lo, hi = sukuyo_learn.SK_RANGE
+        return page("Find your shuku · Sukuyō · The Wyrd Console", "Find your Sukuyō shuku from your birth date.",
+                    f'<p class="crumbs"><a href="/learn">Learn</a> › <a href="/learn/sukuyo">Sukuyō</a></p><h1>Check the date</h1>'
+                    f'<p class="lede">Give a birth date between {lo} and {hi}.</p>{sukuyo_learn.find_form()}', robots="noindex, follow", status=400)
+    title, body = r
+    return page(title, "Your Sukuyō shuku, found from the old Japanese lunar calendar.", body, robots="noindex, follow")
+
 @app.get("/learn/signs")
 def learn_signs():
     return page(*pages.signs_index(config.BASE_URL))

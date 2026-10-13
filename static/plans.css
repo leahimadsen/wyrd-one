@@ -186,3 +186,35 @@ body.paper .tc-back .price { color: var(--arc-mid) !important; }
 .wwm .price { font-size: 32px; margin: 2px 0 10px; }
 .wwm .price small { font-size: 15px; }
 .wwm-lead { box-shadow: 0 0 0 3px rgba(180,69,11,.35); }
+
+/* ---------------- Sukuyō (wyrd/sukuyo_learn.py) ---------------- */
+.sk-kj, .sk-big, .sk-pk, .sr-k { font-family: 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif; }
+.sk-kj { font-size: 1.15em; }
+.sk-top .pg-form { margin-top: 6px; }
+.sk-find { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 18px; align-items: end; }
+.sk-find .btn-cast { width: auto; }
+.sk-table td, .sk-table th { white-space: nowrap; }
+.sk-months { max-width: 360px; }
+.sk-pairs { list-style: none; padding: 0; }
+.sk-pairs li { margin: 12px 0; display: grid; grid-template-columns: 2.6em 1fr; gap: 0 .7em; align-items: baseline; }
+.sk-pk { font-size: 1.25em; font-weight: 700; white-space: nowrap; }
+.sk-card, .sk-rel { display: flex; gap: 18px; align-items: flex-start; border: 2px solid #1d1712; border-radius: 8px; padding: 16px 18px; margin: 18px 0;
+  background: rgba(255,252,244,.6); box-shadow: 4px 5px 0 rgba(29,23,18,.15); }
+.sk-rel { border-color: var(--pc); box-shadow: inset 0 0 0 1px var(--pc), 4px 5px 0 rgba(29,23,18,.15); }
+.sk-card h3, .sk-rel h3 { margin-top: 2px; }
+.sk-big { font-size: 64px; line-height: 1; flex: 0 0 auto; min-width: 1.1em; text-align: center; }
+.sk-rel .sk-big { color: var(--pc); font-size: 52px; }
+.sr-fig { margin: 22px auto; max-width: 560px; }
+.sr-fig svg { width: 100%; height: auto; display: block; }
+.sr-fig figcaption { font-size: 14px; color: var(--ink-soft, #5a4e44); margin-top: 8px; }
+.sr-seg { stroke: #fbf7ee; stroke-width: 1.5; }
+.sr-k { font-size: 26px; fill: #fff; text-anchor: middle; dominant-baseline: central; paint-order: stroke; stroke: rgba(0,0,0,.35); stroke-width: 2px; }
+.sr-en { font-family: 'IM Fell English', Georgia, serif; font-size: 12px; fill: #1d1712; dominant-baseline: central; }
+.sr-n { font-family: 'IM Fell English SC', Georgia, serif; font-size: 11px; fill: #5a4e44; text-anchor: middle; dominant-baseline: central; }
+.sr-d { fill: #1d1712; }
+.sr-cut { stroke: #1d1712; stroke-width: 2; }
+.sr-mid { font-family: 'IM Fell English', Georgia, serif; font-size: 15px; fill: #5a4e44; text-anchor: middle; }
+.sr-mid.big { font-family: 'UnifrakturMaguntia', serif; font-size: 22px; fill: #1d1712; }
+.sr-legend { list-style: none; padding: 0; margin: 0 0 8px; display: flex; flex-wrap: wrap; gap: 4px 16px; color: #1d1712; }
+.sr-sw { display: inline-block; width: .9em; height: .9em; border-radius: 2px; vertical-align: -.1em; margin-right: 6px; }
+@media (max-width: 560px) { .sk-big { font-size: 46px; } .sk-card, .sk-rel { padding: 12px 14px; gap: 12px; } }
