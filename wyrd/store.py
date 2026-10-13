@@ -1,7 +1,7 @@
 """The site's own records: what the Order keeps for its members and the Inner Circle for its
 practitioners. Everything else (payments, plans, the birth chart for Body Weather) stays in Stripe.
 
-    DATABASE_URL=postgres://...   Postgres, on Render (production)
+    DATABASE_URL=postgres://...   Postgres in production: Neon's free tier (neon.tech), or any Postgres
     (unset)                        SQLite, in DATA_DIR/wyrd.db (local runs and tests)
 
 Tables, each keyed to the member's or practitioner's email:
