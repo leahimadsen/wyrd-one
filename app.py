@@ -175,6 +175,18 @@ def consultation():
     sid = request.args.get("session_id", "")
     session, error = consultation_session(sid)
     if error: return error
+    if request.args.get("details") != "1":
+        details_url = "/consultation?" + urlencode({"session_id": sid, "details": "1"})
+        booking = (f'<p><a class="btn-cast" href="{esc(config.BOOKING_URL)}" target="_blank" rel="noopener noreferrer">Book your 60-minute call</a></p>'
+                   if config.BOOKING_URL else '<p><a href="/contact">Contact me to arrange your call</a>.</p>')
+        return private("Your consultation", f"""<h1>Your consultation is paid for</h1>
+<p>Thank you. Your payment is confirmed. There is nothing more to pay when choosing your time.</p>
+<h2>1. Choose a time for your call</h2>
+<p>Book your one-hour consultation below. The calendar opens in a new tab so you can return here for your reading.</p>
+{booking}
+<h2>2. Open your included written reading</h2>
+<p>Give your birth details to open your full reading. If you have already made it, this reopens it.</p>
+<p><a class="btn-cast" href="{esc(details_url)}">Open my written reading</a></p>""")
     if session.get("metadata", {}).get("wyrd_report_ready") == "1":
         return redirect(reading_url(sid))
     return send_from_directory(app.static_folder, "index.html")
