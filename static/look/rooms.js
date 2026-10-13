@@ -1,9 +1,10 @@
 /* ============================================================
    THE MEMBERS' ROOMS, ETHERIC
    On the Hall (the Order) and the practice desk (the Inner Circle):
-   a marble colonnade at the edges, a bust in an arched niche on each
-   side, mist drifting through and motes of light rising. The marble is
-   drawn, not photographed: SVG turbulence makes its veins. Everything
+   a marble colonnade at the edges, a marble statue on each side
+   (static/look/statues, cut from their photographs),
+   mist drifting through and motes of light rising. The columns' marble
+   is drawn: SVG turbulence makes its veins. Everything
    moves slowly, and stands still for anyone who asks for less motion.
    ============================================================ */
 (() => {
@@ -26,8 +27,7 @@ const defs = `
   <stop offset="0" stop-color="#000" stop-opacity=".0"/><stop offset=".5" stop-color="#000" stop-opacity=".22"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
 <radialGradient id="rmStone" cx=".35" cy=".3" r=".9">
   <stop offset="0" stop-color="#fbf9fd"/><stop offset=".45" stop-color="#d8d2de"/><stop offset="1" stop-color="#5d5666"/></radialGradient>
-<radialGradient id="rmNiche" cx=".5" cy=".35" r=".75">
-  <stop offset="0" stop-color="var(--room)" stop-opacity=".28"/><stop offset=".6" stop-color="#000" stop-opacity=".55"/><stop offset="1" stop-color="#000" stop-opacity=".8"/></radialGradient>`;
+`;
 
 const flutes = (x, w, h) => Array.from({ length: 6 }, (_, i) => `<rect x="${x + 6 + i * (w - 12) / 6}" y="0" width="${(w - 12) / 6}" height="${h}" fill="url(#rmFlute)"/>`).join("");
 
@@ -45,31 +45,6 @@ function column(h){
     <rect x="${x - 20}" y="14" width="${w + 40}" height="16" fill="url(#rmShaft)"/></g>`;
 }
 
-/* a classical bust in profile, facing right, on a plinth, in an arched niche */
-function niche(){
-  return `<g class="rm-niche">
-    <path d="M10,330 V120 A100,100 0 0 1 210,120 V330 Z" fill="url(#rmNiche)" stroke="var(--room)" stroke-opacity=".55" stroke-width="2"/>
-    <path d="M10,120 A100,100 0 0 1 210,120" fill="none" stroke="#e9e4ee" stroke-opacity=".5" stroke-width="6"/>
-    <g class="rm-bust">
-      <path d="M48,300 C48,256 76,242 98,236 L100,212 C86,206 76,192 74,174 C66,156 67,130 77,112 C87,94 105,84 125,86
-               C146,88 160,102 165,118 C168,128 167,138 171,146 L176,156 L182,170 L174,173 C174,178 177,180 174,184
-               C172,188 174,191 170,194 C166,201 157,204 147,205 L145,221 C157,236 181,242 190,256 C199,270 201,286 201,300 Z"
-            fill="url(#rmStone)"/>
-      <path d="M48,300 C48,256 76,242 98,236 L100,212 C86,206 76,192 74,174 C66,156 67,130 77,112 C87,94 105,84 125,86
-               C146,88 160,102 165,118 C168,128 167,138 171,146 L176,156 L182,170 L174,173 C174,178 177,180 174,184
-               C172,188 174,191 170,194 C166,201 157,204 147,205 L145,221 C157,236 181,242 190,256 C199,270 201,286 201,300 Z"
-            fill="#fff" filter="url(#rmMarble)" opacity=".5"/>
-      <path d="M82,176 C66,160 62,128 72,106 C84,84 112,76 136,80 C152,84 162,96 162,108 C140,100 118,104 104,118 C96,134 96,156 100,170 Z" fill="url(#rmStone)"/>
-      <g class="rm-hair">${[[96,92,12],[112,86,12],[128,85,12],[143,90,11],[155,100,9],[84,100,12],[75,114,12],[71,130,12],[72,146,11],[79,160,10],[90,172,9],[100,104,11],[116,98,11],[132,98,10],[88,118,11],[86,134,10],[90,150,10]]
-        .map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#rmStone)" stroke="#6d6676" stroke-opacity=".3" stroke-width="1"/>`).join("")}</g>
-      <path d="M100,150 C94,146 92,156 96,162 C99,168 106,166 107,160" fill="none" stroke="#6d6676" stroke-opacity=".6" stroke-width="2"/>
-      <path d="M150,140 C146,144 141,145 137,143 M160,162 L168,163" stroke="#6d6676" stroke-opacity=".55" fill="none" stroke-width="2"/>
-      <path d="M70,268 C100,252 130,252 170,266 M62,284 C100,270 140,272 186,286" stroke="#6d6676" stroke-opacity=".45" fill="none" stroke-width="2"/>
-    </g>
-    <rect x="44" y="300" width="132" height="14" fill="url(#rmShaft)"/><rect x="56" y="314" width="108" height="16" fill="url(#rmShaft)"/>
-  </g>`;
-}
-
 function side(which){
   const s = document.createElementNS(NS, "svg");
   const h = 1000;
@@ -79,7 +54,7 @@ function side(which){
   s.setAttribute("aria-hidden", "true");
   s.innerHTML = `<defs>${which === "l" ? defs : ""}</defs>
     <g transform="${which === "r" ? "translate(330,0) scale(-1,1)" : ""}">
-      ${column(h)}<g transform="translate(110,${h - 380})">${niche()}</g></g>`;
+      ${column(h)}</g>`;
   return s;
 }
 
@@ -87,6 +62,16 @@ const room = document.createElement("div");
 room.className = "rm-bg"; room.setAttribute("aria-hidden", "true");
 room.innerHTML = `<div class="rm-mist m1"></div><div class="rm-mist m2"></div><div class="rm-mist m3"></div><div class="rm-sweep"></div><canvas class="rm-motes"></canvas>`;
 room.append(side("l"), side("r"));
+/* the statues: real marble, two to a room, each on a pedestal of light */
+const STATUES = body.classList.contains("room-circle")
+  ? [["zeus", "Zeus, his arm raised"], ["athena", "Athena, at rest"]]
+  : [["undine", "a veiled figure rising"], ["muse", "a muse, arms open"]];
+STATUES.forEach(([name], i) => {
+  const f = document.createElement("figure");
+  f.className = `rm-statue rm-s${i ? "r" : "l"}`;
+  f.innerHTML = `<span class="rm-halo"></span><img src="/static/look/statues/${name}.webp" alt="" decoding="async"><span class="rm-pedestal"></span>`;
+  room.append(f);
+});
 body.prepend(room);
 
 /* motes of light, rising */
