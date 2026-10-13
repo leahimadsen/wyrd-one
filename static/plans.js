@@ -78,12 +78,12 @@ const SYMBOL = {
   septagram(id) {
     let ticks = "";
     for (let i = 0; i < 40; i++) { const [x1, y1] = at(56, i * 9), [x2, y2] = at(62, i * 9); ticks += `<line class="ink hair" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`; }
-    const p = [0, 2, 4, 6, 1, 3, 5].map(k => at(52, k * 360 / 7 - 90).join(" "));      // {7/2}: each point joined to the second along
+    const p = [0, 3, 6, 2, 5, 1, 4].map(k => at(52, k * 360 / 7 - 90).join(" "));      // {7/3}: each point joined to the third along, the narrow pointed star
     return `<defs><clipPath id="pc-${id}"><circle cx="100" cy="100" r="52"/></clipPath></defs>
       <circle class="tint ink heavy" cx="100" cy="100" r="66"/><circle class="wash ink" cx="100" cy="100" r="52"/>
       <g clip-path="url(#pc-${id})"><circle class="hatch-${id} ink-none" cx="132" cy="132" r="58"/><circle class="wash" cx="92" cy="92" r="50"/></g>
       <circle class="ink" cx="100" cy="100" r="52"/>${ticks}
-      <path class="tint ink heavy" d="M${p.join("L")}Z" fill-rule="evenodd"/>
+      <path class="tint ink heavy" d="M${p.join("L")}Z" fill-rule="nonzero"/>
       <circle class="ink hair" cx="100" cy="100" r="70"/>`;
   },
 };
