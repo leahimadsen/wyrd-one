@@ -150,5 +150,26 @@ as_("p@x.co")
 c.post(f"/pro/clients/{cid}/remove", headers=H)
 check("client removed, the reading kept", store.client("p@x.co", cid) is None and store.reading_by_token(token) is not None)
 
+# ---- on Render with no database yet: the parts that keep records stay off ----
+saved_url = os.environ.pop("DATABASE_URL", None); os.environ["RENDER"] = "true"
+check("no database on Render: not ready", not store.ready())
+as_("m@x.co")
+t = c.get("/hall").get_data(as_text=True)
+check("the Hall still opens, with this week's letter", "WEATHER for Freya Test" in t and "Coming soon" in t and "Past letters" not in t)
+check("past letters wait", c.get("/hall/letters/2020-01-06").headers["Location"] == "/hall")
+check("loved ones wait", c.post("/api/hall/kin", json={"label": "x", "birth": KIN}, headers=H).status_code == 503)
+as_("p@x.co")
+t = c.get("/pro").get_data(as_text=True)
+check("the desk offers one-off readings", 'action="/pro/reading"' in t and "Coming soon" in t and "Add a client" not in t)
+check("client pages wait", c.get(f"/pro/clients/{cid}").headers["Location"] == "/pro")
+as_(None)
+check("share links wait", c.get(f"/r/{token}").status_code == 404)
+site.sample_weather = lambda: ""
+t = c.get("/order").get_data(as_text=True)
+check("the join page promises only what's kept", "loved ones" not in t and "private link" not in t and "The Inner Circle" in t)
+os.environ.pop("RENDER")
+if saved_url: os.environ["DATABASE_URL"] = saved_url
+check("off Render the local database is used", store.ready())
+
 print("all good" if not bad else f"{bad} failed")
 sys.exit(1 if bad else 0)

@@ -37,6 +37,12 @@ def url():
     return os.environ.get("DATABASE_URL", "").strip()
 
 
+def ready():
+    """Whether records will last. On Render without DATABASE_URL the disk is wiped at every restart,
+    so the parts that keep things (past letters, loved ones, clients, history, share links) stay off."""
+    return bool(url()) or not os.environ.get("RENDER")
+
+
 def _connect():
     u = url()
     if u:

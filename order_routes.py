@@ -45,9 +45,23 @@ def _safe(fn, *a, default=None):
         return default
 
 
+# the parts that keep records, switched off until there's a database to keep them in (store.ready)
+NEEDS_STORE = ("/hall/letters", "/hall/kin", "/api/hall/kin", "/pro/practice", "/pro/clients", "/pro/r/", "/pro/history", "/r/")
+
+
+@app.before_request
+def _store_or_not():
+    p = request.path
+    if store.ready() or not p.startswith(NEEDS_STORE): return None
+    if p.startswith("/r/"): abort(404)
+    if p.startswith("/api/"): return jsonify(error="Coming soon."), 503
+    return redirect("/pro" if p.startswith("/pro") else "/hall")
+
+
 def _week_letter(email, b):
     """This week's Body Weather, kept in the archive the first time it's made."""
     week = weather.monday().isoformat()
+    if not store.ready(): return week, A.weather_for(b)
     have = _safe(store.letter, email, week)
     if have: return week, have["html"]
     html = A.weather_for(b)
@@ -94,6 +108,9 @@ USE_CURRENT = """<script src="/static/common.js"></script><script>
 })();</script>"""
 
 
+SOON_HALL = """<section class="hall-sec"><h2>Coming soon</h2><p>Every past letter kept here to reread, and charts for the people you love with their own weekly Body Weather.</p></section>"""
+
+
 # ---------------- the Hall ----------------
 @app.get("/hall")
 def hall():
@@ -120,11 +137,12 @@ def hall():
 <p class="muted" id="noCurrent"><a href="/">Cast your chart</a>, then come back here to choose it.</p></section>"""
         chart = ""
 
-    past = [l for l in (_safe(store.letters, email, default=[]) or []) if not b or l["week"] != weather.monday().isoformat()]
+    db = store.ready()
+    past = [l for l in (_safe(store.letters, email, default=[]) or []) if not b or l["week"] != weather.monday().isoformat()] if db else []
     archive = "".join(f'<li><a href="/hall/letters/{l["week"]}">The week of {datetime.strptime(l["week"], "%Y-%m-%d").strftime("%-d %B %Y")}</a></li>' for l in past)
     letters = f"""<section class="hall-sec"><h2>Past letters</h2>{f'<ul class="hall-list">{archive}</ul>' if archive else '<p class="muted">Each week\'s letter is kept here once it\'s written, so you can go back to it.</p>'}</section>"""
 
-    kin = _safe(store.kin, email, default=[]) or []
+    kin = (_safe(store.kin, email, default=[]) or []) if db else []
     kin_rows = "".join(f"""<li><b>{esc(k["label"])}</b> <span class="muted">· {esc(k["birth"].get("date", ""))}</span>
   <a href="/hall/kin/{k["id"]}">This week's Body Weather</a> · <a href="{_chart_link(k["birth"])}">Open chart</a>
   <form method="post" action="/hall/kin/{k["id"]}/remove" class="inline"><button class="linkish" type="submit">Remove</button></form></li>""" for k in kin)
@@ -145,7 +163,7 @@ def hall():
 <form method="post" action="/signout" style="margin-top:24px"><button class="alt" type="submit">Sign out</button></form></section>"""
     return A.private("The Hall", f"""<p class="hall-kicker">The Order</p><h1>The Hall</h1>
 <p class="lede">Welcome back, {esc(FIRST(b, email))}. This is your room in the Order: your weather, your letters, your people.</p>{joined}
-{this_week}{chart}{letters}{loved}{perks}{circle}{plan}""", script=USE_CURRENT)
+{this_week}{chart}{letters + loved if db else SOON_HALL}{perks}{circle}{plan}""", script=USE_CURRENT)
 
 
 @app.get("/hall/letters/<week>")
@@ -228,6 +246,14 @@ def pro_desk_home():
     if bounce: return bounce
     email, st = who
     left = max(0, config.PRO_READINGS_A_MONTH - st["proUse"])
+    if not store.ready():                            # no database yet: one-off readings, nothing kept
+        form = open(A.os.path.join(A.HERE, "static", "pro-form.html"), encoding="utf-8").read()
+        return A.private("Practice desk", f"""<p class="hall-kicker">The Inner Circle</p><h1>Your practice desk</h1>
+<p class="lede">Generate The Wyrd Reading or a week's Body Weather for a client.</p>
+<div class="desk-meter"><b>{left}</b> of {config.PRO_READINGS_A_MONTH} client readings left this month · Body Weather is unlimited</div>
+<section class="hall-sec"><h2>A reading for a client</h2>{form}</section>
+<section class="hall-sec"><h2>Coming soon</h2><p>Your client list with private notes, every reading kept to reopen free, readings sent to clients by a private link, and your practice's name on each one.</p></section>""",
+                         script='<script src="/static/common.js"></script><script src="/static/pro.js"></script>')
     name = store.practice_name(email)
     cl = store.clients(email)
     rows = "".join(f"""<tr><td><a href="/pro/clients/{c["id"]}"><b>{esc(c["name"])}</b></a><br><small class="muted">{esc(c["birth"].get("date", ""))} · {esc((c["birth"].get("place_label") or "").split(",")[0])}</small></td>

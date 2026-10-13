@@ -790,6 +790,7 @@ def membership_page():
     m, y, pr = config.MEMBER_MONTHLY_CENTS, config.MEMBER_YEARLY_CENTS, config.PRO_MONTHLY_CENTS
     from wyrd import testimonials
     sample = sample_weather()
+    db = store.ready()                               # promise only what can be kept
     body = f"""<div class="order-hero"><p class="hall-kicker">Join</p><h1>The Order</h1>
 <p class="lede">Your design's weather, every week. A letter each Monday on how the planets move through your Birth Design and your Dharma Design,
 written in The Völva's words, and a Hall of your own on the site to keep it all in.</p>
@@ -799,8 +800,8 @@ written in The Völva's words, and a Hall of your own on the site to keep it all
 <ul class="order-gifts">
   <li><b>Body Weather, every Monday</b>Which centres the week's sky switches on in your Birth Design and your Dharma Design, which stay open, and which of your gates it lights. The Moon's mansion day by day, the week's stations and sign changes, and the Vimshottari era and chapter you're in.</li>
   <li><b>Your chart, opened up</b>Every activated rune read in full through its mansion, and the planets set on each station of your body map.</li>
-  <li><b>The Hall</b>Your room on the site: this week's letter, every past letter kept to reread, and your chart one click away.</li>
-  <li><b>Charts for loved ones</b>Keep up to {store.KIN_MAX} charts for the people close to you and read their Body Weather each week too.</li>
+  <li><b>The Hall</b>Your room on the site: this week's letter{", every past letter kept to reread," if db else ""} and your chart one click away.</li>
+  {f"<li><b>Charts for loved ones</b>Keep up to {store.KIN_MAX} charts for the people close to you and read their Body Weather each week too.</li>" if db else ""}
   <li><b>Readings for less</b>The Wyrd Reading for {money(config.MEMBER_READING_CENTS)} instead of {money(config.PRICE_CENTS)}, and {config.TOGETHER_MEMBER_OFF}% off the reading together.</li>
   <li><b>Learning the Mandala</b>The course on working with the Wyrd Mandala, included when it opens.</li>
 </ul>
@@ -814,7 +815,7 @@ written in The Völva's words, and a Hall of your own on the site to keep it all
   <li>Join below. Payment is by Stripe; you're signed in straight away.</li>
   <li>In the Hall, choose the chart your letter is written for: cast it on the front page, then come back and keep it with one press.</li>
   <li>Your first letter is waiting in the Hall at once, and a new one comes to your inbox every Monday.</li>
-  <li>Add the people you love, and read their weather beside yours.</li>
+  {"<li>Add the people you love, and read their weather beside yours.</li>" if db else ""}
 </ol>
 
 {testimonials.render("order")}
@@ -825,16 +826,16 @@ written in The Völva's words, and a Hall of your own on the site to keep it all
     <p class="muted">or {money(y)} a year{months_free(m, y)}</p>
     <ul><li>Body Weather by email every Monday, for your Birth Design and your Dharma Design</li>
       <li>Your chart opened up: every rune in full, and the planets on your body map</li>
-      <li>The Hall: this week's letter, every past letter, and charts for up to {store.KIN_MAX} loved ones</li>
+      <li>{f"The Hall: this week's letter, every past letter, and charts for up to {store.KIN_MAX} loved ones" if db else "The Hall: this week's letter and your chart, in one place"}</li>
       <li>The Wyrd Reading for {money(config.MEMBER_READING_CENTS)}, and {config.TOGETHER_MEMBER_OFF}% off the reading together</li>
       <li>Learning the Mandala, included when it opens</li></ul>
     {buy("member-month", f"Join the Order for {money(m)} a month", True)}
     {buy("member-year", f"Or {money(y)} a year") if on else ""}</section>
   <section class="plan" id="pro" data-line="For those who read for others."><h2>The Inner Circle</h2><div class="price">{money(pr)}<small> a month</small></div>
     <ul><li>For astrologers, coaches and practitioners working with clients</li>
-      <li>A practice desk: keep your clients, their birth details and your private notes in one place</li>
-      <li>The Wyrd Reading for your clients, {config.PRO_READINGS_A_MONTH} a month, each kept in your history to reopen free</li>
-      <li>Send a reading to your client by email or a private link, prepared under your practice's name</li>
+      {"<li>A practice desk: keep your clients, their birth details and your private notes in one place</li>" if db else ""}
+      <li>The Wyrd Reading for your clients, {config.PRO_READINGS_A_MONTH} a month{", each kept in your history to reopen free" if db else ""}</li>
+      {"<li>Send a reading to your client by email or a private link, prepared under your practice's name</li>" if db else ""}
       <li>This week's Body Weather for any client, as often as you like</li>
       <li>Everything in the Order</li></ul>
     {buy("pro-month", f"Join the Inner Circle for {money(pr)} a month")}

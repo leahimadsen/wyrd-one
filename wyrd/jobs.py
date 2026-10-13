@@ -48,7 +48,8 @@ def weekly(eph, cast_for, birth_from, config):
             b = json.loads(meta["wyrd_birth"])
             report = weather.render(weather.week(eph, cast_for(birth_from(b))), (b.get("name") or "").split(" ")[0])
             link = f'<p style="font:14px sans-serif;color:#5f5a73;margin-top:30px">Past weeks are kept in <a href="{config.BASE_URL}/hall">the Hall</a>, where you can also add charts for loved ones and manage your place in the Order.</p>'
-            try: store.save_letter(c["email"], week, report)       # kept in the Hall's archive
+            try:
+                if store.ready(): store.save_letter(c["email"], week, report)       # kept in the Hall's archive
             except Exception as e: log.error("letter archive for %s: %s", c.get("id"), e)
             if mailer.send(c["email"], "Your Body Weather for the week", report + link):
                 stripe_api.update_customer_metadata(secret, c["id"], {"bw_week": week}); sent += 1
