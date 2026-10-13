@@ -49,7 +49,17 @@ body:not(.paper){
 .seat h1 .seat-h{color:#ffd9a0}
 .seat h1 .seat-old{display:block;font-family:var(--fellsc);font-size:clamp(16px,2.6vw,20px);letter-spacing:.22em;color:#ff9be8;margin-bottom:6px;text-shadow:0 0 8px rgba(255,79,216,.6)}
 .seat-what li::before{content:"✶";color:var(--magenta)}
-.masthead{display:block;width:100%;height:auto;aspect-ratio:1344/256;object-fit:cover;margin:0 auto;border-bottom:3px ridge #8f7ce0}
+/* the masthead: her art with no lettering, and the name set as real type on top,
+   so the words stay sharp on every screen. The art is cut wide (banner-800/1600/3000.webp);
+   on a phone the strip is taller and shows more of the circle. */
+.masthead{position:relative;height:clamp(150px,17vw,250px);overflow:hidden;background:#1b0752;border-bottom:3px ridge #8f7ce0}
+.masthead .mh-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+.masthead::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 48% 58% at 50% 52%,rgba(8,2,30,.5),rgba(8,2,30,0) 72%)}
+.masthead .mh-name{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;margin:0;
+  font-family:'IM Fell English','Iowan Old Style',Georgia,serif;font-weight:400;font-size:clamp(48px,10vw,150px);line-height:1;
+  letter-spacing:.01em;white-space:nowrap;color:#c9fbff;
+  text-shadow:0 0 3px rgba(6,1,26,.95),0 0 10px #49e8ff,0 0 26px rgba(73,232,255,.55),0 0 52px rgba(154,107,255,.65)}
 
 /* the cast form as a little 90s window */
 body:not(.paper) .cast{border:3px outset #a99bf0;background:#120533;padding:0 16px 16px;box-shadow:7px 7px 0 rgba(0,0,0,.5)}
