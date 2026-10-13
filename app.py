@@ -294,7 +294,7 @@ def karakamsa_wish(c):
     return w[:1].upper() + w[1:]
 
 # ---------------- what's coming, today, and the sample reading ----------------
-_cal_cache, _today_cache = {}, {}
+_cal_cache, _today_cache, _sky_cache = {}, {}, {}
 
 @app.post("/api/calendar")
 def calendar_api():
@@ -305,13 +305,18 @@ def calendar_api():
     except BadInput as e:
         return jsonify(error=str(e)), 400
     start = math.floor(jd_now() - 0.5) + 0.5             # today, 0h UT
+    sky = _sky_cache.get(start)                          # the year's daily sky is the same for everyone: worked out once a day
+    if sky is None:
+        S = wcal.samples(EPH, start, 366)
+        sky = {"S": S, "track": wcal.track(S, EPH.ayanamsa(start))}
+        _sky_cache.clear(); _sky_cache[start] = sky
     key = (b["y"], b["mo"], b["d"], b["hh"], b["mi"], b["place"]["lat"], b["place"]["lon"], bool(d.get("unknown_time")), start)
     if key not in _cal_cache:
         c = cast_for(b)
         if d.get("unknown_time"): unknown_time(c)
         if len(_cal_cache) > 500: _cal_cache.clear()
-        _cal_cache[key] = plain(wcal.year_for(EPH, c, start))
-    return jsonify(start=start, events=_cal_cache[key])
+        _cal_cache[key] = plain(wcal.year_for(EPH, c, start, S=sky["S"][:366]))
+    return jsonify(start=start, events=_cal_cache[key], track=sky["track"])
 
 @app.get("/api/today")
 def today_api():
