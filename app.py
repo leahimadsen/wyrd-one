@@ -94,7 +94,9 @@ def cast_for(b):
 # ---------------- pages ----------------
 @app.get("/")
 def home():
-    return send_from_directory(app.static_folder, "index.html")
+    from wyrd import testimonials
+    t = open(os.path.join(app.static_folder, "index.html"), encoding="utf-8").read()
+    return Response(t.replace("<!--TESTIMONIALS-->", testimonials.render("home")), mimetype="text/html")
 
 # ---------------- the installable app ----------------
 @app.get("/sw.js")
