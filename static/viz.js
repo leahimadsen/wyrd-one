@@ -1628,6 +1628,12 @@ function paintLab(){
       <p class="kenning" style="font-size:13.5px">The left half of the field is the house
       untouched; the right is the house with this graha standing in it. Tint, shade, tone — three
       operations in colour, three grahas without a hue. The match is exact and nobody arranged it.</p>`;
+  } else if (OUTER.includes(labGraha)){
+    /* the outer three are plotted, not coloured: no graha, no hue */
+    discCol = "transparent";
+    title = "No colour"; meta = `${labGraha} in house ${labHouse} · ${h.color} field`;
+    body = `${labGraha} is not one of the nine grahas, so the colour scheme gives it no hue and no operation. It stands in the house without changing its colour.`;
+    extra = "";
   } else {
     /* Venus and Ketu — the two your document leaves open */
     if (labGraha === "Ketu"){

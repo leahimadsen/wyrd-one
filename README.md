@@ -9,7 +9,7 @@ Web of Wyrd register, unlocked by Stripe Checkout.
 - `config.py` — prices, wording around the reading, year range
 - `wyrd/engine.py` — the chart pipeline, ported from the console and verified against it
 - `wyrd/extras.py` — retrogrades, the panchanga of the birth day, Placidus cusps (kept out of the cast so it stays identical to the console)
-- `wyrd/calendar.py` — the twelve-month calendar ("What's coming") and the public Today page
+- `wyrd/calendar.py` — the twelve-month calendar ("What's coming"), the year's daily sky the chart page scrubs through, and the public Today page
 - `wyrd/ephemeris.py` — NASA JPL DE440 via Skyfield; Lahiri ayanamsa
 - `wyrd/reading.py` — the paid reading (eight sections, all text from `lib/corpus.json`)
 - `wyrd/places.py`, `scripts/build_places.py` — worldwide place search (GeoNames)
@@ -18,7 +18,10 @@ Web of Wyrd register, unlocked by Stripe Checkout.
 - `static/learn.js` — **Learn your chart**: the thirteen-step guided path. Edit the lesson wording here.
 - `static/glossary.js` — every term's plain definition. Edit the wording here; it appears wherever the term does.
 - `static/wheel.js` — the chart wheel (simple and full views, tap to explore, compare overlay)
-- `static/lands.js` — What's coming and Compare
+- `static/now.js` — **Now and next**: the sky on any day of the coming year around the chart, the cards that read it, the year strip and What's coming
+- `static/colour.js` — **The colour room**: your planets in colour, the four-step wheel lesson, and the eye game (the lab and the colour tables stay in `viz.js`)
+- `static/bench.js` — **The bench**: your life's eras as music, why each chapter sounds as it does, the ladder and the ear game
+- `static/rooms.css` — the styles for those three rooms
 - `static/today.html` + `today.js` — the public Today page (`/today`)
 - `static/consult.html` — the unlisted 1:1 consultation page (see below)
 - `static/a11y.css` — contrast and minimum text sizes for the whole site

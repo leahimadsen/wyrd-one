@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="/static/dasha.css">
 <link rel="stylesheet" href="/static/mandala/wyrd-mandala.css">
 <link rel="stylesheet" href="/static/a11y.css">
+<link rel="stylesheet" href="/static/rooms.css">
 <link rel="stylesheet" href="/static/look/wyrd90.css">
 </head>
 <body>
@@ -103,7 +104,7 @@
   <section class="land-panel" id="p-sky" hidden aria-labelledby="h-sky">
     <h2 id="h-sky">Now and next</h2>
     <p class="lede">Which of my planets is the sky touching today, and what happens over the next twelve months?</p>
-    <h3 class="sec-h">The sky now</h3>
+    <div id="nowHost"></div>
     <div class="st-wrap" id="chSky" hidden>
       <div class="st-ctl" role="group" aria-label="How to show the sky">
         <button type="button" class="tz-chip" data-st="flat" aria-pressed="false">◎ Flat wheel</button>
@@ -114,7 +115,6 @@
       <p class="tz-cap" id="chSkyCap" aria-live="polite">Today's planets ride the outer edge, yours from birth the inner edge. Tap one to see what it is crossing.</p>
     </div>
     <p class="st-open"><button type="button" class="tz-chip" id="chSkyOpen">⤢ See today's sky around the Earth, with your birth planets inside</button></p>
-    <div id="trHost"></div>
     <h3 class="sec-h" id="coming">What's coming</h3>
     <div id="calHost"></div>
   </section>
@@ -134,13 +134,13 @@
 
   <section class="land-panel" id="p-colour" hidden aria-labelledby="h-colour">
     <h2 id="h-colour">The colour room</h2>
-    <p class="lede">What colour is each house, and where do my planets sit on the colour wheel?</p>
+    <p class="lede">What colour is each of my houses, and what do my planets do to it?</p>
     <div id="colourHost"></div>
   </section>
 
   <section class="land-panel" id="p-bench" hidden aria-labelledby="h-bench">
     <h2 id="h-bench">The bench</h2>
-    <p class="lede">What do two of my planets sound like together?</p>
+    <p class="lede">What does each chapter of my life sound like, and why?</p>
     <div id="benchHost"></div>
   </section>
 
@@ -203,9 +203,10 @@
 <script src="/static/mandala/wyrd-data.js"></script>
 <script src="/static/mandala/wyrd-glyphs.js"></script>
 <script src="/static/mandala/wyrd-mandala.js"></script>
-<script src="/static/transits.js"></script>
 <script src="/static/learn.js"></script>
-<script src="/static/lands.js"></script>
+<script src="/static/now.js"></script>
+<script src="/static/colour.js"></script>
+<script src="/static/bench.js"></script>
 <script src="/static/dynamics.js"></script>
 <script src="/static/compare.js"></script>
 <script src="/static/music.js"></script>

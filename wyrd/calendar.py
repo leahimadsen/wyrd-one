@@ -101,8 +101,20 @@ def sade_sati(sky, chart):
     return out
 
 
-def year_for(eph, chart, jd0, days=365):
-    S = samples(eph, jd0, days)
+TRACK = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Rahu", "Ketu", "Uranus", "Neptune", "Pluto"]
+
+
+def track(S, ay):
+    """The daily sky as plain numbers, for the chart page to scrub through the year:
+    each body's sidereal longitude at 0h UT on each day, to a hundredth of a degree.
+    One ayanamsa serves the year (it moves about 0.014° in that time)."""
+    return {"start": S[0][0], "ay": round(ay, 4),
+            "lon": {b: [round(p[b], 2) for _, p in S] for b in TRACK}}
+
+
+def year_for(eph, chart, jd0, days=365, S=None):
+    if S is None:
+        S = samples(eph, jd0, days)
     sky = sky_events(S)
     ev = sky + natal_events(S, chart) + sade_sati(sky, chart)
     ev.sort(key=lambda e: e["jd"])

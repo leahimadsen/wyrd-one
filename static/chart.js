@@ -66,7 +66,7 @@ const LANDS = [
     terms: ["vimshottari", "mahadasha", "antardasha", "pratyantar", "moonmansion"], prompt: "Your reading reads every era of your life, and what this era and this chapter ask of you." },
   { id: "sky",       name: "Now and next",           short: "Now & next", mark: "☾", path: true,
     teaser: "Today's sky on your chart, and the next twelve months", why: "The planets moving now, crossing the chart you were born with.",
-    terms: ["transit", "sadesati", "retro", "orb", "ingressT", "station"], prompt: "Your reading names what your chart asks of you, whatever today's sky is doing." },
+    terms: ["transit", "orb", "retro", "station", "ingressT", "sadesati", "antardasha", "tithi"], prompt: "Your reading names what your chart asks of you, whatever today's sky is doing." },
   { id: "runes",     name: "Your activated runes",   short: "Runes", mark: "ᛉ", path: true,
     teaser: "The runes your planets light, read through their mansions", why: "Your houses carry the 24 runes; your planets wake some of them.",
     terms: ["rune", "nakshatra"], prompt: "Your reading ranks your runes and names the years each one wakes." },
@@ -82,10 +82,10 @@ const LANDS = [
     terms: ["nakshatra", "pada", "navamsa"] },
   { id: "armillary", name: "The armillary",          short: "Armillary", mark: "◎", explore: true, teaser: "Your sky as a sphere you can open",
     terms: ["armillary", "ayanamsa", "gate", "rune"], prompt: "Your reading draws every frame of the sphere into one account of you." },
-  { id: "colour",    name: "The colour room",        short: "Colour", mark: "◐", explore: true, teaser: "Your twelve houses as a colour wheel",
-    terms: ["house", "sign"], prompt: "Your reading reads the houses your planets light, one by one." },
-  { id: "bench",     name: "The bench",              short: "Bench", mark: "♪", explore: true, teaser: "Hear two of your planets together",
-    terms: ["graha", "aspect"], prompt: "Your reading reads how your planets work together, as a cabinet around your Soul-Planet." },
+  { id: "colour",    name: "The colour room",        short: "Colour", mark: "◐", explore: true, teaser: "Your planets in colour, and a lesson in the wheel",
+    terms: ["house", "sign", "aspect", "graha"], prompt: "Your reading reads the houses your planets light, one by one." },
+  { id: "bench",     name: "The bench",              short: "Bench", mark: "♪", explore: true, teaser: "Your life's eras as music, and why each chapter sounds as it does",
+    terms: ["graha", "mahadasha", "antardasha"], prompt: "Your reading reads how your planets work together, as a cabinet around your Soul-Planet." },
 ];
 const ORDER = [LEARN, ...LANDS];
 const PATH = ORDER.filter(l => l.path);
@@ -342,9 +342,9 @@ const BUILD = {
       onSelect: s => { if (location.hash.startsWith("#mandala")) history.replaceState(null, "", "#mandala" + (s ? "/" + s.code.toLowerCase() : "")); } });
   },
   armillary: () => { $("armHostWrap").innerHTML = Wyrd.armillary(); watchArmillary($("p-armillary")); },
-  sky: () => { renderTransits(C); WyrdLands.calendar($("calHost"), { C, birth, unknown }); skyTorus(); },
-  colour: () => { $("colourHost").innerHTML = Wyrd.colour(); setTimeout(() => Wyrd.afterColour(), 0); },
-  bench: () => { $("benchHost").innerHTML = Wyrd.bench(); },
+  sky: () => { WyrdNow.mount({ C, birth, unknown, top: $("nowHost"), list: $("calHost") }); skyTorus(); },
+  colour: () => WyrdColour.mount($("colourHost"), C),
+  bench: () => WyrdBench.mount($("benchHost")),
   compare: () => WyrdCompare.mount($("cmpHost"), { C, birth, unknown }),
   reading: () => {},
 };
