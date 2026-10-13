@@ -844,7 +844,7 @@ written in The Völva's words, and a Hall of your own on the site to keep it all
 
 <h2>Choose your place</h2>
 <div class="plans">
-  <section class="plan lead" data-line="Your weather, every week."><h2>The Order</h2><div class="price">{money(m)}<small> a month</small></div>
+  <section class="plan lead" data-arcanum="order" data-line="Your weather, every week."><h2>The Order</h2><div class="price">{money(m)}<small> a month</small></div>
     <p class="muted">or {money(y)} a year{months_free(m, y)}</p>
     <ul><li>Body Weather by email every Monday, for your Birth Design and your Dharma Design</li>
       <li>Your chart opened up: every rune in full, and the planets on your body map</li>
@@ -853,7 +853,7 @@ written in The Völva's words, and a Hall of your own on the site to keep it all
       <li>Learning the Mandala, included when it opens</li></ul>
     {buy("member-month", f"Join the Order for {money(m)} a month", True)}
     {buy("member-year", f"Or {money(y)} a year") if on else ""}</section>
-  <section class="plan" id="pro" data-line="For those who read for others."><h2>The Inner Circle</h2><div class="price">{money(pr)}<small> a month</small></div>
+  <section class="plan" id="pro" data-arcanum="circle" data-line="For those who read for others."><h2>The Inner Circle</h2><div class="price">{money(pr)}<small> a month</small></div>
     <ul><li>For astrologers, coaches and practitioners working with clients</li>
       {"<li>A practice desk: keep your clients, their birth details and your private notes in one place</li>" if db else ""}
       <li>The Wyrd Reading for your clients, {config.PRO_READINGS_A_MONTH} a month{", each kept in your history to reopen free" if db else ""}</li>
