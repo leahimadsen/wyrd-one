@@ -337,6 +337,18 @@ def _dharma_arcs(g):
     return [f"{fmt(lo)} – {fmt(hi)}" for lo, hi in out]
 
 
+def _dharma_wake(g):
+    """How to wake the gate, and the channels it is half of, from lib/dharma.json."""
+    from . import dharma as DH, rave as RV
+    w = DH.T["GATES"].get(str(g), {})
+    if not w.get("ok"): return ""
+    chans = "".join(f'<li>Channel {a}–{b}, {e(DH.T["CHANNELS"][DH.key(a, b)]["name"])}, with <a href="/learn/dharma/gates/{b if a == g else a}">gate {b if a == g else a}</a>: '
+                    f'{e(DH.T["CHANNELS"][DH.key(a, b)]["what"])}</li>' for a, b in RV.CHANNELS if g in (a, b))
+    return (f'<h2>How to wake it</h2><p>{e(w["do"])}</p><p>{e(DH.T["SIGN"].format(sign=w["sign"]))}</p>'
+            f'<p class="muted">The Sun lights this gate each year {e(DH.sun_week(g))}.</p>'
+            f'<h2>Its other halves</h2><p>Every gate is half of a channel. Where your Birth Design holds the other half, you have a bridge.</p><ul>{chans}</ul>')
+
+
 def dharma_gate(base, g):
     r = C["REGISTER"].get(str(g))
     if not r: return None
@@ -351,6 +363,7 @@ def dharma_gate(base, g):
 <h2>The shadow it matures through</h2><p>{e(first(r.get("d")))}</p>
 <p class="muted">The full passage for this gate, with how it breaks and how it is repaired, is in the paid reading when the gate is in your Dharma Design.</p>
 <h2>A question to carry</h2><p><i>{e(first(r.get("a")))}</i></p>
+{_dharma_wake(g)}
 <h2>Where it comes from</h2><p>{e(L["DHARMA_POSITIONS"])}</p>
 <ul>{"".join(f"<li>{e(x)}</li>" for x in _dharma_arcs(g))}</ul>
 <p class="muted">At birth this gate sits at {e(r["h"])}. See <a href="/learn/gates/{g}">Gate {g} in the birth design</a>.</p>
