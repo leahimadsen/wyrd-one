@@ -58,8 +58,8 @@ def work_with_me():
   <section class="offer wwm-lead"><p class="hall-kicker">Start here</p><h2>A first consult</h2><div class="price">{c}<small> once</small></div>
     <p>An initial 1:1 consult is {c}. We'll plan for an hour, but if we run a little over, there's no extra charge. I want us to have enough time to connect and understand what you need.</p>
     <ul><li>About an hour together, with no clock-watching</li>
-      <li>Your full written reading opens as soon as you've booked and given your birth details, so we work from it</li>
-      <li>We arrange the time by email after you book</li></ul>
+      <li>After payment, give your birth details to open your full written reading, so we work from it</li>
+      <li>After payment, choose your 60-minute appointment in Calendly</li></ul>
     {consult_btn}</section>
   <section class="offer"><p class="hall-kicker">Ongoing support</p><h2>{esc(config.PATH_NAME)}</h2><div class="price">{p}<small> a month</small></div>
     <p>If you'd like ongoing support, I'm offering a monthly subscription for {p}. That includes {calls} one-hour calls each month, where we work directly on the backend of things, plus messaging between calls about what we're working on or what you'd like to focus on next.</p>
@@ -72,7 +72,7 @@ def work_with_me():
 {testimonials.render("work")}
 <h2>Questions</h2>
 <div class="order-faq">
-  <details><summary>What do I need for the consult?</summary><p>Your date, time and place of birth, the time from your birth certificate if you can. You give them straight after booking.</p></details>
+  <details><summary>What do I need for the consult?</summary><p>Your date, time and place of birth, the time from your birth certificate if you can. You give them after payment on your consultation page, where you also choose your appointment time.</p></details>
   <details><summary>How do I book my calls on the Lightning Path?</summary><p>From your page on the site, which opens as soon as you join. It's also where you write to me between calls.</p></details>
   <details><summary>Can I cancel the Lightning Path?</summary><p>Any time, from your account. You keep your place until the end of the month you've paid for.</p></details>
   <details><summary>Something else?</summary><p><a href="/contact">Write to me</a>.</p></details>
