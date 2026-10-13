@@ -329,7 +329,10 @@ def build(chart, dasha, who):
       {dharma_table(N, Dh)}
       {VG.thread(C)}"""))
     asks.append(("From Rashi to Dharma", VG.W["ASK"], False))
-    out.append(section(0, DHARMA.T["TITLE"], DHARMA.T["SUB"], DHARMA.body(C, dasha, activation)))
+    already = {g: "The Dharma Weave" for g in (dps["gate"], dds["gate"], Dh["personality"]["Earth"]["gate"], Dh["design"]["Earth"]["gate"])}
+    for side in ("personality", "design"):
+        for b in ("Sun", "Earth"): already.setdefault(N[side][b]["gate"], "The Work")
+    out.append(section(0, DHARMA.T["TITLE"], DHARMA.T["SUB"], DHARMA.body(C, dasha, activation, repair, already)))
 
     # ---------- VI · the Path of Dharma ----------
     def steps(rave):

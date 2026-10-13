@@ -34,7 +34,7 @@ for i in range(6):
     C = E.cast(eph, y, mo, d, h, lat, lon)
     dasha = E.dasha_tree(C, C["jd"] + 365.25 * 30)
     MORE.reset()
-    html = DH.body(C, dasha, reading.activation)
+    html = DH.body(C, dasha, reading.activation, reading.repair)
     have_n, have_d = RV.gates(C["natal"]), RV.gates(C["dharma"])
     shown = [int(g) for g in re.findall(r'<div class="rd-entry dh-gate"><h3>Gate (\d+)\.', html)]
     check(f"chart {i + 1}: every dharma gate read once", sorted(shown) == sorted(have_d))

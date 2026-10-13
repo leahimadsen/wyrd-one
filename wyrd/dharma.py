@@ -19,11 +19,9 @@ from . import reading_more as MORE
 HERE = os.path.dirname(__file__)
 T = json.load(open(os.path.join(HERE, "..", "lib", "dharma.json"), encoding="utf-8"))
 REG = json.load(open(os.path.join(HERE, "..", "lib", "corpus.json"), encoding="utf-8"))["REGISTER"]
-SHORT = json.load(open(os.path.join(HERE, "..", "lib", "gate_short.json"), encoding="utf-8"))["GATES"]
 GLYPH = MORE.GLYPH
 esc = html.escape
 ORDER = ["Sun", "Earth", "Moon", "Rahu", "Ketu", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]
-CROSS = {("personality", "Sun"), ("personality", "Earth"), ("design", "Sun"), ("design", "Earth")}
 
 title = lambda g: REG.get(str(g), {}).get("t", "")
 centre = lambda g: RV.CENTRES[RV.CENTRE_OF[g]][0]
@@ -69,13 +67,17 @@ def _who(cs):
 
 def _channel(a, b, note):
     c = T["CHANNELS"][key(a, b)]
+    halves = "".join(f'<li><b>Gate {g}, {esc(title(g))}</b> ({centre(g)}): {MORE.first(REG.get(str(g), {}).get("e"))}</li>' for g in (a, b))
     return f"""<div class="rd-entry dh-ch"><h3>Channel {a}–{b} · {esc(c["name"])} <span class="rd-side p">{centre(a)} to {centre(b)}</span></h3>
       <div class="rd-hdr">{esc(title(a))} · {esc(title(b))} · {note}</div>
-      <p>{esc(c["what"])}</p>
-      <div class="rd-body"><h5>{T["LIVE"]}</h5><p>{esc(c["live"])}</p></div></div>"""
+      <p>{esc(c["what"])}</p><ul class="dh-halves">{halves}</ul>
+      <div class="rd-gifts"><div class="light"><h5>{T["LIVE"]}</h5><p>{esc(c["live"])}</p></div>
+        <div class="dark"><h5>{T["SHADOW"]}</h5><p>{esc(c["shadow"])}</p></div></div></div>"""
 
 
-def body(C, dasha, activation):
+def body(C, dasha, activation, repair, already=None):
+    """already: {gate: section title} for gates the reading has read in full elsewhere."""
+    already = already or {}
     N, Dh = C["natal"], C["dharma"]
     have_n, have_d = RV.gates(N), RV.gates(Dh)
     live_n, cen_n = RV.defines(N)
@@ -114,17 +116,17 @@ def body(C, dasha, activation):
                   else T["CENTRE_SAME_DEF"] if dd else T["CENTRE_SAME_OPEN"])
         out.append(f'<div class="dh-centre"><h4>{cname} <small>{"defined" if dd else "open"} in the Dharma</small></h4><p>{esc(status)}</p></div>')
         for g in mine:
-            out.append(_gate(g, cd[g], have_n, have_d, C, dasha, activation))
+            out.append(_gate(g, cd[g], have_n, have_d, C, dasha, activation, repair, already))
     out.append(f'<p class="rd-note">{T["BW"]}</p>')
     return "".join(out)
 
 
-def _gate(g, cs, have_n, have_d, C, dasha, activation):
+def _gate(g, cs, have_n, have_d, C, dasha, activation, repair, already):
     G = T["GATES"].get(str(g), {})
     side0, body0, line0 = next((c for c in cs if c[0] == "personality"), cs[0])
     repeats = g in have_n
     design_only = all(s == "design" for s, _, _ in cs)
-    in_cross = any((s, b) in CROSS for s, b, _ in cs)
+    R = REG.get(str(g), {})
     lines = []
     for ln in dict.fromkeys(l for _, _, l in cs):
         lines.append(MORE.once(("dh-line", ln), T["LINE"][str(ln)], T["LINE_SHORT"][str(ln)]))
@@ -145,13 +147,28 @@ def _gate(g, cs, have_n, have_d, C, dasha, activation):
     return f"""<div class="rd-entry dh-gate"><h3>Gate {g}.{line0} · {esc(title(g))}
         <span class="rd-side {'d' if design_only else 'p'}">{T["REPEATS"] if repeats else T["NEW"]}</span></h3>
       <div class="rd-hdr">{T["CARRIED"].format(who=_who(cs))}</div>
-      {f'<p class="rd-short"><b>In short:</b> {esc(SHORT[str(g)]["short"])}</p>' if SHORT.get(str(g), {}).get("ok") else ""}
-      {f'<p class="rd-note">{T["IN_CROSS"]}</p>' if in_cross else ""}
+      {f'<p class="dh-lead">{lead}</p>' if (lead := MORE.once(("dh-lead", repeats), T["REPEAT_LEAD"] if repeats else T["NEW_LEAD"])) else ""}
+      {_passage(g, R, repair, already)}
       {do}
+      {f'<div class="rd-ask"><span>{T["ASK"]}</span> {R["a"]}</div>' if R.get("a") else ""}
       {f'<p class="rd-how">{MORE.once(("dh-design",), *T["DESIGN_ONLY"])}</p>' if design_only else ""}
       <div class="dh-foot"><p>{" ".join(halves)}</p>
       {f'<div class="rd-opens {act["state"].split()[0]}">{GLYPH.get(act["lord"], "⊕")} {act["text"]}</div>' if act else ""}
       {f'<p class="rd-how">{MORE.once(("dh-sun",), *T["SUN_WEEK"]).format(when=week)}</p>' if week else ""}</div></div>"""
+
+
+def _passage(g, R, repair, already):
+    """The gate's own passage from the register, read for the Dharma: its engine is the work, its light gift what
+    ripens, its dark gift the shadow it matures through, its distortion what the maturing clears. A gate the reading
+    has already read in full points back there and keeps only what is new: how it ripens and what it clears."""
+    if not R: return ""
+    where = already.get(g)
+    head = (f'<p class="rd-note">{T["READ_FULL"].format(sec="{SEC:" + where + "}")}</p>' if where
+            else f'<div class="rd-body"><h5>{T["WORK"]}</h5><p>{R["e"]}</p></div>')
+    gifts = f"""<div class="rd-gifts"><div class="light"><h5>{T["RIPENS"]}</h5><p>{R["l"]}</p></div>
+        <div class="dark"><h5>{T["MATURES"]}</h5><p>{R["d"]}</p></div></div>"""
+    clears = "" if where else f'<div class="rd-repair"><h5>{T["CLEARS"]}</h5>{repair(R["r"])}</div>'
+    return head + gifts + clears
 
 
 def _age(act, C, dasha):

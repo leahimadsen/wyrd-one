@@ -1,5 +1,5 @@
 {
- "_note": "DRAFT for The Völva to rewrite in her own words. The Dharma Gates section of the reading (wyrd/dharma.py): how to wake each gate, channel and centre the Dharma Design holds. To hide a gate's practice, set its \"ok\" to false; to change one, edit its text.",
+ "_note": "DRAFT for The Völva to rewrite in her own words. The Dharma Gates section of the reading (wyrd/dharma.py): how to wake each gate (the gates' own passages come from the register in corpus.json), channel and centre the Dharma Design holds. To hide a gate's practice, set its \"ok\" to false; to change one, edit its text.",
  "TITLE": "The Dharma Gates",
  "SUB": "every gate your Dharma Design holds, and how to wake it",
  "INTRO": [
@@ -32,7 +32,7 @@
  "CH_BRIDGE_INTRO": "Neither design completes these alone. One gate is in your Birth Design and the other in your Dharma Design. They're the bridges between who you were issued as and who you're becoming: live the birth half on purpose while you practise the dharma half, and the channel comes on.",
  "CH_BRIDGE_NONE": "No channel is completed by your two designs together. Your Dharma gates find their other halves in other people and in the sky, so the company you keep matters more than most.",
  "GATES_TITLE": "Gate by gate",
- "GATES_INTRO": "Read these in body order, from the Head down. Start with the gates that repeat your Birth Design: they're load-bearing, the ones your life won't outgrow.",
+ "GATES_INTRO": "Read these in body order, from the Head down. Start with the gates that repeat your Birth Design: they're load-bearing, the ones your life won't outgrow. Each gate's engine is the work, its light gift is what ripens, and its distortion is what the maturing has to clear.",
  "LIVE": "How to live it",
  "DO": "How to wake it",
  "SIGN": "You'll know it's waking when {sign}",
@@ -115,182 +115,218 @@
   "1-8": {
    "name": "the maker's mark",
    "what": "Your own creative way, given a place where it belongs. What you make is meant to be seen and used, not kept.",
-   "live": "Finish things and put them where others meet them. Show the work before you think it's perfect."
+   "live": "Finish things and put them where others meet them. Show the work before you think it's perfect.",
+   "shadow": "The work stays private, or gets reshaped to please. You make, but nothing lands, and you start to doubt the making."
   },
   "2-14": {
    "name": "the keeper of direction",
    "what": "Knowing which way to go, and having the resources to get there. Your path draws the means to walk it.",
-   "live": "Spend your energy only on work that points the way you know you're going. Money and help follow direction."
+   "live": "Spend your energy only on work that points the way you know you're going. Money and help follow direction.",
+   "shadow": "Energy pours into other people's directions. You're busy and well paid, and somehow not going anywhere you chose."
   },
   "3-60": {
    "name": "the mutation",
    "what": "New things break through in pulses, after long quiet stretches. You bring change that couldn't come any other way.",
-   "live": "Accept the waiting. Keep your limits clear, and when the new thing comes, give it order straight away."
+   "live": "Accept the waiting. Keep your limits clear, and when the new thing comes, give it order straight away.",
+   "shadow": "The waiting feels like failure, so you force change early, or give up just before it comes."
   },
   "4-63": {
    "name": "the questioning mind",
    "what": "Doubt becomes questions, and questions become answers. Your mind tests things until they hold.",
-   "live": "Ask, guess, and test. Don't treat an answer as a decision: check it against what actually happens."
+   "live": "Ask, guess, and test. Don't treat an answer as a decision: check it against what actually happens.",
+   "shadow": "Doubt spins without testing. Every answer gets questioned and none gets tried, and the mind wears itself out."
   },
   "5-15": {
    "name": "the rhythm of life",
    "what": "Your rhythm and the world's rhythm, moving together. You hold a natural pace that others fall into.",
-   "live": "Keep your routines and trust them. When life wants a different pace, flow with it for a while, then return."
+   "live": "Keep your routines and trust them. When life wants a different pace, flow with it for a while, then return.",
+   "shadow": "You fight your own rhythm to keep someone else's, or hold your routine so tight that life can't get in."
   },
   "6-59": {
    "name": "the closeness",
    "what": "Making contact, and deciding how close to let it come. You open bonds that can create something new.",
-   "live": "Get close honestly, and wait for the feeling to settle before you commit. Intimacy works best with clear terms."
+   "live": "Get close honestly, and wait for the feeling to settle before you commit. Intimacy works best with clear terms.",
+   "shadow": "Closeness comes too fast or not at all. Conflict is dodged until it breaks the bond instead of shaping it."
   },
   "7-31": {
    "name": "the guiding voice",
    "what": "Leadership spoken aloud. People look to you for direction when the future is open.",
-   "live": "Wait to be asked before you lead. When you are, speak a clear direction and let people move on their own."
+   "live": "Wait to be asked before you lead. When you are, speak a clear direction and let people move on their own.",
+   "shadow": "You lead without being asked and meet resistance, or wait so long to be asked that your voice goes unused."
   },
   "9-52": {
    "name": "the steady focus",
    "what": "Stillness turned into concentration. You can stay with one thing long enough to master it.",
-   "live": "Protect long stretches of focus. Choose the one detail that matters and stay with it."
+   "live": "Protect long stretches of focus. Choose the one detail that matters and stay with it.",
+   "shadow": "Focus scatters into a hundred details, or stillness turns into being stuck."
   },
   "10-20": {
    "name": "the awakened self",
    "what": "Being yourself, out loud, in the present. Your way of being speaks for you.",
-   "live": "Say what is true for you now, as yourself. No borrowed voice, no performance."
+   "live": "Say what is true for you now, as yourself. No borrowed voice, no performance.",
+   "shadow": "You speak in a borrowed voice, saying what the moment seems to want instead of what is true for you."
   },
   "10-34": {
    "name": "the power of being yourself",
    "what": "Your strength follows your own convictions. You get things done by being exactly who you are.",
-   "live": "Act only on what's truly yours to do. When your strength serves your nature, it doesn't tire."
+   "live": "Act only on what's truly yours to do. When your strength serves your nature, it doesn't tire.",
+   "shadow": "Strength gets spent proving yourself, or serving convictions that aren't yours, and it tires you out."
   },
   "10-57": {
    "name": "the instinct to survive well",
    "what": "A gut sense for how to live and stay whole. Your intuition protects your way of being.",
-   "live": "Listen to the first quiet knowing about people and places, and let it shape how you live."
+   "live": "Listen to the first quiet knowing about people and places, and let it shape how you live.",
+   "shadow": "You override your gut to be agreeable, and end up in places and with people that don't keep you well."
   },
   "11-56": {
    "name": "the storyteller",
    "what": "Ideas turned into stories that stir people. You pass on what you've seen in a way that sticks.",
-   "live": "Tell what you've seen and imagined, as stories. Let people take from them what they need."
+   "live": "Tell what you've seen and imagined, as stories. Let people take from them what they need.",
+   "shadow": "The stories become preaching, or the ideas never get told, and they crowd the mind."
   },
   "12-22": {
    "name": "the voice of feeling",
    "what": "Feeling made into words at the right time. When you're ready, you can move a room.",
-   "live": "Speak from feeling only when your mood is right and the listener is ready. Timing is everything here."
+   "live": "Speak from feeling only when your mood is right and the listener is ready. Timing is everything here.",
+   "shadow": "Feelings come out at the wrong moment and land badly, so you go quiet altogether."
   },
   "13-33": {
    "name": "the keeper of stories",
    "what": "Listening, remembering, and telling what it meant. You carry what people trust you with.",
-   "live": "Listen fully, then step back to reflect. Tell the story when the lesson is clear."
+   "live": "Listen fully, then step back to reflect. Tell the story when the lesson is clear.",
+   "shadow": "You hold everyone's stories and tell none, or tell them before you've understood them."
   },
   "16-48": {
    "name": "the craft",
    "what": "Depth plus practice. Talent turned into skill through repetition and love.",
-   "live": "Practise one craft for years. Share what you learn as you go."
+   "live": "Practise one craft for years. Share what you learn as you go.",
+   "shadow": "Enthusiasm without depth, or depth so cautious it never practises. The craft never quite arrives."
   },
   "17-62": {
    "name": "the organiser of thought",
    "what": "Opinions made into clear details. You can explain how things fit together.",
-   "live": "Give your view as a picture with the details that support it. Offer it when it's wanted."
+   "live": "Give your view as a picture with the details that support it. Offer it when it's wanted.",
+   "shadow": "Opinions harden into rules, and details are used to win arguments rather than to explain."
   },
   "18-58": {
    "name": "the refiner",
    "what": "The joy of making things better. You see what's off and want to correct it.",
-   "live": "Aim your correction at systems, not at people. Improve one thing at a time, with pleasure."
+   "live": "Aim your correction at systems, not at people. Improve one thing at a time, with pleasure.",
+   "shadow": "Correction turns on people. Nothing is ever good enough, including you."
   },
   "19-49": {
    "name": "the bond and its terms",
    "what": "Needs met within fair agreements. You hold what makes a community work.",
-   "live": "Say what you need and what you'll give. Change the terms openly when they stop being fair."
+   "live": "Say what you need and what you'll give. Change the terms openly when they stop being fair.",
+   "shadow": "Needs go unspoken, and terms change suddenly, so bonds break instead of renewing."
   },
   "20-34": {
    "name": "the busy hands",
    "what": "Power expressed in the moment. You can do a great deal, right now.",
-   "live": "Respond to what's in front of you and let the doing be enough. Stop when your energy says stop."
+   "live": "Respond to what's in front of you and let the doing be enough. Stop when your energy says stop.",
+   "shadow": "Busy for its own sake. You do a great deal and none of it is what you meant to do."
   },
   "20-57": {
    "name": "the quick knowing",
    "what": "Intuition spoken in the moment. You often know and say the right thing straight away.",
-   "live": "Trust what comes to you instantly and say it simply. It doesn't need to be explained."
+   "live": "Trust what comes to you instantly and say it simply. It doesn't need to be explained.",
+   "shadow": "You doubt the quick knowing, ask for proof, and miss the moment it was right."
   },
   "21-45": {
    "name": "the steward of resources",
    "what": "Control and gathering. You manage what the group has and how it's shared.",
-   "live": "Take responsibility for the resources, then share them fairly. Let others hold their own parts."
+   "live": "Take responsibility for the resources, then share them fairly. Let others hold their own parts.",
+   "shadow": "Control becomes hoarding, or you take on everyone's resources and none of the thanks."
   },
   "23-43": {
    "name": "the insight",
    "what": "Sudden knowing put into words. You bring new understanding that others haven't had yet.",
-   "live": "Wait until you can explain an insight simply, then say it. Clarity is what makes it land."
+   "live": "Wait until you can explain an insight simply, then say it. Clarity is what makes it land.",
+   "shadow": "You blurt the insight before it's clear, get called strange, and stop saying what you know."
   },
   "24-61": {
    "name": "the inspired mind",
    "what": "Thinking that returns again and again to the great questions. Inspiration arrives in its own time.",
-   "live": "Give your mind space to wonder without demanding answers. Write down what comes."
+   "live": "Give your mind space to wonder without demanding answers. Write down what comes.",
+   "shadow": "The mind circles the great questions and comes back with worry instead of wonder."
   },
   "25-51": {
    "name": "the brave heart",
    "what": "Love that's tested by shocks. You go first into the unknown and open the way.",
-   "live": "Take the brave step when it's yours to take, and keep your heart open as you do."
+   "live": "Take the brave step when it's yours to take, and keep your heart open as you do.",
+   "shadow": "Shocks close the heart. You stop stepping first, or you shock for its own sake."
   },
   "26-44": {
    "name": "the trusted guide",
    "what": "Instinct for people plus the skill to persuade. You know what people need and how to bring it to them.",
-   "live": "Use your sense of people to help them get where they're going. Keep your offers honest."
+   "live": "Use your sense of people to help them get where they're going. Keep your offers honest.",
+   "shadow": "Persuasion bends the truth, or your read on people is used to manage them."
   },
   "27-50": {
    "name": "the guardian",
    "what": "Care and values. You look after people and the rules that keep them safe.",
-   "live": "Care for others without losing yourself. Keep the values living by testing them."
+   "live": "Care for others without losing yourself. Keep the values living by testing them.",
+   "shadow": "Caring becomes self-sacrifice, or the rules are kept long after they stopped protecting anyone."
   },
   "28-38": {
    "name": "the meaningful struggle",
    "what": "Stubbornness in service of meaning. You fight for what makes life worth living.",
-   "live": "Choose struggles that mean something to you. Let go of the ones that don't."
+   "live": "Choose struggles that mean something to you. Let go of the ones that don't.",
+   "shadow": "Fighting for its own sake, or giving up on the struggle that would have given life meaning."
   },
   "29-46": {
    "name": "the commitment",
    "what": "Saying yes and following it through the body. You discover by committing fully.",
-   "live": "Commit only to what your gut says yes to, then go all the way. Your body learns as it goes."
+   "live": "Commit only to what your gut says yes to, then go all the way. Your body learns as it goes.",
+   "shadow": "Yes to everything, through the body's protests, until the body says no for you."
   },
   "30-41": {
    "name": "the longing",
    "what": "Desire that starts new experiences. You feel what could be, before it is.",
-   "live": "Let yourself want. Choose which dreams to start, and live them fully when they come."
+   "live": "Let yourself want. Choose which dreams to start, and live them fully when they come.",
+   "shadow": "Wanting everything and starting nothing, or burning on desires that were never yours."
   },
   "32-54": {
    "name": "the ambition that lasts",
    "what": "Drive for things that endure. You rise by building what will still stand.",
-   "live": "Ask what will last, and work toward that patiently. Let mentors help you up."
+   "live": "Ask what will last, and work toward that patiently. Let mentors help you up.",
+   "shadow": "Ambition races ahead of what can last, or fear of failure keeps you from rising at all."
   },
   "34-57": {
    "name": "the instinctive strength",
    "what": "Power guided by gut sense. You know how to act to survive and thrive.",
-   "live": "Let your instinct direct your strength in the moment. Don't overthink it."
+   "live": "Let your instinct direct your strength in the moment. Don't overthink it.",
+   "shadow": "Acting on impulse and calling it instinct, or second-guessing the body until the moment passes."
   },
   "35-36": {
    "name": "the hunger for experience",
    "what": "Moving through experiences and learning from their ups and downs. You grow by living.",
-   "live": "Go into new experiences when the feeling is right, and stay to the end. Then share what you learned."
+   "live": "Go into new experiences when the feeling is right, and stay to the end. Then share what you learned.",
+   "shadow": "Chasing new experience to escape the last one, never staying long enough to learn from it."
   },
   "37-40": {
    "name": "the community",
    "what": "Belonging and the bargain behind it. You hold a group together through fair give and take.",
-   "live": "Make agreements clear: what you give, what you get. Keep your word, and take your rest."
+   "live": "Make agreements clear: what you give, what you get. Keep your word, and take your rest.",
+   "shadow": "Giving without agreements, then resenting it, or holding back warmth until you're paid."
   },
   "39-55": {
    "name": "the emotional depth",
    "what": "Moods with meaning. Your feelings stir up the spirit in you and others.",
-   "live": "Let your moods move through without acting on every one. Create from them when they settle."
+   "live": "Let your moods move through without acting on every one. Create from them when they settle.",
+   "shadow": "Moods drive decisions, or you poke at others' feelings to feel your own."
   },
   "42-53": {
    "name": "the full cycle",
    "what": "Beginning, growing, and finishing. You carry things through their whole life.",
-   "live": "Start what you mean to finish. Complete each cycle and carry its lessons into the next."
+   "live": "Start what you mean to finish. Complete each cycle and carry its lessons into the next.",
+   "shadow": "Starting everything and finishing nothing, or finishing what should have been let go."
   },
   "47-64": {
    "name": "the making of sense",
    "what": "Confusing images that settle into meaning. Your mind works on the past until it makes sense.",
-   "live": "Let ideas swirl without forcing them. Insight comes when it's ready, often suddenly."
+   "live": "Let ideas swirl without forcing them. Insight comes when it's ready, often suddenly.",
+   "shadow": "Forcing sense out of confusion, and settling on the wrong meaning to stop the discomfort."
   }
  },
  "GATES": {
@@ -615,5 +651,14 @@
    "ok": true
   }
  },
- "LATE": "Its period, your {lord} mahadasha, falls beyond a usual lifespan, so it wakes by practice alone."
+ "LATE": "Its period, your {lord} mahadasha, falls beyond a usual lifespan, so it wakes by practice alone.",
+ "SHADOW": "When it goes wrong",
+ "WORK": "The work it asks",
+ "RIPENS": "What ripens",
+ "MATURES": "The shadow it matures through",
+ "CLEARS": "What the maturing clears",
+ "ASK": "A question to carry",
+ "READ_FULL": "Its full passage is in section {sec}; here is how it grows in your Dharma.",
+ "REPEAT_LEAD": "You were born with this gate, and the Dharma asks for it again. It is a thread your life will not outgrow: what you were given here is also what you are for.",
+ "NEW_LEAD": "Your Birth Design doesn't hold this gate. It isn't equipment you were handed but a direction you grow into, which is why it can feel unfamiliar, even unlike you, until you walk in it."
 }
