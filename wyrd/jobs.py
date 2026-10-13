@@ -4,7 +4,7 @@ Run by the scheduled GitHub workflow (.github/workflows/weekly.yml), which
 calls POST /jobs/weekly with JOBS_TOKEN. Each member's customer record in
 Stripe remembers the last week sent, so running it twice sends nothing twice."""
 import html, logging, time
-from . import stripe_api, mailer, weather
+from . import stripe_api, mailer, weather, store
 
 log = logging.getLogger("wyrd.jobs")
 LIVE = ("active", "trialing", "past_due")
@@ -47,7 +47,9 @@ def weekly(eph, cast_for, birth_from, config):
         try:
             b = json.loads(meta["wyrd_birth"])
             report = weather.render(weather.week(eph, cast_for(birth_from(b))), (b.get("name") or "").split(" ")[0])
-            link = f'<p style="font:14px sans-serif;color:#5f5a73;margin-top:30px">Read it on the site any time: <a href="{config.BASE_URL}/account/weather">your account</a>. Manage your place in the Order from <a href="{config.BASE_URL}/account">your account</a>.</p>'
+            link = f'<p style="font:14px sans-serif;color:#5f5a73;margin-top:30px">Past weeks are kept in <a href="{config.BASE_URL}/hall">the Hall</a>, where you can also add charts for loved ones and manage your place in the Order.</p>'
+            try: store.save_letter(c["email"], week, report)       # kept in the Hall's archive
+            except Exception as e: log.error("letter archive for %s: %s", c.get("id"), e)
             if mailer.send(c["email"], "Your Body Weather for the week", report + link):
                 stripe_api.update_customer_metadata(secret, c["id"], {"bw_week": week}); sent += 1
             else:

@@ -6,13 +6,14 @@ The pretend Stripe answers at the HTTP layer (stripe_api._call), so every reques
 the site would send is recorded and checked: a gift must never open a checkout,
 make a subscription or take a payment. Nothing here talks to Stripe or sends
 email, and the ephemeris isn't needed."""
-import os, sys, time, types, urllib.parse
+import os, sys, tempfile, time, types, urllib.parse
 from datetime import date
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 os.environ.update(STRIPE_SECRET_KEY="sk_test_fake", ADMIN_PASSWORD="pw-for-tests", SECRET_KEY="k" * 40,
-                  BASE_URL="https://example")
+                  BASE_URL="https://example", WYRD_DB_PATH=os.path.join(tempfile.mkdtemp(), "wyrd.db"))
+os.environ.pop("DATABASE_URL", None)
 sys.modules["wyrd.ephemeris"] = types.SimpleNamespace(Ephemeris=lambda *a: object())   # gift routes never cast a chart
 
 from wyrd import billing, mailer, stripe_api
@@ -106,7 +107,8 @@ check("the practice desk opens", as_user("creator@x.co").get("/pro").status_code
 listed = admin.get("/admin/gifts").get_data(as_text=True)
 check("the admin sees the account and its expiry", "creator@x.co · The Inner Circle until the end of 10 November 2026" in listed
       and "active" in listed)
-check("their account page says when it ends", "until the end of 10 November 2026" in as_user("creator@x.co").get("/account").get_data(as_text=True))
+check("their account page, now the Hall, says when it ends",
+      "until the end of 10 November 2026" in as_user("creator@x.co").get("/account", follow_redirects=True).get_data(as_text=True))
 
 TODAY[0] = "2026-11-10"
 check("still on through the last day", status("creator@x.co")["pro"])

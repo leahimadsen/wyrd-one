@@ -20,7 +20,7 @@ from wyrd.transits import transits
 from wyrd.extras import extras
 from wyrd import calendar as wcal
 from wyrd import pulse
-from wyrd import accounts, billing, mailer, pages, weather
+from wyrd import accounts, billing, mailer, pages, weather, store
 from wyrd import together, together_more, sukuyo
 import atexit
 
@@ -128,7 +128,7 @@ def consult_offer(slug):
     link = html.escape(config.CONSULTATION_PAYMENT_LINK_URL or "")
     return Response(page.replace("{{PAY_LINK}}", link).replace("{{AUTHOR}}", config.AUTHOR), mimetype="text/html")
 
-PRIVATE_PATHS = ("/c/", "/admin", "/gift/", "/welcome", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/")
+PRIVATE_PATHS = ("/c/", "/admin", "/gift/", "/welcome", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/", "/hall", "/api/hall", "/r/")
 
 @app.after_request
 def private_reading_headers(response):
@@ -606,7 +606,7 @@ def google_site_verification():
 @app.get("/robots.txt")
 def robots():
     lines = ["User-agent: *", "Disallow: /admin", "Disallow: /account", "Disallow: /reading", "Disallow: /consultation",
-             "Disallow: /c/", "Disallow: /pro", "Disallow: /auth/", "Disallow: /api/", f"Sitemap: {config.BASE_URL}/sitemap.xml"]
+             "Disallow: /c/", "Disallow: /pro", "Disallow: /hall", "Disallow: /r/", "Disallow: /auth/", "Disallow: /api/", f"Sitemap: {config.BASE_URL}/sitemap.xml"]
     return Response("\n".join(lines) + "\n", mimetype="text/plain")
 
 @app.get("/sitemap.xml")
@@ -765,7 +765,18 @@ def months_free(m, y):
 def order_page(): return membership_page()          # the Order's own address; /membership still works
 
 @app.get("/inner-circle")
-def inner_circle(): return redirect("/membership#pro")
+def inner_circle(): return redirect("/order#pro")
+
+_SAMPLE_WEATHER = {}
+
+def sample_weather():
+    """This week's Body Weather for the sample chart, made once a week, for the Order's page."""
+    week = weather.monday().isoformat()
+    if week not in _SAMPLE_WEATHER:
+        try: _SAMPLE_WEATHER.clear(); _SAMPLE_WEATHER[week] = weather_for(dict(SAMPLE, name=""))
+        except Exception as e:
+            app.logger.error("sample weather: %s", e); return ""
+    return _SAMPLE_WEATHER[week]
 
 @app.get("/membership")
 def membership_page():
@@ -775,29 +786,67 @@ def membership_page():
         return (f'<form method="post" action="/api/subscribe"><input type="hidden" name="plan" value="{plan}">'
                 f'<button class="{"btn-buy" if lead else "btn-cast"}" type="submit">{label}</button></form>')
     m, y, pr = config.MEMBER_MONTHLY_CENTS, config.MEMBER_YEARLY_CENTS, config.PRO_MONTHLY_CENTS
-    body = f"""<h1>The Order</h1>
-<p class="lede">Your design's weather, every week: a letter by email each Monday on how the planets move through your Birth Design and your Dharma Design, written in The Völva's words.</p>
+    sample = sample_weather()
+    body = f"""<div class="order-hero"><p class="hall-kicker">Join</p><h1>The Order</h1>
+<p class="lede">Your design's weather, every week. A letter each Monday on how the planets move through your Birth Design and your Dharma Design,
+written in The Völva's words, and a Hall of your own on the site to keep it all in.</p>
+{buy("member-month", f"Join the Order for {money(m)} a month", True)}</div>
+
+<h2>What you receive</h2>
+<ul class="order-gifts">
+  <li><b>Body Weather, every Monday</b>Which centres the week's sky switches on in your Birth Design and your Dharma Design, which stay open, and which of your gates it lights. The Moon's mansion day by day, the week's stations and sign changes, and the Vimshottari era and chapter you're in.</li>
+  <li><b>Your chart, opened up</b>Every activated rune read in full through its mansion, and the planets set on each station of your body map.</li>
+  <li><b>The Hall</b>Your room on the site: this week's letter, every past letter kept to reread, and your chart one click away.</li>
+  <li><b>Charts for loved ones</b>Keep up to {store.KIN_MAX} charts for the people close to you and read their Body Weather each week too.</li>
+  <li><b>Readings for less</b>The Wyrd Reading for {money(config.MEMBER_READING_CENTS)} instead of {money(config.PRICE_CENTS)}, and {config.TOGETHER_MEMBER_OFF}% off the reading together.</li>
+  <li><b>Learning the Mandala</b>The course on working with the Wyrd Mandala, included when it opens.</li>
+</ul>
+
+{f'''<h2>A taste of a letter</h2>
+<p class="muted">This week's Body Weather, written for a sample chart. Yours is written for your own.</p>
+<div class="order-sample"><span class="ttl">Body Weather · this week · a sample chart</span><div class="weather">{sample}</div></div>''' if sample else ""}
+
+<h2>How it works</h2>
+<ol class="order-steps">
+  <li>Join below. Payment is by Stripe; you're signed in straight away.</li>
+  <li>In the Hall, choose the chart your letter is written for: cast it on the front page, then come back and keep it with one press.</li>
+  <li>Your first letter is waiting in the Hall at once, and a new one comes to your inbox every Monday.</li>
+  <li>Add the people you love, and read their weather beside yours.</li>
+</ol>
+
+<h2>Choose your place</h2>
 <div class="plans">
   <section class="plan lead" data-line="Your weather, every week."><h2>The Order</h2><div class="price">{money(m)}<small> a month</small></div>
     <p class="muted">or {money(y)} a year{months_free(m, y)}</p>
-    <ul><li><b>Body Weather by email every Monday:</b> which centres the week's sky switches on in your Birth Design and your Dharma Design, which stay open, and which of your gates it lights</li>
-      <li>The Moon's mansion day by day, the week's stations and sign changes, and the Vimshottari era and chapter you're in</li>
-      <li><b>Your chart, opened up:</b> every activated rune read in full through its mansion, and the planets on each station of your body map</li>
-      <li>One chart saved to your account, for your weekly letter</li>
-      <li><b>Learning the Mandala</b>, the course on working with the Wyrd Mandala, included when it opens</li>
-      <li>The Wyrd Reading for {money(config.MEMBER_READING_CENTS)} instead of {money(config.PRICE_CENTS)}, and {config.TOGETHER_MEMBER_OFF}% off the reading together</li></ul>
+    <ul><li>Body Weather by email every Monday, for your Birth Design and your Dharma Design</li>
+      <li>Your chart opened up: every rune in full, and the planets on your body map</li>
+      <li>The Hall: this week's letter, every past letter, and charts for up to {store.KIN_MAX} loved ones</li>
+      <li>The Wyrd Reading for {money(config.MEMBER_READING_CENTS)}, and {config.TOGETHER_MEMBER_OFF}% off the reading together</li>
+      <li>Learning the Mandala, included when it opens</li></ul>
     {buy("member-month", f"Join the Order for {money(m)} a month", True)}
     {buy("member-year", f"Or {money(y)} a year") if on else ""}</section>
   <section class="plan" id="pro" data-line="For those who read for others."><h2>The Inner Circle</h2><div class="price">{money(pr)}<small> a month</small></div>
     <ul><li>For astrologers, coaches and practitioners working with clients</li>
-      <li>Generate The Wyrd Reading for your clients: {config.PRO_READINGS_A_MONTH} a month included</li>
+      <li>A practice desk: keep your clients, their birth details and your private notes in one place</li>
+      <li>The Wyrd Reading for your clients, {config.PRO_READINGS_A_MONTH} a month, each kept in your history to reopen free</li>
+      <li>Send a reading to your client by email or a private link, prepared under your practice's name</li>
       <li>This week's Body Weather for any client, as often as you like</li>
       <li>Everything in the Order</li></ul>
-    {buy("pro-month", f"Subscribe for {money(pr)} a month")}
+    {buy("pro-month", f"Join the Inner Circle for {money(pr)} a month")}
     <p class="muted">Already in the Inner Circle? <a href="/signin?next=/pro">Sign in to your practice desk</a>.</p></section>
 </div>
+
+<h2>Questions</h2>
+<div class="order-faq">
+  <details><summary>Do I need to know my birth time?</summary><p>Yes, for Body Weather: the centres and gates it reads depend on the time. If you only know it roughly, cast your best guess; you can change the chart your letter is written for at any time in the Hall.</p></details>
+  <details><summary>What are the Birth Design and the Dharma Design?</summary><p>Your Birth Design is your chart in the sidereal zodiac, the sky as it stood. Your Dharma Design is the same moment read in the tropical zodiac, the seasons' wheel. The Order's letter reads the week through both.</p></details>
+  <details><summary>Can I cancel?</summary><p>Any time, from the Hall. You keep your place until the end of the month or year you've paid for, and the free chart stays yours either way.</p></details>
+  <details><summary>Can I change from the Order to the Inner Circle?</summary><p>Yes. Press the Inner Circle's button while signed in and Stripe moves your plan across, charging only the difference.</p></details>
+  <details><summary>Who writes the letters?</summary><p>The Völva. Every line of interpretation in the Wyrd Console is hers; the console sets it to your chart and the week's sky.</p></details>
+</div>
+
 <p class="muted">The free chart stays free, whether or not you join the Order: the whole path, the Wyrd Mandala, Compare for up to nine people, today's sky and the year ahead.
-Cancel any time from your account. Payments are handled by Stripe. Prefer one reading? <a href="/reports">The Wyrd Reading is {money(config.PRICE_CENTS)}, once</a>,
+Payments are handled by Stripe. Prefer one reading? <a href="/reports">The Wyrd Reading is {money(config.PRICE_CENTS)}, once</a>,
 and <a href="/reports">the reading together</a> is {money(config.TOGETHER_CENTS)} for two ({config.TOGETHER_MEMBER_OFF}% off for the Order).</p>"""
     ld = pages._ld({"@context": "https://schema.org", "@type": "Product", "name": config.MEMBER_NAME,
                     "description": "Weekly Body Weather astrology letter for your Birth Design and Dharma Design.",
@@ -892,8 +941,8 @@ def billing_portal():
 def chart_line(b):
     return f'{esc(b.get("name") or "Your chart")} · {esc(b.get("date"))} {esc(b.get("time"))} · {esc((b.get("place_label") or "").split(",")[0])}'
 
-@app.get("/account")
 def account_page():
+    """The account page for those not in the Order; members are sent to the Hall (order_routes.py)."""
     email = signed_in()
     if not email: return redirect("/signin?next=/account")
     st = account_status(email, fresh=bool(request.args.get("joined")))
@@ -935,7 +984,7 @@ def account_page():
 <h2>Your plan</h2>{plans}{chart}{pro}
 <form method="post" action="/signout" style="margin-top:40px"><button class="alt" type="submit">Sign out</button></form>""", script=script)
 
-WEEK_LINK = '<h2>This week</h2><p><a href="/account/weather">Read this week&#39;s Body Weather →</a></p>'
+WEEK_LINK = '<h2>This week</h2><p><a href="/hall">Read this week&#39;s Body Weather →</a></p>'
 BIRTH_KEYS = ("name", "date", "time", "place_id", "lat", "lon", "tz", "place_label", "full_name")
 
 @app.post("/api/account/chart")
@@ -958,12 +1007,7 @@ def weather_for(b, start=None):
 
 @app.get("/account/weather")
 def account_weather():
-    email = signed_in()
-    if not email: return redirect("/signin?next=/account/weather")
-    st = account_status(email)
-    if not st or not (st["member"] or st["pro"]): return redirect("/membership")
-    if not st.get("birth"): return redirect("/account")
-    return private("Body Weather", f'<p class="crumbs"><a href="/account">Your account</a></p><div class="weather">{weather_for(st["birth"])}</div>')
+    return redirect("/hall")                          # old letters link here; this week now lives in the Hall
 
 # ---------------- the professional desk ----------------
 BAD_BIRTH = "Those birth details don't work."
@@ -974,17 +1018,6 @@ def pro_or_redirect():
     st = account_status(email)
     if not st or not st["pro"]: return None, redirect("/membership#pro")
     return (email, st), None
-
-@app.get("/pro")
-def pro_desk():
-    who, bounce = pro_or_redirect()
-    if bounce: return bounce
-    left = max(0, config.PRO_READINGS_A_MONTH - who[1]["proUse"])
-    form = open(os.path.join(HERE, "static", "pro-form.html"), encoding="utf-8").read()
-    return private("Practice desk", f"""<h1>Your practice desk</h1>
-<p class="lede">Generate The Wyrd Reading or a week's Body Weather for a client.</p>
-<p class="muted">{left} of {config.PRO_READINGS_A_MONTH} client readings left this month. Body Weather is unlimited.</p>{form}""",
-                   script='<script src="/static/common.js"></script><script src="/static/pro.js"></script>')
 
 @app.post("/pro/reading")
 def pro_reading():
@@ -1131,6 +1164,8 @@ def jobs_weekly():
     if not config.JOBS_TOKEN or not hmac.compare_digest(tok.encode(), config.JOBS_TOKEN.encode()): abort(404)
     from wyrd import jobs
     return jsonify(jobs.weekly(EPH, cast_for, birth_from, config))
+
+import order_routes  # noqa: E402,F401  (the Hall and the practice desk; uses the helpers above)
 
 @app.get("/healthz")
 def health():

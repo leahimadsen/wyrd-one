@@ -9,6 +9,6 @@
   });
   f.addEventListener("submit", e => {
     err.textContent = "";
-    if (!place){ e.preventDefault(); err.textContent = "Choose the birthplace from the list as you type."; }
+    if (!place && !f.elements.lat.value){ e.preventDefault(); err.textContent = "Choose the birthplace from the list as you type."; }
   });
 })();
