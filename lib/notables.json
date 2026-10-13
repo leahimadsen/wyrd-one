@@ -1,0 +1,2563 @@
+{
+ "_note": "Notable people for the sign pages. Edit freely: add a person with their birth date as biographies give it, 'cal' J for a date in the old Julian calendar (most of Europe before 1582, England before 1752) or G, and 'utc' the rough hours ahead (+) or behind (-) Greenwich at the birthplace. Then run `python tools/notables.py` to work out each person's sky. 'unsure' withholds the Moon and the Sun's mansion when the date itself is in question. The Moon's sign is shown only when it held one sign through the whole local day, with two hours to spare either side, so an unknown birth time cannot change it.",
+ "FIELDS": {
+  "science": "science",
+  "art": "art and film",
+  "music": "music",
+  "letters": "writing",
+  "thought": "thought",
+  "spirit": "spiritual teachers",
+  "esoteric": "astrology and the occult",
+  "rule": "leaders and causes",
+  "lives": "lives"
+ },
+ "PEOPLE": [
+  {
+   "name": "Leonardo da Vinci",
+   "born": [
+    1452,
+    4,
+    15
+   ],
+   "cal": "J",
+   "utc": 0.7,
+   "field": "art",
+   "note": "painter, engineer and anatomist",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Taurus",
+    "sun_nak": "Bharani"
+   }
+  },
+  {
+   "name": "Catherine the Great",
+   "born": [
+    1729,
+    5,
+    2
+   ],
+   "cal": "G",
+   "utc": 1,
+   "field": "rule",
+   "note": "Empress of Russia",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Taurus",
+    "sun_nak": "Bharani",
+    "moon": "Gemini"
+   }
+  },
+  {
+   "name": "Immanuel Kant",
+   "born": [
+    1724,
+    4,
+    22
+   ],
+   "cal": "G",
+   "utc": 1.3,
+   "field": "thought",
+   "note": "philosopher",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Taurus",
+    "sun_nak": "Ashwini"
+   }
+  },
+  {
+   "name": "Mary Wollstonecraft",
+   "born": [
+    1759,
+    4,
+    27
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "letters",
+   "note": "writer; A Vindication of the Rights of Woman",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Taurus",
+    "sun_nak": "Bharani"
+   }
+  },
+  {
+   "name": "Søren Kierkegaard",
+   "born": [
+    1813,
+    5,
+    5
+   ],
+   "cal": "G",
+   "utc": 0.8,
+   "field": "thought",
+   "note": "philosopher",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Taurus",
+    "sun_nak": "Bharani"
+   }
+  },
+  {
+   "name": "Karl Marx",
+   "born": [
+    1818,
+    5,
+    5
+   ],
+   "cal": "G",
+   "utc": 0.4,
+   "field": "thought",
+   "note": "philosopher and economist",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Taurus",
+    "sun_nak": "Bharani"
+   }
+  },
+  {
+   "name": "Pyotr Ilyich Tchaikovsky",
+   "born": [
+    1840,
+    5,
+    7
+   ],
+   "cal": "G",
+   "utc": 3.5,
+   "field": "music",
+   "note": "composer",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Taurus",
+    "sun_nak": "Bharani",
+    "moon": "Cancer"
+   }
+  },
+  {
+   "name": "Sigmund Freud",
+   "born": [
+    1856,
+    5,
+    6
+   ],
+   "cal": "G",
+   "utc": 1.2,
+   "field": "thought",
+   "note": "founder of psychoanalysis",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Taurus",
+    "sun_nak": "Bharani",
+    "moon": "Taurus"
+   }
+  },
+  {
+   "name": "Rabindranath Tagore",
+   "born": [
+    1861,
+    5,
+    7
+   ],
+   "cal": "G",
+   "utc": 5.9,
+   "field": "letters",
+   "note": "poet, composer and painter",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Taurus",
+    "sun_nak": "Bharani"
+   }
+  },
+  {
+   "name": "Charlie Chaplin",
+   "born": [
+    1889,
+    4,
+    16
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "art",
+   "note": "actor and filmmaker",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Aries",
+    "sun_nak": "Ashwini",
+    "moon": "Libra"
+   }
+  },
+  {
+   "name": "Satyajit Ray",
+   "born": [
+    1921,
+    5,
+    2
+   ],
+   "cal": "G",
+   "utc": 5.9,
+   "field": "art",
+   "note": "filmmaker",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Taurus",
+    "sun_nak": "Bharani",
+    "moon": "Aquarius"
+   }
+  },
+  {
+   "name": "Audrey Hepburn",
+   "born": [
+    1929,
+    5,
+    4
+   ],
+   "cal": "G",
+   "utc": 0.3,
+   "field": "art",
+   "note": "actor",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Taurus",
+    "sun_nak": "Bharani",
+    "moon": "Aquarius"
+   }
+  },
+  {
+   "name": "Carl Linnaeus",
+   "born": [
+    1707,
+    5,
+    23
+   ],
+   "cal": "G",
+   "utc": 1.0,
+   "field": "science",
+   "note": "botanist; the naming of living things",
+   "sky": {
+    "sun": "Taurus",
+    "trop": "Gemini",
+    "sun_nak": "Rohini"
+   }
+  },
+  {
+   "name": "William Lilly",
+   "born": [
+    1602,
+    5,
+    1
+   ],
+   "cal": "J",
+   "utc": -0.1,
+   "field": "esoteric",
+   "note": "astrologer; Christian Astrology",
+   "sky": {
+    "sun": "Taurus",
+    "trop": "Taurus",
+    "sun_nak": "Krittika"
+   }
+  },
+  {
+   "name": "Walt Whitman",
+   "born": [
+    1819,
+    5,
+    31
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "letters",
+   "note": "poet",
+   "sky": {
+    "sun": "Taurus",
+    "trop": "Gemini",
+    "sun_nak": "Rohini",
+    "moon": "Leo"
+   }
+  },
+  {
+   "name": "Richard Wagner",
+   "born": [
+    1813,
+    5,
+    22
+   ],
+   "cal": "G",
+   "utc": 0.8,
+   "field": "music",
+   "note": "composer; the Ring cycle",
+   "sky": {
+    "sun": "Taurus",
+    "trop": "Gemini"
+   }
+  },
+  {
+   "name": "Queen Victoria",
+   "born": [
+    1819,
+    5,
+    24
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "rule",
+   "note": "Queen of the United Kingdom",
+   "sky": {
+    "sun": "Taurus",
+    "trop": "Gemini",
+    "sun_nak": "Rohini",
+    "moon": "Taurus"
+   }
+  },
+  {
+   "name": "John F. Kennedy",
+   "born": [
+    1917,
+    5,
+    29
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "rule",
+   "note": "president of the United States",
+   "sky": {
+    "sun": "Taurus",
+    "trop": "Gemini",
+    "sun_nak": "Rohini"
+   }
+  },
+  {
+   "name": "Malcolm X",
+   "born": [
+    1925,
+    5,
+    19
+   ],
+   "cal": "G",
+   "utc": -6,
+   "field": "rule",
+   "note": "minister and activist",
+   "sky": {
+    "sun": "Taurus",
+    "trop": "Taurus",
+    "sun_nak": "Krittika"
+   }
+  },
+  {
+   "name": "Marilyn Monroe",
+   "born": [
+    1926,
+    6,
+    1
+   ],
+   "cal": "G",
+   "utc": -8,
+   "field": "art",
+   "note": "actor",
+   "sky": {
+    "sun": "Taurus",
+    "trop": "Gemini",
+    "sun_nak": "Rohini"
+   }
+  },
+  {
+   "name": "Bob Dylan",
+   "born": [
+    1941,
+    5,
+    24
+   ],
+   "cal": "G",
+   "utc": -6,
+   "field": "music",
+   "note": "singer and songwriter",
+   "sky": {
+    "sun": "Taurus",
+    "trop": "Gemini"
+   }
+  },
+  {
+   "name": "Stevie Nicks",
+   "born": [
+    1948,
+    5,
+    26
+   ],
+   "cal": "G",
+   "utc": -7,
+   "field": "music",
+   "note": "singer and songwriter",
+   "sky": {
+    "sun": "Taurus",
+    "trop": "Gemini",
+    "sun_nak": "Rohini"
+   }
+  },
+  {
+   "name": "Prince",
+   "born": [
+    1958,
+    6,
+    7
+   ],
+   "cal": "G",
+   "utc": -6,
+   "field": "music",
+   "note": "musician",
+   "sky": {
+    "sun": "Taurus",
+    "trop": "Gemini"
+   }
+  },
+  {
+   "name": "Nikola Tesla",
+   "born": [
+    1856,
+    7,
+    10
+   ],
+   "cal": "G",
+   "utc": 1.0,
+   "field": "science",
+   "note": "inventor; alternating current",
+   "unsure": "born at midnight between 9 and 10 July, so the day itself is uncertain",
+   "sky": {
+    "sun": "Gemini",
+    "trop": "Cancer"
+   }
+  },
+  {
+   "name": "Alan Turing",
+   "born": [
+    1912,
+    6,
+    23
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "science",
+   "note": "mathematician; computation and codebreaking",
+   "sky": {
+    "sun": "Gemini",
+    "trop": "Cancer",
+    "sun_nak": "Ardra"
+   }
+  },
+  {
+   "name": "Frida Kahlo",
+   "born": [
+    1907,
+    7,
+    6
+   ],
+   "cal": "G",
+   "utc": -6.6,
+   "field": "art",
+   "note": "painter",
+   "sky": {
+    "sun": "Gemini",
+    "trop": "Cancer",
+    "sun_nak": "Punarvasu",
+    "moon": "Taurus"
+   }
+  },
+  {
+   "name": "Ingmar Bergman",
+   "born": [
+    1918,
+    7,
+    14
+   ],
+   "cal": "G",
+   "utc": 1.2,
+   "field": "art",
+   "note": "filmmaker",
+   "sky": {
+    "sun": "Gemini",
+    "trop": "Cancer",
+    "sun_nak": "Punarvasu",
+    "moon": "Virgo"
+   }
+  },
+  {
+   "name": "Edvard Grieg",
+   "born": [
+    1843,
+    6,
+    15
+   ],
+   "cal": "G",
+   "utc": 0.4,
+   "field": "music",
+   "note": "composer",
+   "sky": {
+    "sun": "Gemini",
+    "trop": "Gemini",
+    "sun_nak": "Mrigashira",
+    "moon": "Capricorn"
+   }
+  },
+  {
+   "name": "Franz Kafka",
+   "born": [
+    1883,
+    7,
+    3
+   ],
+   "cal": "G",
+   "utc": 1,
+   "field": "letters",
+   "note": "writer",
+   "sky": {
+    "sun": "Gemini",
+    "trop": "Cancer",
+    "sun_nak": "Ardra"
+   }
+  },
+  {
+   "name": "Pablo Neruda",
+   "born": [
+    1904,
+    7,
+    12
+   ],
+   "cal": "G",
+   "utc": -4.8,
+   "field": "letters",
+   "note": "poet",
+   "sky": {
+    "sun": "Gemini",
+    "trop": "Cancer",
+    "sun_nak": "Punarvasu",
+    "moon": "Gemini"
+   }
+  },
+  {
+   "name": "The 14th Dalai Lama",
+   "born": [
+    1935,
+    7,
+    6
+   ],
+   "cal": "G",
+   "utc": 6.8,
+   "field": "spirit",
+   "note": "Tibetan Buddhist teacher",
+   "sky": {
+    "sun": "Gemini",
+    "trop": "Cancer",
+    "moon": "Leo"
+   }
+  },
+  {
+   "name": "Princess Diana",
+   "born": [
+    1961,
+    7,
+    1
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "lives",
+   "note": "Princess of Wales",
+   "sky": {
+    "sun": "Gemini",
+    "trop": "Cancer",
+    "sun_nak": "Ardra"
+   }
+  },
+  {
+   "name": "Petrarch",
+   "born": [
+    1304,
+    7,
+    20
+   ],
+   "cal": "J",
+   "utc": 0.8,
+   "field": "letters",
+   "note": "poet; the sonnet",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Leo",
+    "sun_nak": "Ashlesha"
+   }
+  },
+  {
+   "name": "John Dee",
+   "born": [
+    1527,
+    7,
+    13
+   ],
+   "cal": "J",
+   "utc": 0,
+   "field": "esoteric",
+   "note": "mathematician, astrologer and magician to Elizabeth I",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Cancer",
+    "sun_nak": "Pushya",
+    "moon": "Capricorn"
+   }
+  },
+  {
+   "name": "Rembrandt",
+   "born": [
+    1606,
+    7,
+    15
+   ],
+   "cal": "G",
+   "utc": 0.3,
+   "field": "art",
+   "note": "painter; light and shadow",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Cancer",
+    "sun_nak": "Pushya"
+   }
+  },
+  {
+   "name": "Simón Bolívar",
+   "born": [
+    1783,
+    7,
+    24
+   ],
+   "cal": "G",
+   "utc": -4.5,
+   "field": "rule",
+   "note": "liberator of much of South America",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Leo",
+    "sun_nak": "Pushya",
+    "moon": "Taurus"
+   }
+  },
+  {
+   "name": "Gregor Mendel",
+   "born": [
+    1822,
+    7,
+    20
+   ],
+   "cal": "G",
+   "utc": 1.2,
+   "field": "science",
+   "note": "friar and scientist; the laws of heredity",
+   "unsure": "sources give 20 July, though he kept 22 July, his baptism, as his birthday",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Cancer"
+   }
+  },
+  {
+   "name": "Emily Brontë",
+   "born": [
+    1818,
+    7,
+    30
+   ],
+   "cal": "G",
+   "utc": -0.1,
+   "field": "letters",
+   "note": "novelist and poet; Wuthering Heights",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Leo",
+    "sun_nak": "Pushya",
+    "moon": "Gemini"
+   }
+  },
+  {
+   "name": "Helena Blavatsky",
+   "born": [
+    1831,
+    8,
+    12
+   ],
+   "cal": "G",
+   "utc": 2.3,
+   "field": "esoteric",
+   "note": "founder of Theosophy",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Leo",
+    "sun_nak": "Ashlesha"
+   }
+  },
+  {
+   "name": "Carl Jung",
+   "born": [
+    1875,
+    7,
+    26
+   ],
+   "cal": "G",
+   "utc": 0.6,
+   "field": "thought",
+   "note": "psychiatrist; the collective unconscious, archetypes",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Leo",
+    "sun_nak": "Pushya",
+    "moon": "Aries"
+   }
+  },
+  {
+   "name": "Haile Selassie",
+   "born": [
+    1892,
+    7,
+    23
+   ],
+   "cal": "G",
+   "utc": 2.8,
+   "field": "rule",
+   "note": "Emperor of Ethiopia",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Leo",
+    "sun_nak": "Pushya"
+   }
+  },
+  {
+   "name": "B. V. Raman",
+   "born": [
+    1912,
+    8,
+    8
+   ],
+   "cal": "G",
+   "utc": 5.1,
+   "field": "esoteric",
+   "note": "astrologer; brought Jyotish to a world audience",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Leo",
+    "sun_nak": "Ashlesha",
+    "moon": "Taurus"
+   }
+  },
+  {
+   "name": "Rosalind Franklin",
+   "born": [
+    1920,
+    7,
+    25
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "science",
+   "note": "chemist; the X-ray image that showed DNA's helix",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Leo",
+    "sun_nak": "Pushya",
+    "moon": "Scorpio"
+   }
+  },
+  {
+   "name": "Nelson Mandela",
+   "born": [
+    1918,
+    7,
+    18
+   ],
+   "cal": "G",
+   "utc": 2,
+   "field": "rule",
+   "note": "first president of a democratic South Africa",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Cancer",
+    "sun_nak": "Punarvasu"
+   }
+  },
+  {
+   "name": "Johann Wolfgang von Goethe",
+   "born": [
+    1749,
+    8,
+    28
+   ],
+   "cal": "G",
+   "utc": 0.6,
+   "field": "letters",
+   "note": "poet and natural philosopher",
+   "sky": {
+    "sun": "Leo",
+    "trop": "Virgo",
+    "sun_nak": "Purva Phalguni"
+   }
+  },
+  {
+   "name": "Napoleon Bonaparte",
+   "born": [
+    1769,
+    8,
+    15
+   ],
+   "cal": "G",
+   "utc": 0.6,
+   "field": "rule",
+   "note": "Emperor of the French",
+   "sky": {
+    "sun": "Leo",
+    "trop": "Leo",
+    "sun_nak": "Magha",
+    "moon": "Capricorn"
+   }
+  },
+  {
+   "name": "Mary Shelley",
+   "born": [
+    1797,
+    8,
+    30
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "letters",
+   "note": "novelist; Frankenstein",
+   "sky": {
+    "sun": "Leo",
+    "trop": "Virgo",
+    "sun_nak": "Purva Phalguni"
+   }
+  },
+  {
+   "name": "Leo Tolstoy",
+   "born": [
+    1828,
+    9,
+    9
+   ],
+   "cal": "G",
+   "utc": 2.5,
+   "field": "letters",
+   "note": "novelist; War and Peace",
+   "sky": {
+    "sun": "Leo",
+    "trop": "Virgo",
+    "sun_nak": "Purva Phalguni"
+   }
+  },
+  {
+   "name": "Sri Aurobindo",
+   "born": [
+    1872,
+    8,
+    15
+   ],
+   "cal": "G",
+   "utc": 5.9,
+   "field": "spirit",
+   "note": "yogi and philosopher",
+   "sky": {
+    "sun": "Leo",
+    "trop": "Leo",
+    "sun_nak": "Magha",
+    "moon": "Sagittarius"
+   }
+  },
+  {
+   "name": "H. P. Lovecraft",
+   "born": [
+    1890,
+    8,
+    20
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "letters",
+   "note": "writer",
+   "sky": {
+    "sun": "Leo",
+    "trop": "Leo",
+    "sun_nak": "Magha"
+   }
+  },
+  {
+   "name": "Jorge Luis Borges",
+   "born": [
+    1899,
+    8,
+    24
+   ],
+   "cal": "G",
+   "utc": -3.9,
+   "field": "letters",
+   "note": "writer",
+   "sky": {
+    "sun": "Leo",
+    "trop": "Virgo",
+    "sun_nak": "Magha"
+   }
+  },
+  {
+   "name": "Mother Teresa",
+   "born": [
+    1910,
+    8,
+    26
+   ],
+   "cal": "G",
+   "utc": 1.4,
+   "field": "spirit",
+   "note": "nun; the Missionaries of Charity",
+   "sky": {
+    "sun": "Leo",
+    "trop": "Virgo",
+    "sun_nak": "Magha"
+   }
+  },
+  {
+   "name": "Freddie Mercury",
+   "born": [
+    1946,
+    9,
+    5
+   ],
+   "cal": "G",
+   "utc": 3,
+   "field": "music",
+   "note": "singer; Queen",
+   "sky": {
+    "sun": "Leo",
+    "trop": "Virgo",
+    "sun_nak": "Purva Phalguni",
+    "moon": "Sagittarius"
+   }
+  },
+  {
+   "name": "Elizabeth I",
+   "born": [
+    1533,
+    9,
+    7
+   ],
+   "cal": "J",
+   "utc": 0,
+   "field": "rule",
+   "note": "Queen of England",
+   "sky": {
+    "sun": "Virgo",
+    "trop": "Virgo",
+    "sun_nak": "Uttara Phalguni",
+    "moon": "Aries"
+   }
+  },
+  {
+   "name": "Michael Faraday",
+   "born": [
+    1791,
+    9,
+    22
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "science",
+   "note": "physicist; electromagnetism",
+   "sky": {
+    "sun": "Virgo",
+    "trop": "Virgo",
+    "sun_nak": "Uttara Phalguni"
+   }
+  },
+  {
+   "name": "Mahatma Gandhi",
+   "born": [
+    1869,
+    10,
+    2
+   ],
+   "cal": "G",
+   "utc": 4.6,
+   "field": "rule",
+   "note": "leader of India's independence",
+   "sky": {
+    "sun": "Virgo",
+    "trop": "Libra",
+    "sun_nak": "Hasta"
+   }
+  },
+  {
+   "name": "Aleister Crowley",
+   "born": [
+    1875,
+    10,
+    12
+   ],
+   "cal": "G",
+   "utc": -0.1,
+   "field": "esoteric",
+   "note": "occultist; Thelema",
+   "sky": {
+    "sun": "Virgo",
+    "trop": "Libra",
+    "sun_nak": "Chitra"
+   }
+  },
+  {
+   "name": "Eleanor Roosevelt",
+   "born": [
+    1884,
+    10,
+    11
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "rule",
+   "note": "diplomat and activist",
+   "sky": {
+    "sun": "Virgo",
+    "trop": "Libra",
+    "sun_nak": "Chitra"
+   }
+  },
+  {
+   "name": "Hannah Arendt",
+   "born": [
+    1906,
+    10,
+    14
+   ],
+   "cal": "G",
+   "utc": 0.6,
+   "field": "thought",
+   "note": "political philosopher",
+   "sky": {
+    "sun": "Virgo",
+    "trop": "Libra",
+    "sun_nak": "Chitra",
+    "moon": "Leo"
+   }
+  },
+  {
+   "name": "Lata Mangeshkar",
+   "born": [
+    1929,
+    9,
+    28
+   ],
+   "cal": "G",
+   "utc": 5.1,
+   "field": "music",
+   "note": "singer",
+   "sky": {
+    "sun": "Virgo",
+    "trop": "Libra",
+    "sun_nak": "Hasta",
+    "moon": "Cancer"
+   }
+  },
+  {
+   "name": "Fela Kuti",
+   "born": [
+    1938,
+    10,
+    15
+   ],
+   "cal": "G",
+   "utc": 0.2,
+   "field": "music",
+   "note": "musician; Afrobeat",
+   "sky": {
+    "sun": "Virgo",
+    "trop": "Libra",
+    "sun_nak": "Chitra",
+    "moon": "Gemini"
+   }
+  },
+  {
+   "name": "John Lennon",
+   "born": [
+    1940,
+    10,
+    9
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "music",
+   "note": "singer and songwriter; the Beatles",
+   "sky": {
+    "sun": "Virgo",
+    "trop": "Libra",
+    "moon": "Capricorn"
+   }
+  },
+  {
+   "name": "A. P. J. Abdul Kalam",
+   "born": [
+    1931,
+    10,
+    15
+   ],
+   "cal": "G",
+   "utc": 5.3,
+   "field": "science",
+   "note": "aerospace scientist and president of India",
+   "sky": {
+    "sun": "Virgo",
+    "trop": "Libra",
+    "sun_nak": "Chitra",
+    "moon": "Scorpio"
+   }
+  },
+  {
+   "name": "Fyodor Dostoevsky",
+   "born": [
+    1821,
+    11,
+    11
+   ],
+   "cal": "G",
+   "utc": 2.5,
+   "field": "letters",
+   "note": "novelist",
+   "sky": {
+    "sun": "Libra",
+    "trop": "Scorpio",
+    "sun_nak": "Vishakha",
+    "moon": "Taurus"
+   }
+  },
+  {
+   "name": "Hilma af Klint",
+   "born": [
+    1862,
+    10,
+    26
+   ],
+   "cal": "G",
+   "utc": 1.2,
+   "field": "art",
+   "note": "painter; abstraction drawn from spiritual work",
+   "sky": {
+    "sun": "Libra",
+    "trop": "Scorpio",
+    "sun_nak": "Swati"
+   }
+  },
+  {
+   "name": "Sun Yat-sen",
+   "born": [
+    1866,
+    11,
+    12
+   ],
+   "cal": "G",
+   "utc": 7.5,
+   "field": "rule",
+   "note": "founder of the Republic of China",
+   "sky": {
+    "sun": "Libra",
+    "trop": "Scorpio",
+    "sun_nak": "Vishakha",
+    "moon": "Sagittarius"
+   }
+  },
+  {
+   "name": "Marie Curie",
+   "born": [
+    1867,
+    11,
+    7
+   ],
+   "cal": "G",
+   "utc": 1.4,
+   "field": "science",
+   "note": "physicist and chemist; radioactivity, two Nobel prizes",
+   "sky": {
+    "sun": "Libra",
+    "trop": "Scorpio",
+    "sun_nak": "Vishakha"
+   }
+  },
+  {
+   "name": "Pablo Picasso",
+   "born": [
+    1881,
+    10,
+    25
+   ],
+   "cal": "G",
+   "utc": -0.3,
+   "field": "art",
+   "note": "painter; Cubism",
+   "sky": {
+    "sun": "Libra",
+    "trop": "Scorpio",
+    "sun_nak": "Swati",
+    "moon": "Scorpio"
+   }
+  },
+  {
+   "name": "C. V. Raman",
+   "born": [
+    1888,
+    11,
+    7
+   ],
+   "cal": "G",
+   "utc": 5.2,
+   "field": "science",
+   "note": "physicist; the scattering of light",
+   "sky": {
+    "sun": "Libra",
+    "trop": "Scorpio",
+    "sun_nak": "Vishakha",
+    "moon": "Sagittarius"
+   }
+  },
+  {
+   "name": "Homi J. Bhabha",
+   "born": [
+    1909,
+    10,
+    30
+   ],
+   "cal": "G",
+   "utc": 4.9,
+   "field": "science",
+   "note": "nuclear physicist",
+   "sky": {
+    "sun": "Libra",
+    "trop": "Scorpio",
+    "sun_nak": "Swati"
+   }
+  },
+  {
+   "name": "Ursula K. Le Guin",
+   "born": [
+    1929,
+    10,
+    21
+   ],
+   "cal": "G",
+   "utc": -8,
+   "field": "letters",
+   "note": "novelist",
+   "sky": {
+    "sun": "Libra",
+    "trop": "Libra",
+    "sun_nak": "Chitra",
+    "moon": "Taurus"
+   }
+  },
+  {
+   "name": "Sylvia Plath",
+   "born": [
+    1932,
+    10,
+    27
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "letters",
+   "note": "poet",
+   "sky": {
+    "sun": "Libra",
+    "trop": "Scorpio",
+    "sun_nak": "Swati",
+    "moon": "Virgo"
+   }
+  },
+  {
+   "name": "Carl Sagan",
+   "born": [
+    1934,
+    11,
+    9
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "science",
+   "note": "astronomer and writer; Cosmos",
+   "sky": {
+    "sun": "Libra",
+    "trop": "Scorpio",
+    "sun_nak": "Vishakha"
+   }
+  },
+  {
+   "name": "Martin Luther",
+   "born": [
+    1483,
+    11,
+    10
+   ],
+   "cal": "J",
+   "utc": 0.8,
+   "field": "thought",
+   "note": "reformer",
+   "unsure": "his birth year is sometimes given as 1484",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Scorpio"
+   }
+  },
+  {
+   "name": "William Blake",
+   "born": [
+    1757,
+    11,
+    28
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "art",
+   "note": "poet, painter and visionary",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Sagittarius",
+    "sun_nak": "Anuradha",
+    "moon": "Gemini"
+   }
+  },
+  {
+   "name": "Ada Lovelace",
+   "born": [
+    1815,
+    12,
+    10
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "science",
+   "note": "mathematician; the first published computer program",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Sagittarius",
+    "sun_nak": "Jyeshtha",
+    "moon": "Pisces"
+   }
+  },
+  {
+   "name": "Emily Dickinson",
+   "born": [
+    1830,
+    12,
+    10
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "letters",
+   "note": "poet",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Sagittarius",
+    "sun_nak": "Jyeshtha"
+   }
+  },
+  {
+   "name": "Jagadish Chandra Bose",
+   "born": [
+    1858,
+    11,
+    30
+   ],
+   "cal": "G",
+   "utc": 6.0,
+   "field": "science",
+   "note": "physicist and plant physiologist; radio, the response of plants",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Sagittarius",
+    "sun_nak": "Anuradha",
+    "moon": "Virgo"
+   }
+  },
+  {
+   "name": "Edvard Munch",
+   "born": [
+    1863,
+    12,
+    12
+   ],
+   "cal": "G",
+   "utc": 0.7,
+   "field": "art",
+   "note": "painter; The Scream",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Sagittarius",
+    "sun_nak": "Jyeshtha",
+    "moon": "Sagittarius"
+   }
+  },
+  {
+   "name": "Winston Churchill",
+   "born": [
+    1874,
+    11,
+    30
+   ],
+   "cal": "G",
+   "utc": -0.1,
+   "field": "rule",
+   "note": "prime minister",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Sagittarius",
+    "sun_nak": "Anuradha",
+    "moon": "Leo"
+   }
+  },
+  {
+   "name": "Dion Fortune",
+   "born": [
+    1890,
+    12,
+    6
+   ],
+   "cal": "G",
+   "utc": -0.2,
+   "field": "esoteric",
+   "note": "occultist; the Society of the Inner Light",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Sagittarius",
+    "sun_nak": "Jyeshtha",
+    "moon": "Virgo"
+   }
+  },
+  {
+   "name": "Indira Gandhi",
+   "born": [
+    1917,
+    11,
+    19
+   ],
+   "cal": "G",
+   "utc": 5.5,
+   "field": "rule",
+   "note": "prime minister of India",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Scorpio"
+   }
+  },
+  {
+   "name": "Bruce Lee",
+   "born": [
+    1940,
+    11,
+    27
+   ],
+   "cal": "G",
+   "utc": -8,
+   "field": "art",
+   "note": "martial artist and actor",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Sagittarius",
+    "sun_nak": "Anuradha",
+    "moon": "Libra"
+   }
+  },
+  {
+   "name": "Jimi Hendrix",
+   "born": [
+    1942,
+    11,
+    27
+   ],
+   "cal": "G",
+   "utc": -8,
+   "field": "music",
+   "note": "guitarist",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Sagittarius",
+    "sun_nak": "Anuradha"
+   }
+  },
+  {
+   "name": "Björk",
+   "born": [
+    1965,
+    11,
+    21
+   ],
+   "cal": "G",
+   "utc": -1.5,
+   "field": "music",
+   "note": "singer and composer",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Scorpio",
+    "sun_nak": "Anuradha",
+    "moon": "Libra"
+   }
+  },
+  {
+   "name": "Nostradamus",
+   "born": [
+    1503,
+    12,
+    14
+   ],
+   "cal": "J",
+   "utc": 0.3,
+   "field": "esoteric",
+   "note": "physician and seer; the Prophecies",
+   "unsure": "sources give 14 or 21 December",
+   "sky": {
+    "sun": "Sagittarius",
+    "trop": "Capricorn"
+   }
+  },
+  {
+   "name": "Tycho Brahe",
+   "born": [
+    1546,
+    12,
+    14
+   ],
+   "cal": "J",
+   "utc": 0.9,
+   "field": "science",
+   "note": "astronomer; the finest naked-eye observations ever made",
+   "sky": {
+    "sun": "Sagittarius",
+    "trop": "Capricorn",
+    "sun_nak": "Purva Ashadha"
+   }
+  },
+  {
+   "name": "Johannes Kepler",
+   "born": [
+    1571,
+    12,
+    27
+   ],
+   "cal": "J",
+   "utc": 0.6,
+   "field": "science",
+   "note": "astronomer and astrologer; laws of planetary motion",
+   "sky": {
+    "sun": "Sagittarius",
+    "trop": "Capricorn",
+    "sun_nak": "Uttara Ashadha",
+    "moon": "Taurus"
+   }
+  },
+  {
+   "name": "Isaac Newton",
+   "born": [
+    1642,
+    12,
+    25
+   ],
+   "cal": "J",
+   "utc": 0,
+   "field": "science",
+   "note": "physicist and mathematician; gravitation, optics, calculus",
+   "sky": {
+    "sun": "Sagittarius",
+    "trop": "Capricorn",
+    "sun_nak": "Purva Ashadha",
+    "moon": "Gemini"
+   }
+  },
+  {
+   "name": "Jane Austen",
+   "born": [
+    1775,
+    12,
+    16
+   ],
+   "cal": "G",
+   "utc": -0.1,
+   "field": "letters",
+   "note": "novelist",
+   "sky": {
+    "sun": "Sagittarius",
+    "trop": "Sagittarius",
+    "sun_nak": "Mula",
+    "moon": "Virgo"
+   }
+  },
+  {
+   "name": "Ramana Maharshi",
+   "born": [
+    1879,
+    12,
+    30
+   ],
+   "cal": "G",
+   "utc": 5.2,
+   "field": "spirit",
+   "note": "sage of Arunachala; self-enquiry",
+   "sky": {
+    "sun": "Sagittarius",
+    "trop": "Capricorn",
+    "sun_nak": "Purva Ashadha"
+   }
+  },
+  {
+   "name": "Srinivasa Ramanujan",
+   "born": [
+    1887,
+    12,
+    22
+   ],
+   "cal": "G",
+   "utc": 5.2,
+   "field": "science",
+   "note": "mathematician; number theory, infinite series",
+   "sky": {
+    "sun": "Sagittarius",
+    "sun_nak": "Mula",
+    "moon": "Pisces"
+   }
+  },
+  {
+   "name": "J. R. R. Tolkien",
+   "born": [
+    1892,
+    1,
+    3
+   ],
+   "cal": "G",
+   "utc": 1.8,
+   "field": "letters",
+   "note": "writer and philologist; The Lord of the Rings",
+   "sky": {
+    "sun": "Sagittarius",
+    "trop": "Capricorn",
+    "sun_nak": "Purva Ashadha"
+   }
+  },
+  {
+   "name": "Paramahansa Yogananda",
+   "born": [
+    1893,
+    1,
+    5
+   ],
+   "cal": "G",
+   "utc": 5.6,
+   "field": "spirit",
+   "note": "yogi; Autobiography of a Yogi",
+   "sky": {
+    "sun": "Sagittarius",
+    "trop": "Capricorn",
+    "sun_nak": "Purva Ashadha"
+   }
+  },
+  {
+   "name": "Elvis Presley",
+   "born": [
+    1935,
+    1,
+    8
+   ],
+   "cal": "G",
+   "utc": -6,
+   "field": "music",
+   "note": "singer",
+   "sky": {
+    "sun": "Sagittarius",
+    "trop": "Capricorn",
+    "sun_nak": "Purva Ashadha",
+    "moon": "Aquarius"
+   }
+  },
+  {
+   "name": "David Bowie",
+   "born": [
+    1947,
+    1,
+    8
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "music",
+   "note": "singer and songwriter",
+   "sky": {
+    "sun": "Sagittarius",
+    "trop": "Capricorn",
+    "sun_nak": "Purva Ashadha",
+    "moon": "Cancer"
+   }
+  },
+  {
+   "name": "Peter Steele",
+   "born": [
+    1962,
+    1,
+    4
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "music",
+   "note": "singer and bassist; Type O Negative",
+   "sky": {
+    "sun": "Sagittarius",
+    "trop": "Capricorn",
+    "sun_nak": "Purva Ashadha"
+   }
+  },
+  {
+   "name": "Benjamin Franklin",
+   "born": [
+    1706,
+    1,
+    17
+   ],
+   "cal": "G",
+   "utc": -4.7,
+   "field": "rule",
+   "note": "statesman, printer and scientist",
+   "sky": {
+    "sun": "Capricorn",
+    "trop": "Capricorn",
+    "sun_nak": "Uttara Ashadha",
+    "moon": "Aquarius"
+   }
+  },
+  {
+   "name": "Wolfgang Amadeus Mozart",
+   "born": [
+    1756,
+    1,
+    27
+   ],
+   "cal": "G",
+   "utc": 0.9,
+   "field": "music",
+   "note": "composer",
+   "sky": {
+    "sun": "Capricorn",
+    "trop": "Aquarius",
+    "sun_nak": "Shravana"
+   }
+  },
+  {
+   "name": "Edgar Allan Poe",
+   "born": [
+    1809,
+    1,
+    19
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "letters",
+   "note": "poet and writer",
+   "sky": {
+    "sun": "Capricorn",
+    "trop": "Capricorn",
+    "sun_nak": "Uttara Ashadha"
+   }
+  },
+  {
+   "name": "Virginia Woolf",
+   "born": [
+    1882,
+    1,
+    25
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "letters",
+   "note": "novelist",
+   "sky": {
+    "sun": "Capricorn",
+    "trop": "Aquarius",
+    "sun_nak": "Shravana"
+   }
+  },
+  {
+   "name": "Subhas Chandra Bose",
+   "born": [
+    1897,
+    1,
+    23
+   ],
+   "cal": "G",
+   "utc": 5.7,
+   "field": "rule",
+   "note": "leader in India's independence",
+   "sky": {
+    "sun": "Capricorn",
+    "trop": "Aquarius",
+    "sun_nak": "Shravana"
+   }
+  },
+  {
+   "name": "Simone Weil",
+   "born": [
+    1909,
+    2,
+    3
+   ],
+   "cal": "G",
+   "utc": 0.2,
+   "field": "thought",
+   "note": "philosopher and mystic",
+   "sky": {
+    "sun": "Capricorn",
+    "trop": "Aquarius",
+    "sun_nak": "Shravana"
+   }
+  },
+  {
+   "name": "Amrita Sher-Gil",
+   "born": [
+    1913,
+    1,
+    30
+   ],
+   "cal": "G",
+   "utc": 1.3,
+   "field": "art",
+   "note": "painter",
+   "sky": {
+    "sun": "Capricorn",
+    "trop": "Aquarius",
+    "sun_nak": "Shravana"
+   }
+  },
+  {
+   "name": "Rosa Parks",
+   "born": [
+    1913,
+    2,
+    4
+   ],
+   "cal": "G",
+   "utc": -6,
+   "field": "rule",
+   "note": "civil rights activist",
+   "sky": {
+    "sun": "Capricorn",
+    "trop": "Aquarius",
+    "sun_nak": "Shravana"
+   }
+  },
+  {
+   "name": "Marija Gimbutas",
+   "born": [
+    1921,
+    1,
+    23
+   ],
+   "cal": "G",
+   "utc": 1.7,
+   "field": "thought",
+   "note": "archaeologist of Old Europe",
+   "sky": {
+    "sun": "Capricorn",
+    "trop": "Aquarius"
+   }
+  },
+  {
+   "name": "Martin Luther King Jr.",
+   "born": [
+    1929,
+    1,
+    15
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "rule",
+   "note": "minister and civil rights leader",
+   "sky": {
+    "sun": "Capricorn",
+    "trop": "Capricorn",
+    "sun_nak": "Uttara Ashadha"
+   }
+  },
+  {
+   "name": "Muhammad Ali",
+   "born": [
+    1942,
+    1,
+    17
+   ],
+   "cal": "G",
+   "utc": -6,
+   "field": "lives",
+   "note": "boxer",
+   "sky": {
+    "sun": "Capricorn",
+    "trop": "Capricorn",
+    "sun_nak": "Uttara Ashadha",
+    "moon": "Capricorn"
+   }
+  },
+  {
+   "name": "Bob Marley",
+   "born": [
+    1945,
+    2,
+    6
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "music",
+   "note": "singer and songwriter",
+   "sky": {
+    "sun": "Capricorn",
+    "trop": "Aquarius",
+    "sun_nak": "Dhanishta",
+    "moon": "Scorpio"
+   }
+  },
+  {
+   "name": "Nicolaus Copernicus",
+   "born": [
+    1473,
+    2,
+    19
+   ],
+   "cal": "J",
+   "utc": 1.2,
+   "field": "science",
+   "note": "astronomer; the Sun-centred cosmos",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Pisces",
+    "sun_nak": "Purva Bhadrapada",
+    "moon": "Scorpio"
+   }
+  },
+  {
+   "name": "Galileo Galilei",
+   "born": [
+    1564,
+    2,
+    15
+   ],
+   "cal": "J",
+   "utc": 0.7,
+   "field": "science",
+   "note": "astronomer; first telescopic study of the sky",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Pisces",
+    "sun_nak": "Shatabhisha"
+   }
+  },
+  {
+   "name": "Charles Darwin",
+   "born": [
+    1809,
+    2,
+    12
+   ],
+   "cal": "G",
+   "utc": -0.2,
+   "field": "science",
+   "note": "naturalist; evolution by natural selection",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Aquarius",
+    "sun_nak": "Dhanishta"
+   }
+  },
+  {
+   "name": "Abraham Lincoln",
+   "born": [
+    1809,
+    2,
+    12
+   ],
+   "cal": "G",
+   "utc": -5.7,
+   "field": "rule",
+   "note": "president; ended slavery in the United States",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Aquarius",
+    "sun_nak": "Dhanishta",
+    "moon": "Capricorn"
+   }
+  },
+  {
+   "name": "Ramakrishna",
+   "born": [
+    1836,
+    2,
+    18
+   ],
+   "cal": "G",
+   "utc": 5.9,
+   "field": "spirit",
+   "note": "mystic",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Aquarius"
+   }
+  },
+  {
+   "name": "Sarojini Naidu",
+   "born": [
+    1879,
+    2,
+    13
+   ],
+   "cal": "G",
+   "utc": 5.2,
+   "field": "letters",
+   "note": "poet and leader in India's independence",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Aquarius",
+    "sun_nak": "Dhanishta"
+   }
+  },
+  {
+   "name": "Mircea Eliade",
+   "born": [
+    1907,
+    3,
+    13
+   ],
+   "cal": "G",
+   "utc": 1.7,
+   "field": "thought",
+   "note": "historian of religion",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Pisces",
+    "sun_nak": "Purva Bhadrapada",
+    "moon": "Aquarius"
+   }
+  },
+  {
+   "name": "Gabriel García Márquez",
+   "born": [
+    1927,
+    3,
+    6
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "letters",
+   "note": "novelist",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Pisces",
+    "sun_nak": "Purva Bhadrapada"
+   }
+  },
+  {
+   "name": "Toni Morrison",
+   "born": [
+    1931,
+    2,
+    18
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "letters",
+   "note": "novelist",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Aquarius",
+    "moon": "Aquarius"
+   }
+  },
+  {
+   "name": "Nina Simone",
+   "born": [
+    1933,
+    2,
+    21
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "music",
+   "note": "singer, pianist, activist",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Pisces",
+    "sun_nak": "Shatabhisha"
+   }
+  },
+  {
+   "name": "Johnny Cash",
+   "born": [
+    1932,
+    2,
+    26
+   ],
+   "cal": "G",
+   "utc": -6,
+   "field": "music",
+   "note": "singer and songwriter",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Pisces",
+    "sun_nak": "Shatabhisha",
+    "moon": "Libra"
+   }
+  },
+  {
+   "name": "Kurt Cobain",
+   "born": [
+    1967,
+    2,
+    20
+   ],
+   "cal": "G",
+   "utc": -8,
+   "field": "music",
+   "note": "singer and songwriter; Nirvana",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Pisces",
+    "sun_nak": "Shatabhisha",
+    "moon": "Gemini"
+   }
+  },
+  {
+   "name": "Michelangelo",
+   "born": [
+    1475,
+    3,
+    6
+   ],
+   "cal": "J",
+   "utc": 0.8,
+   "field": "art",
+   "note": "sculptor and painter; the Sistine ceiling",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Pisces",
+    "sun_nak": "Uttara Bhadrapada"
+   }
+  },
+  {
+   "name": "Johann Sebastian Bach",
+   "born": [
+    1685,
+    3,
+    21
+   ],
+   "cal": "J",
+   "utc": 0.7,
+   "field": "music",
+   "note": "composer",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Aries",
+    "sun_nak": "Revati",
+    "moon": "Aquarius"
+   }
+  },
+  {
+   "name": "Hans Christian Andersen",
+   "born": [
+    1805,
+    4,
+    2
+   ],
+   "cal": "G",
+   "utc": 0.7,
+   "field": "letters",
+   "note": "writer of fairy tales",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Aries",
+    "sun_nak": "Revati"
+   }
+  },
+  {
+   "name": "Vincent van Gogh",
+   "born": [
+    1853,
+    3,
+    30
+   ],
+   "cal": "G",
+   "utc": 0.3,
+   "field": "art",
+   "note": "painter",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Aries",
+    "sun_nak": "Revati"
+   }
+  },
+  {
+   "name": "Albert Einstein",
+   "born": [
+    1879,
+    3,
+    14
+   ],
+   "cal": "G",
+   "utc": 0.7,
+   "field": "science",
+   "note": "physicist; relativity",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Pisces",
+    "sun_nak": "Purva Bhadrapada"
+   }
+  },
+  {
+   "name": "Manly P. Hall",
+   "born": [
+    1901,
+    3,
+    18
+   ],
+   "cal": "G",
+   "utc": -6.5,
+   "field": "esoteric",
+   "note": "writer; The Secret Teachings of All Ages",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Pisces",
+    "sun_nak": "Uttara Bhadrapada",
+    "moon": "Aquarius"
+   }
+  },
+  {
+   "name": "Joseph Campbell",
+   "born": [
+    1904,
+    3,
+    26
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "thought",
+   "note": "mythologist; The Hero with a Thousand Faces",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Aries",
+    "sun_nak": "Uttara Bhadrapada"
+   }
+  },
+  {
+   "name": "Akira Kurosawa",
+   "born": [
+    1910,
+    3,
+    23
+   ],
+   "cal": "G",
+   "utc": 9.3,
+   "field": "art",
+   "note": "filmmaker",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Aries",
+    "sun_nak": "Uttara Bhadrapada",
+    "moon": "Leo"
+   }
+  },
+  {
+   "name": "Ravi Shankar",
+   "born": [
+    1920,
+    4,
+    7
+   ],
+   "cal": "G",
+   "utc": 5.5,
+   "field": "music",
+   "note": "sitar player and composer",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Aries",
+    "sun_nak": "Revati",
+    "moon": "Scorpio"
+   }
+  },
+  {
+   "name": "Maya Angelou",
+   "born": [
+    1928,
+    4,
+    4
+   ],
+   "cal": "G",
+   "utc": -6,
+   "field": "letters",
+   "note": "poet and memoirist",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Aries",
+    "sun_nak": "Revati",
+    "moon": "Virgo"
+   }
+  },
+  {
+   "name": "Wangari Maathai",
+   "born": [
+    1940,
+    4,
+    1
+   ],
+   "cal": "G",
+   "utc": 3,
+   "field": "rule",
+   "note": "environmentalist; the Green Belt Movement",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Aries",
+    "sun_nak": "Revati",
+    "moon": "Capricorn"
+   }
+  },
+  {
+   "name": "Aretha Franklin",
+   "born": [
+    1942,
+    3,
+    25
+   ],
+   "cal": "G",
+   "utc": -6,
+   "field": "music",
+   "note": "singer",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Aries",
+    "sun_nak": "Uttara Bhadrapada",
+    "moon": "Gemini"
+   }
+  },
+  {
+   "name": "Jim Morrison",
+   "born": [
+    1943,
+    12,
+    8
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "music",
+   "note": "singer and poet; the Doors",
+   "sky": {
+    "sun": "Scorpio",
+    "trop": "Sagittarius",
+    "sun_nak": "Jyeshtha",
+    "moon": "Aries"
+   }
+  },
+  {
+   "name": "Edgar Cayce",
+   "born": [
+    1877,
+    3,
+    18
+   ],
+   "cal": "G",
+   "utc": -6,
+   "field": "esoteric",
+   "note": "clairvoyant who gave readings in trance",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Pisces",
+    "sun_nak": "Uttara Bhadrapada",
+    "moon": "Aries"
+   }
+  },
+  {
+   "name": "Siouxsie Sioux",
+   "born": [
+    1957,
+    5,
+    27
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "music",
+   "note": "singer; Siouxsie and the Banshees",
+   "sky": {
+    "sun": "Taurus",
+    "trop": "Gemini",
+    "sun_nak": "Rohini",
+    "moon": "Aries"
+   }
+  },
+  {
+   "name": "Hayao Miyazaki",
+   "born": [
+    1941,
+    1,
+    5
+   ],
+   "cal": "G",
+   "utc": 9.3,
+   "field": "art",
+   "note": "animator and filmmaker",
+   "sky": {
+    "sun": "Sagittarius",
+    "trop": "Capricorn",
+    "sun_nak": "Purva Ashadha",
+    "moon": "Pisces"
+   }
+  },
+  {
+   "name": "Steve Jobs",
+   "born": [
+    1955,
+    2,
+    24
+   ],
+   "cal": "G",
+   "utc": -8,
+   "field": "lives",
+   "note": "co-founder of Apple",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Pisces",
+    "sun_nak": "Shatabhisha",
+    "moon": "Pisces"
+   }
+  },
+  {
+   "name": "Whitney Houston",
+   "born": [
+    1963,
+    8,
+    9
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "music",
+   "note": "singer",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Leo",
+    "sun_nak": "Ashlesha",
+    "moon": "Pisces"
+   }
+  },
+  {
+   "name": "James Baldwin",
+   "born": [
+    1924,
+    8,
+    2
+   ],
+   "cal": "G",
+   "utc": -5,
+   "field": "letters",
+   "note": "novelist and essayist",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Leo",
+    "sun_nak": "Ashlesha",
+    "moon": "Leo"
+   }
+  },
+  {
+   "name": "Nick Cave",
+   "born": [
+    1957,
+    9,
+    22
+   ],
+   "cal": "G",
+   "utc": 9.5,
+   "field": "music",
+   "note": "singer and songwriter",
+   "sky": {
+    "sun": "Virgo",
+    "trop": "Virgo",
+    "sun_nak": "Uttara Phalguni",
+    "moon": "Leo"
+   }
+  },
+  {
+   "name": "Terry Pratchett",
+   "born": [
+    1948,
+    4,
+    28
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "letters",
+   "note": "novelist; Discworld",
+   "sky": {
+    "sun": "Aries",
+    "trop": "Taurus",
+    "sun_nak": "Bharani",
+    "moon": "Sagittarius"
+   }
+  },
+  {
+   "name": "Dane Rudhyar",
+   "born": [
+    1895,
+    3,
+    23
+   ],
+   "cal": "G",
+   "utc": 0.2,
+   "field": "esoteric",
+   "note": "astrologer and composer; humanistic astrology",
+   "sky": {
+    "sun": "Pisces",
+    "trop": "Aries",
+    "sun_nak": "Uttara Bhadrapada",
+    "moon": "Aquarius"
+   }
+  },
+  {
+   "name": "Alan Leo",
+   "born": [
+    1860,
+    8,
+    7
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "esoteric",
+   "note": "astrologer; shaped modern Western astrology",
+   "sky": {
+    "sun": "Cancer",
+    "trop": "Leo",
+    "sun_nak": "Ashlesha"
+   }
+  },
+  {
+   "name": "Pamela Colman Smith",
+   "born": [
+    1878,
+    2,
+    16
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "esoteric",
+   "note": "artist who drew the Rider–Waite–Smith tarot",
+   "sky": {
+    "sun": "Aquarius",
+    "trop": "Aquarius",
+    "sun_nak": "Dhanishta"
+   }
+  },
+  {
+   "name": "Annie Besant",
+   "born": [
+    1847,
+    10,
+    1
+   ],
+   "cal": "G",
+   "utc": 0,
+   "field": "esoteric",
+   "note": "Theosophist and campaigner for Indian self-rule",
+   "sky": {
+    "sun": "Virgo",
+    "trop": "Libra",
+    "sun_nak": "Hasta",
+    "moon": "Gemini"
+   }
+  }
+ ]
+}

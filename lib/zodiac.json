@@ -1,0 +1,354 @@
+{
+ "_note": "DRAFT for The Völva to edit. The written parts of the sign pages that are not in the corpus: each sign's Sanskrit name and classical form, its direction and how it rises, and how three older traditions drew its stars, each told on its own terms with its source named. No claim is made about which tradition took from which. The interpretive lines on the sign pages come from the corpus, placements, karakas, matrix, medical, story and vargas files; the numbers come from zodiac_sky.json and notables.json.",
+ "TEACH": {
+  "LEDE": "A sign is a thirty-degree slice of the ecliptic, the path the Sun traces against the stars over a year. Twelve slices make the circle. Every planet, the Moon and the rising degree are read by the sign they stand in, so the twelve are the first thing to learn in any chart.",
+  "TWO": "There are two ways to lay the twelve on the sky, and they no longer line up.",
+  "DRIFT": "The two circles started together around the year 285 and have been drifting apart ever since, by about one degree every 72 years, as the Earth's axis slowly wobbles. The gap is called the ayanamsa. This site uses Lahiri's, the one India's calendar reform adopted, which fixes the sidereal zodiac by the star Spica at 0° Libra.",
+  "SHIFT": "So for most people the Sun stands in the sign before their familiar one. If you were born in the first {gap} days or so of a tropical sign, your sidereal Sun is in the sign before it. Only those born in its last {keep} days or so keep the same Sun sign in both.",
+  "WHEEL": "The outer ring is the sidereal zodiac, with the twenty-seven lunar mansions inside it. The inner ring is the tropical zodiac, turned by this year's ayanamsa. Where a sign of the inner ring sits under a different sign of the outer one, the two zodiacs disagree.",
+  "ELEMENTS": "Each sign has an element and a mode. The element is what it is made of; the mode is how it moves: moving signs start things, fixed signs hold them, and dual signs carry them over into what comes next. Every pairing of the two happens once.",
+  "RULERS": "Each sign has a ruling planet, which acts most like itself there. Each of the seven visible planets also has a sign where it is at its strongest (exalted), a sign opposite where it is at its weakest (its fall), and a root sign, a stretch of its home where it works most purely. The degree given with each exaltation is its peak.",
+  "PEOPLE": "Every sign page lists people born with the Sun there, worked out from their birth dates, and people whose Moon held that sign all day long, so the hour of birth could not change it. Most of them would give a different sign as their own, because most of us were told our tropical sign.",
+  "MOON_NOTE": "The Moon changes sign every two and a half days, so for many people the hour of birth decides it. These are the ones whose Moon held this sign through their whole birth day, with two hours to spare either side, so the hour cannot change it.",
+  "SUN_NOTE": "Worked out from each person's birth date with the console's own ephemeris and checked against a second one. After each name: the mansion the Sun stood in, the Moon's sign where the date alone settles it, and the tropical sign most of them would have been told is theirs."
+ },
+ "SIGNS": [
+  {
+   "sign": "Aries",
+   "glyph": "♈",
+   "skt": "Mesha",
+   "means": "the ram",
+   "form": "a ram",
+   "dir": "east",
+   "rises": "back first",
+   "trad": [
+    [
+     "Babylon",
+     "In MUL.APIN, the Babylonian star list compiled by about 1000 BCE, these stars are the Hired Man (LÚ.ḪUN.GÁ), a farm labourer.",
+     "MUL.APIN"
+    ],
+    [
+     "Greece",
+     "The ram with the golden fleece, which carried the boy Phrixus to Colchis and was set in the sky. Its fleece is the one Jason sailed to find.",
+     "Eratosthenes, Catasterismi; Hyginus, De astronomia"
+    ],
+    [
+     "India",
+     "Mesha, the ram. Varahamihira draws the sign simply as a ram. It holds the first two mansions whole, Ashwini and Bharani, and the first quarter of Krittika.",
+     "Varahamihira, Brihat Jataka"
+    ]
+   ]
+  },
+  {
+   "sign": "Taurus",
+   "glyph": "♉",
+   "skt": "Vrishabha",
+   "means": "the bull",
+   "form": "a bull",
+   "dir": "south",
+   "rises": "back first",
+   "trad": [
+    [
+     "Babylon",
+     "The Bull of Heaven (GU4.AN.NA), the bull Ishtar sent against Gilgamesh. The Pleiades were a figure of their own, MUL.MUL, simply “the Stars”.",
+     "MUL.APIN; the Epic of Gilgamesh"
+    ],
+    [
+     "Greece",
+     "Zeus as a white bull, carrying Europa over the sea to Crete. Only the bull's forepart is drawn among the stars.",
+     "Eratosthenes, Catasterismi; Hyginus, De astronomia"
+    ],
+    [
+     "India",
+     "Vrishabha, the bull. Its stars hold Krittika, the Pleiades, and Rohini, whose star is Aldebaran.",
+     "Varahamihira, Brihat Jataka"
+    ]
+   ]
+  },
+  {
+   "sign": "Gemini",
+   "glyph": "♊",
+   "skt": "Mithuna",
+   "means": "the pair",
+   "form": "a man holding a mace and a woman holding a vina",
+   "dir": "west",
+   "rises": "head first",
+   "trad": [
+    [
+     "Babylon",
+     "The Great Twins (MAŠ.TAB.BA.GAL.GAL), two warrior gods named Lugal-irra and Meslamta-ea.",
+     "MUL.APIN"
+    ],
+    [
+     "Greece",
+     "The Dioscuri, Castor and Polydeuces (Pollux). When Castor, the mortal brother, was killed, Polydeuces shared his immortality with him so they could stay together, alternating their days between the underworld and Olympus.",
+     "Eratosthenes, Catasterismi; Hyginus, De astronomia"
+    ],
+    [
+     "India",
+     "Mithuna, the pair: a man holding a mace and a woman holding a vina, in Varahamihira's drawing.",
+     "Varahamihira, Brihat Jataka"
+    ]
+   ]
+  },
+  {
+   "sign": "Cancer",
+   "glyph": "♋",
+   "skt": "Karka",
+   "means": "the crab",
+   "form": "a crab",
+   "dir": "north",
+   "rises": "back first",
+   "trad": [
+    [
+     "Babylon",
+     "AL.LUL, usually read as the Crab.",
+     "MUL.APIN"
+    ],
+    [
+     "Greece",
+     "The crab Hera sent against Heracles while he fought the Hydra at Lerna. He crushed it, and Hera gave it a place in the sky. The faint cluster at its middle, Praesepe, was the manger, and the two stars beside it the donkeys (Aselli) that feed there.",
+     "Eratosthenes, Catasterismi; Hyginus, De astronomia"
+    ],
+    [
+     "India",
+     "Karka, the crab. Its middle holds Pushya, the nourisher, whose star is Asellus Australis.",
+     "Varahamihira, Brihat Jataka"
+    ]
+   ]
+  },
+  {
+   "sign": "Leo",
+   "glyph": "♌",
+   "skt": "Simha",
+   "means": "the lion",
+   "form": "a lion",
+   "dir": "east",
+   "rises": "head first",
+   "trad": [
+    [
+     "Babylon",
+     "The Lion (UR.GU.LA). Its brightest star, Regulus, was called the King.",
+     "MUL.APIN"
+    ],
+    [
+     "Greece",
+     "The Nemean lion, whose hide no blade could cut, strangled by Heracles in the first of his labours.",
+     "Eratosthenes, Catasterismi; Hyginus, De astronomia"
+    ],
+    [
+     "India",
+     "Simha, the lion. Regulus marks Magha, the mansion of the ancestors.",
+     "Varahamihira, Brihat Jataka"
+    ]
+   ]
+  },
+  {
+   "sign": "Virgo",
+   "glyph": "♍",
+   "skt": "Kanya",
+   "means": "the maiden",
+   "form": "a maiden standing in a boat, holding grain in one hand and fire in the other",
+   "dir": "south",
+   "rises": "head first",
+   "trad": [
+    [
+     "Babylon",
+     "The Furrow (AB.SÍN). Its bright star, Spica, is the ear of barley held by the goddess Shala.",
+     "MUL.APIN"
+    ],
+    [
+     "Greece",
+     "A maiden holding an ear of wheat; spica is Latin for an ear of grain. Aratus names her Dike, Justice, the last of the immortals to leave the earth. Others called her Astraea, Demeter or Persephone.",
+     "Aratus, Phaenomena; Eratosthenes, Catasterismi"
+    ],
+    [
+     "India",
+     "Kanya, the maiden, drawn by Varahamihira standing in a boat with grain in one hand and fire in the other. Spica is the star of Chitra, and Lahiri's zodiac is set by it: Spica stands at 0° Libra, so 0° Aries is the point opposite.",
+     "Varahamihira, Brihat Jataka"
+    ]
+   ]
+  },
+  {
+   "sign": "Libra",
+   "glyph": "♎",
+   "skt": "Tula",
+   "means": "the balance",
+   "form": "a man holding a pair of scales",
+   "dir": "west",
+   "rises": "head first",
+   "trad": [
+    [
+     "Babylon",
+     "The Scales (ZI.BA.AN.NA).",
+     "MUL.APIN"
+    ],
+    [
+     "Greece",
+     "Early Greek astronomers counted these stars as the Claws of the Scorpion (Chelae). The Scales appear by the first century BCE. The stars still carry the older picture: Zubenelgenubi and Zubeneschamali are Arabic for the southern and the northern claw.",
+     "Aratus, Phaenomena; Geminus, Introduction to the Phenomena"
+    ],
+    [
+     "India",
+     "Tula, the balance: a man holding scales, in Varahamihira's drawing. The two claw stars sit in Vishakha, the forked mansion.",
+     "Varahamihira, Brihat Jataka"
+    ]
+   ]
+  },
+  {
+   "sign": "Scorpio",
+   "glyph": "♏",
+   "skt": "Vrishchika",
+   "means": "the scorpion",
+   "form": "a scorpion",
+   "dir": "north",
+   "rises": "head first",
+   "trad": [
+    [
+     "Babylon",
+     "The Scorpion (GÍR.TAB). In the Epic of Gilgamesh, scorpion-people guard the mountain gate the Sun passes through.",
+     "MUL.APIN; the Epic of Gilgamesh"
+    ],
+    [
+     "Greece",
+     "The scorpion that killed the hunter Orion. The two were set on opposite sides of the sky, so Orion sets as the Scorpion rises.",
+     "Eratosthenes, Catasterismi; Hyginus, De astronomia"
+    ],
+    [
+     "India",
+     "Vrishchika, the scorpion. Antares, its heart, is named as the star of Jyeshtha, the eldest, though in Lahiri's measure it stands at about 16° Scorpio, just before Jyeshtha's arc begins. The sting reaches past the sign's end, into Mula.",
+     "Varahamihira, Brihat Jataka"
+    ]
+   ]
+  },
+  {
+   "sign": "Sagittarius",
+   "glyph": "♐",
+   "skt": "Dhanu",
+   "means": "the bow",
+   "form": "a man with a bow, whose hind part is a horse",
+   "dir": "east",
+   "rises": "back first",
+   "trad": [
+    [
+     "Babylon",
+     "Pabilsag (PA.BIL.SAG), an archer god, drawn on boundary stones as a winged archer who is part horse.",
+     "MUL.APIN; Babylonian boundary stones"
+    ],
+    [
+     "Greece",
+     "An archer drawing his bow at the Scorpion. Eratosthenes made him Crotus, a satyr who invented archery and lived among the Muses; others took him for a centaur.",
+     "Eratosthenes, Catasterismi; Hyginus, De astronomia"
+    ],
+    [
+     "India",
+     "Dhanu, the bow: a man with a bow whose hind part is a horse, in Varahamihira's drawing. The centre of our galaxy lies at about 3° sidereal Sagittarius, in Mula, the root.",
+     "Varahamihira, Brihat Jataka"
+    ]
+   ]
+  },
+  {
+   "sign": "Capricorn",
+   "glyph": "♑",
+   "skt": "Makara",
+   "means": "the sea-creature",
+   "form": "a creature with a deer's head and a crocodile's body",
+   "dir": "south",
+   "rises": "back first",
+   "trad": [
+    [
+     "Babylon",
+     "The Goat-Fish (SUḪUR.MÁŠ), the creature of the god Ea, lord of the fresh waters under the earth.",
+     "MUL.APIN"
+    ],
+    [
+     "Greece",
+     "Pan, who leapt into the Nile to escape the monster Typhon; the part of him under the water became a fish.",
+     "Hyginus, De astronomia"
+    ],
+    [
+     "India",
+     "Makara, a sea-creature drawn with a deer's head and a crocodile's body. The Sun enters sidereal Capricorn around 14 January, the day India keeps as Makar Sankranti.",
+     "Varahamihira, Brihat Jataka"
+    ]
+   ]
+  },
+  {
+   "sign": "Aquarius",
+   "glyph": "♒",
+   "skt": "Kumbha",
+   "means": "the pot",
+   "form": "a man carrying a pot on his shoulder",
+   "dir": "west",
+   "rises": "head first",
+   "trad": [
+    [
+     "Babylon",
+     "The Great One (GU.LA), a god pouring streams of water from a vase.",
+     "MUL.APIN"
+    ],
+    [
+     "Greece",
+     "Ganymede, the Trojan youth Zeus carried up to Olympus to pour for the gods.",
+     "Eratosthenes, Catasterismi; Hyginus, De astronomia"
+    ],
+    [
+     "India",
+     "Kumbha, the pot: a man carrying a pot on his shoulder, in Varahamihira's drawing. The water pours toward Fomalhaut, the bright star of the Southern Fish, which stands at about 10° sidereal Aquarius.",
+     "Varahamihira, Brihat Jataka"
+    ]
+   ]
+  },
+  {
+   "sign": "Pisces",
+   "glyph": "♓",
+   "skt": "Mina",
+   "means": "the fish",
+   "form": "two fishes, head to tail",
+   "dir": "north",
+   "rises": "both ways",
+   "trad": [
+    [
+     "Babylon",
+     "The Tails (KUN.MEŠ): two figures, the Swallow and the goddess Anunitu, joined by a cord.",
+     "MUL.APIN"
+    ],
+    [
+     "Greece",
+     "Aphrodite and her son Eros, who became fish to escape Typhon and tied themselves together so as not to be parted. Alrescha, Arabic for the cord, marks the knot.",
+     "Eratosthenes, Catasterismi; Hyginus, De astronomia"
+    ],
+    [
+     "India",
+     "Mina, the fish: two fishes, head to tail. Older Indian reckonings began the zodiac near ζ Piscium, Revati's star; in Lahiri's measure it stands at about 26° Pisces, and the constellation's brightest stars, Alrescha and Alpherg, stand in sidereal Aries.",
+     "Varahamihira, Brihat Jataka; the Surya Siddhanta"
+    ]
+   ]
+  }
+ ],
+ "EXALT_DEG": {
+  "Sun": 10,
+  "Moon": 3,
+  "Mars": 28,
+  "Mercury": 15,
+  "Jupiter": 5,
+  "Venus": 27,
+  "Saturn": 20
+ },
+ "RISES": {
+  "head first": "rises head first (shirshodaya), said to give its results early and openly",
+  "back first": "rises back first (prishtodaya), said to give its results late, after effort",
+  "both ways": "rises both ways (ubhayodaya), head and tail together"
+ },
+ "FIELD_ORDER": [
+  "science",
+  "art",
+  "music",
+  "letters",
+  "thought",
+  "spirit",
+  "esoteric",
+  "rule",
+  "lives"
+ ]
+}

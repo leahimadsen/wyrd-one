@@ -1,0 +1,2724 @@
+{
+ "_note": "Worked out, not written: the dates the Sun enters each sign (sidereal by Lahiri, and tropical), the Lahiri ayanamsa on 1 July each year, and where the stars of each sign stand. Sun dates are UTC days from Astronomy Engine (VSOP87), checked against the console's own engine (they agree within half an hour). Star places are from the Yale Bright Star Catalogue (J2000, carried to 2026 by proper motion) turned into Lahiri longitudes; 'edge' marks a star within 0.4 degrees of a mansion boundary, where it is fairer to name both.",
+ "SID_INGRESS": {
+  "2025": [
+   [
+    2025,
+    4,
+    13
+   ],
+   [
+    2025,
+    5,
+    14
+   ],
+   [
+    2025,
+    6,
+    15
+   ],
+   [
+    2025,
+    7,
+    16
+   ],
+   [
+    2025,
+    8,
+    16
+   ],
+   [
+    2025,
+    9,
+    16
+   ],
+   [
+    2025,
+    10,
+    17
+   ],
+   [
+    2025,
+    11,
+    16
+   ],
+   [
+    2025,
+    12,
+    15
+   ],
+   [
+    2025,
+    1,
+    14
+   ],
+   [
+    2025,
+    2,
+    12
+   ],
+   [
+    2025,
+    3,
+    14
+   ]
+  ],
+  "2026": [
+   [
+    2026,
+    4,
+    14
+   ],
+   [
+    2026,
+    5,
+    15
+   ],
+   [
+    2026,
+    6,
+    15
+   ],
+   [
+    2026,
+    7,
+    16
+   ],
+   [
+    2026,
+    8,
+    17
+   ],
+   [
+    2026,
+    9,
+    17
+   ],
+   [
+    2026,
+    10,
+    17
+   ],
+   [
+    2026,
+    11,
+    16
+   ],
+   [
+    2026,
+    12,
+    16
+   ],
+   [
+    2026,
+    1,
+    14
+   ],
+   [
+    2026,
+    2,
+    12
+   ],
+   [
+    2026,
+    3,
+    14
+   ]
+  ],
+  "2027": [
+   [
+    2027,
+    4,
+    14
+   ],
+   [
+    2027,
+    5,
+    15
+   ],
+   [
+    2027,
+    6,
+    15
+   ],
+   [
+    2027,
+    7,
+    17
+   ],
+   [
+    2027,
+    8,
+    17
+   ],
+   [
+    2027,
+    9,
+    17
+   ],
+   [
+    2027,
+    10,
+    17
+   ],
+   [
+    2027,
+    11,
+    16
+   ],
+   [
+    2027,
+    12,
+    16
+   ],
+   [
+    2027,
+    1,
+    14
+   ],
+   [
+    2027,
+    2,
+    13
+   ],
+   [
+    2027,
+    3,
+    15
+   ]
+  ],
+  "2028": [
+   [
+    2028,
+    4,
+    13
+   ],
+   [
+    2028,
+    5,
+    14
+   ],
+   [
+    2028,
+    6,
+    14
+   ],
+   [
+    2028,
+    7,
+    16
+   ],
+   [
+    2028,
+    8,
+    16
+   ],
+   [
+    2028,
+    9,
+    16
+   ],
+   [
+    2028,
+    10,
+    17
+   ],
+   [
+    2028,
+    11,
+    16
+   ],
+   [
+    2028,
+    12,
+    15
+   ],
+   [
+    2028,
+    1,
+    14
+   ],
+   [
+    2028,
+    2,
+    13
+   ],
+   [
+    2028,
+    3,
+    14
+   ]
+  ],
+  "2029": [
+   [
+    2029,
+    4,
+    13
+   ],
+   [
+    2029,
+    5,
+    14
+   ],
+   [
+    2029,
+    6,
+    15
+   ],
+   [
+    2029,
+    7,
+    16
+   ],
+   [
+    2029,
+    8,
+    16
+   ],
+   [
+    2029,
+    9,
+    16
+   ],
+   [
+    2029,
+    10,
+    17
+   ],
+   [
+    2029,
+    11,
+    16
+   ],
+   [
+    2029,
+    12,
+    15
+   ],
+   [
+    2029,
+    1,
+    14
+   ],
+   [
+    2029,
+    2,
+    12
+   ],
+   [
+    2029,
+    3,
+    14
+   ]
+  ],
+  "2030": [
+   [
+    2030,
+    4,
+    14
+   ],
+   [
+    2030,
+    5,
+    15
+   ],
+   [
+    2030,
+    6,
+    15
+   ],
+   [
+    2030,
+    7,
+    16
+   ],
+   [
+    2030,
+    8,
+    17
+   ],
+   [
+    2030,
+    9,
+    17
+   ],
+   [
+    2030,
+    10,
+    17
+   ],
+   [
+    2030,
+    11,
+    16
+   ],
+   [
+    2030,
+    12,
+    16
+   ],
+   [
+    2030,
+    1,
+    14
+   ],
+   [
+    2030,
+    2,
+    12
+   ],
+   [
+    2030,
+    3,
+    14
+   ]
+  ],
+  "2031": [
+   [
+    2031,
+    4,
+    14
+   ],
+   [
+    2031,
+    5,
+    15
+   ],
+   [
+    2031,
+    6,
+    15
+   ],
+   [
+    2031,
+    7,
+    17
+   ],
+   [
+    2031,
+    8,
+    17
+   ],
+   [
+    2031,
+    9,
+    17
+   ],
+   [
+    2031,
+    10,
+    17
+   ],
+   [
+    2031,
+    11,
+    16
+   ],
+   [
+    2031,
+    12,
+    16
+   ],
+   [
+    2031,
+    1,
+    14
+   ],
+   [
+    2031,
+    2,
+    13
+   ],
+   [
+    2031,
+    3,
+    15
+   ]
+  ],
+  "2032": [
+   [
+    2032,
+    4,
+    13
+   ],
+   [
+    2032,
+    5,
+    14
+   ],
+   [
+    2032,
+    6,
+    14
+   ],
+   [
+    2032,
+    7,
+    16
+   ],
+   [
+    2032,
+    8,
+    16
+   ],
+   [
+    2032,
+    9,
+    16
+   ],
+   [
+    2032,
+    10,
+    17
+   ],
+   [
+    2032,
+    11,
+    16
+   ],
+   [
+    2032,
+    12,
+    15
+   ],
+   [
+    2032,
+    1,
+    14
+   ],
+   [
+    2032,
+    2,
+    13
+   ],
+   [
+    2032,
+    3,
+    14
+   ]
+  ],
+  "2033": [
+   [
+    2033,
+    4,
+    13
+   ],
+   [
+    2033,
+    5,
+    14
+   ],
+   [
+    2033,
+    6,
+    15
+   ],
+   [
+    2033,
+    7,
+    16
+   ],
+   [
+    2033,
+    8,
+    16
+   ],
+   [
+    2033,
+    9,
+    16
+   ],
+   [
+    2033,
+    10,
+    17
+   ],
+   [
+    2033,
+    11,
+    16
+   ],
+   [
+    2033,
+    12,
+    16
+   ],
+   [
+    2033,
+    1,
+    14
+   ],
+   [
+    2033,
+    2,
+    12
+   ],
+   [
+    2033,
+    3,
+    14
+   ]
+  ],
+  "2034": [
+   [
+    2034,
+    4,
+    14
+   ],
+   [
+    2034,
+    5,
+    15
+   ],
+   [
+    2034,
+    6,
+    15
+   ],
+   [
+    2034,
+    7,
+    16
+   ],
+   [
+    2034,
+    8,
+    17
+   ],
+   [
+    2034,
+    9,
+    17
+   ],
+   [
+    2034,
+    10,
+    17
+   ],
+   [
+    2034,
+    11,
+    16
+   ],
+   [
+    2034,
+    12,
+    16
+   ],
+   [
+    2034,
+    1,
+    14
+   ],
+   [
+    2034,
+    2,
+    12
+   ],
+   [
+    2034,
+    3,
+    14
+   ]
+  ],
+  "2035": [
+   [
+    2035,
+    4,
+    14
+   ],
+   [
+    2035,
+    5,
+    15
+   ],
+   [
+    2035,
+    6,
+    15
+   ],
+   [
+    2035,
+    7,
+    17
+   ],
+   [
+    2035,
+    8,
+    17
+   ],
+   [
+    2035,
+    9,
+    17
+   ],
+   [
+    2035,
+    10,
+    17
+   ],
+   [
+    2035,
+    11,
+    16
+   ],
+   [
+    2035,
+    12,
+    16
+   ],
+   [
+    2035,
+    1,
+    14
+   ],
+   [
+    2035,
+    2,
+    13
+   ],
+   [
+    2035,
+    3,
+    15
+   ]
+  ],
+  "2036": [
+   [
+    2036,
+    4,
+    13
+   ],
+   [
+    2036,
+    5,
+    14
+   ],
+   [
+    2036,
+    6,
+    14
+   ],
+   [
+    2036,
+    7,
+    16
+   ],
+   [
+    2036,
+    8,
+    16
+   ],
+   [
+    2036,
+    9,
+    16
+   ],
+   [
+    2036,
+    10,
+    17
+   ],
+   [
+    2036,
+    11,
+    16
+   ],
+   [
+    2036,
+    12,
+    15
+   ],
+   [
+    2036,
+    1,
+    14
+   ],
+   [
+    2036,
+    2,
+    13
+   ],
+   [
+    2036,
+    3,
+    14
+   ]
+  ]
+ },
+ "TROP_INGRESS": {
+  "2025": [
+   [
+    2025,
+    3,
+    20
+   ],
+   [
+    2025,
+    4,
+    19
+   ],
+   [
+    2025,
+    5,
+    20
+   ],
+   [
+    2025,
+    6,
+    21
+   ],
+   [
+    2025,
+    7,
+    22
+   ],
+   [
+    2025,
+    8,
+    22
+   ],
+   [
+    2025,
+    9,
+    22
+   ],
+   [
+    2025,
+    10,
+    23
+   ],
+   [
+    2025,
+    11,
+    22
+   ],
+   [
+    2025,
+    12,
+    21
+   ],
+   [
+    2025,
+    1,
+    19
+   ],
+   [
+    2025,
+    2,
+    18
+   ]
+  ],
+  "2026": [
+   [
+    2026,
+    3,
+    20
+   ],
+   [
+    2026,
+    4,
+    20
+   ],
+   [
+    2026,
+    5,
+    21
+   ],
+   [
+    2026,
+    6,
+    21
+   ],
+   [
+    2026,
+    7,
+    22
+   ],
+   [
+    2026,
+    8,
+    23
+   ],
+   [
+    2026,
+    9,
+    23
+   ],
+   [
+    2026,
+    10,
+    23
+   ],
+   [
+    2026,
+    11,
+    22
+   ],
+   [
+    2026,
+    12,
+    21
+   ],
+   [
+    2026,
+    1,
+    20
+   ],
+   [
+    2026,
+    2,
+    18
+   ]
+  ],
+  "2027": [
+   [
+    2027,
+    3,
+    20
+   ],
+   [
+    2027,
+    4,
+    20
+   ],
+   [
+    2027,
+    5,
+    21
+   ],
+   [
+    2027,
+    6,
+    21
+   ],
+   [
+    2027,
+    7,
+    23
+   ],
+   [
+    2027,
+    8,
+    23
+   ],
+   [
+    2027,
+    9,
+    23
+   ],
+   [
+    2027,
+    10,
+    23
+   ],
+   [
+    2027,
+    11,
+    22
+   ],
+   [
+    2027,
+    12,
+    22
+   ],
+   [
+    2027,
+    1,
+    20
+   ],
+   [
+    2027,
+    2,
+    18
+   ]
+  ],
+  "2028": [
+   [
+    2028,
+    3,
+    20
+   ],
+   [
+    2028,
+    4,
+    19
+   ],
+   [
+    2028,
+    5,
+    20
+   ],
+   [
+    2028,
+    6,
+    20
+   ],
+   [
+    2028,
+    7,
+    22
+   ],
+   [
+    2028,
+    8,
+    22
+   ],
+   [
+    2028,
+    9,
+    22
+   ],
+   [
+    2028,
+    10,
+    22
+   ],
+   [
+    2028,
+    11,
+    21
+   ],
+   [
+    2028,
+    12,
+    21
+   ],
+   [
+    2028,
+    1,
+    20
+   ],
+   [
+    2028,
+    2,
+    19
+   ]
+  ],
+  "2029": [
+   [
+    2029,
+    3,
+    20
+   ],
+   [
+    2029,
+    4,
+    19
+   ],
+   [
+    2029,
+    5,
+    20
+   ],
+   [
+    2029,
+    6,
+    21
+   ],
+   [
+    2029,
+    7,
+    22
+   ],
+   [
+    2029,
+    8,
+    22
+   ],
+   [
+    2029,
+    9,
+    22
+   ],
+   [
+    2029,
+    10,
+    23
+   ],
+   [
+    2029,
+    11,
+    22
+   ],
+   [
+    2029,
+    12,
+    21
+   ],
+   [
+    2029,
+    1,
+    19
+   ],
+   [
+    2029,
+    2,
+    18
+   ]
+  ],
+  "2030": [
+   [
+    2030,
+    3,
+    20
+   ],
+   [
+    2030,
+    4,
+    20
+   ],
+   [
+    2030,
+    5,
+    20
+   ],
+   [
+    2030,
+    6,
+    21
+   ],
+   [
+    2030,
+    7,
+    22
+   ],
+   [
+    2030,
+    8,
+    23
+   ],
+   [
+    2030,
+    9,
+    22
+   ],
+   [
+    2030,
+    10,
+    23
+   ],
+   [
+    2030,
+    11,
+    22
+   ],
+   [
+    2030,
+    12,
+    21
+   ],
+   [
+    2030,
+    1,
+    20
+   ],
+   [
+    2030,
+    2,
+    18
+   ]
+  ],
+  "2031": [
+   [
+    2031,
+    3,
+    20
+   ],
+   [
+    2031,
+    4,
+    20
+   ],
+   [
+    2031,
+    5,
+    21
+   ],
+   [
+    2031,
+    6,
+    21
+   ],
+   [
+    2031,
+    7,
+    23
+   ],
+   [
+    2031,
+    8,
+    23
+   ],
+   [
+    2031,
+    9,
+    23
+   ],
+   [
+    2031,
+    10,
+    23
+   ],
+   [
+    2031,
+    11,
+    22
+   ],
+   [
+    2031,
+    12,
+    22
+   ],
+   [
+    2031,
+    1,
+    20
+   ],
+   [
+    2031,
+    2,
+    18
+   ]
+  ],
+  "2032": [
+   [
+    2032,
+    3,
+    20
+   ],
+   [
+    2032,
+    4,
+    19
+   ],
+   [
+    2032,
+    5,
+    20
+   ],
+   [
+    2032,
+    6,
+    20
+   ],
+   [
+    2032,
+    7,
+    22
+   ],
+   [
+    2032,
+    8,
+    22
+   ],
+   [
+    2032,
+    9,
+    22
+   ],
+   [
+    2032,
+    10,
+    22
+   ],
+   [
+    2032,
+    11,
+    21
+   ],
+   [
+    2032,
+    12,
+    21
+   ],
+   [
+    2032,
+    1,
+    20
+   ],
+   [
+    2032,
+    2,
+    19
+   ]
+  ],
+  "2033": [
+   [
+    2033,
+    3,
+    20
+   ],
+   [
+    2033,
+    4,
+    19
+   ],
+   [
+    2033,
+    5,
+    20
+   ],
+   [
+    2033,
+    6,
+    21
+   ],
+   [
+    2033,
+    7,
+    22
+   ],
+   [
+    2033,
+    8,
+    22
+   ],
+   [
+    2033,
+    9,
+    22
+   ],
+   [
+    2033,
+    10,
+    23
+   ],
+   [
+    2033,
+    11,
+    22
+   ],
+   [
+    2033,
+    12,
+    21
+   ],
+   [
+    2033,
+    1,
+    19
+   ],
+   [
+    2033,
+    2,
+    18
+   ]
+  ],
+  "2034": [
+   [
+    2034,
+    3,
+    20
+   ],
+   [
+    2034,
+    4,
+    20
+   ],
+   [
+    2034,
+    5,
+    20
+   ],
+   [
+    2034,
+    6,
+    21
+   ],
+   [
+    2034,
+    7,
+    22
+   ],
+   [
+    2034,
+    8,
+    23
+   ],
+   [
+    2034,
+    9,
+    22
+   ],
+   [
+    2034,
+    10,
+    23
+   ],
+   [
+    2034,
+    11,
+    22
+   ],
+   [
+    2034,
+    12,
+    21
+   ],
+   [
+    2034,
+    1,
+    20
+   ],
+   [
+    2034,
+    2,
+    18
+   ]
+  ],
+  "2035": [
+   [
+    2035,
+    3,
+    20
+   ],
+   [
+    2035,
+    4,
+    20
+   ],
+   [
+    2035,
+    5,
+    21
+   ],
+   [
+    2035,
+    6,
+    21
+   ],
+   [
+    2035,
+    7,
+    22
+   ],
+   [
+    2035,
+    8,
+    23
+   ],
+   [
+    2035,
+    9,
+    23
+   ],
+   [
+    2035,
+    10,
+    23
+   ],
+   [
+    2035,
+    11,
+    22
+   ],
+   [
+    2035,
+    12,
+    22
+   ],
+   [
+    2035,
+    1,
+    20
+   ],
+   [
+    2035,
+    2,
+    18
+   ]
+  ],
+  "2036": [
+   [
+    2036,
+    3,
+    20
+   ],
+   [
+    2036,
+    4,
+    19
+   ],
+   [
+    2036,
+    5,
+    20
+   ],
+   [
+    2036,
+    6,
+    20
+   ],
+   [
+    2036,
+    7,
+    22
+   ],
+   [
+    2036,
+    8,
+    22
+   ],
+   [
+    2036,
+    9,
+    22
+   ],
+   [
+    2036,
+    10,
+    22
+   ],
+   [
+    2036,
+    11,
+    21
+   ],
+   [
+    2036,
+    12,
+    21
+   ],
+   [
+    2036,
+    1,
+    20
+   ],
+   [
+    2036,
+    2,
+    19
+   ]
+  ]
+ },
+ "AYANAMSA": {
+  "2025": 24.214,
+  "2026": 24.2295,
+  "2027": 24.2446,
+  "2028": 24.2596,
+  "2029": 24.274,
+  "2030": 24.2879,
+  "2031": 24.3011,
+  "2032": 24.314,
+  "2033": 24.3266,
+  "2034": 24.3389,
+  "2035": 24.3512,
+  "2036": 24.3638
+ },
+ "STARS": {
+  "Aries": {
+   "own_in": [
+    {
+     "name": "Mesarthim",
+     "bayer": "γ¹ Arietis",
+     "of": "Aries",
+     "mag": 4.8,
+     "sign": "Aries",
+     "deg": 9,
+     "lon": 9.33,
+     "nak": "Ashwini",
+     "edge": null
+    },
+    {
+     "name": "Sheratan",
+     "bayer": "β Arietis",
+     "of": "Aries",
+     "mag": 2.6,
+     "sign": "Aries",
+     "deg": 10,
+     "lon": 10.11,
+     "nak": "Ashwini",
+     "edge": null
+    },
+    {
+     "name": "Hamal",
+     "bayer": "α Arietis",
+     "of": "Aries",
+     "mag": 2.0,
+     "sign": "Aries",
+     "deg": 14,
+     "lon": 13.81,
+     "nak": "Bharani",
+     "edge": null
+    },
+    {
+     "name": "Botein",
+     "bayer": "δ Arietis",
+     "of": "Aries",
+     "mag": 4.3,
+     "sign": "Aries",
+     "deg": 27,
+     "lon": 27.0,
+     "nak": null,
+     "edge": [
+      "Bharani",
+      "Krittika"
+     ]
+    }
+   ],
+   "own_out": [],
+   "guests": []
+  },
+  "Taurus": {
+   "own_in": [
+    {
+     "name": "Alcyone",
+     "bayer": "η Tauri",
+     "of": "Taurus",
+     "mag": 2.9,
+     "sign": "Taurus",
+     "deg": 6,
+     "lon": 36.14,
+     "nak": "Krittika",
+     "edge": null
+    },
+    {
+     "name": "λ Tauri",
+     "bayer": "",
+     "of": "Taurus",
+     "mag": 3.5,
+     "sign": "Taurus",
+     "deg": 7,
+     "lon": 36.78,
+     "nak": "Krittika",
+     "edge": null
+    },
+    {
+     "name": "Prima Hyadum",
+     "bayer": "γ Tauri",
+     "of": "Taurus",
+     "mag": 3.6,
+     "sign": "Taurus",
+     "deg": 12,
+     "lon": 41.95,
+     "nak": "Rohini",
+     "edge": null
+    },
+    {
+     "name": "θ² Tauri",
+     "bayer": "",
+     "of": "Taurus",
+     "mag": 3.4,
+     "sign": "Taurus",
+     "deg": 14,
+     "lon": 44.11,
+     "nak": "Rohini",
+     "edge": null
+    },
+    {
+     "name": "Ain",
+     "bayer": "ε Tauri",
+     "of": "Taurus",
+     "mag": 3.5,
+     "sign": "Taurus",
+     "deg": 15,
+     "lon": 44.61,
+     "nak": "Rohini",
+     "edge": null
+    },
+    {
+     "name": "Aldebaran",
+     "bayer": "α Tauri",
+     "of": "Taurus",
+     "mag": 0.8,
+     "sign": "Taurus",
+     "deg": 16,
+     "lon": 45.93,
+     "nak": "Rohini",
+     "edge": null
+    },
+    {
+     "name": "Elnath",
+     "bayer": "β Tauri",
+     "of": "Taurus",
+     "mag": 1.6,
+     "sign": "Taurus",
+     "deg": 29,
+     "lon": 58.72,
+     "nak": "Mrigashira",
+     "edge": null
+    }
+   ],
+   "own_out": [
+    {
+     "name": "Tianguan",
+     "bayer": "ζ Tauri",
+     "of": "Taurus",
+     "mag": 3.0,
+     "sign": "Gemini",
+     "deg": 1,
+     "lon": 60.93,
+     "nak": "Mrigashira",
+     "edge": null
+    },
+    {
+     "name": "ο Tauri",
+     "bayer": "",
+     "of": "Taurus",
+     "mag": 3.6,
+     "sign": "Aries",
+     "deg": 27,
+     "lon": 27.31,
+     "nak": "Krittika",
+     "edge": null
+    }
+   ],
+   "guests": [
+    {
+     "name": "Rigel",
+     "bayer": "β Orionis",
+     "of": "Orion",
+     "mag": 0.1,
+     "sign": "Taurus",
+     "deg": 23,
+     "lon": 52.97,
+     "nak": null,
+     "edge": [
+      "Rohini",
+      "Mrigashira"
+     ]
+    },
+    {
+     "name": "Capella",
+     "bayer": "α Aurigae",
+     "of": "Auriga",
+     "mag": 0.1,
+     "sign": "Taurus",
+     "deg": 28,
+     "lon": 58.0,
+     "nak": "Mrigashira",
+     "edge": null
+    }
+   ]
+  },
+  "Gemini": {
+   "own_in": [
+    {
+     "name": "Propus",
+     "bayer": "η Geminorum",
+     "of": "Gemini",
+     "mag": 3.3,
+     "sign": "Gemini",
+     "deg": 10,
+     "lon": 69.58,
+     "nak": "Ardra",
+     "edge": null
+    },
+    {
+     "name": "Tejat",
+     "bayer": "μ Geminorum",
+     "of": "Gemini",
+     "mag": 2.9,
+     "sign": "Gemini",
+     "deg": 11,
+     "lon": 71.45,
+     "nak": "Ardra",
+     "edge": null
+    },
+    {
+     "name": "Alhena",
+     "bayer": "γ Geminorum",
+     "of": "Gemini",
+     "mag": 1.9,
+     "sign": "Gemini",
+     "deg": 15,
+     "lon": 75.25,
+     "nak": "Ardra",
+     "edge": null
+    },
+    {
+     "name": "Mebsuta",
+     "bayer": "ε Geminorum",
+     "of": "Gemini",
+     "mag": 3.0,
+     "sign": "Gemini",
+     "deg": 16,
+     "lon": 76.08,
+     "nak": "Ardra",
+     "edge": null
+    },
+    {
+     "name": "Alzir",
+     "bayer": "ξ Geminorum",
+     "of": "Gemini",
+     "mag": 3.4,
+     "sign": "Gemini",
+     "deg": 17,
+     "lon": 77.35,
+     "nak": "Ardra",
+     "edge": null
+    },
+    {
+     "name": "Wasat",
+     "bayer": "δ Geminorum",
+     "of": "Gemini",
+     "mag": 3.5,
+     "sign": "Gemini",
+     "deg": 25,
+     "lon": 84.66,
+     "nak": "Punarvasu",
+     "edge": null
+    },
+    {
+     "name": "Castor",
+     "bayer": "α Geminorum",
+     "of": "Gemini",
+     "mag": 2.9,
+     "sign": "Gemini",
+     "deg": 26,
+     "lon": 86.38,
+     "nak": "Punarvasu",
+     "edge": null
+    },
+    {
+     "name": "Pollux",
+     "bayer": "β Geminorum",
+     "of": "Gemini",
+     "mag": 1.1,
+     "sign": "Gemini",
+     "deg": 29,
+     "lon": 89.35,
+     "nak": "Punarvasu",
+     "edge": null
+    },
+    {
+     "name": "κ Geminorum",
+     "bayer": "",
+     "of": "Gemini",
+     "mag": 3.6,
+     "sign": "Gemini",
+     "deg": 29,
+     "lon": 89.81,
+     "nak": "Punarvasu",
+     "edge": null
+    }
+   ],
+   "own_out": [],
+   "guests": [
+    {
+     "name": "Betelgeuse",
+     "bayer": "α Orionis",
+     "of": "Orion",
+     "mag": 0.5,
+     "sign": "Gemini",
+     "deg": 5,
+     "lon": 64.9,
+     "nak": "Mrigashira",
+     "edge": null
+    },
+    {
+     "name": "Sirius",
+     "bayer": "α Canis Majoris",
+     "of": "Canis Major",
+     "mag": -1.5,
+     "sign": "Gemini",
+     "deg": 20,
+     "lon": 80.22,
+     "nak": null,
+     "edge": [
+      "Ardra",
+      "Punarvasu"
+     ]
+    }
+   ]
+  },
+  "Cancer": {
+   "own_in": [
+    {
+     "name": "Tarf",
+     "bayer": "β Cancri",
+     "of": "Cancer",
+     "mag": 3.5,
+     "sign": "Cancer",
+     "deg": 10,
+     "lon": 100.4,
+     "nak": "Pushya",
+     "edge": null
+    },
+    {
+     "name": "Asellus Borealis",
+     "bayer": "γ Cancri",
+     "of": "Cancer",
+     "mag": 4.7,
+     "sign": "Cancer",
+     "deg": 14,
+     "lon": 103.68,
+     "nak": "Pushya",
+     "edge": null
+    },
+    {
+     "name": "Asellus Australis",
+     "bayer": "δ Cancri",
+     "of": "Cancer",
+     "mag": 3.9,
+     "sign": "Cancer",
+     "deg": 15,
+     "lon": 104.87,
+     "nak": "Pushya",
+     "edge": null
+    },
+    {
+     "name": "Acubens",
+     "bayer": "α Cancri",
+     "of": "Cancer",
+     "mag": 4.2,
+     "sign": "Cancer",
+     "deg": 20,
+     "lon": 109.78,
+     "nak": "Ashlesha",
+     "edge": null
+    }
+   ],
+   "own_out": [],
+   "guests": [
+    {
+     "name": "Procyon",
+     "bayer": "α Canis Minoris",
+     "of": "Canis Minor",
+     "mag": 0.4,
+     "sign": "Cancer",
+     "deg": 2,
+     "lon": 91.92,
+     "nak": "Punarvasu",
+     "edge": null
+    }
+   ]
+  },
+  "Leo": {
+   "own_in": [
+    {
+     "name": "Subra",
+     "bayer": "ο Leonis",
+     "of": "Leo",
+     "mag": 3.5,
+     "sign": "Leo",
+     "deg": 0,
+     "lon": 120.39,
+     "nak": null,
+     "edge": [
+      "Ashlesha",
+      "Magha"
+     ]
+    },
+    {
+     "name": "Adhafera",
+     "bayer": "ζ Leonis",
+     "of": "Leo",
+     "mag": 3.4,
+     "sign": "Leo",
+     "deg": 4,
+     "lon": 123.71,
+     "nak": "Magha",
+     "edge": null
+    },
+    {
+     "name": "η Leonis",
+     "bayer": "",
+     "of": "Leo",
+     "mag": 3.5,
+     "sign": "Leo",
+     "deg": 4,
+     "lon": 124.05,
+     "nak": "Magha",
+     "edge": null
+    },
+    {
+     "name": "Algieba",
+     "bayer": "γ¹ Leonis",
+     "of": "Leo",
+     "mag": 2.6,
+     "sign": "Leo",
+     "deg": 6,
+     "lon": 125.76,
+     "nak": "Magha",
+     "edge": null
+    },
+    {
+     "name": "Regulus",
+     "bayer": "α Leonis",
+     "of": "Leo",
+     "mag": 1.4,
+     "sign": "Leo",
+     "deg": 6,
+     "lon": 125.97,
+     "nak": "Magha",
+     "edge": null
+    },
+    {
+     "name": "Zosma",
+     "bayer": "δ Leonis",
+     "of": "Leo",
+     "mag": 2.6,
+     "sign": "Leo",
+     "deg": 17,
+     "lon": 137.46,
+     "nak": "Purva Phalguni",
+     "edge": null
+    },
+    {
+     "name": "Chertan",
+     "bayer": "θ Leonis",
+     "of": "Leo",
+     "mag": 3.3,
+     "sign": "Leo",
+     "deg": 20,
+     "lon": 139.57,
+     "nak": "Purva Phalguni",
+     "edge": null
+    },
+    {
+     "name": "Denebola",
+     "bayer": "β Leonis",
+     "of": "Leo",
+     "mag": 2.1,
+     "sign": "Leo",
+     "deg": 28,
+     "lon": 147.76,
+     "nak": "Uttara Phalguni",
+     "edge": null
+    }
+   ],
+   "own_out": [
+    {
+     "name": "Ras Elased Australis",
+     "bayer": "ε Leonis",
+     "of": "Leo",
+     "mag": 3.0,
+     "sign": "Cancer",
+     "deg": 27,
+     "lon": 116.85,
+     "nak": "Ashlesha",
+     "edge": null
+    }
+   ],
+   "guests": []
+  },
+  "Virgo": {
+   "own_in": [
+    {
+     "name": "Zavijava",
+     "bayer": "β Virginis",
+     "of": "Virgo",
+     "mag": 3.6,
+     "sign": "Virgo",
+     "deg": 3,
+     "lon": 153.31,
+     "nak": "Uttara Phalguni",
+     "edge": null
+    },
+    {
+     "name": "Zaniah",
+     "bayer": "η Virginis",
+     "of": "Virgo",
+     "mag": 3.9,
+     "sign": "Virgo",
+     "deg": 11,
+     "lon": 160.97,
+     "nak": "Hasta",
+     "edge": null
+    },
+    {
+     "name": "Vindemiatrix",
+     "bayer": "ε Virginis",
+     "of": "Virgo",
+     "mag": 2.8,
+     "sign": "Virgo",
+     "deg": 16,
+     "lon": 166.08,
+     "nak": "Hasta",
+     "edge": null
+    },
+    {
+     "name": "Porrima",
+     "bayer": "γ Virginis",
+     "of": "Virgo",
+     "mag": 3.6,
+     "sign": "Virgo",
+     "deg": 16,
+     "lon": 166.28,
+     "nak": "Hasta",
+     "edge": null
+    },
+    {
+     "name": "Auva",
+     "bayer": "δ Virginis",
+     "of": "Virgo",
+     "mag": 3.4,
+     "sign": "Virgo",
+     "deg": 18,
+     "lon": 167.6,
+     "nak": "Hasta",
+     "edge": null
+    },
+    {
+     "name": "Heze",
+     "bayer": "ζ Virginis",
+     "of": "Virgo",
+     "mag": 3.4,
+     "sign": "Virgo",
+     "deg": 28,
+     "lon": 178.28,
+     "nak": "Chitra",
+     "edge": null
+    },
+    {
+     "name": "Spica",
+     "bayer": "α Virginis",
+     "of": "Virgo",
+     "mag": 1.0,
+     "sign": "Virgo",
+     "deg": 29,
+     "lon": 179.98,
+     "nak": "Chitra",
+     "edge": null
+    }
+   ],
+   "own_out": [
+    {
+     "name": "Rijl al Awwa",
+     "bayer": "μ Virginis",
+     "of": "Virgo",
+     "mag": 3.9,
+     "sign": "Libra",
+     "deg": 16,
+     "lon": 196.28,
+     "nak": "Swati",
+     "edge": null
+    }
+   ],
+   "guests": []
+  },
+  "Libra": {
+   "own_in": [
+    {
+     "name": "Zubenelgenubi",
+     "bayer": "α² Librae",
+     "of": "Libra",
+     "mag": 2.8,
+     "sign": "Libra",
+     "deg": 21,
+     "lon": 201.22,
+     "nak": "Vishakha",
+     "edge": null
+    },
+    {
+     "name": "Zubeneschamali",
+     "bayer": "β Librae",
+     "of": "Libra",
+     "mag": 2.6,
+     "sign": "Libra",
+     "deg": 26,
+     "lon": 205.51,
+     "nak": "Vishakha",
+     "edge": null
+    },
+    {
+     "name": "Brachium",
+     "bayer": "σ Librae",
+     "of": "Libra",
+     "mag": 3.3,
+     "sign": "Libra",
+     "deg": 27,
+     "lon": 206.83,
+     "nak": "Vishakha",
+     "edge": null
+    },
+    {
+     "name": "ι¹ Librae",
+     "bayer": "",
+     "of": "Libra",
+     "mag": 4.5,
+     "sign": "Libra",
+     "deg": 27,
+     "lon": 207.15,
+     "nak": "Vishakha",
+     "edge": null
+    }
+   ],
+   "own_out": [
+    {
+     "name": "υ Librae",
+     "bayer": "",
+     "of": "Libra",
+     "mag": 3.6,
+     "sign": "Scorpio",
+     "deg": 5,
+     "lon": 214.75,
+     "nak": "Anuradha",
+     "edge": null
+    },
+    {
+     "name": "τ Librae",
+     "bayer": "",
+     "of": "Libra",
+     "mag": 3.7,
+     "sign": "Scorpio",
+     "deg": 5,
+     "lon": 215.49,
+     "nak": "Anuradha",
+     "edge": null
+    },
+    {
+     "name": "Zubenelhakrabi",
+     "bayer": "γ Librae",
+     "of": "Libra",
+     "mag": 3.9,
+     "sign": "Scorpio",
+     "deg": 1,
+     "lon": 211.28,
+     "nak": "Vishakha",
+     "edge": null
+    },
+    {
+     "name": "θ Librae",
+     "bayer": "",
+     "of": "Libra",
+     "mag": 4.2,
+     "sign": "Scorpio",
+     "deg": 6,
+     "lon": 216.02,
+     "nak": "Anuradha",
+     "edge": null
+    }
+   ],
+   "guests": [
+    {
+     "name": "Arcturus",
+     "bayer": "α Boötis",
+     "of": "Boötes",
+     "mag": -0.0,
+     "sign": "Libra",
+     "deg": 0,
+     "lon": 180.37,
+     "nak": "Chitra",
+     "edge": null
+    }
+   ]
+  },
+  "Scorpio": {
+   "own_in": [
+    {
+     "name": "Dschubba",
+     "bayer": "δ Scorpii",
+     "of": "Scorpius",
+     "mag": 2.3,
+     "sign": "Scorpio",
+     "deg": 9,
+     "lon": 218.71,
+     "nak": "Anuradha",
+     "edge": null
+    },
+    {
+     "name": "Acrab",
+     "bayer": "β¹ Scorpii",
+     "of": "Scorpius",
+     "mag": 2.6,
+     "sign": "Scorpio",
+     "deg": 9,
+     "lon": 219.33,
+     "nak": "Anuradha",
+     "edge": null
+    },
+    {
+     "name": "Antares",
+     "bayer": "α Scorpii",
+     "of": "Scorpius",
+     "mag": 1.0,
+     "sign": "Scorpio",
+     "deg": 16,
+     "lon": 225.9,
+     "nak": "Anuradha",
+     "edge": null
+    },
+    {
+     "name": "Paikauhale",
+     "bayer": "τ Scorpii",
+     "of": "Scorpius",
+     "mag": 2.8,
+     "sign": "Scorpio",
+     "deg": 18,
+     "lon": 227.6,
+     "nak": "Jyeshtha",
+     "edge": null
+    },
+    {
+     "name": "ε Scorpii",
+     "bayer": "",
+     "of": "Scorpius",
+     "mag": 2.3,
+     "sign": "Scorpio",
+     "deg": 21,
+     "lon": 231.47,
+     "nak": "Jyeshtha",
+     "edge": null
+    }
+   ],
+   "own_out": [
+    {
+     "name": "Shaula",
+     "bayer": "λ Scorpii",
+     "of": "Scorpius",
+     "mag": 1.6,
+     "sign": "Sagittarius",
+     "deg": 1,
+     "lon": 240.73,
+     "nak": "Mula",
+     "edge": null
+    },
+    {
+     "name": "Sargas",
+     "bayer": "θ Scorpii",
+     "of": "Scorpius",
+     "mag": 1.9,
+     "sign": "Sagittarius",
+     "deg": 2,
+     "lon": 241.74,
+     "nak": "Mula",
+     "edge": null
+    },
+    {
+     "name": "Girtab",
+     "bayer": "κ Scorpii",
+     "of": "Scorpius",
+     "mag": 2.4,
+     "sign": "Sagittarius",
+     "deg": 3,
+     "lon": 242.61,
+     "nak": "Mula",
+     "edge": null
+    },
+    {
+     "name": "Lesath",
+     "bayer": "υ Scorpii",
+     "of": "Scorpius",
+     "mag": 2.7,
+     "sign": "Sagittarius",
+     "deg": 0,
+     "lon": 240.16,
+     "nak": null,
+     "edge": [
+      "Jyeshtha",
+      "Mula"
+     ]
+    }
+   ],
+   "guests": []
+  },
+  "Sagittarius": {
+   "own_in": [
+    {
+     "name": "Alnasl",
+     "bayer": "γ² Sagittarii",
+     "of": "Sagittarius",
+     "mag": 3.0,
+     "sign": "Sagittarius",
+     "deg": 7,
+     "lon": 247.4,
+     "nak": "Mula",
+     "edge": null
+    },
+    {
+     "name": "η Sagittarii",
+     "bayer": "",
+     "of": "Sagittarius",
+     "mag": 3.1,
+     "sign": "Sagittarius",
+     "deg": 10,
+     "lon": 249.77,
+     "nak": "Mula",
+     "edge": null
+    },
+    {
+     "name": "Kaus Media",
+     "bayer": "δ Sagittarii",
+     "of": "Sagittarius",
+     "mag": 2.7,
+     "sign": "Sagittarius",
+     "deg": 11,
+     "lon": 250.72,
+     "nak": "Mula",
+     "edge": null
+    },
+    {
+     "name": "Kaus Australis",
+     "bayer": "ε Sagittarii",
+     "of": "Sagittarius",
+     "mag": 1.9,
+     "sign": "Sagittarius",
+     "deg": 11,
+     "lon": 251.22,
+     "nak": "Mula",
+     "edge": null
+    },
+    {
+     "name": "Kaus Borealis",
+     "bayer": "λ Sagittarii",
+     "of": "Sagittarius",
+     "mag": 2.8,
+     "sign": "Sagittarius",
+     "deg": 12,
+     "lon": 252.46,
+     "nak": "Mula",
+     "edge": null
+    },
+    {
+     "name": "φ Sagittarii",
+     "bayer": "",
+     "of": "Sagittarius",
+     "mag": 3.2,
+     "sign": "Sagittarius",
+     "deg": 16,
+     "lon": 256.32,
+     "nak": "Purva Ashadha",
+     "edge": null
+    },
+    {
+     "name": "Nunki",
+     "bayer": "σ Sagittarii",
+     "of": "Sagittarius",
+     "mag": 2.0,
+     "sign": "Sagittarius",
+     "deg": 19,
+     "lon": 258.53,
+     "nak": "Purva Ashadha",
+     "edge": null
+    },
+    {
+     "name": "Ascella",
+     "bayer": "ζ Sagittarii",
+     "of": "Sagittarius",
+     "mag": 2.6,
+     "sign": "Sagittarius",
+     "deg": 20,
+     "lon": 259.78,
+     "nak": "Purva Ashadha",
+     "edge": null
+    },
+    {
+     "name": "Albaldah",
+     "bayer": "π Sagittarii",
+     "of": "Sagittarius",
+     "mag": 2.9,
+     "sign": "Sagittarius",
+     "deg": 22,
+     "lon": 262.39,
+     "nak": "Purva Ashadha",
+     "edge": null
+    }
+   ],
+   "own_out": [],
+   "guests": []
+  },
+  "Capricorn": {
+   "own_in": [
+    {
+     "name": "Algedi",
+     "bayer": "α² Capricorni",
+     "of": "Capricornus",
+     "mag": 3.6,
+     "sign": "Capricorn",
+     "deg": 10,
+     "lon": 280.0,
+     "nak": null,
+     "edge": [
+      "Uttara Ashadha",
+      "Shravana"
+     ]
+    },
+    {
+     "name": "Dabih",
+     "bayer": "β Capricorni",
+     "of": "Capricornus",
+     "mag": 3.1,
+     "sign": "Capricorn",
+     "deg": 10,
+     "lon": 280.19,
+     "nak": null,
+     "edge": [
+      "Uttara Ashadha",
+      "Shravana"
+     ]
+    },
+    {
+     "name": "ζ Capricorni",
+     "bayer": "",
+     "of": "Capricornus",
+     "mag": 3.7,
+     "sign": "Capricorn",
+     "deg": 23,
+     "lon": 293.08,
+     "nak": null,
+     "edge": [
+      "Shravana",
+      "Dhanishta"
+     ]
+    },
+    {
+     "name": "Nashira",
+     "bayer": "γ Capricorni",
+     "of": "Capricornus",
+     "mag": 3.7,
+     "sign": "Capricorn",
+     "deg": 28,
+     "lon": 297.94,
+     "nak": "Dhanishta",
+     "edge": null
+    },
+    {
+     "name": "Deneb Algedi",
+     "bayer": "δ Capricorni",
+     "of": "Capricornus",
+     "mag": 2.9,
+     "sign": "Capricorn",
+     "deg": 29,
+     "lon": 299.69,
+     "nak": "Dhanishta",
+     "edge": null
+    }
+   ],
+   "own_out": [],
+   "guests": [
+    {
+     "name": "Altair",
+     "bayer": "α Aquilae",
+     "of": "Aquila",
+     "mag": 0.8,
+     "sign": "Capricorn",
+     "deg": 8,
+     "lon": 277.92,
+     "nak": "Uttara Ashadha",
+     "edge": null
+    }
+   ]
+  },
+  "Aquarius": {
+   "own_in": [
+    {
+     "name": "Sadalmelik",
+     "bayer": "α Aquarii",
+     "of": "Aquarius",
+     "mag": 3.0,
+     "sign": "Aquarius",
+     "deg": 9,
+     "lon": 309.5,
+     "nak": "Shatabhisha",
+     "edge": null
+    },
+    {
+     "name": "Sadachbia",
+     "bayer": "γ Aquarii",
+     "of": "Aquarius",
+     "mag": 3.8,
+     "sign": "Aquarius",
+     "deg": 13,
+     "lon": 312.86,
+     "nak": "Shatabhisha",
+     "edge": null
+    },
+    {
+     "name": "Skat",
+     "bayer": "δ Aquarii",
+     "of": "Aquarius",
+     "mag": 3.3,
+     "sign": "Aquarius",
+     "deg": 15,
+     "lon": 315.02,
+     "nak": "Shatabhisha",
+     "edge": null
+    },
+    {
+     "name": "λ Aquarii",
+     "bayer": "",
+     "of": "Aquarius",
+     "mag": 3.7,
+     "sign": "Aquarius",
+     "deg": 18,
+     "lon": 317.72,
+     "nak": "Shatabhisha",
+     "edge": null
+    }
+   ],
+   "own_out": [
+    {
+     "name": "Sadalsuud",
+     "bayer": "β Aquarii",
+     "of": "Aquarius",
+     "mag": 2.9,
+     "sign": "Capricorn",
+     "deg": 29,
+     "lon": 299.54,
+     "nak": "Dhanishta",
+     "edge": null
+    },
+    {
+     "name": "Albali",
+     "bayer": "ε Aquarii",
+     "of": "Aquarius",
+     "mag": 3.8,
+     "sign": "Capricorn",
+     "deg": 18,
+     "lon": 287.87,
+     "nak": "Shravana",
+     "edge": null
+    }
+   ],
+   "guests": [
+    {
+     "name": "Fomalhaut",
+     "bayer": "α Piscis Austrini",
+     "of": "Piscis Austrinus",
+     "mag": 1.2,
+     "sign": "Aquarius",
+     "deg": 10,
+     "lon": 310.01,
+     "nak": "Shatabhisha",
+     "edge": null
+    }
+   ]
+  },
+  "Pisces": {
+   "own_in": [
+    {
+     "name": "θ Piscium",
+     "bayer": "",
+     "of": "Pisces",
+     "mag": 4.3,
+     "sign": "Pisces",
+     "deg": 1,
+     "lon": 331.33,
+     "nak": "Purva Bhadrapada",
+     "edge": null
+    },
+    {
+     "name": "λ Piscium",
+     "bayer": "",
+     "of": "Pisces",
+     "mag": 4.5,
+     "sign": "Pisces",
+     "deg": 3,
+     "lon": 332.73,
+     "nak": "Purva Bhadrapada",
+     "edge": null
+    },
+    {
+     "name": "ι Piscium",
+     "bayer": "",
+     "of": "Pisces",
+     "mag": 4.1,
+     "sign": "Pisces",
+     "deg": 4,
+     "lon": 333.79,
+     "nak": "Uttara Bhadrapada",
+     "edge": null
+    },
+    {
+     "name": "ω Piscium",
+     "bayer": "",
+     "of": "Pisces",
+     "mag": 4.0,
+     "sign": "Pisces",
+     "deg": 9,
+     "lon": 338.73,
+     "nak": "Uttara Bhadrapada",
+     "edge": null
+    },
+    {
+     "name": "δ Piscium",
+     "bayer": "",
+     "of": "Pisces",
+     "mag": 4.4,
+     "sign": "Pisces",
+     "deg": 20,
+     "lon": 350.29,
+     "nak": "Revati",
+     "edge": null
+    },
+    {
+     "name": "ε Piscium",
+     "bayer": "",
+     "of": "Pisces",
+     "mag": 4.3,
+     "sign": "Pisces",
+     "deg": 24,
+     "lon": 353.67,
+     "nak": "Revati",
+     "edge": null
+    },
+    {
+     "name": "ζ Piscium",
+     "bayer": "",
+     "of": "Pisces",
+     "mag": 5.2,
+     "sign": "Pisces",
+     "deg": 26,
+     "lon": 356.02,
+     "nak": "Revati",
+     "edge": null
+    }
+   ],
+   "own_out": [
+    {
+     "name": "Alpherg",
+     "bayer": "η Piscium",
+     "of": "Pisces",
+     "mag": 3.6,
+     "sign": "Aries",
+     "deg": 3,
+     "lon": 2.96,
+     "nak": "Ashwini",
+     "edge": null
+    },
+    {
+     "name": "γ Piscium",
+     "bayer": "",
+     "of": "Pisces",
+     "mag": 3.7,
+     "sign": "Aquarius",
+     "deg": 28,
+     "lon": 327.6,
+     "nak": "Purva Bhadrapada",
+     "edge": null
+    },
+    {
+     "name": "Torcular",
+     "bayer": "ο Piscium",
+     "of": "Pisces",
+     "mag": 4.3,
+     "sign": "Aries",
+     "deg": 4,
+     "lon": 3.89,
+     "nak": "Ashwini",
+     "edge": null
+    },
+    {
+     "name": "ν Piscium",
+     "bayer": "",
+     "of": "Pisces",
+     "mag": 4.4,
+     "sign": "Aries",
+     "deg": 2,
+     "lon": 1.65,
+     "nak": "Ashwini",
+     "edge": null
+    },
+    {
+     "name": "Alrescha",
+     "bayer": "α Piscium",
+     "of": "Pisces",
+     "mag": 5.2,
+     "sign": "Aries",
+     "deg": 6,
+     "lon": 5.52,
+     "nak": "Ashwini",
+     "edge": null
+    }
+   ],
+   "guests": []
+  }
+ },
+ "POINTS": {
+  "galactic_centre": 242.99,
+  "praesepe": 103.49
+ }
+}

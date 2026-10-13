@@ -117,12 +117,16 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=9900, 
 def learn_index(base):
     gates = "".join(f'<li><a href="/learn/gates/{g}">Gate {g} · {e(C["GATE_NAME"][str(g)])}</a></li>' for g in GATES)
     naks = "".join(f'<li><a href="/learn/nakshatras/{s}">{e(C["NAKSHATRA"][i][0])}</a> <span class="muted">· {e(C["NAKSHATRA"][i][6])}</span></li>' for s, i in NAKS)
-    signs = "".join(f'<li><a href="/learn/signs/{s}">{e(C["SIGN_FRAME"][i][0])}</a></li>' for s, i in SIGNS)
+    from .zodiac import Z
+    signs = "".join(f'<li><a href="/learn/signs/{s}">{Z["SIGNS"][i]["glyph"]}︎ {e(C["SIGN_FRAME"][i][0])}</a> '
+                    f'<span class="muted">· {e(Z["SIGNS"][i]["skt"])}</span></li>' for s, i in SIGNS)
     body = f"""<h1>Learn astrology with the Wyrd Console</h1>
-<p class="lede">The building blocks of your birth chart: the twelve sidereal signs, the twenty-seven nakshatras, the sixty-four gates and the twenty-four runes, each in The Völva's words.</p>
+<p class="lede">The building blocks of your birth chart: the twelve signs, the twenty-seven nakshatras, the sixty-four gates and the twenty-four runes, each in The Völva's words.</p>
 <div class="cta"><p><b>New to charts?</b> The quickest way in is your own: cast it, then walk it in short steps, one ring at a time.</p>
 <p><a class="btn-cast" href="/">Cast your chart and start the walk</a></p></div>
-<h2 id="signs">The 12 sidereal signs</h2><ul class="terms">{signs}</ul>
+<h2 id="signs">The 12 signs of the zodiac</h2>
+<p>Start with <a href="/learn/signs">the zodiac</a>: the two ways of measuring it, this year's dates, the elements, the rulers and the dignities. Then each sign in full: what it brings, the body it gives, every planet in it, its mansions and stars, how the old traditions drew it, and people born under it.</p>
+<ul class="terms">{signs}</ul>
 <h2 id="nakshatras">The 27 nakshatras (lunar mansions)</h2>
 <p>The oldest map of the sky in Jyotish: twenty-seven mansions of 13°20′ that the Moon passes through, one a day. Each has a ruling planet, a deity, a power of its own, and a part of the body. Each page reads one in full: what it's about, what it's good for, where it goes wrong, and its question.</p>
 <ul class="terms">{naks}</ul>
@@ -231,24 +235,19 @@ def nakshatra(base, s):
 
 
 def sign(base, s):
-    i = SIGN_BY.get(s)
-    if i is None: return None
-    name, frame = C["SIGN_FRAME"][i]
-    house = C["HOUSES"][i]
-    naks = [C["NAKSHATRA"][k][0] for k in range(27) if (k * 40 / 3) < (i + 1) * 30 and (k + 1) * 40 / 3 > i * 30]
-    body = f"""<p class="crumbs"><a href="/learn">Learn</a> › <a href="/learn#signs">Signs</a></p>
-<h1>{e(name)} in sidereal astrology</h1>
-<p class="lede">{e(name)} spans {i * 30}° to {i * 30 + 30}° of the sidereal zodiac, measured against the stars with the Lahiri ayanamsa.</p>
-<h2>{e(name)} rising: the body it shapes</h2><p>{e(first(frame, 3))}</p>
-<dl class="facts"><dt>Nakshatras in {e(name)}</dt><dd>{", ".join(f'<a href="/learn/nakshatras/{slug(k)}">{e(k)}</a>' for k in naks)}</dd>
-<dt>Natural house</dt><dd>House {house["n"]}: {e(house["phase"])}</dd></dl>{_cta()}"""
-    return (f"{name} Sign Meaning · Sidereal Astrology · The Wyrd Console",
-            f"{name} in sidereal (Vedic) astrology: its nakshatras, its natural house, and the body {name} rising shapes. From The Völva's Wyrd Console.",
-            body, _crumbs(base, [("Learn", "/learn"), (name, f"/learn/signs/{s}")]))
+    """A full page for one sign: see wyrd/zodiac.py."""
+    from . import zodiac
+    return zodiac.sign_page(base, s)
+
+
+def signs_index(base):
+    """The zodiac overview at /learn/signs: see wyrd/zodiac.py."""
+    from . import zodiac
+    return zodiac.index_page(base)
 
 
 def sitemap(base):
-    urls = ["/", "/reports", "/membership", "/today", "/mandala", "/sample", "/learn"]
+    urls = ["/", "/reports", "/membership", "/today", "/mandala", "/sample", "/learn", "/learn/signs"]
     urls += [f"/learn/gates/{g}" for g in GATES] + [f"/learn/nakshatras/{s}" for s, _ in NAKS] + [f"/learn/signs/{s}" for s, _ in SIGNS]
     urls += ["/learn/runes"] + [f"/learn/runes/{r[0]}" for r in RUNES] + ["/learn/numbers", "/learn/dharma"] + [f"/learn/dharma/gates/{g}" for g in GATES]
     rows = "".join(f"<url><loc>{e(base + u)}</loc></url>" for u in urls)
