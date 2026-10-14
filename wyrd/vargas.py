@@ -37,7 +37,13 @@ def sign(lon, n):
 
 EXALT = {"Sun": 0, "Moon": 1, "Mercury": 5, "Venus": 11, "Mars": 9, "Jupiter": 3, "Saturn": 6}
 OWN = {"Sun": {4}, "Moon": {3}, "Mercury": {2, 5}, "Venus": {1, 6}, "Mars": {0, 7}, "Jupiter": {8, 11}, "Saturn": {9, 10}}
-RANK = {"exalted": 3, "own sign": 2, "": 1, "debilitated": 0}
+# dignity is a ladder: exalted, own sign, a friend's, a neutral's, an enemy's, debilitated; friend, neutral
+# and enemy by the natural friendships (naisargika maitri, BPHS ch. 3). static/vargas.js keeps the same ladder.
+KIN = {"Sun": ({"Moon", "Mars", "Jupiter"}, {"Venus", "Saturn"}), "Moon": ({"Sun", "Mercury"}, set()),
+       "Mars": ({"Sun", "Moon", "Jupiter"}, {"Mercury"}), "Mercury": ({"Sun", "Venus"}, {"Moon"}),
+       "Jupiter": ({"Sun", "Moon", "Mars"}, {"Mercury", "Venus"}), "Venus": ({"Mercury", "Saturn"}, {"Sun", "Moon"}),
+       "Saturn": ({"Mercury", "Venus"}, {"Sun", "Moon", "Mars"})}
+RANK = {"exalted": 5, "own sign": 4, "friend's sign": 3, "neutral sign": 2, "enemy's sign": 1, "debilitated": 0, "": 2}
 
 
 def dignity_in(b, s):
@@ -45,7 +51,8 @@ def dignity_in(b, s):
     if EXALT[b] == s: return "exalted"
     if (EXALT[b] + 6) % 12 == s: return "debilitated"
     if s in OWN[b]: return "own sign"
-    return ""
+    friends, enemies = KIN[b]
+    return "friend's sign" if LORD[s] in friends else "enemy's sign" if LORD[s] in enemies else "neutral sign"
 
 
 def ordinal(n): return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
@@ -88,6 +95,9 @@ def thread(C):
     ripen = "".join("<p>" + fill(W["RIPEN"], glyph=GLYPH[r["b"]], planet=r["b"], matter=W["PLANET"][r["b"]], s1=SIGNS[r["s1"]],
                                  fruit=(f'stays in {SIGNS[r["s9"]]} and deepens into ' if r["s1"] == r["s9"] else f'ripens in {SIGNS[r["s9"]]}, into ')
                                  + re.sub(r"^it ripens into ", "", W["FRUIT"][r["s9"]])) + "</p>" for r in rows)
+    eg = next((r for r in rows if r["move"] == "falls" and r["d9"] != "debilitated"), None)
+    standing = lambda d, s: fill(W["STANDING"].get(d, d), lord=("the " if LORD[s] in ("Sun", "Moon") else "") + LORD[s])
+    ladder = (f'<p>{W["LADDER"]}</p>' + (f'<p>{fill(W["LADDER_EG"], glyph=GLYPH[eg["b"]], planet=eg["b"], s1=SIGNS[eg["s1"]], s9=SIGNS[eg["s9"]], p1=standing(eg["d1"], eg["s1"]), p9=standing(eg["d9"], eg["s9"]), steps=W["STEPS"][RANK[eg["d1"]] - RANK[eg["d9"]]])}</p>' if eg else ""))
     vargo = [r for r in rows if r["s1"] == r["s9"]]
     rise = [r for r in rows if r["move"] == "rises"]; fall = [r for r in rows if r["move"] == "falls"]
     lines = [fill(W["VARGOTTAMA"], list=", ".join(f'{GLYPH[r["b"]]} {r["b"]} in {SIGNS[r["s1"]]}' for r in vargo)) if vargo else W["VARGOTTAMA_NONE"]]
@@ -125,6 +135,7 @@ def thread(C):
       <p>{W["THREAD_INTRO"]} <b>{W["THREAD_CHAIN"]}</b></p>
       <div class="rd-tw"><table><tr><th>Planet</th><th>Rashi (D1)</th><th>Navamsha (D9)</th><th>Dharma gate</th><th>Centre</th><th>Birth gate</th></tr>{tr}</table></div>
       <p class="rd-note">{W["THREAD_NOTE"]}</p>
+      <h4>{W["LADDER_H"]}</h4>{ladder}
       <h3 class="rd-tier">{W["RIPEN_H"]}</h3>{ripen}
       <h3 class="rd-tier">{W["INTERLOCK_H"]}</h3>{"".join("<p>" + x + "</p>" for x in lines)}
       <h3 class="rd-tier">{W["CULMINATE_H"]}</h3>{body}

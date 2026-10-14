@@ -114,7 +114,26 @@
  },
  "THREAD_INTRO": "The Rashi is the life as issued, in the stars as they stand: the tree. Multiply every position by nine and you have the Navamsha: the fruit. Your Dharma Design is cast from exactly those nine-fold positions, laid on the gate wheel. So one thread runs from the life you were handed to the body you are growing into:",
  "THREAD_CHAIN": "a planet in your Rashi → the sign it ripens in → the gate that ripening lights in your Dharma Design → the centre that gate feeds.",
- "THREAD_NOTE": "The birth-moment planets. The design side of your Dharma Design runs the same thread from the design moment, about three months before birth. ↑ gains dignity in the fruit; ↓ loses it.",
+ "THREAD_NOTE": "The birth-moment planets. The design side of your Dharma Design runs the same thread from the design moment, about three months before birth. ↑ climbs the ladder of dignity in the fruit; ↓ steps down it, which is not the same as debilitation.",
+ "LADDER_H": "Why a planet can step down without being debilitated",
+ "LADDER": "Dignity is a ladder, not a switch. Every sign is some planet's house, and a planet stands differently in each: at its height in its sign of exaltation, master of the house in its own sign, welcome in a friend's, a guest in a neutral's, on guard in an enemy's, and at its lowest in its sign of debilitation. Friend, neutral and enemy are the natural friendships Parashara gives between the planets. The Navamsha moves every planet into a new sign, so it can lower a planet's standing a step or two without bringing it near the bottom. ↓ means a step down this ladder and ↑ a step up; only the sign of debilitation is debilitation.",
+ "LADDER_EG": "Your {glyph} {planet} stands in {s1} in the Rashi, {p1}. In the Navamsha it stands in {s9}, {p9}. That is {steps} down the ladder, not a debilitation.",
+ "STANDING": {
+  "exalted": "exalted",
+  "own sign": "at home in its own sign",
+  "friend's sign": "in the house of {lord}, its friend",
+  "neutral sign": "in the house of {lord}, neither friend nor enemy to it",
+  "enemy's sign": "in the house of {lord}, its enemy",
+  "debilitated": "debilitated"
+ },
+ "STEPS": [
+  "",
+  "one step",
+  "two steps",
+  "three steps",
+  "four steps",
+  "five steps"
+ ],
  "PLANET": {
   "Sun": "your purpose, and the authority you carry",
   "Moon": "your mind, and what feeds it",

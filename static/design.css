@@ -91,3 +91,7 @@ table.vg-thread { border-collapse: collapse; } .vg-thread th, .vg-thread td { pa
 .dg-lock { margin: 12px 0 4px; padding: 12px 14px; border: 1px dashed rgba(184,146,74,.6); border-left: 3px solid var(--gold); background: rgba(184,146,74,.06); }
 .dg-lock b { display: block; color: var(--gold); font-weight: 400; letter-spacing: .04em; margin-bottom: 4px; }
 .dg-lock p { margin: 0; }
+
+/* why a planet can step down without being debilitated: the ladder of dignity, folded under the thread's table */
+.vg-ladder { margin: 6px 0 14px; } .vg-ladder > summary { cursor: pointer; color: var(--celadon); }
+.vg-ladder p { margin: 8px 0 0; }

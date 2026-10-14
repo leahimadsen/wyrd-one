@@ -71,17 +71,29 @@ function sign(lon, n){
   }
 }
 
-/* dignity by sign, as the vargas are read */
+/* dignity by sign, as the vargas are read: a ladder, not a switch. Exalted, its own sign, a friend's,
+   a neutral's, an enemy's, debilitated; friend, neutral and enemy by the natural friendships
+   (naisargika maitri, BPHS ch. 3). wyrd/vargas.py keeps the same ladder for the reading. */
 const EXALT = { Sun: 0, Moon: 1, Mercury: 5, Venus: 11, Mars: 9, Jupiter: 3, Saturn: 6 };
 const OWN = { Sun: [4], Moon: [3], Mercury: [2, 5], Venus: [1, 6], Mars: [0, 7], Jupiter: [8, 11], Saturn: [9, 10] };
+const KIN = {
+  Sun: { friend: ["Moon", "Mars", "Jupiter"], enemy: ["Venus", "Saturn"] },
+  Moon: { friend: ["Sun", "Mercury"], enemy: [] },
+  Mars: { friend: ["Sun", "Moon", "Jupiter"], enemy: ["Mercury"] },
+  Mercury: { friend: ["Sun", "Venus"], enemy: ["Moon"] },
+  Jupiter: { friend: ["Sun", "Moon", "Mars"], enemy: ["Mercury", "Venus"] },
+  Venus: { friend: ["Mercury", "Saturn"], enemy: ["Sun", "Moon"] },
+  Saturn: { friend: ["Mercury", "Venus"], enemy: ["Sun", "Moon", "Mars"] },
+};
 function dignityIn(b, s){
   if (!(b in EXALT)) return "";
   if (EXALT[b] === s) return "exalted";
   if ((EXALT[b] + 6) % 12 === s) return "debilitated";
   if (OWN[b].includes(s)) return "own sign";
-  return "";
+  const l = LORD[s];
+  return KIN[b].friend.includes(l) ? "friend's sign" : KIN[b].enemy.includes(l) ? "enemy's sign" : "neutral sign";
 }
-const RANK = { "exalted": 3, "own sign": 2, "": 1, "debilitated": 0 };
+const RANK = { "exalted": 5, "own sign": 4, "friend's sign": 3, "neutral sign": 2, "enemy's sign": 1, "debilitated": 0, "": 2 };
 
 /* ---------- one chart, drawn South Indian style: the signs stay put, the planets move ---------- */
 const CELL = { 11: [0, 0], 0: [0, 1], 1: [0, 2], 2: [0, 3], 10: [1, 0], 3: [1, 3], 9: [2, 0], 4: [2, 3], 8: [3, 0], 7: [3, 1], 6: [3, 2], 5: [3, 3] };
@@ -167,6 +179,11 @@ function thread(host, C, { unknown, full } = {}){
   }).filter(Boolean);
   const el = rs => { const c = [0, 0, 0, 0]; rs.forEach(s => c[s % 4]++); return c; };
   const e1 = el(rows.map(r => r.s1)), e9 = el(rows.map(r => r.s9));
+  /* one of their own planets stepping down without being debilitated, if there is one */
+  const standing = (d, s) => fill(((w.STANDING || {})[d] || d), { lord: (["Sun", "Moon"].includes(LORD[s]) ? "the " : "") + LORD[s] });
+  const egRow = rows.find(r => r.move === "falls" && r.d9 !== "debilitated");
+  const ladderEg = egRow && w.LADDER_EG ? fill(w.LADDER_EG, { glyph: GLYPH[egRow.b], planet: egRow.b, s1: SIGNS[egRow.s1], s9: SIGNS[egRow.s9],
+    p1: standing(egRow.d1, egRow.s1), p9: standing(egRow.d9, egRow.s9), steps: (w.STEPS || [])[RANK[egRow.d1] - RANK[egRow.d9]] || "" }) : "";
   const top = c => ELEMENT[c.indexOf(Math.max(...c))];
   const counts = ELEMENT.map((x, i) => `${x} ${e1[i]}→${e9[i]}`).join(", ");
   const wish = kar != null && C.lex && C.lex.karakamsa ? C.lex.karakamsa : "";
@@ -179,6 +196,7 @@ function thread(host, C, { unknown, full } = {}){
         <td>${SIGNS[r.s9]}${r.d9 ? ` <small>· ${r.d9}</small>` : ""}${r.move === "rises" ? " ↑" : r.move === "falls" ? " ↓" : ""}</td>
         <td>${r.g.gate}.${r.g.line}</td><td>${CEN[r.k].label}${r.live ? " <small>· in a channel</small>" : ""}</td><td class="des">${NP[r.b].gate}.${NP[r.b].line}</td></tr>`).join("")}</table></div>
     <p class="fine">${w.THREAD_NOTE || ""}</p>
+    ${w.LADDER ? `<details class="vg-ladder"><summary>${w.LADDER_H}</summary><p>${w.LADDER}</p>${ladderEg ? `<p>${ladderEg}</p>` : ""}</details>` : ""}
     ${full ? "" : `<p>${[rise.length && `${rise.length} of your planets ripen upward`, fall.length && `${fall.length} ripen${fall.length === 1 ? "s" : ""} slowly`, vargo.length && `${vargo.length} hold${vargo.length === 1 ? "s" : ""} steady`].filter(Boolean).join(", ") || "Your planets change sign as they ripen"}, and your Dharma Design gathers at ${DA.defined.size} centre${DA.defined.size === 1 ? "" : "s"}.</p>
     <div class="dg-lock"><b>How the tree becomes the fruit</b>
       <p>How each of your planets ripens, how the tree and the fruit interlock, where your soul is heading and what your Dharma Design gathers into are read in <a href="#reading">The Wyrd Reading</a>, in the Path of Dharma. Members of <a href="/membership">the Order</a> see it here in full.</p></div>`}

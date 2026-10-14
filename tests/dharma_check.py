@@ -58,5 +58,18 @@ check("the Rashi-to-Dharma prose waits for the reading on a free chart", "${full
 check("members see both in full, even when membership arrives after the page is drawn",
       "full: () => MEMBER" in cj and "full: MEMBER" in cj and "DESIGN.redraw()" in cj and "full: true" in cj)
 
+# dignity is a ladder: the Navamsha can step a planet down without debilitating it
+from wyrd import vargas as VG
+check("Saturn at home in Capricorn, in Venus's Taurus: a friend's sign, one step down",
+      VG.dignity_in("Saturn", 9) == "own sign" and VG.dignity_in("Saturn", 1) == "friend's sign" and VG.RANK["own sign"] - VG.RANK["friend's sign"] == 1)
+check("only the sign of debilitation is debilitated", VG.dignity_in("Saturn", 0) == "debilitated" and VG.dignity_in("Saturn", 4) == "enemy's sign" and VG.dignity_in("Jupiter", 9) == "debilitated")
+check("the ladder runs exalted, own, friend's, neutral, enemy's, debilitated",
+      [k for k, _ in sorted(VG.RANK.items(), key=lambda kv: -kv[1]) if k] == ["exalted", "own sign", "friend's sign", "neutral sign", "enemy's sign", "debilitated"])
+vj = src("vargas.js")
+check("the page keeps the same friendships and ladder as the reading",
+      all(f'{b}: {{ friend: [{", ".join(chr(34) + x + chr(34) for x in sorted(VG.KIN[b][0], key=lambda x: ["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn"].index(x)))}]' in vj for b in VG.KIN)
+      and '"friend\'s sign": 3' in vj and '"enemy\'s sign": 1' in vj)
+check("the page and the reading both explain the ladder, with the person's own planet", "ladderEg" in vj and 'W["LADDER_EG"]' in open(os.path.join(ROOT, "wyrd", "vargas.py"), encoding="utf-8").read())
+
 print("DHARMA CHECK PASSED" if not bad else f"DHARMA CHECK FAILED ({bad})")
 sys.exit(1 if bad else 0)
