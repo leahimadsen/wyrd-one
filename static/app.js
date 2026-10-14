@@ -35,7 +35,7 @@ if (params.get("edit")){ const s = current(); if (s && s.birth) fill(s.birth); }
 /* ---------- the consultation version of the form ---------- */
 if (consultSid){
   document.querySelector(".seat-in h1").textContent = "Your consultation";
-  $("seatSub").textContent = "Your payment is confirmed. Give the moment and place of your birth and your reading opens.";
+  $("seatSub").textContent = "Your payment is confirmed. Give the moment and place of your birth and your reading opens; the time for our call is chosen from there.";
   $("nameNote").textContent = "it goes on your reading";
   btn.textContent = "Open my reading";
   document.querySelector(".f-unknown").hidden = true;
