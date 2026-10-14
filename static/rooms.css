@@ -216,3 +216,28 @@
 #benchHost .ladder button.play{background:rgba(255,180,58,.14);transform:translateX(6px)}
 #benchHost .ladder .rd{font-size:11.5px;letter-spacing:.06em;color:var(--ivory-dim)}
 @media(max-width:560px){#benchHost .ladder button{grid-template-columns:1fr auto;gap:2px 10px}#benchHost .ladder .rd{grid-column:1/-1}}
+
+/* ---------- What is dharma? (dharma.js, in the design land) ---------- */
+.wd{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:start;margin:4px 0 8px}
+@media(max-width:900px){.wd{grid-template-columns:1fr}}
+.wd-text p{font-size:15.5px;line-height:1.65;margin:0 0 14px;max-width:68ch}
+.wd-text b{font-weight:500;color:var(--celadon)}
+.wd-lead{font-size:17px !important}
+.wd-gita{margin:4px 0 16px;padding:10px 16px;border-left:3px solid var(--gold);background:rgba(255,180,58,.06)}
+.wd-gita p{margin:0 0 4px !important}
+.wd-gita p:first-child{color:var(--gold)}
+.wd-aims{border:1px solid var(--rule);padding:14px 16px;background:rgba(255,255,255,.025)}
+.wd-wheel{width:100%;max-width:300px;display:block;margin:6px auto 8px}
+.wd-tri{fill:none;stroke:rgba(255,255,255,.12);stroke-width:1}
+.wd-tri.on{fill:rgba(255,180,58,.1);stroke:var(--gold);stroke-width:1.6}
+.wd-dot{opacity:.35;stroke:#0b0322;stroke-width:1.5}
+.wd-dot.on{opacity:1;stroke:#fff;stroke-width:1.5}
+.wd-n{font-family:var(--fellsc);font-size:9px;text-anchor:middle;fill:#120428;opacity:.6}
+.wd-n.on{font-size:11px;font-weight:700;opacity:1}
+.wd-c1{font-family:var(--fellsc);font-size:10px;letter-spacing:.2em;text-anchor:middle;fill:var(--gold)}
+.wd-c2{font-size:10.5px;text-anchor:middle;fill:var(--ivory-dim)}
+.wd-aim{font-size:15px;margin:0 0 6px}
+.wd-aim b{color:var(--celadon);font-weight:500}
+.wd-yours{list-style:none;margin:4px 0 6px;padding:0}
+.wd-yours li{padding:5px 0;border-bottom:1px solid var(--rule);font-size:14.5px}
+.wd-yours b{font-weight:500;margin-right:4px}
