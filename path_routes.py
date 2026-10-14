@@ -1,6 +1,6 @@
 """A lantern for your path: The Völva one to one, and reaching her.
 
-/work-with-me   The first 1:1 consult ($100, through the consult Payment Link) and the Lightning Path,
+/letmelightyourpath   A lantern for your path: the first 1:1 consult ($100, through the consult Payment Link) and the Lightning Path,
                 the monthly 1:1 ($250: three one-hour calls a month and messaging between them).
 /path           A member's own page on the Lightning Path: book a call, write to her, past messages, the plan.
 /contact        A public form, so people can reach her on the site rather than through Substack.
@@ -40,7 +40,16 @@ def _keep(email, text):
 
 
 # ---------------- the offer ----------------
+LANTERN = "/letmelightyourpath"
+
+
 @app.get("/work-with-me")
+def work_with_me_old():
+    """The page's first address: old links and shares still arrive."""
+    return redirect(LANTERN, 301)
+
+
+@app.get(LANTERN)
 def work_with_me():
     on = A.selling()
     consult = config.CONSULTATION_PAYMENT_LINK_URL
@@ -90,7 +99,7 @@ def _walker():
     st = A.account_status(email)
     if st is None:
         return None, A.private(config.PATH_NAME, f"<h1>{esc(config.PATH_NAME)}</h1><p>We couldn't reach the payment system just now. Refresh in a moment.</p>", status=503)
-    if not (st.get("path") or A.is_admin()): return None, redirect("/work-with-me")
+    if not (st.get("path") or A.is_admin()): return None, redirect(LANTERN)
     return (email, st), None
 
 
@@ -157,7 +166,7 @@ def contact_page():
 <label>Your message <textarea name="body" rows="8" maxlength="{MAX}" required></textarea></label>
 <label class="hp" aria-hidden="true">Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label>
 <button class="btn-cast" type="submit">Send</button></form>
-<p class="muted">Looking for something one to one? See <a href="/work-with-me">a lantern for your path</a>: a first consult and the Lightning Path.</p>"""
+<p class="muted">Looking for something one to one? See <a href="/letmelightyourpath">a lantern for your path</a>: a first consult and the Lightning Path.</p>"""
     return A.page("Contact The Völva · The Wyrd Console", "Write to The Völva about a reading, the Order, or a consult one to one.", body)
 
 

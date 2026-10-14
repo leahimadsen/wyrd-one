@@ -814,7 +814,7 @@ PLANS = {
 }
 TIER_NAME = {"member": config.MEMBER_NAME, "pro": config.PRO_NAME, "path": config.PATH_NAME}
 HOME_OF = {"member": "/account", "pro": "/account", "path": "/path"}       # where each plan's members land after joining
-OFFER_OF = {"member": "/membership", "pro": "/membership", "path": "/work-with-me"}
+OFFER_OF = {"member": "/membership", "pro": "/membership", "path": "/letmelightyourpath"}
 
 def money(c): return f"${c / 100:.0f}" if c % 100 == 0 else f"${c / 100:.2f}"
 pages.PRICE = money(config.PRICE_CENTS)
@@ -1029,7 +1029,7 @@ def account_page():
         rows.insert(0, f'<li>{"The Inner Circle" if g["tier"] == "pro" else "The Order"}, a gift from {esc(config.AUTHOR)}, {nice_until(g["until"])} <span class="status on">active</span></li>')
     portal_btn = '<form method="post" action="/billing/portal"><button class="alt" type="submit">Manage or cancel, change card, see receipts</button></form>' if st["plans"] else ""
     plans = f'<ul>{"".join(rows)}</ul>{portal_btn}' if rows else \
-            '<p>You\'re not in the Order yet. <a href="/membership">See the Order</a>, or <a href="/work-with-me">take a lantern for your path</a>, one to one.</p>'
+            '<p>You\'re not in the Order yet. <a href="/membership">See the Order</a>, or <a href="/letmelightyourpath">take a lantern for your path</a>, one to one.</p>'
     member = st["member"] or st["pro"]
     chart = ""
     if member:
