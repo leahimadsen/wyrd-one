@@ -53,6 +53,10 @@ check("every use of the stations in the Harmonic Body goes through the moved one
 check("the turning, the scan, the sound and the design overlays are all still there",
       all(k in body for k in ("bindDrag", "stepScan", "Sound.chord", "centresSVG", "torusSVG", "zodiacSVG", "data-hb-view")))
 
+check("the Harmonic Body has its own Birth Design and Dharma Design toggles, each on or off by itself",
+      'data-hb-toggle="rave"' in body and 'data-hb-toggle="dharma"' in body and 'if (k === "rave") showRave = !showRave; else showDharma = !showDharma' in body)
+check("and the design land's switch keeps them in step", "function pressDesign" in body and body.count("pressDesign()") >= 3)
+
 # the body map's weights travel to the Harmonic Body; the free card points there instead of drawing a second figure
 import random
 from wyrd import engine as E

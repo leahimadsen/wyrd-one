@@ -459,6 +459,8 @@ function mount(host, chart){
       <button class="hb-btn" data-hb-view="tilt">Tilted</button>
       <button class="hb-btn on" data-hb-toggle="zod" aria-pressed="true">Two zodiacs</button>
       <button class="hb-btn on" data-hb-toggle="torus" aria-pressed="true">Torus field</button>
+      <button class="hb-btn" data-hb-toggle="rave" aria-pressed="false">Birth Design</button>
+      ${C.dharma ? `<button class="hb-btn" data-hb-toggle="dharma" aria-pressed="false">Dharma Design</button>` : ""}
       <button class="hb-btn" data-hb-scan>Descent scan</button>
       <button class="hb-btn" data-hb-clear>Clear</button>
     </div>
@@ -474,7 +476,7 @@ function mount(host, chart){
     </div>
     <p class="hb-hint">Drag to turn the figure${matchMedia("(pointer:fine)").matches ? " and tip it back" : ""}. The rings, the body and the stations sit at different depths.</p>
     ${C.bodyMap && C.bodyMap.line ? `<p class="hb-gather">${C.bodyMap.line} <small>The glow round each station is how much of your chart lands there.</small></p>` : ""}
-    <p class="hb-intro">The same body seen another way. The Harmonic Body is an old anatomy engraving with seven stations from crown to root, each fed by one of your planets, standing beside it on its own thread; the label under each planet is the house it stands in, which gives that station its colour. Your design's centres and live channels sit on the figure too, following the Birth / Dharma switch above. The seven stations and the nine design centres are different maps: the Heart station is not the Heart centre. Around the figure is its torus field, and the two zodiacs: tropical outside, sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on the inner ring.</p>
+    <p class="hb-intro">The same body seen another way. The Harmonic Body is an old anatomy engraving with seven stations from crown to root, each fed by one of your planets, standing beside it on its own thread; the label under each planet is the house it stands in, which gives that station its colour. Your design's centres and live channels sit on the figure too, switched on and off with the Birth Design and Dharma Design buttons (the switch at the top of this page sets them too). The seven stations and the nine design centres are different maps: the Heart station is not the Heart centre. Around the figure is its torus field, and the two zodiacs: tropical outside, sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on the inner ring.</p>
     <p class="hb-credit">Engraving by J. Caldwall after John Brisbane, <i>The Anatomy of Painting</i>, 1769.</p>
     <div class="hb-strip" role="group" aria-label="The seven stations">${ST.map(s =>
       `<button class="hb-chipbtn" data-hb-station="${s.id}" style="--band:${s.band}"><i></i>${s.roman} · ${s.station}<span>${GLYPH[s.feeder]} ${s.feeder}</span></button>`).join("")}</div>
@@ -485,6 +487,7 @@ function mount(host, chart){
   host.querySelector('[data-hb-toggle="torus"]').classList.toggle("on", showTorus);
   host.querySelector('[data-hb-toggle="torus"]').setAttribute("aria-pressed", showTorus);
   host.querySelector(".hb-centres").classList.toggle("on", showRave || showDharma);
+  pressDesign();
   host.querySelector('[data-hb-toggle="zod"]').classList.toggle("on", showZod);
   setPose(0, 0, false);
   bindDrag(host.querySelector("#hbStage"));
@@ -503,9 +506,8 @@ document.addEventListener("click", e => {
     const k = tg.dataset.hbToggle;
     if (k === "zod"){ showZod = !showZod; root.querySelector(".hb-zod").classList.toggle("off", !showZod); tg.classList.toggle("on", showZod); tg.setAttribute("aria-pressed", showZod); root.classList.toggle("zod-on", showZod); return; }
     if (k === "torus"){ showTorus = !showTorus; root.querySelector(".hb-torus").classList.toggle("off", !showTorus); tg.classList.toggle("on", showTorus); tg.setAttribute("aria-pressed", showTorus); return; }
-    if (k === "rave") showRave = !showRave; else showDharma = !showDharma;
-    const on = k === "rave" ? showRave : showDharma;
-    tg.classList.toggle("on", on); tg.setAttribute("aria-pressed", on);
+    if (k === "rave") showRave = !showRave; else showDharma = !showDharma && !!C.dharma;
+    pressDesign();
     root.querySelector("#hbCentres").innerHTML = centresSVG();
     root.querySelector("#hbCentres").classList.toggle("on", showRave || showDharma);
     return;
@@ -530,11 +532,19 @@ document.addEventListener("keydown", e => {
   if (el){ e.preventDefault(); el.dispatchEvent(new MouseEvent("click", { bubbles: true })); }
 });
 
-/* the Your design land's switch: which design's centres and channels sit on the figure */
+/* the Birth Design and Dharma Design toggles: each on or off by itself, both off for the bare engraving */
+function pressDesign(){
+  if (!root) return;
+  for (const [k, on] of [["rave", showRave], ["dharma", showDharma]]){
+    const b = root.querySelector(`[data-hb-toggle="${k}"]`); if (b){ b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); }
+  }
+}
+/* the Your design land's switch sets them too: which design's centres and channels sit on the figure */
 function setDesign(v){
   showRave = v !== "dharma"; showDharma = v !== "birth" && !!(C && C.dharma);
   const g = root && root.querySelector("#hbCentres"); if (!g) return;
   g.innerHTML = centresSVG(); g.classList.toggle("on", showRave || showDharma);
+  pressDesign();
 }
 window.WyrdBody = { mount, setDesign, centres: HB_CENTRES, channels: HB_CHANNELS, runsFrom };
 })();
