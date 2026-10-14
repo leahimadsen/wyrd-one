@@ -4,7 +4,7 @@
     python scripts/build_places.py        # once: world places index
     python app.py                          # http://localhost:8000
 """
-import html, hmac, json, math, os, re, time
+import html, hmac, json, math, os, re, threading, time
 from collections import defaultdict, deque
 from datetime import date, datetime, timedelta, timezone
 
@@ -169,26 +169,107 @@ def consultation_session(sid):
 def reading_url(sid):
     return "/reading?" + urlencode({"session_id": sid})
 
+# ---------------- delivering a paid reading ----------------
+# Whoever pays for a reading is sent it once, to the address they paid with: the page, the
+# PDF made from it, the birth it was cast for, and for a consultation the booking link after
+# them. Stripe's metadata remembers that it went (wyrd_mailed), so a reload never sends it
+# twice; while mail isn't working nothing is marked, and it goes on a later visit.
+_mail_tried = {}
+run_later = lambda fn: threading.Thread(target=fn, daemon=True).start()     # the tests run it at once
+
+def is_consultation(s):
+    return bool(s.get("payment_link"))
+
+def birth_lines(meta):
+    people = together_people(meta) if meta.get("kind") == "together" else [meta]
+    out = []
+    for p in people:
+        when = p.get("date", "") + (" · time unknown" if str(p.get("unknown_time", "")) in ("1", "true", "True", "on") else f" · {p.get('time', '')}")
+        out.append(", ".join(x for x in ((p.get("name") or "").strip(), when, p.get("place_label") or "") if x))
+    return out
+
+def booking_link_html():
+    if config.BOOKING_URL:
+        return f'<a href="{esc(config.BOOKING_URL)}" target="_blank" rel="noopener noreferrer">Book your 60-minute call</a>'
+    return f'<a href="{esc(config.BASE_URL)}/contact">Write to me to arrange your call</a>'
+
+def reading_email(sid, meta, consult=False):
+    """Subject, HTML and plain text of the email that delivers a paid reading."""
+    page = config.BASE_URL + reading_url(sid)
+    pdf = page + "&pdf=1"
+    together_ = meta.get("kind") == "together"
+    name = "" if together_ else (meta.get("name") or "").strip()
+    lines = birth_lines(meta)
+    what = "your reading together" if together_ else "your full written reading"
+    subject = (f"Your reading and your consultation with {config.AUTHOR}" if consult
+               else f"Your reading together from {config.AUTHOR}" if together_ else f"Your reading from {config.AUTHOR}")
+    hello = f"{esc(name)}, thank you." if name else "Thank you."
+    book_html = book_text = ""
+    if consult:
+        book_html = (f'<p><b>Next: your call.</b> With your reading in hand, choose the time for your one-hour consultation. '
+                     f'Read it through before we meet and bring your questions.</p><p>{booking_link_html()}</p>')
+        book_text = ("Next: your call. With your reading in hand, choose the time for your one-hour consultation:\n"
+                     + (config.BOOKING_URL or config.BASE_URL + "/contact") + "\n\n")
+    html_ = f"""<p>{hello} Here is {what}.</p>
+<p><a href="{esc(page)}">Open your reading</a><br>It lives on its own page and stays at this address.</p>
+<p><a href="{esc(pdf)}">Download it as a PDF</a><br>The reading opens and your browser offers to save it as a PDF.</p>
+<p><b>Cast for</b><br>{"<br>".join(esc(l) for l in lines)}</p>
+{book_html}<p>Keep this email: these links are yours.</p>
+<p>{esc(config.AUTHOR)}</p>"""
+    text = (f"{'%s, thank you.' % name if name else 'Thank you.'} Here is {what}.\n\n"
+            f"Open your reading (it stays at this address):\n{page}\n\n"
+            f"Download it as a PDF (the reading opens and your browser offers to save it):\n{pdf}\n\n"
+            "Cast for:\n" + "\n".join(lines) + "\n\n" + book_text + f"Keep this email: these links are yours.\n\n{config.AUTHOR}\n")
+    return subject, html_, text
+
+def deliver_reading(sid, s):
+    """Email a paid reading to its buyer, once. True when a send was started."""
+    meta = s.get("metadata") or {}
+    to = (s.get("customer_details") or {}).get("email") or s.get("customer_email")
+    if meta.get("wyrd_mailed") == "1" or not to or not config.STRIPE_SECRET: return False
+    now = time.time()
+    if now - _mail_tried.get(sid, 0) < 600: return False       # a reload, or two tabs: one try per ten minutes
+    if len(_mail_tried) > 2000: _mail_tried.clear()
+    _mail_tried[sid] = now
+    try:
+        subject, html_, text = reading_email(sid, meta, is_consultation(s))
+    except BadInput:
+        return False
+    def go():
+        if not mailer.send(to, subject, html_, text): return
+        try: stripe_api.save_birth_metadata(config.STRIPE_SECRET, sid, {"wyrd_mailed": "1"})
+        except stripe_api.StripeError as e: app.logger.error("reading mailed but not marked: %s", e)
+    run_later(go)
+    return True
+
+def consult_next(s):
+    """On a consultation's reading: the call comes after the reading."""
+    mailed = (' The links to this page and to the calendar are emailed to the address you paid with.'
+              if mailer.ready() else "")
+    return f"""<div class="next">
+  <p class="next-h">Next: your consultation</p>
+  <p>Your reading comes first. Read it through, save it as a PDF, and then choose the time for our call.{mailed}</p>
+  <p class="next-go">{booking_link_html()}</p>
+</div>"""
+
 @app.get("/consultation")
 def consultation():
     if limited(60): return "Too many requests — wait a minute.", 429
     sid = request.args.get("session_id", "")
     session, error = consultation_session(sid)
     if error: return error
+    if session.get("metadata", {}).get("wyrd_report_ready") == "1":
+        return redirect(reading_url(sid))                     # the reading is made: it opens, with the booking at its top
     if request.args.get("details") != "1":
         details_url = "/consultation?" + urlencode({"session_id": sid, "details": "1"})
-        booking = (f'<p><a class="btn-cast" href="{esc(config.BOOKING_URL)}" target="_blank" rel="noopener noreferrer">Book your 60-minute call</a></p>'
-                   if config.BOOKING_URL else '<p><a href="/contact">Contact me to arrange your call</a>.</p>')
         return private("Your consultation", f"""<h1>Your consultation is paid for</h1>
-<p>Thank you. Your payment is confirmed. There is nothing more to pay when choosing your time.</p>
-<h2>1. Choose a time for your call</h2>
-<p>Book your one-hour consultation below. The calendar opens in a new tab so you can return here for your reading.</p>
-{booking}
-<h2>2. Open your included written reading</h2>
-<p>Give your birth details to open your full reading. If you have already made it, this reopens it.</p>
-<p><a class="btn-cast" href="{esc(details_url)}">Open my written reading</a></p>""")
-    if session.get("metadata", {}).get("wyrd_report_ready") == "1":
-        return redirect(reading_url(sid))
+<p>Thank you. Your payment is confirmed. There is nothing more to pay.</p>
+<h2>1. Your written reading comes first</h2>
+<p>Give the moment and place of your birth and your full reading opens: a page that stays at its own address, which you can save as a PDF.
+The links to it are emailed to the address you paid with.</p>
+<p><a class="btn-cast" href="{esc(details_url)}">Give my birth details</a></p>
+<h2>2. Then choose the time for your call</h2>
+<p>Once your reading is open, the booking calendar is at the top of it, so you come to our call with your reading in hand.</p>""")
     return send_from_directory(app.static_folder, "index.html")
 
 @app.post("/api/consultation-reading")
@@ -221,6 +302,7 @@ def consultation_reading():
         stripe_api.save_birth_metadata(config.STRIPE_SECRET, sid, meta)
     except stripe_api.StripeError:
         return jsonify(error="Your payment is confirmed, but your details couldn't be saved. Please try again."), 502
+    deliver_reading(sid, {**session, "metadata": {**(session.get("metadata") or {}), **meta}})
     return jsonify(url=reading_url(sid))
 
 @app.get("/api/places")
@@ -390,20 +472,23 @@ def paid_reading():
         except stripe_api.StripeError:
             s = None
         if not s: abort(404)
-        if s.get("payment_link"):
+        if is_consultation(s):
             s, error = consultation_session(sid)
             if error: return error
             if s.get("metadata", {}).get("wyrd_report_ready") != "1":
                 return redirect("/consultation?" + urlencode({"session_id": sid}))
         meta = s.get("metadata", {})
     try:
-        banner = "PREVIEW — no payment taken" if request.args.get("preview") else ""
-        if meta.get("kind") == "together": return render_together(meta, banner)
-        return render_reading(meta, banner)
+        if request.args.get("preview"):
+            banner = "PREVIEW — no payment taken"
+            return render_together(meta, banner) if meta.get("kind") == "together" else render_reading(meta, banner)
+        page = render_together(meta) if meta.get("kind") == "together" else render_reading(meta, after=consult_next(s) if is_consultation(s) else "")
     except BadInput:
         abort(400)
+    deliver_reading(sid, s)                       # the first visit sends it to their inbox too
+    return page
 
-def render_reading(meta, banner="", sample=False):
+def render_reading(meta, banner="", sample=False, after=""):
     """The full reading page for a set of birth details. Used by the paid flow,
     the sample and the private admin, so all three are always the same reading."""
     b = birth_from(meta)
@@ -418,7 +503,7 @@ def render_reading(meta, banner="", sample=False):
     return Response(page.replace("{{TITLE}}", config.SITE_TITLE).replace("{{WHO}}", who or "Your reading")
                         .replace("{{BORN}}", born).replace("{{OPENING}}", config.READING_OPENING)
                         .replace("{{CLOSING}}", config.READING_CLOSING).replace("{{AUTHOR}}", config.AUTHOR)
-                        .replace("{{PREVIEW}}", banner).replace("{{BODY}}", body)
+                        .replace("{{PREVIEW}}", banner).replace("{{NEXT}}", after).replace("{{BODY}}", body)
                         .replace("{{FOOTER}}", SAMPLE_FOOT if sample else f"<footer>Written by {config.AUTHOR} · The Web of Wyrd. This page is your reading; it stays at this address.</footer>"),
                     mimetype="text/html")
 
@@ -497,7 +582,7 @@ def render_together(meta, banner=""):
     return Response(page.replace("{{TITLE}}", config.SITE_TITLE).replace("{{WHO}}", who)
                         .replace("{{BORN}}", born).replace("{{OPENING}}", together.T["OPENING"])
                         .replace("{{CLOSING}}", together.T["CLOSING"]).replace("{{AUTHOR}}", config.AUTHOR)
-                        .replace("{{PREVIEW}}", banner).replace("{{BODY}}", body)
+                        .replace("{{PREVIEW}}", banner).replace("{{NEXT}}", "").replace("{{BODY}}", body)
                         .replace("{{FOOTER}}", f"<footer>Written by {config.AUTHOR} · The Web of Wyrd. This page is your reading together; it stays at this address.</footer>"),
                     mimetype="text/html")
 

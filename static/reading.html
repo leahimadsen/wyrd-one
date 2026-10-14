@@ -20,6 +20,10 @@ header h1{font-weight:300;font-size:clamp(38px,8vw,58px);line-height:1.05;margin
 header .born{color:var(--dim);margin:0 0 30px}
 .opening,.closing{font-style:italic;color:rgba(217,212,196,.85);font-size:18px}
 .tools{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 10px}
+.next{border:1px solid var(--gold);border-left:3px solid var(--gold);padding:14px 18px;margin:18px 0 6px;font-size:16px}
+.next p{margin:0 0 8px}.next .next-h{color:var(--gold);font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.next .next-go{margin:12px 0 2px}.next .next-go a{display:inline-block;color:var(--ivory);border:1px solid var(--jade);padding:8px 14px;border-radius:2px;text-decoration:none}
+.next .next-go a:hover{background:rgba(255,255,255,.05)}
 .tools button{font:inherit;font-size:15px;color:var(--ivory);background:none;border:1px solid var(--jade);padding:8px 14px;border-radius:2px;cursor:pointer}
 .rd-sec{padding:54px 0 10px;border-top:1px solid var(--rule);margin-top:40px;break-before:page}
 .rd-num{color:var(--gold);font-size:15px;letter-spacing:.08em}
@@ -110,7 +114,7 @@ footer{margin-top:60px;color:var(--dim);font-size:14px;border-top:1px solid var(
   .rd-totop{display:none}.mf svg{max-width:5in}
   :root{--void:#fff;--ivory:#1b1b1b;--dim:#666;--celadon:#2f5f50;--jade:#2f6f5a;--gold:#8a6a2a;--rule:#ddd}
   @page{margin:.65in .7in}
-  body,body.paper{font-size:10pt!important;line-height:1.4!important}.tools,.preview{display:none}.wrap{width:auto;padding:0}
+  body,body.paper{font-size:10pt!important;line-height:1.4!important}.tools,.preview,.next{display:none}.wrap{width:auto;padding:0}
   header h1{font-size:30pt}.opening,.closing{font-size:11pt}
   .rd-sec{padding-top:14pt;margin-top:26pt;break-before:auto!important}.rd-num,.rd-sec h2,.rd-sub{break-after:avoid}.rd-sec h4,.dh-centre{break-after:avoid}.rd-entry h3,.rd-entry .rd-hdr{break-after:avoid}p{orphans:3;widows:3}.rd-sec h2{font-size:20pt}.rd-sec h3{font-size:13pt;margin:10pt 0 3pt!important;break-after:avoid}
   .rd-pair{font-size:9.5pt;padding:2pt 0!important;gap:10pt;break-inside:avoid}.rd-hdr,.rd-note,.rd-held{font-size:9.5pt}
@@ -136,10 +140,15 @@ footer{margin-top:60px;color:var(--dim);font-size:14px;border-top:1px solid var(
     <button onclick="window.print()">Save as PDF</button>
     <button onclick="navigator.clipboard&&navigator.clipboard.writeText(location.href).then(()=>this.textContent='Link copied')">Copy link to this reading</button>
   </div>
+  {{NEXT}}
 </header>
 {{BODY}}
 <p class="closing">{{CLOSING}}</p>
 {{FOOTER}}
 </div>
+<script>
+/* the PDF link in the delivery email: the reading opens with the save-as-PDF window */
+if (new URLSearchParams(location.search).get("pdf") === "1") addEventListener("load", () => setTimeout(() => window.print(), 600));
+</script>
 </body>
 </html>
