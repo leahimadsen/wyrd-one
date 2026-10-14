@@ -1,7 +1,7 @@
 'use strict';
 /* ============================================================
    THE HARMONIC BODY
-   The proportional figure with its seven stations, the planet
+   The old anatomy engraving with its seven stations, the planet
    that feeds each one, the two zodiacs around it and the two
    rave definitions laid over it. Tap a station (or its planet)
    to wake it: the feeding planet's current runs down its thread
@@ -13,133 +13,18 @@
    ============================================================ */
 (() => {
 const NS = "http://www.w3.org/2000/svg";
-const FIGURE = `<g class="geom">
-              <circle cx="450" cy="380" r="300"/>
-              <rect x="200" y="180" width="500" height="500"/>
-            </g>
-            <g class="geom-faint">
-              <line x1="200" y1="244" x2="700" y2="244"/>
-              <line x1="200" y1="266" x2="700" y2="266"/>
-              <line x1="176" y1="380" x2="724" y2="380"/>
-              <line x1="200" y1="430" x2="700" y2="430"/>
-              <line x1="232" y1="556" x2="668" y2="556"/>
-            </g>
-            <g class="fig-second">
-              <path d="M400,258 C382,247 352,229 327,216 C305,205 282,197 263,191 C250,187 237,183 228,179"/>
-              <path d="M229,188 C243,193 251,197 258,204 C277,215 300,228 317,238 C339,250 367,270 387,289"/>
-              <path d="M228,178 C219,171 209,167 201,167 C195,167 193,171 199,175 C193,176 193,180 199,182 C195,184 197,187 203,188 C211,189 221,187 228,185"/>
-              <path d="M500,258 C518,247 548,229 573,216 C595,205 618,197 637,191 C650,187 663,183 672,179"/>
-              <path d="M671,188 C657,193 649,197 642,204 C623,215 600,228 583,238 C561,250 533,270 513,289"/>
-              <path d="M672,178 C681,171 691,167 699,167 C705,167 707,171 701,175 C707,176 707,180 701,182 C705,184 703,187 697,188 C689,189 679,187 672,185"/>
-              <path d="M396,420 C381,448 357,486 331,520 C313,544 296,572 281,599"/>
-              <path d="M447,438 C433,464 411,498 387,532 C367,560 345,586 320,607"/>
-              <path d="M281,599 C273,605 263,609 257,613 C252,616 255,620 261,621 C271,622 285,622 295,620 C301,618 303,612 301,606"/>
-              <path d="M504,420 C519,448 543,486 569,520 C587,544 604,572 619,599"/>
-              <path d="M453,438 C467,464 489,498 513,532 C533,560 555,586 580,607"/>
-              <path d="M619,599 C627,605 637,609 643,613 C648,616 645,620 639,621 C629,622 615,622 605,620 C599,618 597,612 599,606"/>
-            </g>
-            <g class="fig">
-          <path d="M450,244 C442,244 435,239 431,232 C427,226 424,219 422,211 C416,209 412,204 412,197 C411,188 419,181 431,178 C437,176 444,175 450,175 C456,175 463,176 469,178 C481,181 489,188 488,197 C488,204 484,209 478,211 C476,219 473,226 469,232 C465,239 458,244 450,244 Z"/>
-          <path d="M412,196 C400,186 402,167 416,159 C428,152 440,150 450,150 C460,150 472,152 484,159 C498,167 500,186 488,196"/>
-          <path d="M414,206 C403,204 395,194 397,181"/>
-          <path d="M486,206 C497,204 505,194 503,181"/>
-          <path d="M414,204 C409,214 409,226 415,236"/>
-          <path d="M486,204 C491,214 491,226 485,236"/>
-          <path d="M436,241 C434,249 432,255 428,259 C420,263 404,264 392,268"/>
-          <path d="M464,241 C466,249 468,255 472,259 C480,263 496,264 508,268"/>
-          <path d="M392,268 C385,272 381,277 382,284 C384,293 388,299 393,303 C389,311 386,320 388,332 C390,345 396,355 400,366 C403,375 404,381 403,389 C401,399 395,405 393,415 C392,426 400,433 410,437 C424,441 436,444 444,451 C447,454 453,454 456,451 C464,444 476,441 490,437 C500,433 508,426 507,415 C505,405 499,399 497,389 C496,381 497,375 500,366 C504,355 510,345 512,332 C514,320 511,311 507,303 C512,299 516,293 518,284 C519,277 515,272 508,268"/>
-          <path d="M392,266 C376,261 360,258 344,257 C330,256 320,257 313,258 C296,258 272,257 250,257"/>
-          <path d="M250,271 C272,272 296,274 313,275 C323,276 333,278 345,282 C361,287 378,293 394,301"/>
-          <path d="M250,257 C240,254 228,252 218,252 C206,251 194,252 184,254 C176,256 175,259 182,261 C172,262 171,265 180,267 C173,269 175,272 183,273 C177,275 181,277 190,277 C202,277 214,276 224,274 C236,272 245,270 250,269"/>
-          <path d="M508,266 C524,261 540,258 556,257 C570,256 580,257 587,258 C604,258 628,257 650,257"/>
-          <path d="M650,271 C628,272 604,274 587,275 C577,276 567,278 555,282 C539,287 522,293 506,301"/>
-          <path d="M650,257 C660,254 672,252 682,252 C694,251 706,252 716,254 C724,256 725,259 718,261 C728,262 729,265 720,267 C727,269 725,272 717,273 C723,275 719,277 710,277 C698,277 686,276 676,274 C664,272 655,270 650,269"/>
-          <path d="M396,437 C390,453 388,473 391,494 C394,514 400,536 404,556 C407,569 404,580 402,590 C401,604 406,626 410,652"/>
-          <path d="M443,450 C446,466 446,482 443,500 C441,519 438,538 436,556 C434,570 437,582 439,592 C440,608 434,634 430,652"/>
-          <path d="M410,653 C410,662 407,669 400,674 C392,679 383,681 378,683 C375,685 379,686 386,686 C400,686 417,685 429,684 C433,681 433,670 430,653"/>
-          <path d="M504,437 C510,453 512,473 509,494 C506,514 500,536 496,556 C493,569 496,580 498,590 C499,604 494,626 490,652"/>
-          <path d="M457,450 C454,466 454,482 457,500 C459,519 462,538 464,556 C466,570 463,582 461,592 C460,608 466,634 470,652"/>
-          <path d="M490,653 C490,662 493,669 500,674 C508,679 517,681 522,683 C525,685 521,686 514,686 C500,686 483,685 471,684 C467,681 467,670 470,653"/>
-            </g>
-            <g class="fig-muscle">
-          <path d="M438,244 C434,252 428,258 421,262"/>
-          <path d="M462,244 C466,252 472,258 479,262"/>
-          <path d="M430,258 C416,262 404,266 396,271"/>
-          <path d="M470,258 C484,262 496,266 504,271"/>
-          <path d="M392,270 C387,278 386,288 390,296"/>
-          <path d="M508,270 C513,278 514,288 510,296"/>
-          <path d="M398,278 C404,282 410,285 415,286"/>
-          <path d="M502,278 C496,282 490,285 485,286"/>
-          <path d="M400,282 C410,300 424,310 440,312 C446,313 449,312 450,309"/>
-          <path d="M500,282 C490,300 476,310 460,312 C454,313 451,312 450,309"/>
-          <path d="M406,292 C416,298 428,302 438,302"/>
-          <path d="M494,292 C484,298 472,302 462,302"/>
-          <path d="M392,312 C397,315 401,319 404,323"/>
-          <path d="M391,321 C396,324 400,328 403,332"/>
-          <path d="M392,330 C397,333 401,336 404,340"/>
-          <path d="M508,312 C503,315 499,319 496,323"/>
-          <path d="M509,321 C504,324 500,328 497,332"/>
-          <path d="M508,330 C503,333 499,336 496,340"/>
-          <path d="M450,318 C450,336 450,356 450,376"/>
-          <path d="M430,326 C438,329 462,329 470,326"/>
-          <path d="M429,344 C438,347 462,347 471,344"/>
-          <path d="M430,362 C438,365 462,365 470,362"/>
-          <path d="M404,344 C410,356 414,368 414,380"/>
-          <path d="M496,344 C490,356 486,368 486,380"/>
-          <path d="M406,392 C420,406 436,420 448,434"/>
-          <path d="M494,392 C480,406 464,420 452,434"/>
-          <path d="M400,276 C374,278 350,278 332,276"/>
-          <path d="M500,276 C526,278 550,278 568,276"/>
-          <path d="M316,264 C300,266 284,268 270,268"/>
-          <path d="M584,264 C600,266 616,268 630,268"/>
-          <path d="M404,452 C401,478 402,506 407,532"/>
-          <path d="M436,452 C438,478 437,506 433,532"/>
-          <path d="M496,452 C499,478 498,506 493,532"/>
-          <path d="M464,452 C462,478 463,506 467,532"/>
-          <path d="M410,552 C416,547 428,547 434,552 C428,562 416,562 410,552 Z"/>
-          <path d="M490,552 C484,547 472,547 466,552 C472,562 484,562 490,552 Z"/>
-          <path d="M407,572 C404,584 405,596 408,606"/>
-          <path d="M434,566 C438,580 437,594 433,604"/>
-          <path d="M493,572 C496,584 495,596 492,606"/>
-          <path d="M466,566 C462,580 463,594 467,604"/>
-          <path d="M419,600 C419,618 419,636 419,650"/>
-          <path d="M481,600 C481,618 481,636 481,650"/>
-          </g>
-          <g class="fig-fine">
-          <path d="M423,206 C429,202 438,202 444,205"/>
-          <path d="M456,205 C462,202 471,202 477,206"/>
-          <path d="M426,213 C431,209 440,209 445,213 C440,217 431,217 426,213 Z"/>
-          <path d="M455,213 C460,209 469,209 474,213 C469,217 460,217 455,213 Z"/>
-          <path d="M434,213 a2.4,2.4 0 1,0 .1,0"/>
-          <path d="M466,213 a2.4,2.4 0 1,0 .1,0"/>
-          <path d="M450,210 C449,218 447,225 446,229 C447,231 451,232 454,231"/>
-          <path d="M444,231 C446,233 449,233 451,232 M456,231 C454,233 452,233 451,232"/>
-          <path d="M441,238 C444,236 448,235 450,236 C452,235 456,236 459,238
-          C456,241 452,242 450,242 C448,242 444,241 441,238 Z"/>
-          <path d="M450,236 C450,237 450,238 450,239"/>
-          <path d="M424,218 C426,224 429,229 433,232"/>
-          <path d="M476,218 C474,224 471,229 467,232"/>
-          <path d="M398,272 C416,266 433,264 450,264 C467,264 484,266 502,272"/>
-          <path d="M450,276 C450,296 450,318 450,338"/>
-          <path d="M404,286 C410,302 422,312 438,314 C444,315 448,313 450,310"/>
-          <path d="M496,286 C490,302 478,312 462,314 C456,315 452,313 450,310"/>
-          <path d="M414,332 C424,336 434,338 442,338"/>
-          <path d="M486,332 C476,336 466,338 458,338"/>
-          <path d="M450,344 C450,360 450,368 450,374"/>
-          <path d="M450,388 C450,402 450,414 450,424"/>
-          <path d="M428,348 C428,356 428,364 429,370"/>
-          <path d="M472,348 C472,356 472,364 471,370"/>
-          <path d="M400,398 C416,414 484,414 500,398"/>
-          <path d="M416,424 C428,433 472,433 484,424"/>
-          <path d="M183,255 C194,256 206,257 216,258"/>
-          <path d="M181,261 C193,262 207,264 218,265"/>
-          <path d="M180,267 C192,268 206,270 217,271"/>
-          <path d="M717,255 C706,256 694,257 684,258"/>
-          <path d="M719,261 C707,262 693,264 682,265"/>
-          <path d="M720,267 C708,268 694,270 683,271"/>
-          <path d="M402,556 C412,560 428,560 438,556"/>
-          <path d="M498,556 C488,560 472,560 462,556"/>
-            </g>`;
+/* the figure: the engraving (J. Caldwall after John Brisbane, The Anatomy of Painting, 1769), in
+   pale ink, the same one the reading's body map uses. It is placed on the 900 × 900 plan so that the
+   seven stations marked on it (lib/medical.json FIGURE.at, in the engraving's own pixels) fall where
+   the stations stand, and the stations are moved onto it exactly. */
+const ETCH = { src: "/static/look/anatomy-light.png", w: 760, h: 994, s: .5549, x: 289.4, y: 168.4,
+  at: { asgard: [284, 32], alfheim: [284, 72], vanaheim: [291, 160], midgard: [293, 245], muspelheim: [295, 323], nidavellir: [291, 426], hel: [288, 483] },
+  feet: 965 };
+const FIGURE = `<image class="etch" href="${ETCH.src}" x="${ETCH.x}" y="${ETCH.y}" width="${(ETCH.w * ETCH.s).toFixed(1)}" height="${(ETCH.h * ETCH.s).toFixed(1)}" preserveAspectRatio="none"/>`;
+const ST = STATIONS.map(s => {
+  const [ex, ey] = ETCH.at[s.id], x = +(ETCH.x + ex * ETCH.s).toFixed(1), y = +(ETCH.y + ey * ETCH.s).toFixed(1);
+  return { ...s, x, y, leadY: s.leadY + (y - s.y) };
+});
 
 /* ---------- Human Design centres, as the console drew them on the body ---------- */
 const HB_CENTRES = {
@@ -230,7 +115,7 @@ const pose = { tilt: 0, turn: 0 };
 const cusp = () => Math.floor(norm(C.ascS) / 30) * 30;
 const aSid = l => HOUSE_ONE_ANGLE + norm(norm(l) - cusp());
 const aTrop = l => aSid(norm(l - C.ay));
-const seatOf = b => STATIONS.find(s => s.feeder === b) || null;
+const seatOf = b => ST.find(s => s.feeder === b) || null;
 const markXY = (b, i) => {
   const st = seatOf(b);
   if (st) return [st.x + (i % 2 === 0 ? -40 : 40), st.y - 6];
@@ -321,6 +206,8 @@ function centresSVG(){
 }
 
 /* ---------- layer 3: stations, planets, and the current ---------- */
+/* the body map's weights, from the server: how much of the chart gathers at each station, 0 to 1 */
+let W8 = {}, HEAVY = [];
 function stationsSVG(){
   let o = `<g class="thread"><line x1="450" y1="96" x2="450" y2="760"/>
     <circle class="cap" cx="450" cy="100" r="2.6"/><circle class="cap" cx="450" cy="756" r="2.6"/>
@@ -338,12 +225,13 @@ function stationsSVG(){
       <circle cx="${x}" cy="${y - 3}" r="14" fill="transparent"/></g>`;
   });
   o += `<g class="stations" id="hbStations">`;
-  for (const s of STATIONS){
+  for (const s of ST){
     const dir = s.side === "L" ? -1 : 1, bendX = s.x + dir * 116, endX = s.x + dir * 172;
     o += `<g class="station" data-hb-station="${s.id}" tabindex="0" role="button" style="--band:${s.band}"
         aria-label="${s.station}, ${s.world}, fed by ${s.feeder}">
       <path class="lead" d="M${s.x + dir * 14},${s.y} L${bendX},${s.leadY} L${endX},${s.leadY}"/>
       <text class="tag" x="${endX + dir * 6}" y="${s.leadY - 5}" text-anchor="${s.side === "L" ? "end" : "start"}">${s.tag} · ${s.world}</text>
+      ${W8[s.id] != null ? `<circle class="weight${HEAVY.includes(s.id) ? " heavy" : ""}" cx="${s.x}" cy="${s.y}" r="${(9 + 15 * W8[s.id]).toFixed(1)}"/>` : ""}
       <circle class="bloom" cx="${s.x}" cy="${s.y}" r="8"/>
       <circle class="halo" cx="${s.x}" cy="${s.y}" r="13"/>
       <circle class="ring" cx="${s.x}" cy="${s.y}" r="8"/>
@@ -384,19 +272,19 @@ function stream(x1, y1, x2, y2, color, ms, cls){
 function paintSpine(){
   const g = root.querySelector("#hbSpine");
   if (!g) return;
-  const ys = STATIONS.filter(s => woken.has(s.id)).map(s => s.y);
+  const ys = ST.filter(s => woken.has(s.id)).map(s => s.y);
   if (ys.length < 2){ g.innerHTML = ""; return; }
-  const lit = STATIONS.filter(s => woken.has(s.id));
+  const lit = ST.filter(s => woken.has(s.id));
   let o = "";
   for (let i = 0; i < lit.length - 1; i++){
     const a = lit[i], b = lit[i + 1];
-    o += `<line class="hb-spine" x1="450" y1="${a.y}" x2="450" y2="${b.y}" style="stroke:${b.band}"/>`;
+    o += `<line class="hb-spine" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" style="stroke:${b.band}"/>`;
   }
   g.innerHTML = o;
 }
 
 async function wake(id, opts){
-  const s = STATIONS.find(x => x.id === id); if (!s) return;
+  const s = ST.find(x => x.id === id); if (!s) return;
   const quiet = opts && opts.quiet;
   const node = root.querySelector(`.station[data-hb-station="${id}"]`);
   const stG = root.querySelector("#hbStations");
@@ -409,10 +297,10 @@ async function wake(id, opts){
   if (mark) mark.classList.add("feeding");
   if (!quiet) Sound.chord(s.ratios.map(r => s.hz * r[0]));
   paintStation(s);
-  const from = last ? STATIONS.find(x => x.id === last) : null;
+  const from = last ? ST.find(x => x.id === last) : null;
   await Promise.all([
     stream(mx, my + 3, s.x, s.y, s.band, 1100, "feed"),
-    from && from.id !== s.id ? stream(450, from.y, 450, s.y, s.band, 1400, "axis") : null
+    from && from.id !== s.id ? stream(from.x, from.y, s.x, s.y, s.band, 1400, "axis") : null
   ]);
   if (mark) setTimeout(() => mark.classList.remove("feeding"), 400);
   node.classList.remove("bloomed"); void node.getBBox(); node.classList.add("bloomed");
@@ -432,8 +320,8 @@ function sleepAll(){
 
 /* the descent scan, crown to root, as the console ran it */
 function stepScan(){
-  if (scanIdx >= STATIONS.length){ stopScan(); return; }
-  wake(STATIONS[scanIdx].id);
+  if (scanIdx >= ST.length){ stopScan(); return; }
+  wake(ST[scanIdx].id);
   scanIdx++;
   scanTimer = setTimeout(stepScan, 4200);
 }
@@ -539,7 +427,7 @@ function bindDrag(stage){
    The body's own field: it bursts from the crown, falls around both sides in
    nested loops, is drawn back in beneath the feet and rises up the central axis
    to the crown again. Bursts mark where it breaks out: crown, root and feet. */
-const AXIS = { x: 450, crown: 150, root: 445, feet: 640 };
+const AXIS = { x: 450, crown: 150, root: ST[ST.length - 1].y, feet: Math.round(ETCH.y + ETCH.feet * ETCH.s) };
 function torusSVG(){
   const { x, crown, feet } = AXIS, loops = [95, 150, 205, 262, 320];
   let o = `<defs><radialGradient id="hbBurst"><stop offset="0" stop-color="rgba(222,236,228,.9)"/><stop offset=".35" stop-color="rgba(95,156,134,.45)"/>
@@ -559,7 +447,11 @@ function torusSVG(){
 
 /* ---------- mount ---------- */
 function mount(host, chart){
-  C = chart; root = host; woken = new Set(); last = null; nkFocus = null; stopScan();
+  C = chart; root = host;
+  const BM = C.bodyMap || {}, KEY = ["crown", "brow", "throat", "heart", "solar", "sacrum", "root"];
+  W8 = {}; HEAVY = [];
+  if (BM.weights) ST.forEach((s, i) => { if (BM.weights[KEY[i]] != null) W8[s.id] = BM.weights[KEY[i]]; });
+  if (BM.heavy) HEAVY = BM.heavy.map(k => ST[KEY.indexOf(k)]).filter(Boolean).map(s => s.id); woken = new Set(); last = null; nkFocus = null; stopScan();
   host.classList.add("hb");
   host.innerHTML = `
     <div class="hb-ctl">
@@ -581,8 +473,10 @@ function mount(host, chart){
       </div>
     </div>
     <p class="hb-hint">Drag to turn the figure${matchMedia("(pointer:fine)").matches ? " and tip it back" : ""}. The rings, the body and the stations sit at different depths.</p>
-    <p class="hb-intro">The same body seen another way. The Harmonic Body is a proportional figure with seven stations from crown to root, each fed by one of your planets, standing beside it on its own thread; the label under each planet is the house it stands in, which gives that station its colour. Your design's centres and live channels sit on the figure too, following the Birth / Dharma switch above. The seven stations and the nine design centres are different maps: the Heart station is not the Heart centre. Around the figure is its torus field, and the two zodiacs: tropical outside, sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on the inner ring.</p>
-    <div class="hb-strip" role="group" aria-label="The seven stations">${STATIONS.map(s =>
+    ${C.bodyMap && C.bodyMap.line ? `<p class="hb-gather">${C.bodyMap.line} <small>The glow round each station is how much of your chart lands there.</small></p>` : ""}
+    <p class="hb-intro">The same body seen another way. The Harmonic Body is an old anatomy engraving with seven stations from crown to root, each fed by one of your planets, standing beside it on its own thread; the label under each planet is the house it stands in, which gives that station its colour. Your design's centres and live channels sit on the figure too, following the Birth / Dharma switch above. The seven stations and the nine design centres are different maps: the Heart station is not the Heart centre. Around the figure is its torus field, and the two zodiacs: tropical outside, sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on the inner ring.</p>
+    <p class="hb-credit">Engraving by J. Caldwall after John Brisbane, <i>The Anatomy of Painting</i>, 1769.</p>
+    <div class="hb-strip" role="group" aria-label="The seven stations">${ST.map(s =>
       `<button class="hb-chipbtn" data-hb-station="${s.id}" style="--band:${s.band}"><i></i>${s.roman} · ${s.station}<span>${GLYPH[s.feeder]} ${s.feeder}</span></button>`).join("")}</div>
     <div class="hb-read" id="hbRead" aria-live="polite">${idleRead()}</div>`;
   deck = host.querySelector("#hbDeck"); read = host.querySelector("#hbRead");
@@ -624,7 +518,7 @@ document.addEventListener("click", e => {
   }
   if (t.closest("[data-hb-clear]")){ nkFocus = null; paintNak(); sleepAll(); return; }
   const rp = t.closest("[data-hb-replay]");
-  if (rp){ const s = STATIONS.find(x => x.id === rp.dataset.hbReplay); if (s){ Sound.chord(s.ratios.map(r => s.hz * r[0])); drawBars(); } return; }
+  if (rp){ const s = ST.find(x => x.id === rp.dataset.hbReplay); if (s){ Sound.chord(s.ratios.map(r => s.hz * r[0])); drawBars(); } return; }
   const st = t.closest("[data-hb-station]");
   if (st){ stopScan(); nkFocus = null; root.querySelectorAll(".znak").forEach(n => n.classList.remove("lit", "dim")); wake(st.dataset.hbStation); return; }
   const nk = t.closest("[data-hb-nak]");
