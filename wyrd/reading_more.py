@@ -485,14 +485,14 @@ def karakas_more(C, dasha, asks=None):
         return fill(KA["FROM_SOUL"][kind], role=role.replace("karaka", "karaka"), n=ORD(n))
 
     def strength(b, l):
-        out = []; dg = dignity(b, l); s9 = nav(l); d9 = VG.dignity_in(b, s9)
+        out = []; dg = dignity(b, l); s9 = nav(l); d9 = VG.dignity_in(b, s9, C)
         if dg == "exalted": out.append(KA["STRENGTH"]["exalted"])
         elif dg in ("own", "root"): out.append(KA["STRENGTH"]["own"])
         elif dg == "debilitated": out.append(KA["STRENGTH"]["debilitated"])
         if s9 == sign_i(l): out.append(KA["STRENGTH"]["vargottama"])
         else:
-            r1 = VG.RANK[{"own": "own sign", "root": "own sign"}.get(dg, dg or "")]; r9 = VG.RANK[d9]
-            if r9 > r1: out.append(fill(KA["STRENGTH"]["nav_up"], d=d9))
+            r1 = VG.RANK[{"own": "own sign", "root": "own sign"}.get(dg) or dg or VG.dignity_in(b, sign_i(l), C)]; r9 = VG.RANK[d9]
+            if r9 > r1: out.append(fill(KA["STRENGTH"]["nav_up"], d=VG.standing_of(d9)))
             elif r9 < r1: out.append(KA["STRENGTH"]["nav_down"])
         return " ".join(out) or once(("plain",), KA["STRENGTH"]["plain"], "Neither strong nor weak, as above.")
 

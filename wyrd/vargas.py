@@ -37,22 +37,40 @@ def sign(lon, n):
 
 EXALT = {"Sun": 0, "Moon": 1, "Mercury": 5, "Venus": 11, "Mars": 9, "Jupiter": 3, "Saturn": 6}
 OWN = {"Sun": {4}, "Moon": {3}, "Mercury": {2, 5}, "Venus": {1, 6}, "Mars": {0, 7}, "Jupiter": {8, 11}, "Saturn": {9, 10}}
-# dignity is a ladder: exalted, own sign, a friend's, a neutral's, an enemy's, debilitated; friend, neutral
-# and enemy by the natural friendships (naisargika maitri, BPHS ch. 3). static/vargas.js keeps the same ladder.
+# dignity is a ladder: exalted, own sign, a great friend's, a friend's, a neutral's, an enemy's, a great enemy's,
+# debilitated. Given the chart, friendship is Parashara's compound one (panchadha maitri, BPHS ch. 3): the
+# natural friendship joined with the temporary one counted in the Rashi (2nd, 3rd, 4th, 10th, 11th, 12th
+# sign from a planet: temporary friends; the rest: temporary enemies). static/vargas.js keeps the same ladder.
 KIN = {"Sun": ({"Moon", "Mars", "Jupiter"}, {"Venus", "Saturn"}), "Moon": ({"Sun", "Mercury"}, set()),
        "Mars": ({"Sun", "Moon", "Jupiter"}, {"Mercury"}), "Mercury": ({"Sun", "Venus"}, {"Moon"}),
        "Jupiter": ({"Sun", "Moon", "Mars"}, {"Mercury", "Venus"}), "Venus": ({"Mercury", "Saturn"}, {"Sun", "Moon"}),
        "Saturn": ({"Mercury", "Venus"}, {"Sun", "Moon", "Mars"})}
-RANK = {"exalted": 5, "own sign": 4, "friend's sign": 3, "neutral sign": 2, "enemy's sign": 1, "debilitated": 0, "": 2}
+RANK = {"exalted": 7, "own sign": 6, "great friend's sign": 5, "friend's sign": 4, "neutral sign": 3, "enemy's sign": 2,
+        "great enemy's sign": 1, "debilitated": 0, "": 3}
+COMPOUND = {("friend", "friend"): "great friend", ("friend", "enemy"): "neutral", ("neutral", "friend"): "friend",
+            ("neutral", "enemy"): "enemy", ("enemy", "friend"): "neutral", ("enemy", "enemy"): "great enemy"}
 
 
-def dignity_in(b, s):
+def kin_of(b, l, C=None):
+    friends, enemies = KIN[b]
+    nat = "friend" if l in friends else "enemy" if l in enemies else "neutral"
+    if not C or C.get("sid", {}).get(l) is None: return nat
+    n = (math.floor(E.norm(C["sid"][l]) / 30) - math.floor(E.norm(C["sid"][b]) / 30)) % 12 + 1
+    return COMPOUND[(nat, "friend" if n in (2, 3, 4, 10, 11, 12) else "enemy")]
+
+
+def dignity_in(b, s, C=None):
     if b not in EXALT: return ""
     if EXALT[b] == s: return "exalted"
     if (EXALT[b] + 6) % 12 == s: return "debilitated"
     if s in OWN[b]: return "own sign"
-    friends, enemies = KIN[b]
-    return "friend's sign" if LORD[s] in friends else "enemy's sign" if LORD[s] in enemies else "neutral sign"
+    k = kin_of(b, LORD[s], C)
+    return "neutral sign" if k == "neutral" else k + "'s sign"
+
+
+def standing_of(d):
+    """A dignity as a phrase that follows "rises to": "a great friend's sign", "its own sign", "exaltation"."""
+    return {"exalted": "exaltation", "own sign": "its own sign", "debilitated": "debilitation", "": "neutral ground"}.get(d, "a " + d if d != "neutral sign" else "a neutral sign")
 
 
 def ordinal(n): return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
@@ -80,7 +98,7 @@ def thread(C):
     rows = []
     for b in BODIES:
         s1, s9 = sign(C["sid"][b], 1), sign(C["sid"][b], 9)
-        d1, d9 = dignity_in(b, s1), dignity_in(b, s9)
+        d1, d9 = dignity_in(b, s1, C), dignity_in(b, s9, C)
         g = DP[b]; k = RV.CENTRE_OF[g["gate"]]
         move = "rises" if RANK[d9] > RANK[d1] else "falls" if RANK[d9] < RANK[d1] else "holds" if s1 == s9 else ""
         rows.append(dict(b=b, s1=s1, s9=s9, d1=d1, d9=d9, g=g, k=k, live=g["gate"] in live_gates, move=move))

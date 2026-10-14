@@ -71,9 +71,12 @@ function sign(lon, n){
   }
 }
 
-/* dignity by sign, as the vargas are read: a ladder, not a switch. Exalted, its own sign, a friend's,
-   a neutral's, an enemy's, debilitated; friend, neutral and enemy by the natural friendships
-   (naisargika maitri, BPHS ch. 3). wyrd/vargas.py keeps the same ladder for the reading. */
+/* dignity by sign, as the vargas are read: a ladder, not a switch. Exalted, its own sign, a great friend's,
+   a friend's, a neutral's, an enemy's, a great enemy's, debilitated. Given the chart, friendship is
+   Parashara's compound one (panchadha maitri, BPHS ch. 3): the natural friendship joined with the
+   temporary one, counted in the Rashi (the 2nd, 3rd, 4th, 10th, 11th and 12th sign from a planet are its
+   temporary friends, the rest its temporary enemies). Without the chart, the natural friendship alone.
+   wyrd/vargas.py keeps the same ladder for the reading. */
 const EXALT = { Sun: 0, Moon: 1, Mercury: 5, Venus: 11, Mars: 9, Jupiter: 3, Saturn: 6 };
 const OWN = { Sun: [4], Moon: [3], Mercury: [2, 5], Venus: [1, 6], Mars: [0, 7], Jupiter: [8, 11], Saturn: [9, 10] };
 const KIN = {
@@ -85,15 +88,22 @@ const KIN = {
   Venus: { friend: ["Mercury", "Saturn"], enemy: ["Sun", "Moon"] },
   Saturn: { friend: ["Mercury", "Venus"], enemy: ["Sun", "Moon", "Mars"] },
 };
-function dignityIn(b, s){
+const COMPOUND = { "friend|friend": "great friend", "friend|enemy": "neutral", "neutral|friend": "friend", "neutral|enemy": "enemy", "enemy|friend": "neutral", "enemy|enemy": "great enemy" };
+function kinOf(b, l, C){
+  const nat = KIN[b].friend.includes(l) ? "friend" : KIN[b].enemy.includes(l) ? "enemy" : "neutral";
+  if (!C || !C.sid || C.sid[l] == null) return nat;
+  const n = ((Math.floor(norm(C.sid[l]) / 30) - Math.floor(norm(C.sid[b]) / 30) + 12) % 12) + 1;
+  return COMPOUND[nat + "|" + ([2, 3, 4, 10, 11, 12].includes(n) ? "friend" : "enemy")];
+}
+function dignityIn(b, s, C){
   if (!(b in EXALT)) return "";
   if (EXALT[b] === s) return "exalted";
   if ((EXALT[b] + 6) % 12 === s) return "debilitated";
   if (OWN[b].includes(s)) return "own sign";
-  const l = LORD[s];
-  return KIN[b].friend.includes(l) ? "friend's sign" : KIN[b].enemy.includes(l) ? "enemy's sign" : "neutral sign";
+  const k = kinOf(b, LORD[s], C);
+  return k === "neutral" ? "neutral sign" : k + "'s sign";
 }
-const RANK = { "exalted": 5, "own sign": 4, "friend's sign": 3, "neutral sign": 2, "enemy's sign": 1, "debilitated": 0, "": 2 };
+const RANK = { "exalted": 7, "own sign": 6, "great friend's sign": 5, "friend's sign": 4, "neutral sign": 3, "enemy's sign": 2, "great enemy's sign": 1, "debilitated": 0, "": 3 };
 
 /* ---------- one chart, drawn South Indian style: the signs stay put, the planets move ---------- */
 const CELL = { 11: [0, 0], 0: [0, 1], 1: [0, 2], 2: [0, 3], 10: [1, 0], 3: [1, 3], 9: [2, 0], 4: [2, 3], 8: [3, 0], 7: [3, 1], 6: [3, 2], 5: [3, 3] };
@@ -154,7 +164,7 @@ function thread(host, C, { unknown, full } = {}){
   const CEN = WyrdBody.centres, centreOf = {}; for (const k in CEN) for (const g of CEN[k].gates) centreOf[g] = k;
   const DP = C.dharma.personality, NP = C.natal.personality;
   const rows = BODIES.map(b => {
-    const s1 = sign(C.sid[b], 1), s9 = sign(C.sid[b], 9), d1 = dignityIn(b, s1), d9 = dignityIn(b, s9);
+    const s1 = sign(C.sid[b], 1), s9 = sign(C.sid[b], 9), d1 = dignityIn(b, s1, C), d9 = dignityIn(b, s9, C);
     const g = DP[b], k = centreOf[g.gate], live = DA.live.some(ch => ch.includes(g.gate));
     const move = RANK[d9] > RANK[d1] ? "rises" : RANK[d9] < RANK[d1] ? "falls" : s1 === s9 ? "holds" : "";
     return { b, s1, s9, d1, d9, g, k, live, move };
