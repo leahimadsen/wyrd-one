@@ -48,7 +48,7 @@ async function cast(birth){
   return j;
 }
 /* charts cast before the engine last changed meaning are re-cast (app.py CHART_V) */
-const CHART_V = 6;
+const CHART_V = 7;
 const fresh = result => !!(result && result.chart && result.chart.v === CHART_V);
 function keep(birth, result){
   try { sessionStorage.setItem("wyrdChart", JSON.stringify({ birth, result })); return true; } catch (_) { return false; }

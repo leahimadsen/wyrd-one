@@ -265,7 +265,7 @@ def chart():
     c["v"] = CHART_V
     return jsonify(chart=plain(c), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME)
 
-CHART_V = 6      # bump when a cast changes meaning (2: sidereal Dharma Design, 3: the vargas words, 4: the story's opening, 5: the body figure, 6: the pale engraving); common.js CHART_V must match
+CHART_V = 7      # bump when a cast changes meaning (2: sidereal Dharma Design, 3: the vargas words, 4: the story's opening, 5: the body figure, 6: the pale engraving, 7: the ladder of dignity); common.js CHART_V must match
 
 def lexicon(c):
     """The words the free pages need for this chart: each of its gates (name, title, a first line from the

@@ -28,7 +28,7 @@ const G = {
   graha: ["Graha (planet)", "The bodies the chart tracks: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, the two lunar nodes, and the three outer planets. Graha means 'that which seizes'."],
   nodes: ["Rahu and Ketu", "The two points where the Moon's path crosses the Sun's. Rahu is the north node, Ketu the south; they always sit exactly opposite each other. They are where eclipses happen."],
   retro: ["Retrograde (℞)", "A planet that appears, from Earth, to be moving backwards through the zodiac. It is an optical effect of the two orbits; every planet except the Sun and Moon does it regularly."],
-  dignity: ["Dignity", "How comfortable a planet is in the sign it occupies, by the classical rules: its own sign, its sign of exaltation (strongest), its sign of debilitation (weakest), or neutral ground."],
+  dignity: ["Dignity", "How a planet stands in the sign it occupies, by the classical rules. It is a ladder, strongest to weakest: exalted, its own sign, a friend's sign, a neutral sign, an enemy's sign, debilitated (friend, neutral and enemy by the planets' natural friendships). A planet can step down the ladder, from its own sign into a friend's, say, without being debilitated."],
   exalted: ["Exalted", "The sign where a planet is classically at its strongest. Each planet has one, and its debilitation is the opposite sign."],
   debilitated: ["Debilitated", "The sign where a planet is classically at its weakest, opposite its exaltation."],
   ownsign: ["Own sign", "A sign the planet rules. The Sun and Moon rule one sign each; the other five classical planets rule two."],
