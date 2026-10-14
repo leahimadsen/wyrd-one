@@ -314,7 +314,9 @@ function downloadWheel(svgEl, kind){
   img.src = url;
 }
 
-/* ---------- Your design: the Birth Design and the Dharma Design, one switch for the whole land ---------- */
+/* ---------- Your design: the Birth Design and the Dharma Design, one switch for the whole land ----------
+   The Dharma Design's meaning (its readout, and the Rashi-to-Dharma prose) is the reading's; members see it here. */
+let DESIGN = null;
 function designLand(){
   const has = !!C.dharma;
   $("designIntro").innerHTML = `
@@ -322,11 +324,11 @@ function designLand(){
     ${unknown ? `<p class="unknown-note">Without a birth time your Moon's gate and line may be off, and the Dharma Sun moves about 9° a day, so read the details lightly.</p>` : ""}
     ${has ? `<div class="dg-ctl dg-master" role="group" aria-label="Which design to show">
       <button class="hb-btn" data-dgv="birth" aria-pressed="true">Birth Design</button><button class="hb-btn" data-dgv="dharma" aria-pressed="false">Dharma Design</button><button class="hb-btn" data-dgv="both" aria-pressed="false">Both together</button></div>` : ""}`;
-  const D = WyrdDesign.mount($("designHost"), { C });
+  const D = DESIGN = WyrdDesign.mount($("designHost"), { C, full: () => MEMBER });
   if (window.WyrdBody) WyrdBody.mount($("bodyHost"), C);
   WyrdDharma.what($("whatDharmaHost"), { C, unknown });
   if (has) WyrdDharma.mount($("dharmaHost"), { C, unknown }); else $("weave").hidden = true;
-  if (has) WyrdVargas.thread($("threadHost"), C, { unknown }); else { $("thread").hidden = true; }
+  if (has) WyrdVargas.thread($("threadHost"), C, { unknown, full: MEMBER }); else { $("thread").hidden = true; }
   const set = v => { D.set(v); if (window.WyrdBody) WyrdBody.setDesign(v);
     $("designIntro").querySelectorAll("[data-dgv]").forEach(b => b.setAttribute("aria-pressed", b.dataset.dgv === v)); };
   $("designIntro").addEventListener("click", e => { const b = e.target.closest("[data-dgv]"); if (b) set(b.dataset.dgv); });
@@ -438,11 +440,13 @@ $("buyBtn").addEventListener("click", async () => {
     location.href = j.url;
   } catch (x) { err.textContent = x.message; btn.disabled = false; btn.textContent = buyLabel; }
 });
-/* members see more on their chart: every rune in full, and the planets on the body map */
+/* members see more on their chart: every rune in full, the planets on the body map, and their Dharma Design read */
 function becomeMember(){
   MEMBER = true;
   for (const [sel, show] of [[".bm-free", false], [".bm-full", true], [".bm-note", false], [".bm-member", true]]) { const el = document.querySelector(sel); if (el) el.hidden = !show; }
   const rh = $("runesHost"); if (rh && rh.innerHTML.trim()) WyrdRunes.mount(rh, C, { all: true });
+  if (DESIGN) DESIGN.redraw();
+  const th = $("threadHost"); if (th && th.innerHTML.trim() && C.dharma) WyrdVargas.thread(th, C, { unknown, full: true });
 }
 
 /* members pay less: say so on the button before they click */

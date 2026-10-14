@@ -79,7 +79,7 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=9900, 
   <section class="plan" data-arcanum="order" data-line="Your weather, every week."><h2>The Order</h2><div class="price">{m(month_cents)}<small> a month</small></div>
     <p class="muted">or {m(year_cents)} a year</p>
     <ul><li>Body Weather by email every Monday: how the week's sky moves through your Birth Design and your Dharma Design</li>
-    <li>Your chart opened up: every rune read in full, and the planets on your body map</li>
+    <li>Your chart opened up: every rune read in full, your Dharma Design read, and the planets on your body map</li>
     <li>The Wyrd Reading for {m(member_cents)} instead of {m(price_cents)}, and {member_off}% off the reading together</li></ul>
     <a class="btn-cast" href="/membership">See the Order</a></section>
   <section class="plan" data-arcanum="circle" data-line="For those who read for others."><h2>The Inner Circle</h2><div class="price">{m(pro_cents)}<small> a month</small></div>

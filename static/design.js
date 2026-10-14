@@ -197,6 +197,17 @@ function gatesList(R){
   }).join("");
 }
 
+/* The Dharma Design's meaning is the reading's (and the Order's): a free chart shows its facts and the
+   picture, and says what is waiting. */
+function locked(R, label){
+  return `<div class="dg-read">
+    <h3>${label}</h3>
+    <dl class="dg-facts"><dt>Type</dt><dd>${R.type}</dd><dt>Authority</dt><dd>${R.authority}</dd><dt>Definition</dt><dd>${R.definition}</dd><dt>Profile</dt><dd>${esc(R.profile || "")}</dd></dl>
+    <p>Your Dharma Design defines ${R.defined.size} centre${R.defined.size === 1 ? "" : "s"} and ${R.live.length ? `runs ${R.live.length} channel${R.live.length === 1 ? "" : "s"}` : "no complete channels"}. You can see them drawn above and on the Harmonic Body.</p>
+    <div class="dg-lock"><b>What it asks of you</b>
+      <p>What your Dharma Design means is read in <a href="#reading">The Wyrd Reading</a>: what a ${esc(R.type)} with ${esc(R.authority).toLowerCase()} authority is ripening toward, each of your channels and the planets that carry it, and how your planets ripen into it. Members of <a href="/membership">the Order</a> see it here in full.</p></div>
+  </div>`;
+}
 function readout(R, label){
   const order = ["head", "ajna", "throat", "g", "heart", "spleen", "solar", "sacral", "root"];
   const reached = MOTORS.filter(m => R.defined.has(m) && m in R.dist && R.dist[m] > 0);
@@ -218,16 +229,18 @@ function readout(R, label){
   </div>`;
 }
 
-function mount(host, { C }){
+function mount(host, { C, full }){
   window.WyrdDesignChart = C;
+  const open = () => !!(full && full());
   const birth = analyse(C.natal), dharma = C.dharma ? analyse(C.dharma) : null;
   let view = "birth";
   const draw = () => {
     const A = view !== "dharma" ? birth : null, B = view !== "birth" ? dharma : null;
     host.querySelector("#dgGraph").innerHTML = graph(A, B);
+    const dh = () => (open() ? readout : locked)(dharma, "Your Dharma Design");
     host.querySelector("#dgRead").innerHTML = view === "both"
-      ? `<div class="dg-two">${readout(birth, "Your Birth Design")}${readout(dharma, "Your Dharma Design")}</div>`
-      : readout(view === "birth" ? birth : dharma, view === "birth" ? "Your Birth Design" : "Your Dharma Design");
+      ? `<div class="dg-two">${readout(birth, "Your Birth Design")}${dh()}</div>`
+      : view === "birth" ? readout(birth, "Your Birth Design") : dh();
   };
   host.innerHTML = `
     <div class="dg-wrap"><div class="dg-graph" id="dgGraph"></div><div id="dgRead"></div></div>
@@ -235,7 +248,7 @@ function mount(host, { C }){
     <p class="dg-key"><span class="k birth"></span> Birth Design <span class="k dharma"></span> Dharma Design <span class="k both"></span> both <span class="k open"></span> open</p>
     <p class="fine">To read the Dharma design in depth, see <a href="/learn/dharma">Learn the Dharma Design</a>.</p>`;
   draw();
-  return { set(v){ view = dharma || v === "birth" ? v : "birth"; draw(); } };
+  return { set(v){ view = dharma || v === "birth" ? v : "birth"; draw(); }, redraw: draw };
 }
 
 window.WyrdDesign = { mount, analyse, graph };
