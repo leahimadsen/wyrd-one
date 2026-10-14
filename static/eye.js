@@ -706,7 +706,7 @@ function panel(){
       if (ps.length) rows.push(`<li><b style="color:${HOUSE[h]}">${ORD(h + 1)}</b><small>${SIGNS[(CUSP / 30 + h) % 12]}</small><span>${ps.map(pname).join("")}</span></li>`); }
     shellRows = `<dt>The shell</dt><dd>Your twelve houses run round it in their colours, with the runes that seat them, and every planet stands in it at its degree. It turns freely, so no house is tied to a quarter.${UNKNOWN
       ? " Your birth time is unknown, so the houses are counted from your Sun's sign." : ` The gold line across it is your rising degree, ${deg(ASC)}.`}<ul class="ey-hs">${rows.join("")}</ul></dd>`;
-    go = `<button type="button" class="ey-go" data-eye-open>Open the shell: your chart as a torus →</button>`;
+    go = `<button type="button" class="ey-go" data-eye-open>Back to the shell as a torus, with all its layers →</button>`;
   } else if (st) go = toLand("#design/harmonic", `Hear the ${st.station} on the Harmonic Body`);
   panelEl.innerHTML = `<h3>${names === "soul" ? `${w.soul} <small>${w.name}</small>` : `${w.name} <small>${w.soul}</small>`}</h3>
     <p class="ey-on">${w.on} · ${w.where.toLowerCase()}</p>

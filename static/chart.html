@@ -39,20 +39,20 @@
     <p class="meta" id="chartMeta"></p>
     <div class="ctools" id="tools"></div>
     <p class="unknown-note" id="unknownNote" hidden></p>
-    <div class="hub-torus tz-win eye-win">
-      <div class="tz-bar" aria-hidden="true"><span class="tz-title" id="hubTitle">✦ odins_eye.wyrd</span><span class="tz-btns"><i>_</i><i>□</i><i>×</i></span></div>
-      <div class="tz-screen"><div id="eyeHost"></div><div class="map-core tz-core" hidden></div></div>
+    <div class="hub-torus tz-win">
+      <div class="tz-bar" aria-hidden="true"><span class="tz-title" id="hubTitle">✦ your_chart.wyrd</span><span class="tz-btns"><i>_</i><i>□</i><i>×</i></span></div>
+      <div class="tz-screen"><div class="map-core tz-core"></div><div id="eyeHost" hidden></div></div>
     </div>
     <div class="hub-view" id="hubView" role="group" aria-label="What the window shows">
-      <button type="button" class="tz-chip" data-hub-view="eye" aria-pressed="true">◎ Odin's Eye</button>
-      <button type="button" class="tz-chip" data-hub-view="shell" aria-pressed="false">◯ The shell opened: your chart as a torus</button>
+      <button type="button" class="tz-chip" data-hub-view="shell" aria-pressed="true">◯ Your chart as a torus</button>
+      <button type="button" class="tz-chip" data-hub-view="eye" aria-pressed="false">◎ Odin's Eye</button>
     </div>
-    <div class="ey-ctls" id="eyeCtl"></div>
-    <p class="tz-cap" id="eyeCap" aria-live="polite"></p>
-    <div class="tz-zod" id="tzZodiac" role="group" aria-label="Which zodiac the torus is read in" hidden></div>
-    <div class="tz-layers" id="tzLayers" role="group" aria-label="Layers of the torus" hidden></div>
-    <p class="tz-cap" id="tzCap" aria-live="polite" hidden>Drag the torus to turn it. Tap it to see what is there.</p>
-    <p class="map-hint" id="hubHint">The whole of it as one shape: the world tree seen from above. Five worlds stand on the axis and four on the ring round Midgard, and the ring is Jötunheim's shell, where your houses and planets stand. Open the shell to see your chart as a torus, its layers wrapped round the tube. Below, the same chart is opened one layer at a time. Each step builds on the one before.</p>
+    <div class="ey-ctls" id="eyeCtl" hidden></div>
+    <p class="tz-cap" id="eyeCap" aria-live="polite" hidden></p>
+    <div class="tz-zod" id="tzZodiac" role="group" aria-label="Which zodiac the torus is read in"></div>
+    <div class="tz-layers" id="tzLayers" role="group" aria-label="Layers of the torus"></div>
+    <p class="tz-cap" id="tzCap" aria-live="polite">Drag the torus to turn it. Tap it to see what is there.</p>
+    <p class="map-hint" id="hubHint">Your whole chart as one shape: the zodiac runs around the ring, your chart's layers wrap around the tube, and your planets ride its outer edge. Odin's Eye shows the same ring as Jötunheim's shell round the world tree, with the nine worlds on the axis and the ring. Below, the same chart is opened one layer at a time. Each step builds on the one before.</p>
     <a class="start" id="startHere" href="#learn"></a>
     <nav class="map" id="map" aria-label="Your chart, step by step"></nav>
   </div>

@@ -152,26 +152,30 @@ function drawMap(){
     ORDER.map(l => `<a href="#${l.id}" class="tab${l.gold ? " gold" : ""}${l.explore ? " ex" : ""}" data-tab="${l.id}">${l.path ? PATH.indexOf(l) + 1 + " · " : ""}${l.short}</a>`).join("");
 }
 
-/* the hub's window: Odin's Eye first; its shell opens into the torus, with the torus's own switches */
-let TZ = null, EYE = null, hubView = "eye";
+/* the hub's window: the torus first, with its own switches; Odin's Eye beside it, built the first
+   time it is opened. In the eye, tapping the shell comes back to the torus. */
+let TZ = null, EYE = null, hubView = "shell";
 function mountHub(){
-  try { EYE = WyrdEye.mount($("eyeHost"), C, { controls: $("eyeCtl"), caption: $("eyeCap"), onShell: () => { setHubView("shell"); $("hubView").scrollIntoView({ block: "nearest" }); } }); }
-  catch (x) { console.error(x); EYE = null; }
-  $("hubView").addEventListener("click", e => { const b = e.target.closest("[data-hub-view]"); if (b && b.dataset.hubView !== hubView) setHubView(b.dataset.hubView); });
-  if (!EYE){ $("hubView").hidden = true; setHubView("shell"); }
+  $("hubView").addEventListener("click", e => { const b = e.target.closest("[data-hub-view]"); if (b && b.dataset.hubView !== hubView) setHubView(b.dataset.hubView, true); });
+  if (!window.WyrdEye) $("hubView").hidden = true;
+  setHubView("shell");
 }
-function setHubView(v){
+function setHubView(v, asked){
+  const eye = v === "eye", core = document.querySelector(".hub-torus .map-core");
   hubView = v;
-  const shell = v === "shell", core = document.querySelector(".hub-torus .map-core");
-  $("eyeHost").hidden = shell; if (core) core.hidden = !shell;
-  for (const id of ["eyeCtl", "eyeCap"]) $(id).hidden = shell;
-  for (const id of ["tzZodiac", "tzLayers", "tzCap"]) $(id).hidden = !shell;
-  document.querySelector(".hub-torus").classList.toggle("eye-win", !shell);
-  $("hubTitle").textContent = shell ? "✦ your_chart.wyrd" : "✦ odins_eye.wyrd";
+  $("eyeHost").hidden = !eye; if (core) core.hidden = eye;
+  for (const id of ["eyeCtl", "eyeCap"]) $(id).hidden = !eye;
+  for (const id of ["tzZodiac", "tzLayers", "tzCap"]) $(id).hidden = eye;
+  document.querySelector(".hub-torus").classList.toggle("eye-win", eye);
+  $("hubTitle").textContent = eye ? "✦ odins_eye.wyrd" : "✦ your_chart.wyrd";
   $("hubView").querySelectorAll("[data-hub-view]").forEach(b => b.setAttribute("aria-pressed", b.dataset.hubView === v));
-  if (shell && !TZ) mountTorus();
+  if (eye && !EYE){
+    try { EYE = WyrdEye.mount($("eyeHost"), C, { controls: $("eyeCtl"), caption: $("eyeCap"), onShell: () => { setHubView("shell", true); $("hubView").scrollIntoView({ block: "nearest" }); } }); }
+    catch (x) { console.error(x); $("hubView").hidden = true; setHubView("shell"); return; }
+  }
+  if (!eye && !TZ) mountTorus();
   startHub();
-  if (Wyrd.pulse) Wyrd.pulse("act", "hub-" + v);
+  if (asked && Wyrd.pulse) Wyrd.pulse("act", "hub-" + v);
 }
 function startHub(){
   if (hubView === "shell"){ if (EYE) EYE.stop(); if (TZ) TZ.start(); }
