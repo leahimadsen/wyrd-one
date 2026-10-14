@@ -21,9 +21,10 @@ eye, body, viz = read("static", "eye.js"), read("static", "body.js"), read("stat
 # the hub: the eye first, the torus when its shell is opened
 check("the chart page loads eye.js and eye.css", 'src="/static/eye.js"' in page and 'href="/static/eye.css"' in page)
 check("eye.js loads after viz.js and torus.js", page.index("/static/viz.js") < page.index("/static/eye.js") and page.index("/static/torus.js") < page.index("/static/eye.js"))
-check("the hub window holds the eye, with the torus hidden behind it", 'id="eyeHost"' in page and re.search(r'class="map-core tz-core" hidden', page) is not None)
+check("the hub window opens on the torus, with the eye hidden beside it", 'class="map-core tz-core">' in page and 'id="eyeHost" hidden' in page and "✦ your_chart.wyrd" in page)
+check("the torus's switch comes first, Odin's Eye next to it", page.index('data-hub-view="shell"') < page.index('data-hub-view="eye"'))
 check("a switch between the eye and the opened shell", 'data-hub-view="eye"' in page and 'data-hub-view="shell"' in page)
-check("the page mounts the eye and opens the torus only when asked", "WyrdEye.mount" in js and "if (shell && !TZ) mountTorus();" in js)
+check("the page starts on the torus and builds the eye only when it is opened", 'hubView = "shell"' in js and "if (eye && !EYE)" in js and "WyrdEye.mount" in js)
 check("leaving the map stops both, coming back starts the one showing", "stopHub()" in js and "startHub()" in js)
 check("the offline copy knows the eye", '"/static/eye.js"' in sw and '"/static/eye.css"' in sw)
 
