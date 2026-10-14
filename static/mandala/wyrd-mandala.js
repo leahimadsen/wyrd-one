@@ -323,7 +323,7 @@
       const t = s.tarot, c = s.cards, ph = G.get(t.glyph).placeholder, ay = D.FRAME.ayanamsa;
       const deck = (name, ring, where, cards) => `<li><p class="c-deck">${name} · ${ring}</p>
         ${cards.map(x => `<p class="c-name">${esc(x.minor)} <small>· ${esc(x.trump)}</small></p>
-          <p class="c-det">${esc(x.sign)}, ruled by ${esc(x.ruler)}</p>`).join("")}<p class="c-det">${where}</p></li>`;
+          <p class="c-det">${esc(x.sign)}${x.decan ? `, ${x.decan} decan` : ""}, ruled by ${esc(x.ruler)}</p>`).join("")}<p class="c-det">${where}</p></li>`;
       return `<section class="rec-sec">
           <h3>Cards</h3>
           ${c ? `<div class="tarot">
