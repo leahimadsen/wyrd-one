@@ -100,9 +100,7 @@
 
 .wm .t-edge { fill: none; stroke: var(--wm-ink); stroke-width: .9; }
 .wm .t-glyph { color: var(--wm-ink); }
-.wm .g-card { fill: var(--wm-paper); stroke: currentColor; stroke-width: .9; }
-.wm .g-frame { fill: none; stroke: currentColor; stroke-width: .35; opacity: .6; }
-.wm .g-num { font-family: var(--wm-mono); font-size: 7.4px; fill: currentColor; writing-mode: vertical-rl; letter-spacing: .02em; }
+/* the card glyphs carry their own styling (wyrd-glyphs.js, STYLE): a stylesheet can't reach inside a <use> copy */
 .wm .t-glyph.unassigned { opacity: .62; }
 
 /* your planets, standing in the field */
@@ -191,11 +189,6 @@
 .wm .pl-g1 { color: var(--wm-pl); display: inline-block; min-width: 1.4em; }
 .wm .rec-mine { border-top-color: var(--wm-pl); }
 @media (prefers-reduced-motion: reduce) { .wm .n-sec, .wm .p-sec { transition: none; } }
-/* the drawn glyphs: emblem, numeral, pada dots */
-.wm .g-em { fill: none; stroke: currentColor; stroke-width: .9; stroke-linejoin: round; stroke-linecap: round; }
-.wm .g-thin { stroke-width: .5; opacity: .75; }
-.wm .g-dot { fill: currentColor; }
-.wm .g-rom { font-family: var(--wm-serif); font-size: 5.4px; fill: currentColor; letter-spacing: .02em; }
 
 /* the tropical rotor: the receiving rings, set apart in verdigris */
 .wm .tz-sec { fill: color-mix(in srgb, var(--wm-verd) 7%, var(--wm-paper)); stroke: none; transition: fill 160ms; }

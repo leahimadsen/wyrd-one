@@ -58,11 +58,31 @@
     registry[c] = CUSTOM[c] ? { code: c, svg: CUSTOM[c], placeholder: false } : { code: c, svg: drawn(S[i - 1]) || numbered(c), placeholder: true };
   }
 
+  /* Each glyph carries its own styling, written onto its shapes. A <use> copy is styled as a copy:
+     since Chrome 144 (and always in Firefox), a rule like ".wm .g-card" no longer reaches inside it,
+     so glyphs styled from the stylesheet drew as solid black. Colours still come from outside, by
+     inheritance: currentColor from the <use>, and the --wm-* colours from the page.
+     Artwork added with define() should carry its own fill and stroke the same way. */
+  const STYLE = {
+    "g-card": "fill:var(--wm-paper);stroke:currentColor;stroke-width:.9",
+    "g-frame": "fill:none;stroke:currentColor;stroke-width:.35;opacity:.6",
+    "g-em": "fill:none;stroke:currentColor;stroke-width:.9;stroke-linejoin:round;stroke-linecap:round",
+    "g-thin": "stroke-width:.5;opacity:.75",
+    "g-dot": "fill:currentColor;stroke:none",
+    "g-rom": "font-family:var(--wm-serif);font-size:5.4px;fill:currentColor;stroke:none;letter-spacing:.02em",
+    "g-num": "font-family:var(--wm-mono);font-size:7.4px;fill:currentColor;stroke:none;writing-mode:vertical-rl;letter-spacing:.02em",
+  };
+  const styled = svg => svg.replace(/class="([^"]*)"/g, (m, cls) => {
+    const st = cls.split(/\s+/).map(c => STYLE[c]).filter(Boolean).join(";");
+    return st ? `${m} style="${st}"` : m;
+  });
+
   root.WyrdGlyphs = {
     size: { w: W, h: H },
     get: code => registry[code] || null,
     define(code, svg) { registry[code] = { code, svg, placeholder: false }; if (root.WyrdMandala) root.WyrdMandala.refreshGlyphs(); },
     /* every glyph as <symbol>s, for one <defs> block */
-    defs: () => Object.values(registry).map(g => `<symbol id="tarot-${g.code}" viewBox="0 0 ${W} ${H}">${g.svg}</symbol>`).join(""),
+    defs: () => Object.values(registry).map(g => `<symbol id="tarot-${g.code}" viewBox="0 0 ${W} ${H}">${g.placeholder ? styled(g.svg) : g.svg}</symbol>`).join(""),
+    style: STYLE,
   };
 })(window);

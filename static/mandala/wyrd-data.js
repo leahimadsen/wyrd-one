@@ -184,10 +184,12 @@
      Both read the same 36 decans. Sidereally a pada sits wholly inside one decan (three padas to a decan); tropically
      the ring is offset by the ayanamsa, so a pada can cross a decan line, and then both Nordic cards are given. */
   function cardsFor(start, end, C) {
-    const dec = lon => C.decans[Math.floor((((lon % 360) + 360) % 360) / 10) % 36], ay = FRAME.ayanamsa.degrees;
-    const b = dec((start + end) / 2), n0 = dec(start + ay), n1 = dec(end + ay - 1e-9);
-    const nordic = [n0, n1].filter((d, k, a) => a.indexOf(d) === k).map(d => ({ minor: d.nordic.minor, trump: d.nordic.trump, ruler: d.ruler, sign: d.sign }));
-    return { buddhist: { minor: b.buddhist.minor, trump: b.buddhist.trump, ruler: b.ruler, sign: b.sign }, nordic,
+    /* "ruled by" is the decan's ruler (Golden Dawn order), so each card also says which of its sign's three decans it is */
+    const at = lon => Math.floor((((lon % 360) + 360) % 360) / 10) % 36, dec = lon => C.decans[at(lon)], ay = FRAME.ayanamsa.degrees;
+    const third = lon => ["first", "second", "third"][at(lon) % 3];
+    const mid = (start + end) / 2, b = dec(mid), ends = [start + ay, end + ay - 1e-9];
+    const nordic = ends.filter((l, k) => k === 0 || at(l) !== at(ends[0])).map(l => { const d = dec(l); return { minor: d.nordic.minor, trump: d.nordic.trump, ruler: d.ruler, sign: d.sign, decan: third(l) }; });
+    return { buddhist: { minor: b.buddhist.minor, trump: b.buddhist.trump, ruler: b.ruler, sign: b.sign, decan: third(mid) }, nordic,
       void: C.voids[Math.round(start / PADA)] || "", gate: start === 0 ? C.gate : null };
   }
   const pad3 = n => String(n).padStart(3, "0");
