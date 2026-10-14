@@ -49,5 +49,14 @@ for i in range(6):
     check(f"chart {i + 1}: nothing left unfilled", not re.search(r"\{(?!SEC:)", txt) and not re.search(r"\bNone\b(?! of them)", txt))
     check(f"chart {i + 1}: no period past a long life", not any(int(a) > 90 for a in re.findall(r"Opens at (\d+)", txt)))
 
+# the free chart shows the Dharma Design's facts and picture; what it means is the reading's, and the Order's
+src = lambda f: open(os.path.join(ROOT, "static", f), encoding="utf-8").read()
+dz, vg, cj = src("design.js"), src("vargas.js"), src("chart.js")
+check("a free chart gets the Dharma Design's facts, not its readout", "function locked(R, label)" in dz and "(open() ? readout : locked)(dharma" in dz)
+check("the Birth Design is still read in full for everyone", 'readout(birth, "Your Birth Design")' in dz)
+check("the Rashi-to-Dharma prose waits for the reading on a free chart", "${full ? `<h4>${w.RIPEN_H" in vg and 'class="dg-lock"' in vg)
+check("members see both in full, even when membership arrives after the page is drawn",
+      "full: () => MEMBER" in cj and "full: MEMBER" in cj and "DESIGN.redraw()" in cj and "full: true" in cj)
+
 print("DHARMA CHECK PASSED" if not bad else f"DHARMA CHECK FAILED ({bad})")
 sys.exit(1 if bad else 0)

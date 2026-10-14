@@ -88,8 +88,8 @@ function mount(host, X){
       <dt>${g("channel", "Channels")}</dt><dd>${rD.channels.join(", ") || "none"}</dd></dl>
       <p>${newly.length ? `The dharma defines ${newly.join(", ")}, which your Birth Design leaves open.` : ""} ${lost.length ? `Your Birth Design defines ${lost.join(", ")}, which the dharma leaves open.` : ""}
       ${!newly.length && !lost.length ? "Your dharma rave defines the same centres as your birth rave." : ""}</p>`)}
-    ${step(7, "See it on the body", `<p>The harmonic body can lay the dharma rave over the figure: turn on <b>Dharma Rave</b> there, alone or with the Body Rave, to see where they agree.</p>
-      <p><a class="ln-deep" href="#body">Open the harmonic body →</a></p>`)}`;
+    ${step(7, "See it on the body", `<p>The Harmonic Body can lay your Dharma Design over the engraving: turn on <b>Dharma Design</b> there, alone or with your Birth Design, to see where they agree.</p>
+      <p><a class="ln-deep" href="#design/harmonic">Open the Harmonic Body →</a></p>`)}`;
 }
 
 /* ============================================================

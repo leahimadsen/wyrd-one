@@ -86,3 +86,8 @@ table.vg-thread { border-collapse: collapse; } .vg-thread th, .vg-thread td { pa
 .vg-dom { font-style: italic; color: var(--celadon); margin: 0 0 8px; }
 .vg-ask { font-style: italic; color: var(--gold, #b8924a); border-left: 2px solid rgba(184,146,74,.5); padding-left: 12px; }
 .vg-close { margin-top: 18px; color: var(--ivory); }
+
+/* the Dharma Design's meaning, waiting in the reading */
+.dg-lock { margin: 12px 0 4px; padding: 12px 14px; border: 1px dashed rgba(184,146,74,.6); border-left: 3px solid var(--gold); background: rgba(184,146,74,.06); }
+.dg-lock b { display: block; color: var(--gold); font-weight: 400; letter-spacing: .04em; margin-bottom: 4px; }
+.dg-lock p { margin: 0; }

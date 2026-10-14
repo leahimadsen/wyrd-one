@@ -886,7 +886,7 @@ written in The Völva's words, and a Hall of your own on the site to keep it all
   <section class="plan lead" data-arcanum="order" data-line="Your weather, every week."><h2>The Order</h2><div class="price">{money(m)}<small> a month</small></div>
     <p class="muted">or {money(y)} a year{months_free(m, y)}</p>
     <ul><li>Body Weather by email every Monday, for your Birth Design and your Dharma Design</li>
-      <li>Your chart opened up: every rune in full, and the planets on your body map</li>
+      <li>Your chart opened up: every rune in full, your Dharma Design read, and the planets on your body map</li>
       <li>{f"The Hall: this week's letter, every past letter, and charts for up to {store.KIN_MAX} loved ones" if db else "The Hall: this week's letter and your chart, in one place"}</li>
       <li>The Wyrd Reading for {money(config.MEMBER_READING_CENTS)}, and {config.TOGETHER_MEMBER_OFF}% off the reading together</li>
       <li>Learning the Mandala, included when it opens</li></ul>

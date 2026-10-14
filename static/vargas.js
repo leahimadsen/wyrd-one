@@ -136,7 +136,7 @@ function mount(host, C, { unknown } = {}){
 }
 
 /* ---------- from Rashi to Dharma: D1 → D9 → the Dharma Design → the body ---------- */
-function thread(host, C, { unknown } = {}){
+function thread(host, C, { unknown, full } = {}){
   if (!C.dharma || !window.WyrdDesign) { host.innerHTML = ""; return; }
   const w = W(C), DA = WyrdDesign.analyse(C.dharma), BA = WyrdDesign.analyse(C.natal);
   const CEN = WyrdBody.centres, centreOf = {}; for (const k in CEN) for (const g of CEN[k].gates) centreOf[g] = k;
@@ -179,7 +179,10 @@ function thread(host, C, { unknown } = {}){
         <td>${SIGNS[r.s9]}${r.d9 ? ` <small>· ${r.d9}</small>` : ""}${r.move === "rises" ? " ↑" : r.move === "falls" ? " ↓" : ""}</td>
         <td>${r.g.gate}.${r.g.line}</td><td>${CEN[r.k].label}${r.live ? " <small>· in a channel</small>" : ""}</td><td class="des">${NP[r.b].gate}.${NP[r.b].line}</td></tr>`).join("")}</table></div>
     <p class="fine">${w.THREAD_NOTE || ""}</p>
-    <h4>${w.RIPEN_H || ""}</h4>
+    ${full ? "" : `<p>${[rise.length && `${rise.length} of your planets ripen upward`, fall.length && `${fall.length} ripen${fall.length === 1 ? "s" : ""} slowly`, vargo.length && `${vargo.length} hold${vargo.length === 1 ? "s" : ""} steady`].filter(Boolean).join(", ") || "Your planets change sign as they ripen"}, and your Dharma Design gathers at ${DA.defined.size} centre${DA.defined.size === 1 ? "" : "s"}.</p>
+    <div class="dg-lock"><b>How the tree becomes the fruit</b>
+      <p>How each of your planets ripens, how the tree and the fruit interlock, where your soul is heading and what your Dharma Design gathers into are read in <a href="#reading">The Wyrd Reading</a>, in the Path of Dharma. Members of <a href="/membership">the Order</a> see it here in full.</p></div>`}
+    ${full ? `<h4>${w.RIPEN_H || ""}</h4>
     <ul class="vg-read">${rows.map(r => `<li>${fill(w.RIPEN, { glyph: GLYPH[r.b], planet: r.b, matter: (w.PLANET || {})[r.b] || "", s1: SIGNS[r.s1], fruit: (r.s1 === r.s9 ? `stays in ${SIGNS[r.s9]} and deepens into ` : `ripens in ${SIGNS[r.s9]}, into `) + ((w.FRUIT || [])[r.s9] || "").replace(/^it ripens into /, "") })}</li>`).join("")}</ul>
     <h4>${w.INTERLOCK_H || ""}</h4>
     <ul class="vg-read">
@@ -193,7 +196,7 @@ function thread(host, C, { unknown } = {}){
     <h4>${w.CULMINATE_H || ""}</h4>
     ${feeds.length ? `<p>${fill(w.CULMINATE, { n: DA.defined.size, centres: DA.defined.size === 1 ? "centre" : "centres" })}</p><ul class="vg-read">${feeds.join("")}</ul>` : `<p>${w.CULMINATE_NONE || ""}</p>`}
     <p class="vg-close">${w.CLOSE || ""}</p>
-    ${w.ASK ? `<p class="vg-ask">${esc(w.ASK)}</p>` : ""}`;
+    ${w.ASK ? `<p class="vg-ask">${esc(w.ASK)}</p>` : ""}` : ""}`;
 }
 
 window.WyrdVargas = { sign, VARGAS, dignityIn, mount, thread, SIGNS };
