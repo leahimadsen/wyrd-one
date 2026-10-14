@@ -47,11 +47,19 @@ or IP addresses, and nothing at all from browsers that send Do Not Track or Glob
   repository only, with **Contents: read and write**. Without it, counts live in memory until a restart.
 - Mention the anonymous counting in your privacy policy.
 
-## The torus
-- `static/torus.js` — the map's centre: the chart as a luminous torus you can turn. The zodiac runs round
+## Odin's Eye and the torus
+- `static/eye.js` + `eye.css` — the map's opening picture: **Odin's Eye**, the world tree seen from above, laid
+  out as the codex's plates lay it. Five worlds on the axis (Asgard to Hel), four on the ring round Midgard
+  (Niflheim north, Jötunheim east, Muspelheim south, Vanaheim west). The ring is Jötunheim's shell: the
+  houses in their colours, the runes round its top, the planets on its rim at their degrees; it turns freely.
+  The seven Ladder worlds take their stations and soul parts from `STATIONS` in `viz.js` (the Harmonic Body's);
+  Jötunheim carries Sjálfr and Niflheim Lík. Each part links to the room that draws it in detail.
+- `static/torus.js` — the shell opened: the chart as a luminous torus you can turn. The zodiac runs round
   the ring; the houses, signs, runes, gates, mansions and tropical signs wrap round the tube; the planets ride
   the outer edge; a field of light flows through it. Layers switch on and off and build up again.
-- The harmonic body has its own torus field (the "Torus field" switch).
+- `static/body.js` — the Harmonic Body, on the anatomy engraving (`static/look/anatomy-light.png`, the same one
+  the reading's body map uses; its stations are placed from `lib/medical.json` FIGURE.at). It has its own torus
+  field (the "Torus field" switch), and the glow round each station is the body map's weight there.
 
 ## Compare, Sukuyō and the Dharma Weave
 - `static/compare.js` — Compare: two people in full, or a unit of three or four.

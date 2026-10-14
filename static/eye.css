@@ -1,0 +1,40 @@
+/* Odin's Eye in the hub's window: the eye on the left, the chosen part's record on the right;
+   stacked on a phone. The window widens for it and narrows again for the torus. */
+.hub-torus.eye-win { width: min(100%, 960px); }
+.ey { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 14px; align-items: start; text-align: left; padding: 8px; }
+@media (max-width: 760px) { .ey { grid-template-columns: 1fr; padding: 4px; } }
+.ey-stage { position: relative; min-width: 0; }
+.ey-cv { display: block; width: 100%; height: auto; cursor: pointer; background: #07021a; }
+.ey-cv:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.ey-back { position: absolute; top: 8px; left: 8px; font: 13px var(--mono); color: var(--gold); background: rgba(7,2,26,.85);
+  border: 1px solid var(--gold); padding: 6px 10px; cursor: pointer; }
+.ey-worlds { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0 0; }
+.ey-w { font: 12.5px var(--mono); color: rgba(234,243,255,.72); background: #0d0430; border: 1px solid rgba(169,155,240,.4);
+  padding: 4px 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.ey-w i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); box-shadow: 0 0 6px var(--c); }
+.ey-w[aria-pressed="true"] { color: #fff; border-color: var(--gold); }
+.ey-w:focus-visible, .ey-back:focus-visible, .ey-go:focus-visible { outline: 2px solid #7ff6ff; outline-offset: 2px; }
+
+.ey-panel { border: 2px inset #6b5bd6; border-left: 3px solid #ffb43a; background: rgba(255,255,255,.03); padding: 14px 16px; min-width: 0; color: #eaf3ff; }
+.hub .ey-panel h3 { font-family: var(--pixel); font-weight: 400; font-size: 24px; margin: 0; color: #9ff3ff; letter-spacing: .02em; }
+.ey-panel h3 small { font-family: var(--mono); font-size: 13px; color: rgba(222,236,255,.5); margin-left: 6px; letter-spacing: 0; }
+.ey-on { font-family: var(--mono); font-size: 12.5px; color: rgba(222,236,255,.55); margin: 2px 0 12px; }
+.ey-panel dl { display: grid; grid-template-columns: 7.5em 1fr; gap: 7px 12px; margin: 0 0 12px; }
+.ey-panel dt { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: #ffb43a; padding-top: 3px; }
+.ey-panel dd { margin: 0; font-size: 15px; line-height: 1.5; }
+.ey-panel dd small { color: rgba(222,236,255,.55); font-size: 13px; }
+.ey-panel a { color: #7ff6ff; }
+@media (max-width: 480px) { .ey-panel dl { grid-template-columns: 1fr; gap: 2px; } .ey-panel dd { margin-bottom: 8px; } }
+.ey-pl { display: inline-block; margin: 0 10px 2px 0; white-space: nowrap; }
+.ey-rn { font-family: var(--rune); color: #ffb43a; }
+.ey-hs { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 3px; font-size: 14px; }
+.ey-hs li { display: grid; grid-template-columns: 3em 6.6em 1fr; align-items: baseline; }
+.ey-hs b { font: 700 12.5px var(--mono); }
+.ey-ken { font-style: italic; color: rgba(222,236,255,.72); border-top: 1px solid rgba(160,140,255,.24); padding-top: 10px; margin: 0 0 10px; font-size: 14.5px; }
+.ey-go { display: block; width: 100%; box-sizing: border-box; text-align: left; margin: 8px 0 0; font: 14px var(--mono); color: #ffd9a0 !important;
+  text-decoration: none; background: #2a0f6e; border: 2px outset #a99bf0; padding: 8px 10px; cursor: pointer; }
+.ey-go:hover { background: #3a1890; }
+
+.hub-view, .ey-ctls, .ey-ctl { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.hub-view { margin: 14px 0 0; }
+.ey-ctls { gap: 8px 22px; margin: 10px 0 0; }

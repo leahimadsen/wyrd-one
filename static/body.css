@@ -20,7 +20,14 @@
 .hb-top{transform:translateZ(60px) scale(.96)}
 .hb-zod.off{opacity:0}
 .hb-zod .znak,.hb-top .station,.hb-top .g-mark{pointer-events:auto}
-.hb.zod-on .hb-fig .fig{opacity:.6}
+.hb-fig .etch{opacity:.62;transition:opacity 900ms var(--ease)}
+.hb.zod-on .hb-fig .etch{opacity:.5}
+/* where the chart gathers: a soft glow round each station, the two heaviest ringed */
+.hb-top .station .weight{fill:var(--band);opacity:.22;stroke:none}
+.hb-top .station .weight.heavy{opacity:.32;stroke:var(--band);stroke-width:1;stroke-opacity:.7}
+.hb-gather{font-size:15px;line-height:1.55;color:var(--ivory);max-width:62ch;margin:4px 0 10px}
+.hb-gather small{display:block;color:rgba(217,212,196,.55);font-size:12.5px}
+.hb-credit{font-size:12px;color:rgba(217,212,196,.45);margin:4px 0 0}
 
 /* the rings (the console's own look) */
 .hb-zod .band{fill:transparent;cursor:pointer;transition:fill 420ms var(--ease)}

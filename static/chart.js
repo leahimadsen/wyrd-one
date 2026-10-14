@@ -152,8 +152,32 @@ function drawMap(){
     ORDER.map(l => `<a href="#${l.id}" class="tab${l.gold ? " gold" : ""}${l.explore ? " ex" : ""}" data-tab="${l.id}">${l.path ? PATH.indexOf(l) + 1 + " · " : ""}${l.short}</a>`).join("");
 }
 
-/* the torus at the map's centre, and its layer switches */
-let TZ = null;
+/* the hub's window: Odin's Eye first; its shell opens into the torus, with the torus's own switches */
+let TZ = null, EYE = null, hubView = "eye";
+function mountHub(){
+  try { EYE = WyrdEye.mount($("eyeHost"), C, { controls: $("eyeCtl"), caption: $("eyeCap"), onShell: () => { setHubView("shell"); $("hubView").scrollIntoView({ block: "nearest" }); } }); }
+  catch (x) { console.error(x); EYE = null; }
+  $("hubView").addEventListener("click", e => { const b = e.target.closest("[data-hub-view]"); if (b && b.dataset.hubView !== hubView) setHubView(b.dataset.hubView); });
+  if (!EYE){ $("hubView").hidden = true; setHubView("shell"); }
+}
+function setHubView(v){
+  hubView = v;
+  const shell = v === "shell", core = document.querySelector(".hub-torus .map-core");
+  $("eyeHost").hidden = shell; if (core) core.hidden = !shell;
+  for (const id of ["eyeCtl", "eyeCap"]) $(id).hidden = shell;
+  for (const id of ["tzZodiac", "tzLayers", "tzCap"]) $(id).hidden = !shell;
+  document.querySelector(".hub-torus").classList.toggle("eye-win", !shell);
+  $("hubTitle").textContent = shell ? "✦ your_chart.wyrd" : "✦ odins_eye.wyrd";
+  $("hubView").querySelectorAll("[data-hub-view]").forEach(b => b.setAttribute("aria-pressed", b.dataset.hubView === v));
+  if (shell && !TZ) mountTorus();
+  startHub();
+  if (Wyrd.pulse) Wyrd.pulse("act", "hub-" + v);
+}
+function startHub(){
+  if (hubView === "shell"){ if (EYE) EYE.stop(); if (TZ) TZ.start(); }
+  else { if (TZ) TZ.stop(); if (EYE) EYE.start(); }
+}
+function stopHub(){ if (EYE) EYE.stop(); if (TZ) TZ.stop(); }
 function mountTorus(){
   const core = document.querySelector(".tz-core");
   try { TZ = WyrdTorus.mount(core, C, { caption: $("tzCap") }); }
@@ -254,7 +278,7 @@ function chartLand(){
       <dt>${g("channel", "Channels")}</dt><dd>${rv.channels.join(", ") || "—"}</dd></dl>
       <p class="fine">Drawn on your body and explained in <a href="#design">Your design →</a></p></div>
     ${BM ? `<div class="fact wide body-fig"><h3>${g("bodymap", "Your body map")}</h3>
-      <p class="bm-line">${BM.line}</p><div class="bm-free"${MEMBER ? " hidden" : ""}>${BM.figure}</div><div class="bm-full"${MEMBER ? "" : " hidden"}>${BM.full || ""}</div>
+      <p class="bm-line">${BM.line}</p><p class="bm-free"${MEMBER ? " hidden" : ""}><a href="#design/harmonic">See your stations on the Harmonic Body →</a></p><div class="bm-full"${MEMBER ? "" : " hidden"}>${BM.full || ""}</div>
       <p class="fine bm-note"${MEMBER ? " hidden" : ""}>${BM.note}</p><p class="fine bm-member"${MEMBER ? "" : " hidden"}>${BM.memberNote || ""}</p></div>` : ""}
     ${nums ? `<div class="fact"><h3>Your numbers</h3>
       <table class="mini"><tr><th></th><th></th><th>${g("stavefall", "Stavefall")}</th><th>${g("vedicnum", "Vedic")}</th></tr>${numRows}</table>
@@ -372,8 +396,8 @@ function go(){
   ORDER.forEach(l => { $("p-" + l.id).hidden = l !== land; });
   document.querySelectorAll("[data-tab]").forEach(t =>
     t.dataset.tab === id ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current"));
-  if (!land){ drawStart(); Wyrd.sky.start(); if (TZ) TZ.start(); document.title = `${birth.name ? birth.name + "'s chart" : "Your chart"} · The Wyrd Console`; return; }
-  Wyrd.sky.stop(); if (TZ) TZ.stop();
+  if (!land){ drawStart(); Wyrd.sky.start(); startHub(); document.title = `${birth.name ? birth.name + "'s chart" : "Your chart"} · The Wyrd Console`; return; }
+  Wyrd.sky.stop(); stopHub();
   if (!built.has(id)){ built.add(id); if (land !== LEARN) decorate(land); BUILD[id](); }
   if (id === "learn" && arg && learn) learn.show(+arg - 1);
   if (id === "mandala" && MAND && /^s\d{3}$/.test(arg || "")){ MAND.select(+arg.slice(1)); scrollTo(0, 0); }
@@ -391,7 +415,7 @@ function go(){
 }
 
 drawMap();
-mountTorus();
+mountHub();
 addEventListener("hashchange", go);
 go();
 

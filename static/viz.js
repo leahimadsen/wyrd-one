@@ -517,55 +517,6 @@ const HARMONY = [
 ];
 
 /* ============================================================
-   THE ADDENDUM · Twofold Gift · Gáttir · Veð · Doorposts
-   Every structural claim below was checked before it was coded:
-   ×9 is nine-to-one with preimages exactly 40° apart; k mod 3
-   sorts the openings fire / earth / air with none in water; the
-   three water signs lie whole inside the three air-opened
-   segments; 180° falls in k=4; all eight doorposts are fixed
-   points of the transform and fall one each in k=1..7 with the
-   0° post standing on the seam. 5 × 8 × 9 = 360.
-   ============================================================ */
-
-const SEGMENT_ARC = 40;
-const DOORPOSTS = [0, 45, 90, 135, 180, 225, 270, 315];
-const LINE_W = 360 / 64 / 6;          /* a line's breadth — the working orb */
-
-/* Schedule A */
-const VED_WORLD = [
-  { k:0, world:"Muspellsheimr", opens:"0° Aries",        triad:"fire",  well:null },
-  { k:1, world:"Jötunheimr",    opens:"10° Taurus",      triad:"earth", well:null },
-  { k:2, world:"Vanaheimr",     opens:"20° Gemini",      triad:"air",   well:"Cancer" },
-  { k:3, world:"Ásgarðr",       opens:"0° Leo",          triad:"fire",  well:null },
-  { k:4, world:"Miðgarðr",      opens:"10° Virgo",       triad:"earth", well:null },
-  { k:5, world:"Helheimr",      opens:"20° Libra",       triad:"air",   well:"Scorpio" },
-  { k:6, world:"Álfheimr",      opens:"0° Sagittarius",  triad:"fire",  well:null },
-  { k:7, world:"Niðavellir",    opens:"10° Capricorn",   triad:"earth", well:null },
-  { k:8, world:"Niflheimr",     opens:"20° Aquarius",    triad:"air",   well:"Pisces" }
-];
-
-
-
-/** A doorpost carries no veð: nothing was staked; it is the threshold. */
-function onDoorpost(lon){
-  for (const p of DOORPOSTS){
-    const d = Math.abs(norm(lon - p));
-    if (Math.min(d, 360 - d) < LINE_W) return p;
-  }
-  return null;
-}
-
-/** The Veð index is read from the NATAL sidereal longitude. The dharma
-    level cannot see it — that is the whole point of the article. */
-function vedOf(siderealLon){
-  const post = onDoorpost(siderealLon);
-  if (post !== null) return { doorpost: post };
-  const k = Math.floor(norm(siderealLon) / SEGMENT_ARC);
-  return { k, ...VED_WORLD[k],
-           into: norm(siderealLon) - k * SEGMENT_ARC };
-}
-
-/* ============================================================
    THE DAŚĀ CLOCK · the full 120-year sequence, not just today
    ============================================================ */
 const DASHA_SEQ = [["Ketu",7],["Venus",20],["Sun",6],["Moon",10],["Mars",7],
@@ -1069,7 +1020,6 @@ function bodyGlossary(b){
   const h = houseOf(sid, CHART.ascS), hh = HOUSES[h-1];
   const nk = nakIndex(sid), pada = Math.floor((norm(sid) % NAK_ARC) / (NAK_ARC/4)) + 1;
   const gN = CHART.natal.personality[b], gD = CHART.natal.design[b];
-  const v = vedOf(sid);
   const half = degIn(sid) < 15 ? "ingress" : "egress";
   const rune = half === "ingress" ? hh.ingress : hh.egress;
   const kar = Object.keys(CHART.karakas || CHART.karaka || {}).find(k =>
@@ -1104,8 +1054,6 @@ function bodyGlossary(b){
         <div class="gr"><dt>Rave gate</dt><dd>${gN ? gN.gate + "." + gN.line + " " +
           (GATE_NAME[gN.gate]||"") : "—"}${gD ? `<br><span style="font-size:11.5px;
           color:rgba(217,212,196,.5)">design ${gD.gate}.${gD.line}</span>` : ""}</dd></div>
-        <div class="gr"><dt>Veð</dt><dd>${v.doorpost !== undefined
-          ? `Doorpost ${v.doorpost}° — no pledge` : `${v.world} · k=${v.k}`}</dd></div>
         ${kar ? `<div class="gr"><dt>Karaka</dt><dd>${kar.replace("karaka","")}${karT && karT !== kar ? ` <small>· tropical ${karT.replace("karaka","")}</small>` : ""}</dd></div>` : ""}
         ${st ? `<div class="gr"><dt>Feeds</dt><dd>${st.station} · ${st.world} · ${
           st.bifrost}<br><span style="font-size:11.5px;color:rgba(217,212,196,.5)">${

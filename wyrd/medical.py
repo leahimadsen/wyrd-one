@@ -176,8 +176,10 @@ def free(C):
     swap = lambda html: _electric(html)
     a, b = sorted(KEYS, key=lambda k: -w[k])[:2]
     line = fill(T["FREE"]["line"], first=f"your {zname(a)[4:]}", first_parts=ZONE[a]["parts"], second=f"your {zname(b)[4:]}", second_parts=ZONE[b]["parts"])
+    top = max(w.values()) or 1                      # the Harmonic Body draws these as the glow round each station
     return {"figure": swap(figure(g, w, unknown, planets=False, light=True)), "line": line, "note": T["FREE"]["note"],
-            "full": swap(figure(g, w, unknown, light=True)), "memberNote": T["FREE"]["member"]}
+            "full": swap(figure(g, w, unknown, light=True)), "memberNote": T["FREE"]["member"],
+            "weights": {k: round(w[k] / top, 3) for k in KEYS}, "heavy": [a, b]}
 
 
 def _electric(html):
