@@ -1029,7 +1029,7 @@ def account_page():
         rows.insert(0, f'<li>{"The Inner Circle" if g["tier"] == "pro" else "The Order"}, a gift from {esc(config.AUTHOR)}, {nice_until(g["until"])} <span class="status on">active</span></li>')
     portal_btn = '<form method="post" action="/billing/portal"><button class="alt" type="submit">Manage or cancel, change card, see receipts</button></form>' if st["plans"] else ""
     plans = f'<ul>{"".join(rows)}</ul>{portal_btn}' if rows else \
-            '<p>You\'re not in the Order yet. <a href="/membership">See the Order</a>, or <a href="/work-with-me">work with me one to one</a>.</p>'
+            '<p>You\'re not in the Order yet. <a href="/membership">See the Order</a>, or <a href="/work-with-me">take a lantern for your path</a>, one to one.</p>'
     member = st["member"] or st["pro"]
     chart = ""
     if member:
@@ -1249,7 +1249,7 @@ def jobs_weekly():
     return jsonify(jobs.weekly(EPH, cast_for, birth_from, config))
 
 import order_routes  # noqa: E402,F401  (the Hall and the practice desk; uses the helpers above)
-import path_routes   # noqa: E402,F401  (working one to one, the Lightning Path, and the contact form)
+import path_routes   # noqa: E402,F401  (a lantern for your path: one to one, the Lightning Path, and the contact form)
 
 @app.get("/healthz")
 def health():
