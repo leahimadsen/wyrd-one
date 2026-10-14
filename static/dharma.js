@@ -8,7 +8,7 @@
    defines. What it all MEANS is the reading's work (sections V and VI).
    ============================================================ */
 (() => {
-const { signOf, degIn, norm, GLYPH } = Wyrd.helpers;
+const { signOf, degIn, norm, GLYPH, HOUSES, houseOf } = Wyrd.helpers;
 const g = (k, l) => Wyrd.gloss(k, l);
 const LINE = 360 / 64 / 6;
 const dm = l => { const d = degIn(l); let a = Math.floor(d), m = Math.round((d - a) * 60); if (m === 60){ a++; m = 0; } return `${a}°${String(m).padStart(2, "0")}′`; };
@@ -92,5 +92,73 @@ function mount(host, X){
       <p><a class="ln-deep" href="#body">Open the harmonic body →</a></p>`)}`;
 }
 
-window.WyrdDharma = { mount };
+/* ============================================================
+   WHAT IS DHARMA? WHAT IS SVADHARMA?
+   The plain answer, before the Dharma Design is shown: the word, svadharma
+   in the Gita, dharma among the four aims and its three houses, the navamsa
+   as the chart of dharma, and what this system's Dharma Design is (marked as
+   its construction). With the person's own houses of each aim to tap through.
+   DRAFT wording for The Völva to edit. What dharma asks of THIS person stays
+   in the reading.
+   ============================================================ */
+const AIMS = [
+  { id: "dharma", name: "Dharma", gloss: "what upholds: purpose, right conduct, the teacher and the teaching", houses: [1, 5, 9] },
+  { id: "artha", name: "Artha", gloss: "means: work, wealth, the material a life is lived with", houses: [2, 6, 10] },
+  { id: "kama", name: "Kama", gloss: "desire: love, pleasure, what draws a life on", houses: [3, 7, 11] },
+  { id: "moksha", name: "Moksha", gloss: "release: letting go, the way out of the wheel", houses: [4, 8, 12] },
+];
+const SIGN_NAMES = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+const ORDN = n => n + (["th","st","nd","rd"][(n % 100 - 20) % 10] || ["th","st","nd","rd"][n % 100] || "th");
+function aimWheel(aim){
+  const P = (r, d) => [150 + r * Math.cos(d * Math.PI / 180), 150 + r * Math.sin(d * Math.PI / 180)];
+  const at = h => angleHouse(h) + 15, f = n => n.toFixed(1);
+  let s = `<svg viewBox="0 0 300 300" class="wd-wheel" role="img" aria-label="The twelve houses, with the four triangles of the aims of life; ${aim.name} lit: houses ${aim.houses.join(", ")}">`;
+  for (const a of AIMS){
+    const pts = a.houses.map(h => P(104, at(h)).map(f).join(",")).join(" ");
+    s += `<polygon points="${pts}" class="wd-tri${a === aim ? " on" : ""}"/>`;
+  }
+  for (let h = 1; h <= 12; h++){
+    const [x, y] = P(104, at(h)), [tx, ty] = P(132, at(h)), lit = aim.houses.includes(h);
+    s += `<circle cx="${f(x)}" cy="${f(y)}" r="${lit ? 15 : 10}" fill="${HOUSES[h - 1].hex}" class="wd-dot${lit ? " on" : ""}"/>
+      <text x="${f(x)}" y="${f(y + 4)}" class="wd-n${lit ? " on" : ""}">${h}</text>`;
+  }
+  return s + `<text x="150" y="146" class="wd-c1">${aim.name.toUpperCase()}</text><text x="150" y="162" class="wd-c2">houses ${aim.houses.join(" · ")}</text></svg>`;
+}
+function aimYours(aim, C, unknown){
+  const asc = Math.floor(norm(C.ascS) / 30);
+  const rows = aim.houses.map(h => {
+    const sign = (asc + h - 1) % 12;
+    const here = ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Rahu","Ketu"].filter(b => houseOf(C.sid[b], C.ascS) === h);
+    return `<li><span class="sw" style="background:${HOUSES[h - 1].hex}"></span><b>${ORDN(h)}</b> ${SIGN_NAMES[sign]}${here.length ? ` · ${here.map(b => `${GLYPH[b]} ${b}`).join(", ")}` : ""}</li>`;
+  }).join("");
+  const n = aim.houses.reduce((k, h) => k + ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Rahu","Ketu"].filter(b => houseOf(C.sid[b], C.ascS) === h).length, 0);
+  return `<p class="wd-aim"><b>${aim.name}</b> is ${aim.gloss}.</p>
+    <p class="fine">In your chart${unknown ? " (counted from your Sun's sign, without a birth time)" : ""}:</p><ul class="wd-yours">${rows}</ul>
+    <p class="fine">${n === 0 ? "None of your nine planets stands in these houses; the signs and their lords still carry this aim." : `${n} of your nine planets ${n === 1 ? "stands" : "stand"} in these houses.`}</p>`;
+}
+function what(host, X){
+  const C = X.C;
+  let aim = AIMS[0];
+  host.innerHTML = `<div class="wd">
+    <div class="wd-text">
+      <p class="wd-lead"><b>Dharma</b> comes from the Sanskrit root <i>dhṛ</i>: to hold, to bear, to uphold. Dharma is what holds. It is the order that keeps the world together, the way of acting that keeps faith with that order, and a thing's own nature, what it cannot stop being and still be itself. Fire's dharma is to burn.</p>
+      <p><b>Svadharma</b> (also written swadharma) is <i>sva</i>, one's own, and dharma: your own dharma, the way of living that fits your own nature (<i>svabhava</i>), rather than one borrowed from someone else. The Bhagavad Gita says it twice, in almost the same words (3.35 and 18.47):</p>
+      <blockquote class="wd-gita"><p lang="sa-Latn"><i>śreyān svadharmo viguṇaḥ paradharmāt svanuṣṭhitāt</i></p>
+        <p>Better your own dharma, done imperfectly, than another's done well.</p></blockquote>
+      <p>Jyotish counts dharma first among the four aims of a life, with artha, kama and moksha, and gives each aim a triangle of houses. Dharma's are the 1st, 5th and 9th, and the 9th is called the house of dharma. Jyotish also reads the ${g("navamsa", "navamsa")}, the chart of the ninth division, as the chart of dharma. If your birth chart is what you are made of, the navamsa is what that material is for: what the life ripens into as it is lived.</p>
+      <p>Your <b>Dharma Design</b> is this system's own construction. It takes the navamsa and applies it to the two moments of your Birth Design, so the Birth Design shows how your energy runs and the Dharma Design shows what it runs toward. It is not a second, better self to climb up to. It is the same life, read for what it is for. Living your svadharma is living the one through the other: your own nature, toward its own purpose.</p>
+    </div>
+    <div class="wd-aims">
+      <div class="cr-btns" role="group" aria-label="The four aims of a life">${AIMS.map(a => `<button type="button" class="tz-chip" data-wd-aim="${a.id}" aria-pressed="${a === aim}">${a.name}</button>`).join("")}</div>
+      <div class="wd-show"></div>
+    </div></div>`;
+  const show = () => {
+    host.querySelector(".wd-show").innerHTML = aimWheel(aim) + aimYours(aim, C, X.unknown);
+    host.querySelectorAll("[data-wd-aim]").forEach(b => b.setAttribute("aria-pressed", b.dataset.wdAim === aim.id));
+  };
+  show();
+  host.addEventListener("click", e => { const b = e.target.closest("[data-wd-aim]"); if (b){ aim = AIMS.find(a => a.id === b.dataset.wdAim); show(); } });
+}
+
+window.WyrdDharma = { mount, what };
 })();

@@ -69,6 +69,8 @@ const G = {
   channel: ["Channel", "A link between two gates in two different centres. When both of its gates are activated, by birth or design, the channel is complete and both centres are defined."],
   cross: ["Cross gates", "The gates of the four Suns and Earths: birth Sun / birth Earth | design Sun / design Earth. Together they name a person's incarnation cross."],
   /* the Dharma Weave */
+  dharma: ["Dharma", "From the Sanskrit dhṛ, to hold. What upholds: the order that holds the world together, the way of acting that keeps faith with it, and a thing's own nature. In Jyotish, the first of the four aims of a life, read in the 1st, 5th and 9th houses and in the navamsa."],
+  svadharma: ["Svadharma", "One's own dharma (also written swadharma): the way of living that fits one's own nature, rather than one borrowed from someone else. \"Better your own dharma, done imperfectly, than another's done well\" (Bhagavad Gita 3.35, 18.47)."],
   dharmaweave: ["Dharma Design", "A second design made from the same two moments as the Birth Design, with every sidereal position passed through the navamsa (multiplied by nine). It is the chart of what the life ripens into. The Dharma Weave is the method that makes it."],
   pentagram: ["Pentagram Cross", "The two dharma Suns always sit exactly 72° apart, one fifth of the wheel, because the 88° between birth and design multiplied by nine is 792°, which is two circles and 72°."],
   dharmaprofile: ["Dharma profile", "The line of the dharma Sun and the line of the dharma design Sun, written like the Birth Design profile."],

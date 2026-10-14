@@ -72,7 +72,7 @@ const LANDS = [
     terms: ["rune", "nakshatra"], prompt: "Your reading ranks your runes and names the years each one wakes." },
   { id: "design",    name: "Your design",            short: "Design", mark: "⬡", path: true,
     teaser: `${designType ? designType + " · " : ""}your Birth and Dharma Designs`, why: "How energy moves through your body, and how your Rashi ripens into your Dharma.",
-    terms: ["centre", "channel", "type", "authority", "station7", "dharmaweave"], prompt: "Your reading reads the gates of your work and your body's channels through both designs, and walks the Path of Dharma step by step." },
+    terms: ["centre", "channel", "type", "authority", "station7", "dharma", "svadharma", "dharmaweave"], prompt: "Your reading reads the gates of your work and your body's channels through both designs, and walks the Path of Dharma step by step." },
   { id: "compare",   name: "Compare",                short: "Compare", mark: "⚭", path: true,
     teaser: "You and up to eight others", why: "How your chart meets someone else's.",
     terms: [], prompt: "The reading together writes your bond out in full: your story at one table, the old match, and the next thirty years." },
@@ -296,6 +296,7 @@ function designLand(){
       <button class="hb-btn" data-dgv="birth" aria-pressed="true">Birth Design</button><button class="hb-btn" data-dgv="dharma" aria-pressed="false">Dharma Design</button><button class="hb-btn" data-dgv="both" aria-pressed="false">Both together</button></div>` : ""}`;
   const D = WyrdDesign.mount($("designHost"), { C });
   if (window.WyrdBody) WyrdBody.mount($("bodyHost"), C);
+  WyrdDharma.what($("whatDharmaHost"), { C, unknown });
   if (has) WyrdDharma.mount($("dharmaHost"), { C, unknown }); else $("weave").hidden = true;
   if (has) WyrdVargas.thread($("threadHost"), C, { unknown }); else { $("thread").hidden = true; }
   const set = v => { D.set(v); if (window.WyrdBody) WyrdBody.setDesign(v);
