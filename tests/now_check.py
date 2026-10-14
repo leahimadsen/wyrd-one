@@ -76,5 +76,13 @@ if shutil.which("node"):
     for f in ("now.js", "colour.js", "bench.js", "viz.js", "chart.js"):
         check(f"{f} parses", subprocess.run(["node", "--check", os.path.join(ROOT, "static", f)], capture_output=True).returncode == 0)
 
+# Venus in the colour room: the glaze, no longer an open question
+viz = open(os.path.join(ROOT, "static", "viz.js"), encoding="utf-8").read()
+col = open(os.path.join(ROOT, "static", "colour.js"), encoding="utf-8").read()
+check("Venus glazes: it raises the saturation", re.search(r'Venus:\s*\{[^}]*op:"Glaze"[^}]*does:"raises the saturation"', viz) is not None)
+check("and is marked a construction", re.search(r'Venus:\s*\{[^}]*constructed:true', viz) is not None)
+check("nothing calls Venus unresolved any more", "UNRESOLVED.Venus" not in viz + col and "Unresolved" not in viz + col)
+check("Ketu stays the prism", "UNRESOLVED.Ketu" in viz and "Prism" in col)
+
 print("\nall good" if not bad else f"\n{bad} failed")
 sys.exit(1 if bad else 0)
