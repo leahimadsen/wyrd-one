@@ -87,7 +87,7 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=9900, 
     <li>This week's Body Weather for any client</li><li>Everything in the Order</li></ul>
     <a class="btn-cast" href="/membership#pro">See the Inner Circle</a></section>
 </div>
-<section class="one-to-one"><p class="hall-kicker">One to one</p><h2>Work with The Völva</h2>
+<section class="one-to-one"><p class="hall-kicker">One to one</p><h2>A lantern for your path</h2>
 <p>A first 1:1 consult is {m(consult_cents)}: about an hour together on your chart and what you need, and your full written reading opens as soon as you book.
 For ongoing support there is <b>the Lightning Path</b>: {["", "one", "two", "three", "four", "five", "six"][path_calls] if path_calls < 7 else path_calls} one-hour calls a month, and messaging between them, for {m(path_cents)} a month.</p>
 <p><a class="btn-buy" href="/work-with-me">Book a 1:1 consult</a> <a class="alt" href="/work-with-me">See the Lightning Path</a></p></section>
@@ -97,7 +97,7 @@ For ongoing support there is <b>the Lightning Path</b>: {["", "one", "two", "thr
 <h3>Is this sidereal or tropical astrology?</h3><p>Both. Signs, nakshatras and houses are sidereal (Lahiri). The 64 gates use the tropical zodiac, as Human Design does. Your Dharma Design is the ninth harmonic (D9) of the sidereal positions.</p>
 <h3>How do I get my reading?</h3><p>Straight after payment it opens in your browser. Save it as a PDF from your browser's print menu.</p>
 <h3>Can astrologers use these tools with their clients?</h3><p>Yes. Astrologers and practitioners can use these tools with their own clients through <a href="/membership#pro">the Inner Circle</a>.</p>
-<h3>How do I reach The Völva?</h3><p><a href="/contact">Write to her here</a>. For a session together, see <a href="/work-with-me">working one to one</a>.</p>
+<h3>How do I reach The Völva?</h3><p><a href="/contact">Write to her here</a>. For a session together, see <a href="/work-with-me">a lantern for your path</a>.</p>
 """
     faq = [("What do I need for an astrology reading?", "Your date, time and place of birth. If you don't know the time, the free chart still works with solar houses."),
            ("Is this sidereal or tropical astrology?", "Both. Signs, nakshatras and houses are sidereal (Lahiri). The 64 gates use the tropical zodiac. The Dharma Design is the ninth harmonic (D9) of the sidereal positions."),

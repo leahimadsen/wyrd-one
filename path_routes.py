@@ -1,4 +1,4 @@
-"""Working with The Völva one to one, and reaching her.
+"""A lantern for your path: The Völva one to one, and reaching her.
 
 /work-with-me   The first 1:1 consult ($100, through the consult Payment Link) and the Lightning Path,
                 the monthly 1:1 ($250: three one-hour calls a month and messaging between them).
@@ -52,23 +52,23 @@ def work_with_me():
     path_btn = (f'<form method="post" action="/api/subscribe"><input type="hidden" name="plan" value="path-month">'
                 f'<button class="btn-cast" type="submit">Begin the Lightning Path, {p} a month</button></form>' if on
                 else '<p class="muted">Opening soon.</p>')
-    body = f"""<h1>Work with me</h1>
-<p class="lede">One to one, on your chart and on what you're building.</p>
+    body = f"""<h1>A lantern for your path</h1>
+<p class="lede">I am an emissary of Aja Ekapada, the unborn, one-footed lord of Purva Bhadrapada, and as his emissary I can illuminate his burning path of electricity. One to one, I hold the lantern while you walk your own chart.</p>
 <div class="wwm">
   <section class="offer wwm-lead"><p class="hall-kicker">Start here</p><h2>A first consult</h2><div class="price">{c}<small> once</small></div>
     <p>An initial 1:1 consult is {c}. We'll plan for an hour, but if we run a little over, there's no extra charge. I want us to have enough time to connect and understand what you need.</p>
     <ul><li>About an hour together, with no clock-watching</li>
-      <li>After payment, give your birth details to open your full written reading, so we work from it</li>
+      <li>After payment, give your birth details to open your full written reading, so we read from it together</li>
       <li>After payment, choose your 60-minute appointment in Calendly</li></ul>
     {consult_btn}</section>
-  <section class="offer"><p class="hall-kicker">Ongoing support</p><h2>{esc(config.PATH_NAME)}</h2><div class="price">{p}<small> a month</small></div>
-    <p>If you'd like ongoing support, I'm offering a monthly subscription for {p}. That includes {calls} one-hour calls each month, where we work directly on the backend of things, plus messaging between calls about what we're working on or what you'd like to focus on next.</p>
+  <section class="offer"><p class="hall-kicker">Month by month</p><h2>{esc(config.PATH_NAME)}</h2><div class="price">{p}<small> a month</small></div>
+    <p>If you'd like the lantern carried further, {esc(config.PATH_NAME[:1].lower() + config.PATH_NAME[1:] if config.PATH_NAME.startswith('The ') else config.PATH_NAME)} is {p} a month. That includes {calls} one-hour calls each month, where we follow the current beneath the surface of things, plus messages between calls about where you are on the path or what you'd like lit next.</p>
     <ul><li>{calls.capitalize()} one-hour calls a month, booked from your page on the site</li>
       <li>Messaging between calls, from the same page</li>
       <li>Cancel any time; your place runs to the end of the month you've paid for</li></ul>
     {path_btn}</section>
 </div>
-<p class="note-box">I recommend starting with a consult so we can get to know each other and see whether working together feels like a good fit.</p>
+<p class="note-box">I recommend starting with a consult, so we can meet and see whether walking this path together feels right.</p>
 {testimonials.render("work")}
 <h2>Questions</h2>
 <div class="order-faq">
@@ -77,8 +77,8 @@ def work_with_me():
   <details><summary>Can I cancel the Lightning Path?</summary><p>Any time, from your account. You keep your place until the end of the month you've paid for.</p></details>
   <details><summary>Something else?</summary><p><a href="/contact">Write to me</a>.</p></details>
 </div>"""
-    return A.page(f"Work with The Völva: a 1:1 Consult and {config.PATH_NAME} · The Wyrd Console",
-                  f"Work with The Völva one to one: a first consult for {c}, about an hour, and {config.PATH_NAME}, {p} a month for {calls} one-hour calls and messaging between them.",
+    return A.page(f"A Lantern for Your Path: a 1:1 Consult and {config.PATH_NAME} with The Völva · The Wyrd Console",
+                  f"One to one with The Völva, emissary of Aja Ekapada: a first consult for {c}, about an hour, and {config.PATH_NAME}, {p} a month for {calls} one-hour calls and messages between them.",
                   body)
 
 
@@ -115,10 +115,10 @@ def path_page():
     plans = '<form method="post" action="/billing/portal"><button class="alt" type="submit">Manage or cancel, change card, see receipts</button></form>' if st["plans"] else ""
     body = f"""<h1>{esc(config.PATH_NAME)}</h1><p class="muted">Signed in as {esc(email)}</p>{joined}{note}
 <h2>Your calls</h2>
-<p>{config.PATH_CALLS} one-hour calls each month, where we work directly on the backend of things.</p>
+<p>{config.PATH_CALLS} one-hour calls each month, where we follow the current beneath the surface of things.</p>
 {book}
 <h2>Write to me</h2>
-<p>Between calls, about what we're working on or what you'd like to focus on next. It comes to me by email, and my reply comes to {esc(email)}.</p>
+<p>Between calls, about where you are on the path or what you'd like lit next. It comes to me by email, and my reply comes to {esc(email)}.</p>
 <form class="pg-form" method="post" action="/path/message">
 <label>Your message <textarea name="body" rows="8" maxlength="{MAX}" required></textarea></label>
 <button class="btn-cast" type="submit">Send</button></form>
@@ -150,15 +150,15 @@ def contact_page():
     note = {"1": '<p class="note-box">Thank you. Your message is on its way, and the reply will come to the email you gave.</p>',
             "0": '<p class="err">That didn\'t send. Please try again in a moment.</p>'}.get(done, "")
     body = f"""<h1>Write to me</h1>
-<p class="lede">Questions about a reading, the Order, working together, or anything else. I read everything myself.</p>{note}
+<p class="lede">Questions about a reading, the Order, a consult or the Lightning Path, or anything else. I read everything myself.</p>{note}
 <form class="pg-form" method="post" action="/contact">
 <label>Your name <input name="name" maxlength="80" autocomplete="name"></label>
 <label>Your email <input name="email" type="email" required maxlength="254" autocomplete="email" value="{esc(email)}"></label>
 <label>Your message <textarea name="body" rows="8" maxlength="{MAX}" required></textarea></label>
 <label class="hp" aria-hidden="true">Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label>
 <button class="btn-cast" type="submit">Send</button></form>
-<p class="muted">Looking to work with me one to one? See <a href="/work-with-me">a first consult and the Lightning Path</a>.</p>"""
-    return A.page("Contact The Völva · The Wyrd Console", "Write to The Völva about a reading, the Order, or working together one to one.", body)
+<p class="muted">Looking for something one to one? See <a href="/work-with-me">a lantern for your path</a>: a first consult and the Lightning Path.</p>"""
+    return A.page("Contact The Völva · The Wyrd Console", "Write to The Völva about a reading, the Order, or a consult one to one.", body)
 
 
 @app.post("/contact")
