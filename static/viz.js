@@ -454,18 +454,56 @@ const CHROMATIC = {
   Jupiter: { hue:"Yellow, gold",     hex:"#ffd400", seat:5 },
   Mercury: { hue:"Green",            hex:"#22e07a", seat:7 }
 };
+/* four grahas carry no hue and work on the house's colour instead, on two scales:
+   value, how light or dark (the Moon raises it, Saturn lowers it), and saturation, how vivid (Venus raises it,
+   Rahu lowers it). Tint, shade and tone are colour theory's names for adding white,
+   black and grey. The glaze is the painter's way of raising saturation, which no
+   mixture can: a construction, given to Venus on the meaning of śukra, bright and clear. */
 const ACHROMATIC = {
-  Moon:   { adds:"White", op:"Tint",
+  Moon:   { adds:"White", op:"Tint", scale:"value", does:"raises the value",
             note:"Raises the value. The house's matter grows lighter, more visible, more receptive. Nothing is removed; everything is brought up into the light." },
-  Saturn: { adds:"Black", op:"Shade",
+  Saturn: { adds:"Black", op:"Shade", scale:"value", does:"lowers the value",
             note:"Lowers the value. The house's matter grows heavier, deeper, more contracted. The hue is still there and harder to see." },
-  Rahu:   { adds:"Grey",  op:"Tone",
+  Venus:  { adds:"A clear glaze", op:"Glaze", scale:"saturation", does:"raises the saturation", constructed:true,
+            note:"Raises the saturation. The house's matter grows richer and more lustrous, more fully its own colour. Nothing is added from outside; what is there is polished until it shines." },
+  Rahu:   { adds:"Grey",  op:"Tone", scale:"saturation", does:"lowers the saturation",
             note:"Drops the saturation. The house's matter goes murky and hard to read. Not darker, not lighter — less certain what colour it was." }
 };
 const UNRESOLVED = {
-  Venus: "Jyotish gives Venus white or variegated, which puts it with the Moon as a tint-maker and leaves two grahas doing one job. Western practice gives Venus green, clean for mixing but colliding with Mercury. A third option: Venus as the high-key pastel, tinting toward delicacy where the Moon tints toward visibility. Your decision.",
   Ketu:  "Classically variegated — flag-coloured, many-hued. In colour terms that is not a hue but a prism: it splits the house's colour into components rather than mixing with it. Fitting for the graha that fragments, though it is construction, not lineage."
 };
+
+/* the glaze: the same hue, more saturated and a little deeper, as a transparent
+   layer of colour over itself looks; with a sheen of light across it */
+function hexHsl(hex){
+  const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+  if (!d) return [0, 0, l];
+  const s = d / (1 - Math.abs(2 * l - 1));
+  const h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return [(h * 60 + 360) % 360, s, l];
+}
+function hslHex(h, s, l){
+  const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2;
+  const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+  return "#" + [r, g, b].map(v => Math.round((v + m) * 255).toString(16).padStart(2, "0")).join("");
+}
+function glazeHex(hex){
+  const [h, s, l] = hexHsl(hex);
+  return hslHex(h, Math.min(1, s + (1 - s) * .7), l * .8);
+}
+const SHEEN = "linear-gradient(115deg,rgba(255,255,255,0) 56%,rgba(255,255,255,.38) 69%,rgba(255,255,255,0) 82%)";
+/* Venus's disc: the house's own colour, glazed and polished into a bead */
+function glazeDisc(hex){
+  const g = glazeHex(hex);
+  return `radial-gradient(circle at 34% 28%,#fff 0,rgba(255,255,255,.7) 8%,${g} 42%,${mixHex(g, "#000000", .42)} 100%)`;
+}
+/* what each hueless graha does to a house's colour */
+function opAfter(graha, hex){
+  return graha === "Moon" ? mixHex(hex, "#ffffff", .45) : graha === "Saturn" ? mixHex(hex, "#000000", .45)
+       : graha === "Venus" ? glazeHex(hex) : mixHex(hex, "#7a7f79", .55);
+}
+const OP_DISC = { Moon: "#f2f4ef", Saturn: "#0a0908", Rahu: "#767a74" };
 
 /* harmony and aspect are the same word — both divide twelve */
 const HARMONY = [
@@ -1580,7 +1618,7 @@ function colourLab(){
           Object.keys(GLYPH).map(g => `<button data-graha="${g}" class="${g===labGraha?"on":""}">${
             CHROMATIC[g] ? `<span class="sw" style="background:${CHROMATIC[g].hex}"></span>` :
             ACHROMATIC[g] ? `<span class="sw" style="background:${
-              g==="Moon"?"#e8ece6":g==="Saturn"?"#12100e":"#6d716c"}"></span>` :
+              g==="Moon"?"#e8ece6":g==="Saturn"?"#12100e":g==="Venus"?"radial-gradient(circle at 35% 30%,#fff 0,#efe6ff 30%,#9d86e8 100%)":"#6d716c"}"></span>` :
             `<span class="sw" style="background:linear-gradient(90deg,#ff3b4e,#22e07a,#6b6bff)"></span>`
           }${GLYPH[g]} ${g}</button>`).join("")}</div>
         <div class="lab-label">Standing in house</div>
@@ -1614,20 +1652,21 @@ function paintLab(){
       answers — neither borrowed from the other.</p>`;
   } else if (ACHROMATIC[labGraha]){
     const a = ACHROMATIC[labGraha];
-    const mix = labGraha === "Moon" ? "#f2f4ef" : labGraha === "Saturn" ? "#0a0908" : "#767a74";
-    discCol = mix;
+    discCol = labGraha === "Venus" ? glazeDisc(h.hex) : OP_DISC[labGraha];
     title = a.op; meta = `${labGraha} in house ${labHouse} · ${h.color} field · ${a.adds}`;
     body = a.note;
     /* show the operation done to the field itself */
-    const shifted = labGraha === "Moon" ? mixHex(h.hex, "#ffffff", .45)
-                  : labGraha === "Saturn" ? mixHex(h.hex, "#000000", .45)
-                  : mixHex(h.hex, "#7a7f79", .55);
-    field.style.background = `linear-gradient(90deg,${h.hex} 0%,${h.hex} 38%,${shifted} 62%,${shifted} 100%)`;
-    extra = `<div class="pair"><em>Operation</em><span>${a.op.toLowerCase()} — ${
-      labGraha==="Moon"?"raises the value":labGraha==="Saturn"?"lowers the value":"drops the saturation"}</span></div>
+    const shifted = opAfter(labGraha, h.hex);
+    field.style.background = (labGraha === "Venus" ? SHEEN + "," : "") +
+      `linear-gradient(90deg,${h.hex} 0%,${h.hex} 38%,${shifted} 62%,${shifted} 100%)`;
+    extra = `<div class="pair"><em>Operation</em><span>${a.op.toLowerCase()} — ${a.does}</span></div>
       <p class="kenning" style="font-size:13.5px">The left half of the field is the house
-      untouched; the right is the house with this graha standing in it. Tint, shade, tone — three
-      operations in colour, three grahas without a hue. The match is exact and nobody arranged it.</p>`;
+      untouched; the right is the house with this graha standing in it. Four grahas carry no hue
+      and work on the colour instead, on two scales: the Moon and Saturn on its value, how light or
+      dark it is; Venus and Rahu on its saturation, how vivid. Tint, shade and tone are colour theory's own names for adding
+      white, black and grey, and that match is exact and nobody arranged it.${a.constructed
+        ? ` The glaze is the painter's way of raising saturation, which no mixture can do. Giving it
+      to Venus is a construction, on the meaning of <em>śukra</em>: bright, clear, pure.` : ""}</p>`;
   } else if (OUTER.includes(labGraha)){
     /* the outer three are plotted, not coloured: no graha, no hue */
     discCol = "transparent";
@@ -1635,17 +1674,11 @@ function paintLab(){
     body = `${labGraha} is not one of the nine grahas, so the colour scheme gives it no hue and no operation. It stands in the house without changing its colour.`;
     extra = "";
   } else {
-    /* Venus and Ketu — the two your document leaves open */
-    if (labGraha === "Ketu"){
-      discCol = "transparent";
-      disc.style.background = `conic-gradient(${HOUSES.map(x => x.hex).join(",")},${HOUSES[0].hex})`;
-      title = "Prism"; meta = `Ketu in house ${labHouse} · ${h.color} field · construction, flagged`;
-      body = UNRESOLVED.Ketu;
-    } else {
-      discCol = "#efeae2";
-      title = "Unresolved"; meta = `Venus in house ${labHouse} · ${h.color} field`;
-      body = UNRESOLVED.Venus;
-    }
+    /* Ketu, the prism */
+    discCol = "transparent";
+    disc.style.background = `conic-gradient(${HOUSES.map(x => x.hex).join(",")},${HOUSES[0].hex})`;
+    title = "Prism"; meta = `Ketu in house ${labHouse} · ${h.color} field · construction, flagged`;
+    body = UNRESOLVED.Ketu;
     extra = `<div class="pair"><em>Status</em><span style="color:var(--gold)">your decision — the reasons cut both ways</span></div>`;
   }
 

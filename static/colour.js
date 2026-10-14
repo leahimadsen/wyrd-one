@@ -29,12 +29,10 @@ function effect(p, h){
   }
   if (ACHROMATIC[p]){
     const a = ACHROMATIC[p];
-    const disc = p === "Moon" ? "#f2f4ef" : p === "Saturn" ? "#0a0908" : "#767a74";
-    const after = p === "Moon" ? mixHex(field, "#ffffff", .45) : p === "Saturn" ? mixHex(field, "#000000", .45) : mixHex(field, "#7a7f79", .55);
-    return { kind: "op", disc, field, after, title: a.op, sub: `adds ${a.adds.toLowerCase()}`, gloss: a.note };
+    return { kind: "op", disc: p === "Venus" ? glazeDisc(field) : OP_DISC[p], field, after: opAfter(p, field),
+             title: a.op, sub: `adds ${lc(a.adds)}`, gloss: a.note, sheen: p === "Venus" };
   }
-  if (p === "Ketu") return { kind: "prism", disc: null, field, title: "Prism", sub: "splits the hue", gloss: UNRESOLVED.Ketu };
-  return { kind: "open", disc: "#efeae2", field, title: "Unresolved", sub: "an open question", gloss: UNRESOLVED.Venus };
+  return { kind: "prism", disc: null, field, title: "Prism", sub: "splits the hue", gloss: UNRESOLVED.Ketu };
 }
 const PRISM = `conic-gradient(${HOUSES.map(x => x.hex).join(",")},${HOUSES[0].hex})`;
 const houseOfP = p => houseOf(C.sid[p], C.ascS);
@@ -43,7 +41,7 @@ const houseOfP = p => houseOf(C.sid[p], C.ascS);
 function palette(){
   const rows = GRAHAS.map(p => ({ p, h: houseOfP(p), e: effect(p, houseOfP(p)) }));
   const tiles = rows.map(({ p, h, e }) => {
-    const bg = e.kind === "op" ? `linear-gradient(90deg,${e.field} 0 50%,${e.after} 50% 100%)` : e.field;
+    const bg = e.kind === "op" ? `${e.sheen ? SHEEN + "," : ""}linear-gradient(90deg,${e.field} 0 50%,${e.after} 50% 100%)` : e.field;
     const disc = e.kind === "prism" ? PRISM : e.disc;
     return `<button type="button" class="cr-tile${pick === p ? " on" : ""}" data-cr-p="${p}" aria-label="${p} in your ${ORD(h)} house: ${e.title}">
       <span class="cr-field" style="background:${bg}"><span class="cr-disc" style="background:${disc}"></span></span>
@@ -75,7 +73,9 @@ function chord(a, b, col, w){
 }
 function wheel(){
   let o = `<svg class="cr-wheel" viewBox="0 0 340 340" role="img" aria-label="The twelve house colours, with your planets around them">
-    <defs><linearGradient id="crPrism" x1="0" x2="1">${HOUSES.map((x, i) => `<stop offset="${i / 11}" stop-color="${x.hex}"/>`).join("")}</linearGradient></defs>`;
+    <defs><linearGradient id="crPrism" x1="0" x2="1">${HOUSES.map((x, i) => `<stop offset="${i / 11}" stop-color="${x.hex}"/>`).join("")}</linearGradient>
+    ${(() => { const gz = glazeHex(HOUSES[houseOfP("Venus") - 1].hex);
+      return `<radialGradient id="crVenus" cx=".34" cy=".28" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".1" stop-color="#fff" stop-opacity=".7"/><stop offset=".45" stop-color="${gz}"/><stop offset="1" stop-color="${mixHex(gz, "#000000", .42)}"/></radialGradient>`; })()}</defs>`;
   for (let h = 1; h <= 12; h++){
     const a0 = angleHouse(h), a1 = a0 + 30;
     const [x1, y1] = P(RO, a0), [x2, y2] = P(RO, a1), [x3, y3] = P(RI, a1), [x4, y4] = P(RI, a0);
@@ -100,17 +100,17 @@ function wheel(){
   for (const [h, ps] of Object.entries(by)) ps.forEach((p, i) => {
     const row = i < 3 ? 0 : 1, k = row ? i - 3 : i, n = row ? ps.length - 3 : Math.min(3, ps.length);
     const [x, y] = P(RO + 15 + row * 21, mid(+h) + (k - (n - 1) / 2) * 9.5);
-    const e = effect(p, +h), fill = e.kind === "prism" ? "url(#crPrism)" : e.disc;
+    const e = effect(p, +h), fill = e.kind === "prism" ? "url(#crPrism)" : p === "Venus" ? "url(#crVenus)" : e.disc;
     const dim = (step === 2 && pick && pick !== p) || (step === 1);
     o += `<g class="cr-pl${dim ? " dim" : ""}${pick === p ? " on" : ""}" data-cr-p="${p}" role="button" tabindex="0" aria-label="${p}, in house ${h}">
       <circle cx="${x}" cy="${y}" r="9.5" fill="${fill}" stroke="${p === "Saturn" ? "#cfc6ff" : "rgba(0,0,0,.45)"}" stroke-width="1"/>
-      <text x="${x}" y="${y + 3.6}" class="cr-g" fill="${["Moon", "Venus", "Jupiter", "Mercury"].includes(p) ? "#120428" : "#fff"}">${GLYPH[p]}</text></g>`;
+      <text x="${x}" y="${y + 3.6}" class="cr-g" fill="${["Moon", "Jupiter", "Mercury"].includes(p) ? "#120428" : "#fff"}">${GLYPH[p]}</text></g>`;
   });
   /* the centre */
   let c1 = "", c2 = "";
   if (step === 0){ c1 = cls ? cls.toUpperCase() + "S" : "TWELVE HUES"; c2 = cls ? ({ primary: "fire", secondary: "air", tertiary: "earth · water" })[cls] : "twelve houses"; }
   else if (step === 1){ const r = HARMONY[dist]; c1 = `${dist} APART · ${r[2].toUpperCase()}`; c2 = r[1]; }
-  else if (step === 2){ c1 = pick ? pick.toUpperCase() : "PLANETS"; c2 = pick ? effect(pick, houseOfP(pick)).title : "carry or change colour"; }
+  else if (step === 2){ c1 = pick ? pick.toUpperCase() : "PLANETS"; c2 = pick ? effect(pick, houseOfP(pick)).title : "carry or change"; }
   else { c1 = `HOUSE ${focus}`; c2 = HOUSES[focus - 1].color; }
   o += `<circle cx="${CX}" cy="${CX}" r="${RI - 6}" class="cr-hole"/>
     <text x="${CX}" y="${CX - 4}" class="cr-c1">${c1}</text><text x="${CX}" y="${CX + 13}" class="cr-c2">${c2}</text></svg>`;
@@ -140,13 +140,14 @@ function lesson(){
       const e = effect(p, houseOfP(p)), bg = e.kind === "prism" ? PRISM : e.disc;
       return `<button type="button" class="cr-chip${pick === p ? " on" : ""}" data-cr-p="${p}"><i style="background:${bg}"></i>${GLYPH[p]} ${p}</button>`;
     }).join("");
-    let say = "Four grahas carry a hue of their own. Three carry none, and change the house's colour instead. Two are left open. Pick one.";
+    let say = "Four grahas carry a hue of their own. Four carry none and change the house's colour instead: the Moon and Saturn its value, how light or dark it is; Venus and Rahu its saturation, how vivid. Ketu splits it. Pick one.";
     if (pick && CHROMATIC[pick]){
       const c = CHROMATIC[pick], h = houseOfP(pick), e = effect(pick, h);
       say = `<b>${pick}</b> carries ${lc(c.hue)}, the hue of house ${c.seat}. In your chart it stands in house ${h}, ${lc(HOUSES[h - 1].color)}: ${e.d} ${e.d === 1 ? "step" : "steps"} from home, <b>${lc(e.title)}</b>, ${an(e.sub)}. ${e.gloss}`;
     } else if (pick && ACHROMATIC[pick]){
       const a = ACHROMATIC[pick];
-      say = `<b>${pick}</b> has no hue. It adds ${a.adds.toLowerCase()}, a <b>${a.op.toLowerCase()}</b>. ${a.note}`;
+      say = `<b>${pick}</b> has no hue of its own. Its operation is the <b>${a.op.toLowerCase()}</b>${a.constructed ? "" : `, adding ${lc(a.adds)}`}. ${a.note}${a.constructed
+        ? ` <span class="nw-fine">The glaze is the painter's way of raising saturation, which no mixture can do. Giving it to Venus is a construction, on the meaning of <i>śukra</i>: bright, clear, pure.</span>` : ""}`;
     } else if (pick) say = `<b>${pick}</b>: ${UNRESOLVED[pick]}`;
     body = `<div class="cr-chips">${chips}</div><p class="cr-say">${say}</p>`;
   } else {
