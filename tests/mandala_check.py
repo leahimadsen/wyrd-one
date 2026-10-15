@@ -53,6 +53,13 @@ check("the Nordic ring draws a card in each decan, in place of its name", 'card(
 check("the sidereal signs carry the Buddhist trump's card, the tropical signs the Nordic's", 'card("MB" + String(s.index + 1)' in mand and 'card("MN" + String(s.index + 1)' in mand)
 check("the Fool's card stands at the gate", 'card("MB00"' in mand)
 check("the record shows each deck's card and trump as glyphs", 'glyph(x.glyph, x.minor)}${glyph(x.major, x.trump)' in mand and 'glyph("MB00", c.gate.buddhist)' in mand)
+check("the record's cards are small, with their size written on them, so no browser stretches them to the column",
+      'class="c-glyph" width="${CW}" height="${CH}"' in mand and "const CW = 28" in mand and ".wm .c-glyph { display: block; flex: none; width: 28px; height: 42px;" in css)
+check("each pair sits side by side, with its name and detail beside it", 'class="c-row"' in mand and ".wm .c-row { display: grid; grid-template-columns: auto minmax(0, 1fr)" in css and ".wm .c-pair { display: flex;" in css)
+for page in ("mandala.html", "chart.html"):
+    html = open(os.path.join(ROOT, "static", page), encoding="utf-8").read()
+    check(f"{page} asks for this deploy's Mandala files by version, so an old stylesheet can't sit beside new scripts",
+          all(re.search(rf'/static/mandala/{re.escape(f)}\?v=\d+"', html) for f in ("wyrd-mandala.css", "wyrd-mansions.js", "wyrd-data.js", "wyrd-glyphs.js", "wyrd-mandala.js")))
 import shutil, subprocess, json as _json
 if shutil.which("node"):
     js = """global.window = global; const fs = require("fs"), d = %r;
