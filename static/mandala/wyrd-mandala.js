@@ -135,8 +135,8 @@
     /* a card glyph, upright, centred at radius r and longitude lon */
     const card = (code, r, lon, w, cls, data = "") => { if (!G.get(code)) return ""; const h = w * 1.5, [x, y] = pt(r, lon);
       return `<use href="#tarot-${code}" x="${f(x - w / 2)}" y="${f(y - h / 2)}" width="${f(w)}" height="${f(h)}" class="t-glyph ${cls}"${data}/>`; };
-    /* the Asura voids: the tunnels, thirty-six on a 3-2-4 spacing; pada 90's has never been named */
-    const voidOf = s => s.cards && s.cards.void ? (s.cards.void === "UNNAMED" ? "the unnamed void, the open seat" : s.cards.void) : "";
+    /* the Asura voids: the tunnels, thirty-six on a 3-2-4 spacing, the fourth, seventh and ninth pada of every sidereal sign */
+    const voidOf = s => (s.cards && s.cards.void) || "";
     /* a radial boundary at longitude a */
     const radial = (r0, r1, a) => { const [x0, y0] = pt(r0, a), [x1, y1] = pt(r1, a); return `M${f(x0)} ${f(y0)}L${f(x1)} ${f(y1)}`; };
     /* an arc for text: runs left-to-right whichever half of the dial it sits on */

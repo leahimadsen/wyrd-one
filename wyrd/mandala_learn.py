@@ -2,8 +2,8 @@
 
 What the instrument is, its two rotors, its rings from the centre out (with a key drawn as the wheel draws
 them), the two decks, the Asura voids, how to read a station, three things to try, and the outline of the
-paid course. Words are in lib/mandala_learn.json; the course's own teaching is paid and stays off this page."""
-import html, json, math, os
+paid course. Words are in lib/mandala_learn.json, the voids' names in lib/wyrd-mandala-108.csv; the course's own teaching is paid and stays off this page."""
+import csv, html, json, math, os
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 T = json.load(open(os.path.join(HERE, "lib", "mandala_learn.json"), encoding="utf-8"))
@@ -45,6 +45,43 @@ def ring_key():
             f'<figcaption>The rings from the centre out, each coloured by sign. The field and the five rings round it turn with the stars (sidereal); the outer two turn with the seasons (tropical).</figcaption></figure>')
 
 
+SIGNS = "Aries Taurus Gemini Cancer Leo Virgo Libra Scorpio Sagittarius Capricorn Aquarius Pisces".split()
+# the voids as the sheet names them (lib/wyrd-mandala-108.csv), station by station
+VOIDS = [(i + 1, r["nakshatra"], int(r["nak_pada"]), r["asura_void"])
+         for i, r in enumerate(csv.DictReader(open(os.path.join(HERE, "lib", "wyrd-mandala-108.csv"), encoding="utf-8"))) if r["asura_void"]]
+
+
+def void_strip():
+    """One sidereal sign's nine padas, the voids dark at the fourth, seventh and ninth, with the 3-2-4 spacing above."""
+    X = lambda i: 30 + i * 72 + 34          # centre of pada i (0-based)
+    o = []
+    for i in range(9):
+        void = i + 1 in (4, 7, 9)
+        o.append(f'<rect x="{30 + i * 72}" y="44" width="68" height="44" rx="3" fill="{"#050010" if void else HUE[0]}"'
+                 f' fill-opacity="{1 if void else .3}" stroke="{"#c48cff" if void else "none"}" stroke-width="1.5"/>')
+        if void: o.append(f'<circle cx="{X(i)}" cy="66" r="6" fill="none" stroke="#c48cff" stroke-width="1.5"/>')
+        o.append(f'<text x="{X(i)}" y="110" text-anchor="middle" fill="currentColor" font-size="15">{i + 1}</text>')
+    for a, b, n in ((3, 6, "3"), (6, 8, "2")):
+        o.append(f'<path d="M{X(a)} 40Q{(X(a) + X(b)) / 2} {14 if b - a > 2 else 22} {X(b)} 40" fill="none" stroke="currentColor" stroke-opacity=".6"/>'
+                 f'<text x="{(X(a) + X(b)) / 2}" y="{24 if b - a > 2 else 30}" text-anchor="middle" fill="currentColor" font-size="15">{n}</text>')
+    o.append(f'<path d="M{X(8)} 40Q{X(8) + 40} 18 716 26" fill="none" stroke="currentColor" stroke-opacity=".6" stroke-dasharray="4 4"/>'
+             f'<text x="{X(8) + 44}" y="22" text-anchor="middle" fill="currentColor" font-size="15">4</text>')
+    return ('<figure class="ml-fig"><svg viewBox="0 0 720 120" role="img" aria-labelledby="mlv"><title id="mlv">One sidereal sign\'s nine padas, '
+            'with the voids at the fourth, seventh and ninth</title>' + "".join(o) + '</svg>'
+            '<figcaption>One sidereal sign, nine padas. The voids fall on the fourth, the seventh and the ninth, three, two and four apart, '
+            'and the last four carry on into the next sign. Every sign is laid the same way.</figcaption></figure>')
+
+
+def void_table():
+    by = {}
+    for st, nak, pada, name in VOIDS: by.setdefault((st - 1) // 9, []).append((st, nak, pada, name))
+    cell = lambda v, n: f'<td data-n="{n}"><b>{e(v[3])}</b><small>{v[0]:03d} · {e(v[1])} {v[2]}</small></td>'
+    rows = "".join(f"<tr><th scope=\"row\">{SIGNS[k]}</th>{''.join(cell(v, n) for v, n in zip(by[k], ('Fourth', 'Seventh', 'Ninth')))}</tr>" for k in sorted(by))
+    return (f'<div class="ml-scroll"><table class="ml-voids"><caption>{e(T["VOIDS_TABLE"])}</caption>'
+            f'<thead><tr><th scope="col">Sign</th><th scope="col">Fourth</th><th scope="col">Seventh</th><th scope="col">Ninth, closing</th></tr></thead>'
+            f'<tbody>{rows}</tbody></table></div>')
+
+
 def index_page(base):
     from .pages import _crumbs
     ps = lambda xs: "".join(f"<p>{e(x)}</p>" for x in xs)
@@ -64,7 +101,10 @@ def index_page(base):
 
 <h2 id="decks">The two decks</h2>{ps(T["DECKS"])}
 
-<h2 id="voids">The Asura voids</h2><p>{e(T["VOIDS"])}</p>
+<h2 id="voids">The Asura voids</h2>{ps(T["VOIDS"][:4])}
+{void_strip()}
+{ps(T["VOIDS"][4:])}
+{void_table()}
 
 <h2 id="station">Reading a station</h2>{ps(T["STATION"])}
 
@@ -76,6 +116,6 @@ def index_page(base):
 <ol class="ml-course">{course}</ol>
 <p class="note-box">The course is coming. When it opens it will be here, and members of the Order will find it in the Hall. <a href="/membership">See the Order</a>.</p>"""
     desc = ("A free introduction to the Wyrd Mandala by The Völva: the two zodiacs turning against each other, the rings from the centre out, "
-            "the Buddhist and Nordic decks, the Asura voids, how to read a station, and the course to come.")
+            "the Buddhist and Nordic decks, the thirty-six Asura voids and their names, how to read a station, and the course to come.")
     return ("Learn the Wyrd Mandala: the Two Rotors, the Rings, the Decks and the Voids · The Wyrd Console", desc, body,
             _crumbs(base, [("Learn", "/learn"), ("The Wyrd Mandala", "/learn/mandala")]))
