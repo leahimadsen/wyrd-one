@@ -85,6 +85,7 @@ def void_table():
 def index_page(base):
     from .pages import _crumbs
     ps = lambda xs: "".join(f"<p>{e(x)}</p>" for x in xs)
+    cut = next(k for k, v in enumerate(T["VOIDS"]) if "fourth, the seventh" in v) + 1     # the diagram follows the paragraph that lays them out
     rings = "".join(f"<dt>{e(n)}</dt><dd>{e(t)}</dd>" for n, t in T["RINGS"])
     tries = "".join(f"<li><b>{e(n)}.</b> {e(t)}</li>" for n, t in T["TRY"])
     course = "".join(f"<li><b>{e(n)}</b><span>{e(t)}</span></li>" for n, t in T["COURSE"])
@@ -101,9 +102,9 @@ def index_page(base):
 
 <h2 id="decks">The two decks</h2>{ps(T["DECKS"])}
 
-<h2 id="voids">The Asura voids</h2>{ps(T["VOIDS"][:4])}
+<h2 id="voids">The Asura voids</h2>{ps(T["VOIDS"][:cut])}
 {void_strip()}
-{ps(T["VOIDS"][4:])}
+{ps(T["VOIDS"][cut:])}
 {void_table()}
 
 <h2 id="station">Reading a station</h2>{ps(T["STATION"])}

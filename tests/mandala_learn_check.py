@@ -31,6 +31,9 @@ check("no open seat left: the void at station 90 is named Narakasura", "open sea
 check("the voids are taught in depth: what an asura is, where they dwell, the spacing, the mansions, the names",
       all(k in page for k in ("Brihadaranyaka Upanishad 1.3.1", "patalas", "Sumeru", "fourth, the seventh and the ninth", "gandanta", "Devi Mahatmya", "Bhagavata Purana 10.59")))
 check("the borrowed word is flagged: Grant's tunnels lend the image, not the lineage", "Nightside of Eden" in page and "claim no descent" in page)
+check("the third lord of Tripura is Kamalaksha (103), and 79 is Vrishaparvan",
+      '<td data-n="Fourth"><b>Kamalaksha</b><small>103 · Uttara Bhadrapada 3</small></td>' in page and '<td data-n="Seventh"><b>Vrishaparvan</b><small>079 · Purva Ashadha 3</small></td>' in page
+      and "Kamalanabha" not in page and "Kamalanayana" not in page)
 check("a diagram of one sign's nine padas, and a table of all thirty-six by sign",
       'aria-labelledby="mlv"' in page and page.count('<tr><th scope="row">') == 12 and page.count('<td data-n="') == 36)
 check("the table names station 90 Narakasura, in Dhanishta's second pada", '<td data-n="Ninth"><b>Narakasura</b><small>090 · Dhanishta 2</small></td>' in page)
