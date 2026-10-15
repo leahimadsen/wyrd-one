@@ -354,21 +354,24 @@
     /* the two decks, one per rotor: Buddhist on the sidereal ring (emanating), Nordic on the true tropical ring (receiving) */
     function cardsText(s) {
       const t = s.tarot, c = s.cards, ay = D.FRAME.ayanamsa;
-      const glyph = (code, label) => G.get(code) ? `<svg class="c-glyph" viewBox="0 0 ${G.size.w} ${G.size.h}" role="img" aria-label="${esc(label)}"><use href="#tarot-${code}"/></svg>` : "";
+      /* small cards, their size written on them so they never stretch to the column; a pair side by side, the words beside it */
+      const CW = 28, CH = Math.round(CW * G.size.h / G.size.w);
+      const glyph = (code, label) => G.get(code) ? `<svg class="c-glyph" width="${CW}" height="${CH}" viewBox="0 0 ${G.size.w} ${G.size.h}" role="img" aria-label="${esc(label)}"><use href="#tarot-${code}"/></svg>` : "";
+      const row = (pair, words) => `<div class="c-row"><span class="c-pair">${pair}</span><div class="c-words">${words}</div></div>`;
       const deck = (name, ring, where, cards) => `<li><p class="c-deck">${name} · ${ring}</p>
-        ${cards.map(x => `<div class="c-pair">${glyph(x.glyph, x.minor)}${glyph(x.major, x.trump)}</div>
-          <p class="c-name">${esc(x.minor)} <small>· ${esc(x.trump)}</small></p>
-          <p class="c-det">${esc(x.sign)}${x.decan ? `, ${x.decan} decan` : ""}, ruled by ${esc(x.ruler)}</p>`).join("")}<p class="c-det">${where}</p></li>`;
+        ${cards.map(x => row(`${glyph(x.glyph, x.minor)}${glyph(x.major, x.trump)}`,
+          `<p class="c-name">${esc(x.minor)} <small>· ${esc(x.trump)}</small></p>
+          <p class="c-det">${esc(x.sign)}${x.decan ? `, ${x.decan} decan` : ""}, ruled by ${esc(x.ruler)}</p>`)).join("")}<p class="c-det">${where}</p></li>`;
       return `<section class="rec-sec">
           <h3>Cards</h3>
           ${c ? `<ul class="cands">
               ${deck("Buddhist deck", "sidereal ring", `where it comes from: ${inSign(s.zodiacStart)} – ${inSign(s.zodiacEnd)}`, [{ ...c.buddhist, glyph: t.glyph }])}
               ${deck("Nordic deck", "tropical ring", `where it lands: ${inSign(s.zodiacStart + ay.degrees)} – ${inSign(s.zodiacEnd + ay.degrees)} (${ay.epoch})${c.nordic.length > 1 ? "; the pada crosses a decan line, so both cards" : ""}`, c.nordic)}
             </ul>
-          ${c.gate ? `<div class="gate-card"><div class="c-pair">${glyph("MB00", c.gate.buddhist)}</div><p class="c-deck">At the gate · 0° sidereal Aries</p><p class="c-name">${esc(c.gate.buddhist)}</p>
-            <p class="c-det">${esc(c.gate.reading)}. ${esc(c.gate.note)}</p></div>` : ""}
-          ${exaltIn(s, ay.degrees).map(x => `<div class="gate-card"><div class="c-pair">${glyph(x.code, x.nordic)}</div><p class="c-deck">Exaltation · tropical ring</p>
-            <p class="c-name">${esc(x.nordic)} <small>· ${esc(x.planet)} exalted, ${inSign(x.trop)}</small></p></div>`).join("")}
+          ${c.gate ? `<div class="gate-card"><p class="c-deck">At the gate · 0° sidereal Aries</p>${row(glyph("MB00", c.gate.buddhist), `<p class="c-name">${esc(c.gate.buddhist)}</p>
+            <p class="c-det">${esc(c.gate.reading)}. ${esc(c.gate.note)}</p>`)}</div>` : ""}
+          ${exaltIn(s, ay.degrees).map(x => `<div class="gate-card"><p class="c-deck">Exaltation · tropical ring</p>${row(glyph(x.code, x.nordic),
+            `<p class="c-name">${esc(x.nordic)} <small>· ${esc(x.planet)} exalted, ${inSign(x.trop)}</small></p>`)}</div>`).join("")}
           ${voidOf(s) ? `<dl class="kv"><dt>Asura void</dt><dd>${esc(voidOf(s))}</dd></dl>` : ""}`
           : `<dl class="kv"><dt>Card</dt><dd>${t.name ? esc(t.name) : NA}</dd></dl>`}
         </section>`;
