@@ -69,8 +69,10 @@ const figs = S.build(R);
 const alt = figs.map(G => [G.f.id, G.crossings]);
 const boxes = figs.map(G => G.box), overlap = boxes.some((a, i) => boxes.some((b, j) => j > i && a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1));
 const inside = boxes.every(b => b.x0 >= 0 && b.x1 <= 1000 && b.y0 >= 0 && b.y1 <= 1280), starsIn = figs.map(G => G.stars.length);
-const ropes = figs.filter(G => G.strands.length > G.f.parts.length).length;
-console.log(JSON.stringify({ B, Rg, Si, alt, overlap, inside, starsIn, ropes, assigned: figs.every(G => G.pieces.length === G.crossings),
+const ropes = figs.filter(G => G.strands.length > G.f.parts.filter(p => p.o || p.tw || p.ring || p.eye || p.eight).length).length;
+const woven = figs.filter(G => G.field.dots >= 4 && G.field.overs.length > 0 && G.bodies.length).map(G => G.f.id);
+const fieldOK = figs.every(G => G.field.overs.every(o => o.length >= 3));
+console.log(JSON.stringify({ B, Rg, Si, alt, overlap, inside, starsIn, ropes, woven, fieldOK, assigned: figs.every(G => G.pieces.length === G.plaitCrossings),
   inside: figs.every(G => G.strands.every(s => s.pts.every(p => isFinite(p[0]) && isFinite(p[1])))) }));
 """ % (os.path.join(ROOT, "static", "sky-data.js"), os.path.join(ROOT, "static", "sky.js"))
     r = subprocess.run(["node", "-e", js], capture_output=True, text=True)
@@ -85,7 +87,10 @@ console.log(JSON.stringify({ B, Rg, Si, alt, overlap, inside, starsIn, ropes, as
     check("every crossing has its over strand drawn on top", out.get("assigned") is True)
     check("the figures are spread through the margins, no two in the same place", out.get("overlap") is False and out.get("inside") is True)
     check("every figure shows its own real stars", all(n >= 2 for n in out.get("starsIn", [])))
-    check("the outlines are ropes of interlace, two strands where one was drawn", out.get("ropes", 0) >= 10)
+    check("limbs, tails and rings are plaits and ropes, more strands than were drawn", out.get("ropes", 0) >= 10)
+    check("the broad bodies are woven knot fields inside their contours (the Wagon, the wolf, the lion, the horse)",
+          {"wagon", "wolf", "lion", "horse"} <= set(out.get("woven", [])))
+    check("every crossing in a woven body has its over strand", out.get("fieldOK") is True)
 
 print("\nall good" if not bad else f"\n{bad} failed")
 sys.exit(1 if bad else 0)
