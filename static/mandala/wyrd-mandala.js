@@ -37,7 +37,6 @@
   const GLYPH = { Sun: "☉", Moon: "☽", Mars: "♂", Mercury: "☿", Jupiter: "♃", Venus: "♀", Saturn: "♄", Rahu: "☊", Ketu: "☋",
     Uranus: "♅", Neptune: "♆", Pluto: "♇", Ascendant: "AC", Midheaven: "MC" };
   const NA = `<span class="na">Not yet assigned</span>`;
-  const badge = p => p && D.PROVENANCE[p] ? `<span class="prov prov-${p}">${D.PROVENANCE[p].label}</span>` : "";
 
   /* the instrument's controls, dial and record: one copy per mount, found by data-wm, never by global id */
   let seq = 0;
@@ -132,6 +131,9 @@
       return "#" + a.map((v, k) => Math.round(v + (b[k] - v) * t).toString(16).padStart(2, "0")).join("");
     }
     const tint = h => ` style="--h:${h}"`;
+    /* a card glyph, upright, centred at radius r and longitude lon */
+    const card = (code, r, lon, w, cls, data = "") => { if (!G.get(code)) return ""; const h = w * 1.5, [x, y] = pt(r, lon);
+      return `<use href="#tarot-${code}" x="${f(x - w / 2)}" y="${f(y - h / 2)}" width="${f(w)}" height="${f(h)}" class="t-glyph ${cls}"${data}/>`; };
     /* the Asura voids: the tunnels, thirty-six on a 3-2-4 spacing; pada 90's has never been named */
     const voidOf = s => s.cards && s.cards.void ? (s.cards.void === "UNNAMED" ? "the unnamed void, the open seat" : s.cards.void) : "";
     /* a radial boundary at longitude a */
@@ -154,6 +156,7 @@
       o += `<path d="M${T.map(p => p.map(f).join(" ")).join("L")}Z" class="f-tri"/>`;
       for (const a of [0, 120, 240]) { const [x, y] = pt(R * .96, a); o += `<circle cx="${f(x)}" cy="${f(y)}" r="3.2" class="f-node"/>`; }
       o += `<circle r="12" class="f-bindu-ring"/><circle r="4.5" class="f-bindu"/>`;
+      o += card("MB00", R * .76, 0, 20, "trump-glyph gate-glyph", ` data-trump="gate"`);
       return o;
     }
     function drawZodiac(arcDefs) {
@@ -161,7 +164,8 @@
       let o = "";
       for (const s of D.SIGNS) {
         o += `<path d="${sector(r0, r1, s.start, s.end)}" class="z-sec ${s.index % 2 ? "alt" : ""}" data-sign="${s.index}"${tint(hueOf(s.index))}/>`;
-        const [gx, gy] = pt(r1 - 22, s.start + 15), id = `wm${n}-zn-${s.index}`, dec = root.WYRD_MANSIONS && root.WYRD_MANSIONS.cards.decans;
+        const [gx, gy] = pt((r0 + r1) / 2 + 2, s.start + 6.2), id = `wm${n}-zn-${s.index}`, dec = root.WYRD_MANSIONS && root.WYRD_MANSIONS.cards.decans;
+        o += card("MB" + String(s.index + 1).padStart(2, "0"), (r0 + r1) / 2 + 1, s.start + 15, 16, "trump-glyph", ` data-trump="b${s.index}"`);
         o += `<text x="${f(gx)}" y="${f(gy)}" class="z-glyph" text-anchor="middle" dominant-baseline="central">${s.glyph}</text>`;
         arcDefs.push(`<path id="${id}" d="${textArc(r0 + 10, s.start + 1, s.end - 1)}"/>`);
         o += `<text class="z-name"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${s.name.toUpperCase()}</textPath></text>`;
@@ -218,9 +222,7 @@
       for (let k = 0; k < 36; k++) {
         const a = k * 10 - AY(), b = a + 10, d = dec && dec[k];
         o += `<path d="${sector(r0, r1, a, b)}" class="tz-sec tz-dec ${k % 2 ? "alt" : ""}" data-dec="${k}"${tint(hueOf(Math.floor(k / 3)))}/>`;
-        if (d) { const id = `wm${n}-nd-${k}`;
-          arcDefs.push(`<path id="${id}" d="${textArc((r0 + r1) / 2 + 3, a + .3, b - .3)}"/>`);
-          o += `<text class="nd-name"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${d.nordic.minor.replace(" of ", " ")}</textPath></text>`; }
+        if (d) o += card("N" + String(k + 1).padStart(2, "0"), (r0 + r1) / 2, a + 5, 17, "nd-glyph", ` data-dec="${k}"`);
       }
       for (let k = 0; k < 36; k++) o += `<path d="${radial(r0, r1, k * 10 - AY())}" class="${k % 3 ? "tz-div-t" : "tz-div"}"/>`;
       return o;
@@ -231,9 +233,10 @@
       for (const s of D.SIGNS) {
         const a = s.start - AY(), b = s.end - AY(), id = `wm${n}-tz-${s.index}`;
         o += `<path d="${sector(r0, r1, a, b)}" class="tz-sec ${s.index % 2 ? "alt" : ""}" data-tsign="${s.index}"${tint(hueOf(s.index))}/>`;
-        const [gx, gy] = pt(r1 - 13, s.start + 15 - AY());
+        const [gx, gy] = pt((r0 + r1) / 2, s.start + 3.2 - AY());
         o += `<text x="${f(gx)}" y="${f(gy)}" class="tz-glyph" text-anchor="middle" dominant-baseline="central">${s.glyph}</text>`;
-        arcDefs.push(`<path id="${id}" d="${textArc(r0 + 13, a + 1, b - 1)}"/>`);
+        o += card("MN" + String(s.index + 1).padStart(2, "0"), (r0 + r1) / 2, s.start + 7.6 - AY(), 17, "trump-glyph", ` data-trump="n${s.index}"`);
+        arcDefs.push(`<path id="${id}" d="${textArc((r0 + r1) / 2 - 3, a + 10.4, b - 1)}"/>`);
         o += `<text class="tz-name"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${s.name.toUpperCase()}${dec ? " · " + dec[s.index * 3].nordic.trump.replace(/^The /, "").toUpperCase() : ""}</textPath></text>`;
       }
       for (const s of D.SIGNS) o += `<path d="${radial(r0, r1, s.start - AY())}" class="tz-div-s"/>`;
@@ -338,22 +341,21 @@
     }
     /* the two decks, one per rotor: Buddhist on the sidereal ring (emanating), Nordic on the true tropical ring (receiving) */
     function cardsText(s) {
-      const t = s.tarot, c = s.cards, ph = G.get(t.glyph).placeholder, ay = D.FRAME.ayanamsa;
+      const t = s.tarot, c = s.cards, ay = D.FRAME.ayanamsa;
+      const glyph = (code, label) => G.get(code) ? `<svg class="c-glyph" viewBox="0 0 ${G.size.w} ${G.size.h}" role="img" aria-label="${esc(label)}"><use href="#tarot-${code}"/></svg>` : "";
       const deck = (name, ring, where, cards) => `<li><p class="c-deck">${name} · ${ring}</p>
-        ${cards.map(x => `<p class="c-name">${esc(x.minor)} <small>· ${esc(x.trump)}</small></p>
+        ${cards.map(x => `<div class="c-pair">${glyph(x.glyph, x.minor)}${glyph(x.major, x.trump)}</div>
+          <p class="c-name">${esc(x.minor)} <small>· ${esc(x.trump)}</small></p>
           <p class="c-det">${esc(x.sign)}${x.decan ? `, ${x.decan} decan` : ""}, ruled by ${esc(x.ruler)}</p>`).join("")}<p class="c-det">${where}</p></li>`;
       return `<section class="rec-sec">
           <h3>Cards</h3>
-          ${c ? `<div class="tarot">
-            <svg class="tarot-big" viewBox="0 0 ${G.size.w} ${G.size.h}" role="img" aria-label="Glyph ${t.glyph}${ph ? " (placeholder)" : ""}"><use href="#tarot-${t.glyph}"/></svg>
-            <ul class="cands">
-              ${deck("Buddhist deck", "sidereal ring", `where it comes from: ${inSign(s.zodiacStart)} – ${inSign(s.zodiacEnd)}`, [c.buddhist])}
+          ${c ? `<ul class="cands">
+              ${deck("Buddhist deck", "sidereal ring", `where it comes from: ${inSign(s.zodiacStart)} – ${inSign(s.zodiacEnd)}`, [{ ...c.buddhist, glyph: t.glyph }])}
               ${deck("Nordic deck", "tropical ring", `where it lands: ${inSign(s.zodiacStart + ay.degrees)} – ${inSign(s.zodiacEnd + ay.degrees)} (${ay.epoch})${c.nordic.length > 1 ? "; the pada crosses a decan line, so both cards" : ""}`, c.nordic)}
-            </ul></div>
-          ${c.gate ? `<div class="gate-card"><p class="c-deck">At the gate · 0° sidereal Aries</p><p class="c-name">${esc(c.gate.buddhist)}</p>
+            </ul>
+          ${c.gate ? `<div class="gate-card"><div class="c-pair">${glyph("MB00", c.gate.buddhist)}</div><p class="c-deck">At the gate · 0° sidereal Aries</p><p class="c-name">${esc(c.gate.buddhist)}</p>
             <p class="c-det">${esc(c.gate.reading)}. ${esc(c.gate.note)}</p></div>` : ""}
-          <dl class="kv">${voidOf(s) ? `<dt>Asura void</dt><dd>${esc(voidOf(s))}</dd>` : ""}
-            <dt>Glyph</dt><dd class="num">${t.glyph}${ph ? " <small>· artwork to come</small>" : ""}</dd></dl>`
+          ${voidOf(s) ? `<dl class="kv"><dt>Asura void</dt><dd>${esc(voidOf(s))}</dd></dl>` : ""}`
           : `<dl class="kv"><dt>Card</dt><dd>${t.name ? esc(t.name) : NA}</dd></dl>`}
         </section>`;
     }
@@ -382,18 +384,16 @@
             <dt>Zodiac sign</dt><dd>${sign.glyph} ${sign.name} <small>· ${dms(s.zodiacStart % 30)} – ${dms((s.zodiacEnd - 1e-9) % 30 + 1e-9)}</small></dd>
             <dt>Nakshatra ruler</dt><dd>${esc(s.nakshatraLord)}</dd>
             <dt>Nakshatra deity</dt><dd>${esc(s.deity)}${s.deityAlt ? ` <small>· also given as ${esc(s.deityAlt)}</small>` : ""}</dd>
-            <dt>Navamsa</dt><dd>${s.navamsa}${s.vargottama ? ` <small class="mark">· vargottama</small>` : ""} <small>· computed</small></dd>
+            <dt>Navamsa</dt><dd>${s.navamsa}${s.vargottama ? ` <small class="mark">· vargottama</small>` : ""}</dd>
             <dt>Tropical projection</dt><dd class="num">${trop(s.zodiacStart)} – ${trop(s.zodiacEnd)} <small>· ${ay.name} ≈ ${dms(ay.degrees)}, ${ay.epoch}</small></dd>
           </dl>
         </section>
         ${cardsText(s)}
         <section class="rec-sec">
           <h3>Correspondences</h3>
-          ${corr.length ? corr.map(([sys, rows], i) => { const one = rows.every(r => r.provenance === rows[0].provenance) ? rows[0].provenance : null;
-            return `<details${i < 2 ? " open" : ""}><summary>${esc(sys)} <small>${rows.length}</small>${one ? " " + badge(one) : ""}</summary>
-            <dl class="kv corr">${rows.map(r => `<dt>${esc(r.label)}</dt><dd>${esc(r.value)}${one ? "" : " " + badge(r.provenance)}</dd>`).join("")}</dl></details>`; }).join("")
+          ${corr.length ? corr.map(([sys, rows], i) => `<details${i < 2 ? " open" : ""}><summary>${esc(sys)}</summary>
+            <dl class="kv corr">${rows.map(r => `<dt>${esc(r.label)}</dt><dd>${esc(r.value)}</dd>`).join("")}</dl></details>`).join("")
             : `<p class="na-block">No correspondences have been mapped to this station yet.</p>`}
-          <p class="planned">Every row says how it is held: attested in a primary or traditional source, computed from the wheel, structural to this system's own rules, or constructed and awaiting a ruling.</p>
         </section>
         ${s.notes ? `<section class="rec-sec"><h3>Notes</h3>${s.notes.split(/\n\n+/).map(p => `<p class="note">${esc(p)}</p>`).join("")}
           ${s.source ? `<p class="src">Source: ${esc(s.source)}</p>` : ""}</section>` : ""}`;

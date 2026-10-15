@@ -48,5 +48,31 @@ check("hovering a void names it", '" · Asura void: " + esc(voidOf(s))' in mand)
 check("the sidereal sign ring carries each sign's Buddhist trump", 'class="z-trump"' in mand and "dec[s.index * 3].buddhist.trump" in mand)
 check("and the tropical ring still carries the Nordic", "dec[s.index * 3].nordic.trump" in mand)
 
+# both decks as cards: the Nordic minors and every trump carry glyphs, and the Fool stands at the gate
+check("the Nordic ring draws a card in each decan, in place of its name", 'card("N" + String(k + 1).padStart(2, "0")' in mand and 'class="nd-name"' not in mand)
+check("the sidereal signs carry the Buddhist trump's card, the tropical signs the Nordic's", 'card("MB" + String(s.index + 1)' in mand and 'card("MN" + String(s.index + 1)' in mand)
+check("the Fool's card stands at the gate", 'card("MB00"' in mand)
+check("the record shows each deck's card and trump as glyphs", 'glyph(x.glyph, x.minor)}${glyph(x.major, x.trump)' in mand and 'glyph("MB00", c.gate.buddhist)' in mand)
+import shutil, subprocess, json as _json
+if shutil.which("node"):
+    js = """global.window = global; const fs = require("fs"), d = %r;
+for (const f of ["wyrd-mansions.js", "wyrd-data.js", "wyrd-glyphs.js"]) eval(fs.readFileSync(d + f, "utf8"));
+const G = window.WyrdGlyphs, p2 = n => String(n).padStart(2, "0"), has = c => c.filter(x => G.get(x)).length;
+console.log(JSON.stringify({ N: has(Array.from({length:36}, (_, i) => "N" + p2(i + 1))), MB: has(Array.from({length:12}, (_, i) => "MB" + p2(i + 1))),
+  MN: has(Array.from({length:12}, (_, i) => "MN" + p2(i + 1))), fool: !!G.get("MB00"),
+  drawn: Array.from({length:12}, (_, i) => G.get("MB" + p2(i + 1)).svg + G.get("MN" + p2(i + 1)).svg).every(s => s.includes("g-em")),
+  iv: G.get("MN01").svg.includes(">IV<"), ii: G.get("N01").svg.includes(">II<"), st: window.WYRD.stations[8].cards }));""" % os.path.join(ROOT, "static", "mandala", "")
+    r = subprocess.run(["node", "-e", js], capture_output=True, text=True); o = _json.loads(r.stdout or "{}")
+    check("thirty-six Nordic minor cards, twelve trumps a deck, and the Fool, all registered", o.get("N") == 36 and o.get("MB") == 12 and o.get("MN") == 12 and o.get("fool"))
+    check("every trump has its own emblem drawn", o.get("drawn") is True)
+    check("the Nordic trumps carry Waite's numbers (the Emperor is IV), the minors their own (2 of Wands is II)", o.get("iv") and o.get("ii"))
+    st = o.get("st", {})
+    check("a station knows its cards' glyphs: station 9's Nordic card is Taurus's third decan, 7 of Shields", st.get("nordic", [{}])[0].get("glyph") == "N06" and st["nordic"][0]["minor"] == "7 of Shields" and st["buddhist"]["major"] == "MB01")
+
+# the record without its annotations: no status badges, no counts beside the sections
+check("no status badges in the record", "badge(" not in mand and 'class="prov' not in mand and "how it is held" not in mand)
+check("no counts beside the sections", "<small>${rows.length}</small>" not in mand)
+check("the page no longer promises them", "how it is held" not in open(os.path.join(ROOT, "static", "mandala.html"), encoding="utf-8").read())
+
 print("\nall good" if not bad else f"\n{bad} failed")
 sys.exit(1 if bad else 0)

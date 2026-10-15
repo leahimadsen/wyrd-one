@@ -178,6 +178,12 @@
 .wm .c-det { font-size: 15px; color: var(--wm-ink-2); }
 .wm .c-name small { font-family: var(--wm-serif); font-size: 15px; color: var(--wm-ink-2); }
 .wm .gate-card { border: 1px solid var(--wm-brass); padding: 8px 12px; display: grid; gap: 2px; }
+.wm .c-pair { display: flex; gap: 8px; margin: 4px 0 4px; }
+.wm .c-glyph { width: 40px; height: 60px; color: var(--wm-ink); }
+.wm .gate-card .c-glyph { color: var(--wm-brass); }
+/* the trumps and the Nordic cards on the wheel */
+.wm .trump-glyph { color: var(--wm-ink); }
+.wm .gate-glyph { color: var(--wm-brass); }
 .wm details { border-top: 1px dotted var(--wm-hair); padding: 6px 0; }
 .wm summary { cursor: pointer; font-family: var(--wm-display); letter-spacing: .05em; }
 .wm summary small { font-family: var(--wm-mono); color: var(--wm-ink-2); margin-left: 4px; }
