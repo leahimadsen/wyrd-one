@@ -11,8 +11,8 @@ import json, os, sys
 SRC = sys.argv[1] if len(sys.argv) > 1 else "data"
 OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static", "sky-data.js")
 LIMIT = 5.0
-# the classical figures drawn in knotwork: their IAU stick figures go along, faint
-LINES = ["Cyg", "Aql", "Lyr", "Dra", "Peg", "Leo", "Sco", "Cas", "UMi", "And"]
+# the constellations drawn as star maps round the tree: their IAU stick figures
+LINES = ["Cyg", "Aql", "Lyr", "Dra", "Peg", "Leo", "Cas", "Ori", "CMa", "Gem", "Tau", "UMa"]
 
 ra = lambda x: round(x % 360, 2)
 stars = json.load(open(os.path.join(SRC, "stars.6.json")))["features"]
