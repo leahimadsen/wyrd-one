@@ -61,13 +61,38 @@ const G = window.WyrdGlyphs, p2 = n => String(n).padStart(2, "0"), has = c => c.
 console.log(JSON.stringify({ N: has(Array.from({length:36}, (_, i) => "N" + p2(i + 1))), MB: has(Array.from({length:12}, (_, i) => "MB" + p2(i + 1))),
   MN: has(Array.from({length:12}, (_, i) => "MN" + p2(i + 1))), fool: !!G.get("MB00"),
   drawn: Array.from({length:12}, (_, i) => G.get("MB" + p2(i + 1)).svg + G.get("MN" + p2(i + 1)).svg).every(s => s.includes("g-em")),
-  iv: G.get("MN01").svg.includes(">IV<"), ii: G.get("N01").svg.includes(">II<"), st: window.WYRD.stations[8].cards }));""" % os.path.join(ROOT, "static", "mandala", "")
+  iv: G.get("MN01").svg.includes(">IV<"), ii: G.get("N01").svg.includes(">II<"), st: window.WYRD.stations[8].cards,
+  ex: window.WYRD.TRUMP_EXALT, mx: Array.from({length:7}, (_, i) => G.get("MX" + p2(i + 1))).map(g => g ? [g.name, g.svg.includes("g-em"), (g.svg.match(/>([IVXL]+)</) || [])[1]] : null) }));""" % os.path.join(ROOT, "static", "mandala", "")
     r = subprocess.run(["node", "-e", js], capture_output=True, text=True); o = _json.loads(r.stdout or "{}")
     check("thirty-six Nordic minor cards, twelve trumps a deck, and the Fool, all registered", o.get("N") == 36 and o.get("MB") == 12 and o.get("MN") == 12 and o.get("fool"))
     check("every trump has its own emblem drawn", o.get("drawn") is True)
     check("the Nordic trumps carry Waite's numbers (the Emperor is IV), the minors their own (2 of Wands is II)", o.get("iv") and o.get("ii"))
     st = o.get("st", {})
     check("a station knows its cards' glyphs: station 9's Nordic card is Taurus's third decan, 7 of Shields", st.get("nordic", [{}])[0].get("glyph") == "N06" and st["nordic"][0]["minor"] == "7 of Shields" and st["buddhist"]["major"] == "MB01")
+    # the seven planetary trumps, each deck on its own rotor: the Nordic at the Western exaltation on the tropical ring
+    ex = {x["planet"]: x for x in o.get("ex", [])}
+    WEST = {"Sun": 19, "Moon": 33, "Mercury": 165, "Venus": 357, "Mars": 298, "Jupiter": 105, "Saturn": 201}     # 19° Aries … 21° Libra
+    JYOTISH = {"Sun": 10, "Moon": 33, "Mercury": 165, "Venus": 357, "Mars": 298, "Jupiter": 95, "Saturn": 200}   # Parashara
+    GD = {"Sun": "The Sun", "Moon": "The High Priestess", "Mercury": "The Magician", "Venus": "The Empress", "Mars": "The Tower", "Jupiter": "Wheel of Fortune", "Saturn": "The World"}
+    check("seven planetary trumps, the Golden Dawn's, one to each planet", {p: x["nordic"] for p, x in ex.items()} == GD)
+    check("the Nordic deck's sit at the Western exaltation degrees (tropical)", {p: x["trop"] for p, x in ex.items()} == WEST)
+    check("and the sidereal degrees are Parashara's, the same the record's exaltation rows use", {p: x["sid"] for p, x in ex.items()} == JYOTISH
+          and "const EXALT = { Sun: 10, Moon: 33, Mars: 298, Mercury: 165, Jupiter: 95, Venus: 357, Saturn: 200 }" in data)
+    mx = o.get("mx", [])
+    check("each has its card drawn, with Waite's number (the Magician I … the World XXI)", len(mx) == 7 and all(m and m[1] for m in mx)
+          and {m[0]: m[2] for m in mx if m} == {"The Sun": "XIX", "The High Priestess": "II", "The Magician": "I", "The Empress": "III", "The Tower": "XVI", "Wheel of Fortune": "X", "The World": "XXI"})
+check("the planetary trumps stand outside the rim at their degree on the tropical ring, with a hairline in", 'card("MX" + String(i + 1).padStart(2, "0"), r + 38, a' in mand
+      and "norm(x.trop - AY())" in mand and 'class="ex-tick"' in mand and ".wm .ex-tick" in css)
+check("the rim's degree numbers make way for them, and so does the selected station's code", "if (ex.some(a =>" in mand and "steps aside from a planetary trump" in mand)
+check("a station holding an exaltation shows its trump in the record", "exaltIn(s, ay.degrees)" in mand and "Exaltation · tropical ring" in mand)
+check("the key explains them", "planetary trumps, each at its planet's exaltation" in mand)
+if shutil.which("node"):
+    js = """global.window = global; const fs = require("fs"), d = %r;
+for (const f of ["wyrd-mansions.js", "wyrd-data.js"]) eval(fs.readFileSync(d + f, "utf8"));
+const W = window.WYRD, ay = W.FRAME.ayanamsa.degrees, n = x => ((x %% 360) + 360) %% 360;
+console.log(JSON.stringify(W.TRUMP_EXALT.map(x => [x.planet, W.stations.filter(s => n(x.trop - n(s.zodiacStart + ay)) < s.zodiacEnd - s.zodiacStart).map(s => s.id)])));""" % os.path.join(ROOT, "static", "mandala", "")
+    r = subprocess.run(["node", "-e", js], capture_output=True, text=True); held = dict(_json.loads(r.stdout or "[]"))
+    check("each exaltation falls in exactly one station (2026: the Sun's 19° Aries in station 107)", len(held) == 7 and all(len(v) == 1 for v in held.values()) and held.get("Sun") == [107])
 
 # the record without its annotations: no status badges, no counts beside the sections
 check("no status badges in the record", "badge(" not in mand and 'class="prov' not in mand and "how it is held" not in mand)

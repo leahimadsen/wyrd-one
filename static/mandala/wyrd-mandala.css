@@ -112,6 +112,7 @@
 /* the Asura voids: a dark passage through the pada ring, the mouth ringed in mauve */
 .wm .p-sec.p-void { fill: color-mix(in srgb, var(--h, #2a1240) 12%, #07020f); }
 .wm .void-mouth { fill: #050010; stroke: #c48cff; stroke-width: 1.2; pointer-events: none; }
+.wm .key-card { display: inline-block; width: 8px; height: 12px; border-radius: 1.5px; border: 1.3px solid var(--wm-brass); vertical-align: -2px; margin-right: 4px; }
 .wm .key-void { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #050010; border: 1.5px solid #c48cff; vertical-align: -1px; margin-right: 4px; }
 
 .wm .t-edge { fill: none; stroke: var(--wm-ink); stroke-width: .9; }
@@ -184,6 +185,8 @@
 /* the trumps and the Nordic cards on the wheel */
 .wm .trump-glyph { color: var(--wm-ink); }
 .wm .gate-glyph { color: var(--wm-brass); }
+.wm .ex-tick { stroke: var(--wm-ink-2); stroke-width: .8; stroke-dasharray: 1.5 2.5; }
+.wm .ex-glyph { color: var(--wm-brass); }
 .wm details { border-top: 1px dotted var(--wm-hair); padding: 6px 0; }
 .wm summary { cursor: pointer; font-family: var(--wm-display); letter-spacing: .05em; }
 .wm summary small { font-family: var(--wm-mono); color: var(--wm-ink-2); margin-left: 4px; }
