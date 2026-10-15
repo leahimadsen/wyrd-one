@@ -135,6 +135,8 @@ def learn_index(base):
 <p>The oldest map of the sky in Jyotish: twenty-seven mansions of 13°20′ that the Moon passes through, one a day. Each has a ruling planet, a deity, a power of its own, and a part of the body. Each page reads one in full: what it's about, what it's good for, where it goes wrong, and its question.</p>
 <ul class="terms">{naks}</ul>
 <h2 id="gates">The 64 gates</h2><ul class="terms">{gates}</ul>
+<h2 id="mandala">The Wyrd Mandala</h2>
+<p>Two zodiacs turning against each other, with the mansions, the padas, a Buddhist and a Nordic deck, and the Asura voids laid on them. <a href="/learn/mandala">Learn to read the Wyrd Mandala</a>, then <a href="/mandala">open it</a>.</p>
 <h2 id="sukuyo">Sukuyō</h2>
 <p>The Japanese art of the lunar mansions: twenty-seven shuku read from the old lunar calendar, and the six relations that say how two people stand to each other. <a href="/learn/sukuyo">Learn Sukuyō and find your shuku</a>.</p>
 <h2>Go further</h2><ul class="terms"><li><a href="/learn/runes">Learn the runes: the 24 runes of the Elder Futhark</a></li>
@@ -253,7 +255,7 @@ def signs_index(base):
 
 
 def sitemap(base):
-    urls = ["/", "/reports", "/letmelightyourpath", "/contact", "/membership", "/today", "/mandala", "/sample", "/learn", "/learn/signs", "/learn/sukuyo"]
+    urls = ["/", "/reports", "/letmelightyourpath", "/contact", "/membership", "/today", "/mandala", "/sample", "/learn", "/learn/signs", "/learn/sukuyo", "/learn/mandala"]
     urls += [f"/learn/gates/{g}" for g in GATES] + [f"/learn/nakshatras/{s}" for s, _ in NAKS] + [f"/learn/signs/{s}" for s, _ in SIGNS]
     urls += ["/learn/runes"] + [f"/learn/runes/{r[0]}" for r in RUNES] + ["/learn/numbers", "/learn/dharma"] + [f"/learn/dharma/gates/{g}" for g in GATES]
     rows = "".join(f"<url><loc>{e(base + u)}</loc></url>" for u in urls)

@@ -1,0 +1,45 @@
+{
+  "_note": "DRAFT for The Völva to edit. The free introduction to the Wyrd Mandala at /learn/mandala: what the instrument is, its two rotors, its rings from the centre out, the two decks, the Asura voids, how to read a station's record, three things to try, and the outline of the paid course (Learning the Mandala). The course itself is the paid teaching and stays off this page; only its module titles and one line each are shown here.",
+  "LEDE": "The Wyrd Mandala is a study wheel: two zodiacs turning against each other, with the twenty-seven mansions, the hundred and eight padas, two decks of cards and the Asura voids laid on them. It needs no birth data. You read it directly, one station at a time, and lay your own chart on it when you want to.",
+  "ROTORS": [
+    "The inner rings are sidereal: the zodiac measured from the stars. The outer rings are tropical: the zodiac measured from the spring equinox. The wheel opens at 0° sidereal Aries, the first pada of Ashwini, because the sidereal ring is where things come from: the stars. The tropical ring is where they land, in the seasons.",
+    "The two zeros stand about 24° apart in 2026, and the gap widens by a degree in roughly 72 years. That gap is the ayanamsa. On the wheel it is the distance the outer ring has turned, and the year slider turns it, from 285, when the two zodiacs met, to 2700."
+  ],
+  "RINGS": [
+    ["The field", "The bindu at the centre. The cross of the four cardinal sign starts, each a vargottama station. The triangle at 0°, 120° and 240°: the only three places where a sign boundary and a mansion boundary fall together. The Fool stands here, at the gate."],
+    ["The sidereal signs", "Twelve signs of 30°, each carrying its trump from the Buddhist deck."],
+    ["The mansions", "The twenty-seven nakshatras of 13°20′, each with its number and its ruling planet."],
+    ["The padas", "A hundred and eight quarters of 3°20′: the stations of the wheel. A small ring marks a vargottama pada, whose navamsa repeats its own sign. The dark padas are the Asura voids. The dashed lines carry the sign boundaries through, so you can see where the signs and the mansions part company."],
+    ["The Buddhist cards", "One card for every station: the minor card of its decan, read on the sidereal ring."],
+    ["The Nordic cards", "The thirty-six decans of the tropical ring, each with its minor card, turned by the ayanamsa."],
+    ["The tropical signs", "Twelve signs measured from the equinox, each carrying its Nordic trump. The dashed equinox line marks 0° tropical Aries."]
+  ],
+  "DECKS": [
+    "The Buddhist deck belongs to the sidereal ring and the Nordic deck to the tropical. Both read the same thirty-six decans, so every station holds a card in each: where it comes from, and where it lands.",
+    "Because the tropical ring is turned by the ayanamsa, a pada can straddle two Nordic decans, and then it carries both cards. The trumps sit by sign, one in each deck. The Fool belongs to no sign and no decan. It stands at the gate, 0° sidereal Aries, where the Buddhist ring begins."
+  ],
+  "VOIDS": "Thirty-six padas are Asura voids, the tunnels: three in every nine padas, on a repeating spacing of three, two and four. Thirty-five carry names. The void at station 90 has never been named. It is the open seat.",
+  "STATION": [
+    "Tap a station and its record opens. Read it from the inside out: the mansion and its pada, the station's place on both rotors, its two cards with their trumps, its void if it has one, and then its correspondences.",
+    "The correspondences are lenses on the one station: the two rotors, the mansion, the planets and their rulership, the runes, colour, numerology, sound, Human Design on the tropical ring, the I Ching, the chakras and the Planetary Ladder, the tattvas, anatomy, the harmonic relationships and the mythological structures. None of them is the source of another. Each is a way of looking at the same arc of sky."
+  ],
+  "TRY_INTRO": "Three things to try with the Mandala open beside this page.",
+  "TRY": [
+    ["Open station 001", "Read its mansion, Ashwini, then its two cards: the Buddhist card of where it comes from and the Nordic card of where it lands. Then the Fool, at the gate."],
+    ["Turn back the years", "Drag the year slider back to 285 and watch the outer ring turn until the two zeros meet. Then bring it forward to today and see how far the receiving ring has travelled."],
+    ["Lay your chart on it", "Cast your chart and open the Mandala from it. Your planets stand at their stations. Open the station your Moon stands on and read it from the inside out."]
+  ],
+  "COURSE_INTRO": "Learning the Mandala is the course that teaches the reading itself: how a station speaks through its rings, how the two rotors and their decks answer each other, and how to read your own chart on the wheel. It will be sold on its own, apart from The Wyrd Reading, and included for the Order.",
+  "COURSE": [
+    ["The gate and the two rotors", "Where the wheel opens, and why the stars emanate and the seasons receive."],
+    ["One station, ring by ring", "Reading a single pada from the bindu to the rim."],
+    ["Padas, navamsa and the vargottama twelve", "The ninth harmonic, and the stations whose navamsa returns home."],
+    ["The two decks", "Minor cards by decan, trumps by sign, and the Fool at the gate."],
+    ["The Asura voids", "The thirty-six tunnels, their spacing, their names, and the open seat."],
+    ["The years", "The ayanamsa as a distance travelled, and what it does to a station's cards."],
+    ["What lights together", "The relations: the same navamsa, the same ruler, the vargottama set."],
+    ["Your chart on the wheel", "Your planets at their stations, and what lines up across the rings."],
+    ["A whole reading", "Reading a chart through the Mandala from first station to last."]
+  ],
+  "OPEN": "Open the Wyrd Mandala"
+}

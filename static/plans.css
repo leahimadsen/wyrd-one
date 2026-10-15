@@ -218,3 +218,13 @@ body.paper .tc-back .price { color: var(--arc-mid) !important; }
 .sr-legend { list-style: none; padding: 0; margin: 0 0 8px; display: flex; flex-wrap: wrap; gap: 4px 16px; color: #1d1712; }
 .sr-sw { display: inline-block; width: .9em; height: .9em; border-radius: 2px; vertical-align: -.1em; margin-right: 6px; }
 @media (max-width: 560px) { .sk-big { font-size: 46px; } .sk-card, .sk-rel { padding: 12px 14px; gap: 12px; } }
+
+/* Learn the Wyrd Mandala (/learn/mandala) */
+.ml-fig { margin: 22px auto; max-width: 720px; }
+.ml-fig svg { width: 100%; height: auto; display: block; color: inherit; }
+.ml-fig figcaption { font-size: 14px; opacity: .75; margin-top: 8px; }
+.ml-rings dt { font-weight: 600; }
+.ml-try li, .ml-course li { margin: 0 0 10px; }
+.ml-course li b { display: block; }
+.ml-course li span { opacity: .8; }
+.ml-alt { margin-left: 14px; }
