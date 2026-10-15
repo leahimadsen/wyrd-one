@@ -27,7 +27,13 @@ T = json.load(open(os.path.join(A.HERE, "lib", "mandala_learn.json"), encoding="
 check("the words are a draft for The Völva to edit", T["_note"].startswith("DRAFT for The Völva to edit"))
 check("the course shows only its module titles and a line each", len(T["COURSE"]) >= 6 and all(len(x) == 2 and len(x[1]) < 120 for x in T["COURSE"]))
 check("the course is marked as coming, and for the Order", "The course is coming" in page and 'href="/membership"' in page)
-check("the void at station 90 is the open seat", "open seat" in page)
+check("no open seat left: the void at station 90 is named Narakasura", "open seat" not in page and "never been named" not in page and "The void at station 90 is Narakasura" in page)
+check("the voids are taught in depth: what an asura is, where they dwell, the spacing, the mansions, the names",
+      all(k in page for k in ("Brihadaranyaka Upanishad 1.3.1", "patalas", "Sumeru", "fourth, the seventh and the ninth", "gandanta", "Devi Mahatmya", "Bhagavata Purana 10.59")))
+check("the borrowed word is flagged: Grant's tunnels lend the image, not the lineage", "Nightside of Eden" in page and "claim no descent" in page)
+check("a diagram of one sign's nine padas, and a table of all thirty-six by sign",
+      'aria-labelledby="mlv"' in page and page.count('<tr><th scope="row">') == 12 and page.count('<td data-n="') == 36)
+check("the table names station 90 Narakasura, in Dhanishta's second pada", '<td data-n="Ninth"><b>Narakasura</b><small>090 · Dhanishta 2</small></td>' in page)
 check("the Learn page links to it", 'href="/learn/mandala"' in web.get("/learn").get_data(as_text=True))
 check("the Mandala page links to it", 'href="/learn/mandala"' in open(os.path.join(A.HERE, "static", "mandala.html"), encoding="utf-8").read())
 check("search engines are told of it", "/learn/mandala" in web.get("/sitemap.xml").get_data(as_text=True))
