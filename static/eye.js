@@ -125,8 +125,8 @@ function half(kind, side){
 const HALVES = [half("crown", -1), half("crown", 1), half("root", -1), half("root", 1)];
 const STRANDS = Array.from({ length: 22 }, (_, i) => ({ i, f: i / 21 }));
 /* the sky behind: the real stars about the north celestial pole, which this drawing sets above Asgard's
-   crown, and round the margins twelve figures in knotwork, each on its own stars (sky.js): Norse names
-   in gold, Greek figures in ice. */
+   crown, and round the margins twelve constellations as star maps (sky.js): the stars a Norse source
+   names in gold, the Greek constellations in ice. */
 const SKY_R = 325;
 for (let i = 0; i < 990; i++) rnd();   /* the old made-up stars drew from this seeded sequence: spending it keeps the tree's twigs and the rocks as they were */
 const skyAngle = () => -1.15;                              /* the Milky Way laid diagonally across the scene */
@@ -672,11 +672,11 @@ function panel(){
   }
   if (sel.startsWith("sky:")){
     const f = window.WyrdSky && WyrdSky.figure(sel.slice(4)); if (!f){ panelEl.innerHTML = ""; return; }
-    panelEl.innerHTML = `<h3>${f.name} <small>${f.gloss}</small></h3><p class="ey-on">${f.kind === "norse" ? `a Norse name · ${f.tag}` : "a Greek figure, in Norse ornament"}</p>
+    panelEl.innerHTML = `<h3>${f.name} <small>${f.gloss}</small></h3><p class="ey-on">${f.kind === "norse" ? `a Norse name · ${f.tag}` : "a Greek constellation"}</p>
       <dl>
         <dt>The stars</dt><dd>${f.stars}</dd>
         <dt>Its source</dt><dd>${f.note}</dd>
-        <dt>Drawn here</dt><dd>The stars in the figure are real and keep their true places to one another. Where it sits round the tree, its size and its turn are composed for the drawing, and so is the sky behind, set about the pole above Asgard; no source fixes the sky to the tree. The knotwork is drawn for the console${f.kind === "norse" ? "" : ", round a Greek figure"}.</dd>
+        <dt>Drawn here</dt><dd>The stars are real and keep their true places to one another, north up, with the constellation's lines after the IAU${f.kind === "norse" ? "; the named stars and their lines are in gold" : ""}. Where the map sits round the tree and its size are composed for the drawing, and so is the sky behind, set about the pole above Asgard; no source fixes the sky to the tree.</dd>
       </dl><p class="ey-src">${f.credit}</p>`;
     return;
   }
@@ -707,7 +707,7 @@ function panel(){
     ${st ? `<p class="ey-ken">${st.kenning}</p>` : w.ken ? `<p class="ey-ken">${w.ken}</p>` : ""}${go}`;
 }
 const how = () => { if (capEl) capEl.textContent = mode === "shell"
-  ? "Your planets stand where they stood when you were born, on the rim of Jötunheim's shell among your houses. Drag the shell to turn it; tap any world, well or planet, or a figure in the sky for where its name comes from."
+  ? "Your planets stand where they stood when you were born, on the rim of Jötunheim's shell among your houses. Drag the shell to turn it; tap any world, well or planet, or a constellation in the sky for where its name comes from."
   : "On the Ladder, each of the seven goes to the world it feeds, the same for everyone. Rahu and Ketu go to the poles above and below; the outer three stay in the shell."; };
 function choose(id, go){
   sel = id; panel();
