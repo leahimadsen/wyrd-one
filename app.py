@@ -774,6 +774,11 @@ def learn_dharma_gate(g):
     if not p: abort(404)
     return page(*p)
 
+@app.get("/learn/mandala")
+def learn_mandala():
+    from wyrd import mandala_learn
+    return page(*mandala_learn.index_page(config.BASE_URL))
+
 @app.get("/learn/sukuyo")
 def learn_sukuyo():
     from wyrd import sukuyo_learn
