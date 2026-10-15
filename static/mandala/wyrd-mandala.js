@@ -64,6 +64,7 @@
           <li><i style="border-color: var(--wm-brass)"></i>Triangle: where sign and mansion boundaries meet (0°, 120°, 240°)</li>
           <li><i style="border-color: var(--wm-ink-2)"></i>Cross: the four cardinal sign starts</li>
           <li><span style="color: var(--wm-brass)">○</span> vargottama pada</li>
+          <li><span class="key-void"></span> Asura void: the tunnels, thirty-six dark padas on a 3-2-4 spacing</li>
           <li><i style="border-color: var(--wm-verd); border-top-width: 6px"></i>Tropical rings, outside: the Nordic cards and the tropical signs, turned by the ayanamsa</li>
           <li><i style="border-color: var(--wm-verd); border-top-style: dashed"></i>The equinox: 0° tropical Aries</li>
           <li data-wm="plKey" hidden><span style="color: var(--wm-pl)">☉</span> your planets, at their sidereal places</li>
@@ -120,6 +121,19 @@
       const [x0, y0] = pt(r1, a), [x1, y1] = pt(r1, b), [x2, y2] = pt(r0, b), [x3, y3] = pt(r0, a), big = (b - a) > 180 ? 1 : 0;
       return `M${f(x0)} ${f(y0)}A${r1} ${r1} 0 ${big} 1 ${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}A${r0} ${r0} 0 ${big} 0 ${f(x3)} ${f(y3)}Z`;
     }
+    /* colour: the console's twelve house colours round the wheel, Aries red to Pisces magenta (the gate station is
+       red, house 1). A ring of signs takes each sign's colour; the mansions, which cross the signs, take the colour
+       of where their middle stands, blended between the signs' colours. */
+    const HUE = ["#ff3b4e", "#ff6a1f", "#ff8c1a", "#ffb31a", "#ffd400", "#a3e635", "#22e07a", "#14e0c0", "#22b8ff", "#6b6bff", "#b05cff", "#ff2fa8"];
+    const hx = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+    const hueOf = sign => HUE[((sign % 12) + 12) % 12];
+    function hueAt(lon) {
+      const x = norm(lon) / 30 - .5, i = Math.floor(x), t = x - i, a = hx(hueOf(i)), b = hx(hueOf(i + 1));
+      return "#" + a.map((v, k) => Math.round(v + (b[k] - v) * t).toString(16).padStart(2, "0")).join("");
+    }
+    const tint = h => ` style="--h:${h}"`;
+    /* the Asura voids: the tunnels, thirty-six on a 3-2-4 spacing; pada 90's has never been named */
+    const voidOf = s => s.cards && s.cards.void ? (s.cards.void === "UNNAMED" ? "the unnamed void, the open seat" : s.cards.void) : "";
     /* a radial boundary at longitude a */
     const radial = (r0, r1, a) => { const [x0, y0] = pt(r0, a), [x1, y1] = pt(r1, a); return `M${f(x0)} ${f(y0)}L${f(x1)} ${f(y1)}`; };
     /* an arc for text: runs left-to-right whichever half of the dial it sits on */
@@ -146,11 +160,13 @@
       const [r0, r1] = ring("zodiac");
       let o = "";
       for (const s of D.SIGNS) {
-        o += `<path d="${sector(r0, r1, s.start, s.end)}" class="z-sec ${s.index % 2 ? "alt" : ""}" data-sign="${s.index}"/>`;
-        const [gx, gy] = pt(r1 - 17, s.start + 15), id = `wm${n}-zn-${s.index}`;
+        o += `<path d="${sector(r0, r1, s.start, s.end)}" class="z-sec ${s.index % 2 ? "alt" : ""}" data-sign="${s.index}"${tint(hueOf(s.index))}/>`;
+        const [gx, gy] = pt(r1 - 22, s.start + 15), id = `wm${n}-zn-${s.index}`, dec = root.WYRD_MANSIONS && root.WYRD_MANSIONS.cards.decans;
         o += `<text x="${f(gx)}" y="${f(gy)}" class="z-glyph" text-anchor="middle" dominant-baseline="central">${s.glyph}</text>`;
-        arcDefs.push(`<path id="${id}" d="${textArc(r0 + 11, s.start + 1, s.end - 1)}"/>`);
+        arcDefs.push(`<path id="${id}" d="${textArc(r0 + 10, s.start + 1, s.end - 1)}"/>`);
         o += `<text class="z-name"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${s.name.toUpperCase()}</textPath></text>`;
+        if (dec) { arcDefs.push(`<path id="${id}-t" d="${textArc(r1 - 7, s.start + 1, s.end - 1)}"/>`);
+          o += `<text class="z-trump"><textPath href="#${id}-t" startOffset="50%" text-anchor="middle">${esc(dec[s.index * 3].buddhist.trump)}</textPath></text>`; }
       }
       for (const s of D.SIGNS) o += `<path d="${radial(r0, r1, s.start)}" class="z-div"/>`;
       return o;
@@ -159,7 +175,7 @@
       const [r0, r1] = ring("nakshatras");
       let o = "";
       for (const k of D.NAKSHATRAS) {
-        o += `<path d="${sector(r0, r1, k.start, k.end)}" class="n-sec ${k.index % 2 ? "alt" : ""}" data-nak="${k.index}"/>`;
+        o += `<path d="${sector(r0, r1, k.start, k.end)}" class="n-sec ${k.index % 2 ? "alt" : ""}" data-nak="${k.index}"${tint(hueAt((k.start + k.end) / 2))}/>`;
         const id = `wm${n}-nk-${k.index}`;
         arcDefs.push(`<path id="${id}" d="${textArc((r0 + r1) / 2 + 9, k.start + .4, k.end - .4)}"/>`);
         arcDefs.push(`<path id="${id}-b" d="${textArc((r0 + r1) / 2 - 11, k.start + .4, k.end - .4)}"/>`);
@@ -173,10 +189,11 @@
       const [r0, r1] = ring("padas");
       let o = "";
       for (const s of S) {
-        o += `<path d="${sector(r0, r1, s.zodiacStart, s.zodiacEnd)}" class="p-sec${byStation[s.id] ? " has-pl" : ""}" data-st="${s.id}"/>`;
+        o += `<path d="${sector(r0, r1, s.zodiacStart, s.zodiacEnd)}" class="p-sec${byStation[s.id] ? " has-pl" : ""}${s.pada % 2 ? "" : " alt"}${voidOf(s) ? " p-void" : ""}" data-st="${s.id}"${tint(hueOf(Math.floor(mid(s) / 30)))}/>`;
         const [x, y] = pt(r0 + 15, mid(s));
         o += `<text x="${f(x)}" y="${f(y)}" class="p-num" text-anchor="middle" dominant-baseline="central">${s.pada}</text>`;
         if (s.vargottama) { const [vx, vy] = pt(r1 - 12, mid(s)); o += `<circle cx="${f(vx)}" cy="${f(vy)}" r="2.6" class="p-varg"/>`; }
+        if (voidOf(s)) { const [vx, vy] = pt(r0 + 26, mid(s)); o += `<circle cx="${f(vx)}" cy="${f(vy)}" r="3.6" class="void-mouth"/>`; }
       }
       for (const s of S) o += `<path d="${radial(r0, r1, s.zodiacStart)}" class="${s.pada === 1 ? "p-div-nak" : "p-div"}"/>`;
       /* where the sign boundaries cross the mansion and pada rings: drawn through, so the misalignment shows */
@@ -185,7 +202,8 @@
     }
     function drawTarot() {
       const [r0, r1] = ring("tarot"), gw = 17, gh = 25.5;
-      let o = `<circle r="${r0}" class="t-edge"/><circle r="${r1}" class="t-edge"/>`;
+      let o = D.SIGNS.map(z => `<path d="${sector(r0, r1, z.start, z.end)}" class="t-sec${z.index % 2 ? " alt" : ""}"${tint(hueOf(z.index))}/>`).join("")
+        + `<circle r="${r0}" class="t-edge"/><circle r="${r1}" class="t-edge"/>`;
       for (const s of S) {
         const [x, y] = pt((r0 + r1) / 2, mid(s));
         o += `<use href="#tarot-${s.tarot.glyph}" x="${f(x - gw / 2)}" y="${f(y - gh / 2)}" width="${gw}" height="${gh}" class="t-glyph${s.tarot.status === "unassigned" ? " unassigned" : ""}" data-st="${s.id}"/>`;
@@ -199,7 +217,7 @@
       let o = "";
       for (let k = 0; k < 36; k++) {
         const a = k * 10 - AY(), b = a + 10, d = dec && dec[k];
-        o += `<path d="${sector(r0, r1, a, b)}" class="tz-sec ${Math.floor(k / 3) % 2 ? "alt" : ""}" data-dec="${k}"/>`;
+        o += `<path d="${sector(r0, r1, a, b)}" class="tz-sec tz-dec ${k % 2 ? "alt" : ""}" data-dec="${k}"${tint(hueOf(Math.floor(k / 3)))}/>`;
         if (d) { const id = `wm${n}-nd-${k}`;
           arcDefs.push(`<path id="${id}" d="${textArc((r0 + r1) / 2 + 3, a + .3, b - .3)}"/>`);
           o += `<text class="nd-name"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${d.nordic.minor.replace(" of ", " ")}</textPath></text>`; }
@@ -212,7 +230,7 @@
       let o = "";
       for (const s of D.SIGNS) {
         const a = s.start - AY(), b = s.end - AY(), id = `wm${n}-tz-${s.index}`;
-        o += `<path d="${sector(r0, r1, a, b)}" class="tz-sec ${s.index % 2 ? "alt" : ""}" data-tsign="${s.index}"/>`;
+        o += `<path d="${sector(r0, r1, a, b)}" class="tz-sec ${s.index % 2 ? "alt" : ""}" data-tsign="${s.index}"${tint(hueOf(s.index))}/>`;
         const [gx, gy] = pt(r1 - 13, s.start + 15 - AY());
         o += `<text x="${f(gx)}" y="${f(gy)}" class="tz-glyph" text-anchor="middle" dominant-baseline="central">${s.glyph}</text>`;
         arcDefs.push(`<path id="${id}" d="${textArc(r0 + 13, a + 1, b - 1)}"/>`);
@@ -253,7 +271,7 @@
     }
     function drawHit() {
       const r0 = ring("zodiac")[0], r1 = ring("tropical")[1];
-      return S.map(s => `<path d="${sector(r0, r1, s.zodiacStart, s.zodiacEnd)}" class="hit" data-st="${s.id}"><title>${s.code} · ${s.nakshatra} ${s.pada} · ${inSign(s.zodiacStart)}</title></path>`).join("");
+      return S.map(s => `<path d="${sector(r0, r1, s.zodiacStart, s.zodiacEnd)}" class="hit" data-st="${s.id}"><title>${s.code} · ${s.nakshatra} ${s.pada} · ${inSign(s.zodiacStart)}${voidOf(s) ? " · Asura void: " + esc(voidOf(s)) : ""}</title></path>`).join("");
     }
     function drawSelection() {
       const s = state.sel; if (!s) return "";
@@ -334,7 +352,7 @@
             </ul></div>
           ${c.gate ? `<div class="gate-card"><p class="c-deck">At the gate · 0° sidereal Aries</p><p class="c-name">${esc(c.gate.buddhist)}</p>
             <p class="c-det">${esc(c.gate.reading)}. ${esc(c.gate.note)}</p></div>` : ""}
-          <dl class="kv">${c.void ? `<dt>Asura void</dt><dd>${esc(c.void)}</dd>` : ""}
+          <dl class="kv">${voidOf(s) ? `<dt>Asura void</dt><dd>${esc(voidOf(s))}</dd>` : ""}
             <dt>Glyph</dt><dd class="num">${t.glyph}${ph ? " <small>· artwork to come</small>" : ""}</dd></dl>`
           : `<dl class="kv"><dt>Card</dt><dd>${t.name ? esc(t.name) : NA}</dd></dl>`}
         </section>`;

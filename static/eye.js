@@ -124,16 +124,11 @@ function half(kind, side){
 }
 const HALVES = [half("crown", -1), half("crown", 1), half("root", -1), half("root", 1)];
 const STRANDS = Array.from({ length: 22 }, (_, i) => ({ i, f: i / 21 }));
-const STARS = Array.from({ length: 220 }, () => [rnd() * PW, rnd() * PH, rnd() * 1.2 + .3, rnd()]);
-const BRIGHT = Array.from({ length: 14 }, () => [rnd() * PW, rnd() * PH * .94, 2 + rnd() * 2.5, rnd()]);
-/* constellations in the empty corners, drawn as the hub world draws them (decoration only) */
-const CONST = [[120, 120], [880, 110], [110, 1215], [890, 1210]].map(([cx, cy], n) => {
-  const pts = [], k = 6 + (n % 3);
-  for (let i = 0; i < k; i++) pts.push([cx + (rnd() - .5) * 170, cy + (rnd() - .5) * 120]);
-  pts.sort((a, b) => a[0] - b[0]);
-  const edges = pts.slice(1).map((p, i) => [i, i + 1]); edges.push([1, Math.min(k - 1, 4)]);
-  return { pts, edges };
-});
+/* the sky behind: the real stars, turning slowly about the north celestial pole, which this drawing
+   sets above Asgard's crown (sky.js). Its figures are knotwork: Norse names in gold, Greek figures in ice. */
+const SKY_R = 325, SKY_TURN = 360 / 1200;                 /* one turn in twenty minutes */
+for (let i = 0; i < 990; i++) rnd();   /* the old made-up stars drew from this seeded sequence: spending it keeps the tree's twigs and the rocks as they were */
+const skyAngle = time => -(((Date.now() / 1000) * SKY_TURN) % 360) * RAD * (reduce ? 0 : 1) - (reduce ? 2.2 : 0);
 function rock(cx, cy, w, h){
   const top = [], bot = [];
   for (let i = 0; i <= 14; i++){ const u = i / 14 * 2 - 1; top.push([cx + u * w / 2, cy - Math.abs(Math.sin(i * 1.7)) * 5 - (1 - u * u) * 4]); }
@@ -386,12 +381,8 @@ function buildSky(){
   const ag = c.createRadialGradient(0, 0, 0, 0, 0, 500); ag.addColorStop(0, "rgba(154,107,255,0)"); ag.addColorStop(.62, "rgba(154,107,255,.035)");
   ag.addColorStop(.86, "rgba(190,150,255,.09)"); ag.addColorStop(1, "rgba(154,107,255,0)");
   c.fillStyle = ag; c.beginPath(); c.arc(0, 0, 500, 0, TAU); c.fill(); c.restore();
-  /* faint knotwork spirals, as in the hub world's sky */
-  c.strokeStyle = "rgba(100,190,255,.08)"; c.lineWidth = 1.2;
-  for (const [x, y, s0] of [[120, 420, 1], [880, 380, -1], [860, 1090, 1], [140, 860, -1]]){
-    c.beginPath(); for (let t = 0; t < 26; t += .1){ const r = 4 + t * 3.2, a = s0 * t; c.lineTo(x + r * Math.cos(a), y + r * Math.sin(a)); } c.stroke();
-  }
   SKY = off;
+  if (window.WyrdSky) WyrdSky.prepare(SKY_R, dpr * scale * 1.8);
 }
 /* the frame of the figure: the egg, the axis running out past it, the mansions' ring, the compass */
 function frameLines(time, z){
@@ -480,22 +471,8 @@ function frame(now){
   ctx.lineCap = "round"; ctx.lineJoin = "round";
 
   if (SKY) ctx.drawImage(SKY, 0, 0, PW, PH);
-  ctx.globalCompositeOperation = "lighter";
-  for (const C of CONST){
-    ctx.strokeStyle = "rgba(110,200,255,.3)"; ctx.lineWidth = 1.1 / Math.sqrt(z); ctx.beginPath();
-    for (const [a, b] of C.edges){ ctx.moveTo(...C.pts[a]); ctx.lineTo(...C.pts[b]); } ctx.stroke();
-    for (const p of C.pts){ ctx.fillStyle = "rgba(150,220,255,.26)"; ctx.beginPath(); ctx.arc(p[0], p[1], 6 / Math.sqrt(z), 0, TAU); ctx.fill();
-      ctx.fillStyle = "rgba(225,245,255,.95)"; ctx.beginPath(); ctx.arc(p[0], p[1], 2.1 / Math.sqrt(z), 0, TAU); ctx.fill(); }
-  }
-  for (const [x, y, r, ph] of BRIGHT){
-    const a = .5 + .5 * Math.sin(time * 1.1 + ph * 9), l = r * 4 * (.7 + .3 * a);
-    ctx.strokeStyle = `rgba(220,240,255,${.35 * a})`; ctx.lineWidth = .8 / Math.sqrt(z);
-    ctx.beginPath(); ctx.moveTo(x - l, y); ctx.lineTo(x + l, y); ctx.moveTo(x, y - l); ctx.lineTo(x, y + l); ctx.stroke();
-    ctx.fillStyle = `rgba(235,248,255,${.6 + .4 * a})`; ctx.beginPath(); ctx.arc(x, y, r * .55, 0, TAU); ctx.fill();
-  }
-  ctx.globalCompositeOperation = "source-over";
+  if (window.WyrdSky) WyrdSky.draw(ctx, POLES.above.at, skyAngle(time), sel && sel.startsWith("sky:") ? sel.slice(4) : null, time, z);
   for (const R of ROCKS) drawRock(R, time, z);
-  for (const [x, y, r, ph] of STARS){ ctx.fillStyle = `rgba(220,235,255,${.18 + .22 * Math.sin(time * .7 + ph * 9) ** 2})`; ctx.beginPath(); ctx.arc(x, y, r / Math.sqrt(z), 0, TAU); ctx.fill(); }
   let g = ctx.createRadialGradient(CROWN.x, CROWN.y - 60, 0, CROWN.x, CROWN.y - 60, CROWN.rx * 1.1);
   g.addColorStop(0, `rgba(${S.halo},.10)`); g.addColorStop(1, `rgba(${S.halo},0)`); ctx.fillStyle = g; ctx.fillRect(0, 0, PW, PH);
   g = ctx.createRadialGradient(CX, 1100, 0, CX, 1100, 420); g.addColorStop(0, `rgba(${S.halo},.07)`); g.addColorStop(1, `rgba(${S.halo},0)`);
@@ -692,6 +669,16 @@ function panel(){
       </dl>${toLand("#chart", "Every placement in Your chart")}${st ? toLand("#design/harmonic", `The ${st.station} on the Harmonic Body`) : ""}`;
     return;
   }
+  if (sel.startsWith("sky:")){
+    const f = window.WyrdSky && WyrdSky.figure(sel.slice(4)); if (!f){ panelEl.innerHTML = ""; return; }
+    panelEl.innerHTML = `<h3>${f.name} <small>${f.gloss}</small></h3><p class="ey-on">${f.kind === "norse" ? `a Norse name · ${f.tag}` : "a Greek figure, in Norse ornament"}</p>
+      <dl>
+        <dt>The stars</dt><dd>${f.stars}</dd>
+        <dt>Its source</dt><dd>${f.note}</dd>
+        <dt>Drawn here</dt><dd>The stars are real and stand in their true places, turning about the north celestial pole. Setting that pole above Asgard is this drawing's choice; no source fixes the sky to the tree. The knotwork is drawn for the console${f.kind === "norse" ? "" : ", round a Greek figure"}.</dd>
+      </dl><p class="ey-src">${f.credit}</p>`;
+    return;
+  }
   const well = WELLS.find(w => w.id === sel);
   if (well){
     panelEl.innerHTML = `<h3>${well.name}</h3><p class="ey-on">${well.on}</p>
@@ -719,14 +706,14 @@ function panel(){
     ${st ? `<p class="ey-ken">${st.kenning}</p>` : w.ken ? `<p class="ey-ken">${w.ken}</p>` : ""}${go}`;
 }
 const how = () => { if (capEl) capEl.textContent = mode === "shell"
-  ? "Your planets stand where they stood when you were born, on the rim of Jötunheim's shell among your houses. Drag the shell to turn it; tap any world, well or planet."
+  ? "Your planets stand where they stood when you were born, on the rim of Jötunheim's shell among your houses. Drag the shell to turn it; tap any world, well or planet, or a figure in the sky for where its name comes from."
   : "On the Ladder, each of the seven goes to the world it feeds, the same for everyone. Rahu and Ketu go to the poles above and below; the outer three stay in the shell."; };
 function choose(id, go){
   sel = id; panel();
   host.querySelectorAll("[data-eye-w]").forEach(b => b.setAttribute("aria-pressed", b.dataset.eyeW === sel));
   if (go) travel(id);
   if (reduce) paintOnce();
-  if (window.Wyrd && Wyrd.pulse && id) Wyrd.pulse("tap", "eye-" + (id.startsWith("p:") ? "planet" : id));
+  if (window.Wyrd && Wyrd.pulse && id) Wyrd.pulse("tap", "eye-" + (id.startsWith("p:") ? "planet" : id.startsWith("sky:") ? "sky" : id));
 }
 function buttons(){
   host.querySelector(".ey-worlds").innerHTML = W.map(w => `<button class="ey-w" type="button" data-eye-w="${w.id}" aria-pressed="${sel === w.id}" style="--c:${w.col}"><i></i>${names === "soul" ? w.soul : w.name}</button>`).join("");
@@ -796,6 +783,7 @@ function mount(el, C, o = {}){
     let best = null, bd = Infinity;
     for (const n of NODES){ const d = Math.hypot(n.x - x, n.y - y), dd = d - (n.planet ? 1000 : 0); if (d < n.r + 10 / (scale * cam.z) && dd < bd){ bd = dd; best = n.id; } }
     if (!best){ const dx = x - CX, dy = y - MY, rr = Math.hypot(dx, dy / K); if (rr > 168 && rr < 415) best = "jotunheim"; }
+    if (!best && window.WyrdSky){ const f = WyrdSky.hit(x, y, POLES.above.at, skyAngle(performance.now() / 1000)); if (f){ choose("sky:" + f, false); return; } }
     if (best) choose(best, true);
   });
   addEventListener("resize", () => { if (running) size(); });
