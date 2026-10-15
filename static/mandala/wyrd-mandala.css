@@ -19,20 +19,30 @@
   --wm-serif: "Crimson Pro", "Iowan Old Style", Georgia, serif;
   --wm-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --wm-size: 17px;
+  /* how much of a sector's own colour (--h, its sign's) shows in each ring: pastel on vellum, deeper on dark */
+  --k-z: 34%; --k-za: 27%; --k-n: 24%; --k-na: 18%; --k-p: 15%; --k-pa: 11%; --k-t: 12%; --k-ta: 9%;
+  --k-d: 20%; --k-da: 26%; --k-ts: 32%; --k-tsa: 26%; --k-sel: 55%;
   color: var(--wm-ink); font-family: var(--wm-serif); font-size: var(--wm-size); line-height: 1.5;
 }
 @media (prefers-color-scheme: dark) { .wm:not([data-wm-theme="light"]) {
   --wm-paper: #121614; --wm-paper-2: #181d1a; --wm-ink: #e2e3d8; --wm-ink-2: #a1a89f;
   --wm-hair: rgba(226, 227, 216, .24); --wm-hair-2: rgba(226, 227, 216, .1);
-  --wm-brass: #c49a55; --wm-rubric: #dc6a4f; --wm-verd: #7fb3a2; --wm-pl: #8cb8e0; } }
+  --wm-brass: #c49a55; --wm-rubric: #dc6a4f; --wm-verd: #7fb3a2; --wm-pl: #8cb8e0;
+  --k-z: 48%; --k-za: 41%; --k-n: 36%; --k-na: 29%; --k-p: 26%; --k-pa: 20%; --k-t: 16%; --k-ta: 11%;
+  --k-d: 30%; --k-da: 38%; --k-ts: 46%; --k-tsa: 39%; --k-sel: 62%; } }
 .wm[data-wm-theme="dark"] {
   --wm-paper: #121614; --wm-paper-2: #181d1a; --wm-ink: #e2e3d8; --wm-ink-2: #a1a89f;
   --wm-hair: rgba(226, 227, 216, .24); --wm-hair-2: rgba(226, 227, 216, .1);
-  --wm-brass: #c49a55; --wm-rubric: #dc6a4f; --wm-verd: #7fb3a2; --wm-pl: #8cb8e0; }
+  --wm-brass: #c49a55; --wm-rubric: #dc6a4f; --wm-verd: #7fb3a2; --wm-pl: #8cb8e0;
+  --k-z: 48%; --k-za: 41%; --k-n: 36%; --k-na: 29%; --k-p: 26%; --k-pa: 20%; --k-t: 16%; --k-ta: 11%;
+  --k-d: 30%; --k-da: 38%; --k-ts: 46%; --k-tsa: 39%; --k-sel: 62%; }
+/* the console's own: the rings in their colours on deep night, gold for what is chosen */
 .wm[data-wm-theme="site"] {
-  --wm-paper: #070b0d; --wm-paper-2: #0d1417; --wm-ink: #d9d4c4; --wm-ink-2: #9b998d;
-  --wm-hair: rgba(156, 180, 166, .26); --wm-hair-2: rgba(156, 180, 166, .1);
-  --wm-brass: #b8924a; --wm-rubric: #d9805f; --wm-verd: #6fb7a0; --wm-pl: #9fc6e6;
+  --wm-paper: #0b0722; --wm-paper-2: #120b30; --wm-ink: #f1ecff; --wm-ink-2: #c3b9e6;
+  --wm-hair: rgba(214, 200, 255, .3); --wm-hair-2: rgba(214, 200, 255, .12);
+  --wm-brass: #f2c14e; --wm-rubric: #ffcf5a; --wm-verd: #5ee6c6; --wm-pl: #8fd8ff;
+  --k-z: 58%; --k-za: 50%; --k-n: 45%; --k-na: 37%; --k-p: 34%; --k-pa: 27%; --k-t: 20%; --k-ta: 13%;
+  --k-d: 38%; --k-da: 46%; --k-ts: 56%; --k-tsa: 48%; --k-sel: 72%;
   --wm-display: "Texturina", "Iowan Old Style", Palatino, Georgia, serif;
   --wm-serif: "Texturina", "Iowan Old Style", Palatino, Georgia, serif;
   --wm-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
@@ -77,28 +87,36 @@
 .wm .f-bindu-ring { fill: none; stroke: var(--wm-ink); stroke-width: 1; }
 .wm .f-bindu { fill: var(--wm-ink); }
 
-.wm .z-sec { fill: var(--wm-paper); stroke: none; }
-.wm .z-sec.alt { fill: var(--wm-paper-2); }
+.wm .z-sec { fill: color-mix(in srgb, var(--h, var(--wm-paper)) var(--k-z), var(--wm-paper)); stroke: none; }
+.wm .z-sec.alt { fill: color-mix(in srgb, var(--h, var(--wm-paper)) var(--k-za), var(--wm-paper)); }
 .wm .z-div { stroke: var(--wm-ink); stroke-width: 1.4; }
 .wm .wm-svg .z-glyph { font-size: 21px; }
 .wm .wm-svg .z-name { font-family: var(--wm-mono); font-size: 8.5px; letter-spacing: .12em; fill: var(--wm-ink-2); }
+.wm .wm-svg .z-trump { font-family: var(--wm-display); font-size: 9.5px; font-style: italic; letter-spacing: .02em; fill: var(--wm-ink); }
 .wm .z-through { stroke: var(--wm-brass); stroke-width: 1.1; stroke-dasharray: 3 3; }
 
-.wm .n-sec { fill: var(--wm-paper-2); stroke: none; transition: fill 160ms; }
-.wm .n-sec.alt { fill: var(--wm-paper); }
+.wm .n-sec { fill: color-mix(in srgb, var(--h, var(--wm-paper)) var(--k-n), var(--wm-paper)); stroke: none; transition: fill 160ms; }
+.wm .n-sec.alt { fill: color-mix(in srgb, var(--h, var(--wm-paper)) var(--k-na), var(--wm-paper)); }
 .wm .n-div { stroke: var(--wm-ink); stroke-width: 1; }
 .wm .wm-svg .n-name { font-family: var(--wm-display); font-size: 10.6px; letter-spacing: .01em; }
 .wm .wm-svg .n-name.long { font-size: 9.4px; letter-spacing: 0; }
 .wm .wm-svg .n-num { font-family: var(--wm-mono); font-size: 7.6px; fill: var(--wm-ink-2); letter-spacing: .04em; }
 
-.wm .p-sec { fill: var(--wm-paper); stroke: none; transition: fill 160ms; }
+.wm .p-sec { fill: color-mix(in srgb, var(--h, var(--wm-paper)) var(--k-p), var(--wm-paper)); stroke: none; transition: fill 160ms; }
+.wm .p-sec.alt { fill: color-mix(in srgb, var(--h, var(--wm-paper)) var(--k-pa), var(--wm-paper)); }
 .wm .p-sec.has-pl { fill: color-mix(in srgb, var(--wm-pl) 16%, var(--wm-paper)); }
 .wm .p-div { stroke: var(--wm-hair); stroke-width: .7; }
 .wm .p-div-nak { stroke: var(--wm-ink); stroke-width: 1.3; }
 .wm .wm-svg .p-num { font-family: var(--wm-mono); font-size: 9.5px; fill: var(--wm-ink-2); }
 .wm .p-varg { fill: none; stroke: var(--wm-brass); stroke-width: 1.1; }
+/* the Asura voids: a dark passage through the pada ring, the mouth ringed in mauve */
+.wm .p-sec.p-void { fill: color-mix(in srgb, var(--h, #2a1240) 12%, #07020f); }
+.wm .void-mouth { fill: #050010; stroke: #c48cff; stroke-width: 1.2; pointer-events: none; }
+.wm .key-void { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #050010; border: 1.5px solid #c48cff; vertical-align: -1px; margin-right: 4px; }
 
 .wm .t-edge { fill: none; stroke: var(--wm-ink); stroke-width: .9; }
+.wm .t-sec { fill: color-mix(in srgb, var(--h, var(--wm-paper)) var(--k-t), var(--wm-paper)); stroke: none; }
+.wm .t-sec.alt { fill: color-mix(in srgb, var(--h, var(--wm-paper)) var(--k-ta), var(--wm-paper)); }
 .wm .t-glyph { color: var(--wm-ink); }
 /* the card glyphs carry their own styling (wyrd-glyphs.js, STYLE): a stylesheet can't reach inside a <use> copy */
 .wm .t-glyph.unassigned { opacity: .62; }
@@ -112,20 +130,19 @@
 .wm .pl.is-sel .pl-disc, .wm .pl.is-hov .pl-disc { stroke: var(--wm-rubric); stroke-width: 1.8; }
 
 .wm .hit { fill: transparent; cursor: pointer; }
-.wm .n-sec.is-hov, .wm .p-sec.is-hov { fill: color-mix(in srgb, var(--wm-brass) 14%, var(--wm-paper)); }
+.wm .n-sec.is-hov, .wm .p-sec.is-hov { fill: color-mix(in srgb, var(--h, var(--wm-brass)) calc(var(--k-n) + 18%), var(--wm-paper)); }
 .wm .t-glyph.is-hov { opacity: 1; color: var(--wm-brass); }
-.wm .n-sec.is-sel { fill: color-mix(in srgb, var(--wm-rubric) 7%, var(--wm-paper-2)); }
-.wm .z-sec.is-sel { fill: color-mix(in srgb, var(--wm-rubric) 6%, var(--wm-paper)); }
-.wm .p-sec.is-sel { fill: color-mix(in srgb, var(--wm-rubric) 20%, var(--wm-paper)); }
+.wm .n-sec.is-sel, .wm .z-sec.is-sel { fill: color-mix(in srgb, var(--h, var(--wm-rubric)) var(--k-sel), var(--wm-paper)); }
+.wm .p-sec.is-sel { fill: color-mix(in srgb, var(--h, var(--wm-rubric)) calc(var(--k-sel) + 14%), var(--wm-paper)); }
 .wm .t-glyph.is-sel { opacity: 1; color: var(--wm-rubric); }
-.wm .sel-wedge { fill: none; stroke: var(--wm-rubric); stroke-width: 1.8; }
+.wm .sel-wedge { fill: none; stroke: var(--wm-rubric); stroke-width: 2.2; }
 .wm .sel-ray { stroke: var(--wm-rubric); stroke-width: 1; stroke-dasharray: 1 3; }
 .wm .wm-svg .sel-code { font-family: var(--wm-mono); font-size: 13px; font-weight: 500; fill: var(--wm-rubric); }
 
 /* focus mode: the rest of the instrument recedes; relations are drawn in verdigris */
 .wm .wm-svg.focusing .ring-zodiac, .wm .wm-svg.focusing .ring-nakshatras, .wm .wm-svg.focusing .ring-tarot { opacity: .45; }
-.wm .wm-svg.focusing .p-sec:not(.is-sel):not(.is-rel) { fill: color-mix(in srgb, var(--wm-paper) 70%, var(--wm-paper-2)); }
-.wm .p-sec.is-rel { fill: color-mix(in srgb, var(--wm-verd) 16%, var(--wm-paper)); }
+.wm .wm-svg.focusing .p-sec:not(.is-sel):not(.is-rel) { fill: color-mix(in srgb, var(--h, var(--wm-paper)) 8%, var(--wm-paper)); }
+.wm .p-sec.is-rel { fill: color-mix(in srgb, var(--h, var(--wm-verd)) var(--k-sel), var(--wm-paper)); }
 .wm .t-glyph.is-rel { opacity: 1; color: var(--wm-verd); }
 .wm .rel { fill: none; stroke: var(--wm-verd); stroke-width: 1; }
 .wm .rel-node { fill: var(--wm-paper); stroke: var(--wm-verd); stroke-width: 1.2; }
@@ -191,15 +208,17 @@
 @media (prefers-reduced-motion: reduce) { .wm .n-sec, .wm .p-sec { transition: none; } }
 
 /* the tropical rotor: the receiving rings, set apart in verdigris */
-.wm .tz-sec { fill: color-mix(in srgb, var(--wm-verd) 7%, var(--wm-paper)); stroke: none; transition: fill 160ms; }
-.wm .tz-sec.alt { fill: color-mix(in srgb, var(--wm-verd) 13%, var(--wm-paper-2)); }
-.wm .tz-sec.is-sel { fill: color-mix(in srgb, var(--wm-rubric) 18%, var(--wm-paper)); }
+.wm .tz-sec { fill: color-mix(in srgb, var(--h, var(--wm-verd)) var(--k-ts), var(--wm-paper)); stroke: none; transition: fill 160ms; }
+.wm .tz-sec.alt { fill: color-mix(in srgb, var(--h, var(--wm-verd)) var(--k-tsa), var(--wm-paper)); }
+.wm .tz-dec { fill: color-mix(in srgb, var(--h, var(--wm-verd)) var(--k-d), var(--wm-paper)); }
+.wm .tz-dec.alt { fill: color-mix(in srgb, var(--h, var(--wm-verd)) var(--k-da), var(--wm-paper)); }
+.wm .tz-sec.is-sel { fill: color-mix(in srgb, var(--h, var(--wm-rubric)) var(--k-sel), var(--wm-paper)); }
 .wm .tz-div-s { stroke: var(--wm-verd); stroke-width: 1.3; }
 .wm .tz-div { stroke: var(--wm-verd); stroke-width: 1; }
 .wm .tz-div-t { stroke: var(--wm-verd); stroke-width: .6; opacity: .6; }
-.wm .wm-svg .tz-glyph { font-size: 19px; fill: var(--wm-verd); }
-.wm .wm-svg .tz-name { font-family: var(--wm-mono); font-size: 8px; letter-spacing: .1em; fill: var(--wm-verd); }
-.wm .wm-svg .nd-name { font-family: var(--wm-mono); font-size: 8.4px; fill: var(--wm-ink-2); }
+.wm .wm-svg .tz-glyph { font-size: 19px; fill: var(--wm-ink); }
+.wm .wm-svg .tz-name { font-family: var(--wm-mono); font-size: 8px; letter-spacing: .1em; fill: var(--wm-ink); }
+.wm .wm-svg .nd-name { font-family: var(--wm-mono); font-size: 8.4px; fill: var(--wm-ink); opacity: .86; }
 .wm .eq { stroke: var(--wm-verd); stroke-width: 1.4; stroke-dasharray: 5 3; }
 .wm .wm-svg .eq-lab { font-family: var(--wm-mono); font-size: 10px; letter-spacing: .12em; fill: var(--wm-verd); }
 .wm .wm-year { font-family: var(--wm-mono); font-size: 14px; min-width: 4.5em; }
