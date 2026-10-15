@@ -847,11 +847,24 @@ def signin_page():
     nxt = accounts.safe_next(request.args.get("next", "/account"))
     if signed_in(): return redirect(nxt)
     return private("Sign in", f"""<h1>Sign in</h1>
-<p class="lede">No password. Type your email and we'll send you a link that signs you in.</p>
+<p class="lede">Signing in is for members of the Order, the Inner Circle and the Lightning Path. No password: type the email you paid with and we'll send you a link that signs you in.</p>
 <form class="pg-form" method="post" action="/signin"><input type="hidden" name="next" value="{esc(nxt)}">
 <label>Email <input name="email" type="email" required autocomplete="email" maxlength="254"></label>
 <button class="btn-cast" type="submit">Email me a sign-in link</button></form>
-<p class="muted">Use the same email you paid with, and your place in the Order is found automatically.</p>""")
+<p class="muted">Not a member yet? <a href="/membership">See the Order</a>. A reading you've bought needs no sign-in: it lives at the link in its email.</p>""")
+
+def may_sign_in(email):
+    """Signing in is for those who pay, or were given a place: the Order, the Inner Circle, the
+    Lightning Path or a gift, now or before (so someone whose plan has ended can still find their
+    receipts and come back). A reading bought on its own needs no account: it lives at its own link.
+    None when Stripe can't be reached."""
+    if not config.STRIPE_SECRET: return True                   # nothing to check against (local testing)
+    if config.OWNER_EMAIL and email == accounts.clean_email(config.OWNER_EMAIL): return True
+    try:
+        st = billing.status(config.STRIPE_SECRET, email, fresh=True)
+    except stripe_api.StripeError:
+        return None
+    return bool(st.get("plans") or st.get("gift") or any(st.get(t) for t in billing.TIERS))
 
 @app.post("/signin")
 def signin_send():
@@ -859,15 +872,22 @@ def signin_send():
     email = accounts.clean_email(request.form.get("email"))
     if not email or not config.SECRET_KEY:
         return private("Sign in", '<h1>Check the address</h1><p>That email address doesn\'t look right. <a href="/signin">Try again</a>.</p>', status=400)
-    token = accounts.make_token(config.SECRET_KEY, email, request.form.get("next", "/account"))
-    link = f"{config.BASE_URL}/auth/{token}"
-    sent = mailer.send(email, "Your sign-in link for the Wyrd Console",
-        f'<p>Here is your link to sign in to the Wyrd Console. It works for {accounts.LINK_MINUTES} minutes.</p><p><a href="{esc(link)}">Sign in</a></p><p>If you didn\'t ask for this, ignore it.</p>',
-        f"Sign in to the Wyrd Console (works for {accounts.LINK_MINUTES} minutes): {link}\n\nIf you didn't ask for this, ignore it.")
-    dev = f'<p class="note-box">Email isn\'t set up on this server, so here is the link: <a href="{esc(link)}">sign in</a></p>' if (not sent and os.environ.get("WYRD_DEV_SHOW_LINKS")) else ""
+    ok = may_sign_in(email)
+    if ok is None:
+        return private("Sign in", '<h1>Try again in a moment</h1><p>We couldn\'t reach the payment system to find your place. Try again shortly.</p>', status=503)
+    dev = ""
+    if ok:                                    # only those with a place get a link; the page reads the same either way
+        token = accounts.make_token(config.SECRET_KEY, email, request.form.get("next", "/account"))
+        link = f"{config.BASE_URL}/auth/{token}"
+        sent = mailer.send(email, "Your sign-in link for the Wyrd Console",
+            f'<p>Here is your link to sign in to the Wyrd Console. It works for {accounts.LINK_MINUTES} minutes.</p><p><a href="{esc(link)}">Sign in</a></p><p>If you didn\'t ask for this, ignore it.</p>',
+            f"Sign in to the Wyrd Console (works for {accounts.LINK_MINUTES} minutes): {link}\n\nIf you didn't ask for this, ignore it.")
+        if not sent and os.environ.get("WYRD_DEV_SHOW_LINKS"):
+            dev = f'<p class="note-box">Email isn\'t set up on this server, so here is the link: <a href="{esc(link)}">sign in</a></p>'
     return private("Check your email", f"""<h1>Check your email</h1>
-<p class="lede">We sent a sign-in link to {esc(email)}. It works for {accounts.LINK_MINUTES} minutes.</p>
-<p class="muted">Nothing there? Look in spam, or <a href="/signin">send another</a>.</p>{dev}""")
+<p class="lede">If {esc(email)} belongs to a member of the Order, the Inner Circle or the Lightning Path, a sign-in link is on its way. It works for {accounts.LINK_MINUTES} minutes.</p>
+<p class="muted">Nothing there? Look in spam, check it's the address you paid with, or <a href="/signin">send another</a>.
+Not a member yet? <a href="/membership">See the Order</a>. A reading you've bought needs no sign-in: it lives at the link in its email.</p>{dev}""")
 
 @app.get("/auth/<token>")
 def auth_page(token):
