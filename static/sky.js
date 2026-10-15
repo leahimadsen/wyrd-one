@@ -1,21 +1,23 @@
-/* The sky behind Odin's Eye: the real stars, the Milky Way, and figures drawn round them in knotwork.
+/* The sky behind Odin's Eye: the real stars, the Milky Way, and figures drawn round their stars in knotwork.
 
-   The stars stand in their true places (J2000, from the Hipparcos compilation, sky-data.js), seen from
-   inside the sky as we see it, turning slowly about the north celestial pole. Setting that pole above
-   Asgard's crown is this drawing's choice: no source fixes the sky to the tree.
+   Behind everything, the real sky (J2000, from the Hipparcos compilation, sky-data.js), faint, seen as
+   we see it about the north celestial pole, which this drawing sets above Asgard's crown.
 
-   The figures are of two kinds, and each says which it is:
+   Over it, twelve figures, each a window on its own stars: within a figure the stars keep their true
+   places to one another; where the figure sits round the tree, its size and its turn are composed, so
+   the figures spread through the margins (SLOT). Nothing is written on the sky: tapping a figure opens
+   its record in the panel.
      · Norse, in gold: names the Norse sources give these stars, marked Eddic, medieval Icelandic, or
        later folk tradition, as each is attested.
      · Greek, in ice: the classical figure, drawn in Norse ornament. Only the ornament is Norse.
 
-   Each figure is authored in degrees about one of its stars (x west to the right, y north up, as the
-   sky is seen), as ribbons: closed loops, open strands, rings, eyes, twists. Where ribbons cross, they
-   go over and under in turn, as interlace does.
+   Each figure is authored in degrees about one of its stars (x west to the right, y north up). Its
+   outlines become two-strand ropes of interlace, ends can close in a Norse scroll, and wherever
+   ribbons cross they go over and under in turn.
 
    WyrdSky.prepare(R, k)            build for a sky of radius scale R (scene units), k pixels per unit
-   WyrdSky.draw(ctx, pole, θ, sel)   draw under the current transform, turned by θ (radians)
-   WyrdSky.hit(x, y, pole, θ)       the figure at a scene point, or null
+   WyrdSky.draw(ctx, pole, θ, sel)   draw the sky about the pole (turned by θ) and the figures
+   WyrdSky.hit(x, y)                the figure at a scene point, or null
    WyrdSky.figure(id)               its record, for the panel                                          */
 (function () {
 "use strict";
@@ -24,8 +26,8 @@ if (!D) { window.WyrdSky = null; return; }
 
 const NORSE = "norse", GREEK = "greek";
 const LOOK = {
-  [NORSE]: { band: "#f4c46a", glow: "255,196,106", label: "rgba(255,214,140,.86)" },
-  [GREEK]: { band: "#9fdcff", glow: "150,215,255", label: "rgba(175,225,255,.8)" },
+  [NORSE]: { band: "#f6c768", core: "#3a1f05", glow: "255,190,96" },
+  [GREEK]: { band: "#a6e0ff", core: "#0a2440", glow: "140,210,255" },
 };
 const GREEK_NOTE = "The figure is Greek, as Ptolemy lists it; only the ornament is Norse.";
 
@@ -60,7 +62,7 @@ const FIGS = [
       { c: [-1.0, -0.2, -1.4, 1.8, -0.6, 4.0, 0.2, 6.2, 1.0, 4.0, 1.4, 1.8, 1.0, -0.2, 0.0, -0.9] },
       { c: [-0.3, 0.3, -1.8, 0.6, -2.9, 2.2, -2.6, 4.4, -1.6, 2.8, -0.6, 1.8, 0.3, 0.6] },
       { c: [0.3, 0.3, 1.8, 0.6, 2.9, 2.0, 2.7, 4.2, 1.8, 2.6, 0.6, 1.8, -0.3, 0.6] },
-      { o: [-0.2, -0.6, -1.6, -3.4, -3.0, -6.4, -3.9, -8.4] }, { ring: [-1.0, -2.0, .85] }, { ring: [-4.1, -8.9, .7] }] },
+      { o: [-0.2, -0.6, -1.6, -3.4, -3.0, -6.4, -3.9, -8.4], curl: -1 }, { ring: [-1.0, -2.0, .85] }] },
 
   { id: "distaff", kind: NORSE, name: "Friggerock", gloss: "Frigg's distaff", tag: "Swedish folk", at: [84.05, -1.20], s: .82,
     stars: "Orion's belt: Alnitak, Alnilam, Mintaka",
@@ -110,7 +112,7 @@ const FIGS = [
     stars: "Altair, Tarazed, Alshain",
     parts: [
       { c: [-0.8, 1.6, 1.0, 2.3, 1.9, 0.4, 0.8, -1.6, -1.0, -1.2, -1.6, 0.4] },
-      { o: [-1.4, 1.0, -3.0, 1.7, -3.5, 0.4, -2.5, 0.1] },
+      { o: [-1.4, 1.0, -3.0, 1.7, -3.5, 0.4, -2.5, 0.1], one: 1 },
       { c: [1.6, -0.6, 5.2, -3.2, 8.2, -6.6, 9.6, -9.8, 8.4, -10.8, 5.6, -8.6, 2.4, -5.0, 0.0, -1.8] },
       { c: [8.6, -10.2, 10.0, -13.0, 11.4, -14.6, 12.2, -13.0, 10.4, -10.4] },
       { c: [8.8, -10.6, 8.8, -13.6, 9.6, -15.4, 10.6, -14.4, 9.8, -11.6] },
@@ -126,7 +128,7 @@ const FIGS = [
       { tw: [-24.6, -8.2, -29.6, -3.2, -33.3, 3.3, -31.6, 6.6, -27.7, 7.0, -23.6, 4.6, -19.9, 1.3, -15.1, -2.9, -12.7, -5.8, -8.7, -5.4,
              -4.4, -3.6, 0, 0, 4.8, 3.6, 9.8, 5.4, 13.4, 5.6, 16.5, 5.0, 18.6, 3.8], a: .85, l: 4.2 },
       { c: [-25.9, -13.8, -22.0, -13.3, -21.5, -9.0, -24.4, -6.5, -26.7, -9.4] },
-      { o: [-21.9, -11.6, -19.4, -12.4, -17.8, -11.3] }, { o: [-19.6, -12.5, -17.5, -13.4] },
+      { o: [-21.9, -11.6, -19.4, -12.4, -17.8, -11.3], one: 1, curl: 1 }, { o: [-19.6, -12.5, -17.5, -13.4], one: 1, curl: -1 },
       { c: [17.2, 4.4, 19.8, 6.8, 21.6, 5.0, 20.2, 2.2, 17.6, 2.8] }, { dot: [-24.0, -10.6] }] },
 
   { id: "horse", kind: GREEK, name: "Pegasus", gloss: "the winged horse", tag: "Greek figure", at: [346.19, 15.21], lines: "Peg",
@@ -135,7 +137,7 @@ const FIGS = [
       { c: [1.2, -0.8, 1.0, 6.4, 1.3, 13.6, -7.2, 15.6, -14.6, 14.8, -17.1, 7.2, -17.4, -0.6, -8.0, -1.6] },
       { c: [-0.4, 1.0, 3.6, -3.6, 7.2, -7.0, 11.4, -9.6, 12.4, -7.6, 8.4, -5.0, 5.2, -1.8, 2.0, 2.4] },
       { c: [11.2, -9.8, 14.2, -10.4, 17.6, -8.2, 19.4, -5.3, 20.0, -4.0, 18.0, -3.6, 14.6, -5.6, 12.2, -6.8] },
-      { o: [12.4, -9.4, 11.6, -11.8, 13.0, -10.8] },
+      { o: [12.4, -9.4, 11.6, -11.8, 13.0, -10.8], one: 1 },
       { c: [2.6, 0.2, 2.0, -4.2, 4.6, -7.6, 6.4, -5.6, 5.0, -2.8] }, { c: [6.0, -3.0, 6.4, -7.6, 9.2, -10.6, 10.4, -8.2, 8.6, -5.4] },
       { o: [0.6, 13.2, 5.2, 15.0, 9.0, 16.0, 13.2, 18.0] }, { ring: [14.2, 18.6, .9] },
       { o: [0.8, 9.6, 4.4, 8.4, 9.0, 9.4, 13.9, 10.1, 17.0, 10.4, 19.3, 10.4] }, { ring: [20.3, 10.6, .9] },
@@ -151,28 +153,39 @@ const FIGS = [
       { c: [-0.6, 9.6, -3.2, 12.6, -2.0, 16.2, 1.2, 17.0, 0.4, 13.6] },
       { o: [0.4, 0.4, 1.6, -2.6, 1.2, -5.0] }, { ring: [1.9, -5.6, .8] },
       { o: [-15.0, 2.6, -14.0, -0.6, -15.6, -3.6] }, { ring: [-14.9, -4.4, .8] },
-      { o: [-18.0, 7.2, -21.4, 5.6, -24.6, 2.6, -25.4, 1.0] },
-      { c: [-25.4, 1.0, -27.6, -0.4, -26.6, -2.2, -25.0, -0.8] }, { dot: [4.8, 12.0] }] },
+      { o: [-18.0, 7.2, -21.4, 5.6, -24.6, 2.6, -26.2, 0.2], curl: 1 }, { dot: [4.8, 12.0] }] },
 
   { id: "queen", kind: GREEK, name: "Cassiopeia", gloss: "the queen's throne", tag: "Greek figure", at: [14.18, 60.72], lines: "Cas",
     stars: "Schedar, Caph, Navi, Ruchbah, Segin",
     parts: [
       { c: [-4.4, 0.3, 0.2, 0.9, 6.3, -0.8, 6.1, -2.3, 0.0, -0.9, -4.1, -1.3] },
       { c: [-3.1, -0.1, -5.5, 1.7, -7.4, 3.9, -7.9, 2.5, -5.7, 0.2, -4.3, -0.9] },
-      { o: [-8.7, 3.4, -8.6, 5.3, -7.7, 4.3, -7.0, 5.8, -6.5, 4.1, -5.9, 5.1, -6.0, 3.3] },
+      { o: [-8.7, 3.4, -8.6, 5.3, -7.7, 4.3, -7.0, 5.8, -6.5, 4.1, -5.9, 5.1, -6.0, 3.3], one: 1 },
       { o: [-3.7, -1.0, -3.9, -3.4, -4.1, -5.7] }, { ring: [-4.1, -6.3, .7] },
       { o: [5.5, -1.9, 5.5, -4.0, 5.4, -6.1] }, { ring: [5.4, -6.7, .7] },
       { o: [-4.6, -3.9, -1.2, -4.1, 2.0, -4.2, 6.2, -4.5] }] },
 ];
 
+/* ---------------- where each figure sits ----------------
+   Composed round the tree so the figures spread evenly through the margins: centre x, y, width and
+   height in the eye's scene (1000 × 1280), and a turn in degrees. Within a figure the stars keep their
+   true places to one another; only its place, size and turn are composed. Pegasus is set upright. */
+const SLOT = {
+  wagon:  [160, 118, 280, 190, 0],   queen: [356, 64, 96, 92, 0],      eyes:  [500, 50, 180, 72, -59.5], dragon: [832, 122, 300, 196, 0],
+  swan:   [82, 395, 150, 185, 0],    eagle: [918, 395, 150, 185, 0],
+  loki:   [42, 700, 76, 200, 0],     lyre:  [961, 702, 70, 160, 0],
+  horse:  [168, 995, 300, 205, 180], lion:  [834, 995, 300, 195, 0],
+  distaff:[132, 1238, 240, 72, -36], wolf:  [872, 1238, 232, 84, 0],
+};
+
 /* ---------------- geometry ---------------- */
 let R = 325, built = null;
 const proj = (ra, dec) => { const r = 2 * R * Math.tan((90 - dec) / 2 * RAD), a = ra * RAD; return [-r * Math.sin(a), r * Math.cos(a)]; };
-const toSky = (f, x, y) => { const s = f.s || 1; return [f.at[0] - x * s / Math.cos(f.at[1] * RAD), f.at[1] + y * s]; };
-const at = (f, x, y) => proj(...toSky(f, x, y));
 const pairs = a => { const p = []; for (let i = 0; i < a.length; i += 2) p.push([a[i], a[i + 1]]); return p; };
+/* a star's place in a figure's own degrees (x west to the right, y north up) */
+const local = (f, ra, dec) => { const s = f.s || 1; return [-(((ra - f.at[0] + 540) % 360) - 180) * Math.cos(f.at[1] * RAD) / s, (dec - f.at[1]) / s]; };
 
-/* a smooth curve through the points (Catmull-Rom), in the figure's own degrees */
+/* a smooth curve through the points (Catmull-Rom) */
 function spline(P, closed, per = 7){
   const n = P.length, out = [], get = i => closed ? P[(i + n) % n] : P[Math.max(0, Math.min(n - 1, i))];
   const segs = closed ? n : n - 1;
@@ -191,112 +204,162 @@ function eightPts(cx, cy, ang, hl, hh){ const u = [Math.cos(ang * RAD), Math.sin
   for (let i = 0; i < 16; i++){ const t = i / 16 * TAU, a = Math.sin(t), b = Math.sin(t) * Math.cos(t) * 2;
     out.push([cx + u[0] * hl * a + v[0] * hh * b, cy + u[1] * hl * a + v[1] * hh * b]); }
   return out; }
-/* a two-strand twist along a path: the strands cross every half turn */
-function twist(P, a, l){
-  const C = spline(P, false, 8), len = [0];
-  for (let i = 1; i < C.length; i++) len.push(len[i - 1] + Math.hypot(C[i][0] - C[i - 1][0], C[i][1] - C[i - 1][1]));
-  const side = sgn => C.map((p, i) => { const q = C[Math.min(C.length - 1, i + 1)], o = C[Math.max(0, i - 1)];
-    const dx = q[0] - o[0], dy = q[1] - o[1], m = Math.hypot(dx, dy) || 1, w = sgn * a * Math.sin(len[i] / l * TAU) * Math.min(1, len[i] / l, (len[len.length - 1] - len[i]) / l + .25);
+
+/* even steps along a polyline (scene units) */
+function resample(P, step, closed){
+  const Q = closed ? [...P, P[0]] : P, out = [Q[0]]; let carry = 0;
+  for (let i = 1; i < Q.length; i++){
+    const [ax, ay] = Q[i - 1], [bx, by] = Q[i], L = Math.hypot(bx - ax, by - ay); let d = step - carry;
+    while (d <= L){ out.push([ax + (bx - ax) * d / L, ay + (by - ay) * d / L]); d += step; }
+    carry = L - (d - step);
+  }
+  if (!closed && out.length && Math.hypot(out[out.length - 1][0] - Q[Q.length - 1][0], out[out.length - 1][1] - Q[Q.length - 1][1]) > step * .3) out.push(Q[Q.length - 1]);
+  if (closed) out.push(out[0]);
+  return out;
+}
+const lengthOf = P => P.reduce((s, p, i) => i ? s + Math.hypot(p[0] - P[i - 1][0], p[1] - P[i - 1][1]) : 0, 0);
+/* a two-strand rope along a path: the strands cross every half turn; a closed rope closes on a whole number of turns */
+function rope(P, closed, a = 2.5, want = 13){
+  const len = lengthOf(P), n = Math.max(closed ? 3 : 1, Math.round(len / want)), l = len / n, acc = [0];
+  for (let i = 1; i < P.length; i++) acc.push(acc[i - 1] + Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]));
+  const side = sgn => P.map((p, i) => { const q = P[closed ? (i + 1) % (P.length - 1) : Math.min(P.length - 1, i + 1)], o = P[closed ? (i - 1 + P.length - 1) % (P.length - 1) : Math.max(0, i - 1)];
+    const dx = q[0] - o[0], dy = q[1] - o[1], m = Math.hypot(dx, dy) || 1;
+    const taper = closed ? 1 : Math.min(1, acc[i] / (l * .75), (len - acc[i]) / (l * .75));
+    const w = sgn * a * Math.sin(acc[i] / l * Math.PI) * taper;
     return [p[0] - dy / m * w, p[1] + dx / m * w]; });
   return [side(1), side(-1)];
 }
+/* a Norse scroll at a strand's end: a spiral turning in from the line's own direction */
+function curl(P, dir, r0 = 7){
+  const e = P[P.length - 1], b = P[Math.max(0, P.length - 3)], dx = e[0] - b[0], dy = e[1] - b[1], m = Math.hypot(dx, dy) || 1;
+  const t = [dx / m, dy / m], nrm = [-t[1] * dir, t[0] * dir], c = [e[0] + nrm[0] * r0, e[1] + nrm[1] * r0], a0 = Math.atan2(e[1] - c[1], e[0] - c[0]), out = [];
+  for (let k = 1; k <= 26; k++){ const th = k / 26 * 1.35 * TAU, r = r0 * (1 - .78 * k / 26), a = a0 + th * dir;
+    out.push([c[0] + r * Math.cos(a), c[1] + r * Math.sin(a)]); }
+  return out;
+}
 
-/* where two polylines cross: segment against segment, skipping a strand's own neighbours */
-function cross(A, B, same, closed){
-  const out = [];
-  for (let i = 0; i < A.length - 1; i++){
-    const [ax, ay] = A[i], [bx, by] = A[i + 1];
-    for (let j = same ? i + 2 : 0; j < B.length - 1; j++){
-      if (same && closed && i === 0 && j === B.length - 2) continue;
-      const [cx, cy] = B[j], [dx, dy] = B[j + 1], den = (bx - ax) * (dy - cy) - (by - ay) * (dx - cx);
-      if (!den) continue;
-      const t = ((cx - ax) * (dy - cy) - (cy - ay) * (dx - cx)) / den, u = ((cx - ax) * (by - ay) - (cy - ay) * (bx - ax)) / den;
-      if (t >= 0 && t < 1 && u >= 0 && u < 1) out.push({ i: i + t, j: j + u, x: ax + (bx - ax) * t, y: ay + (by - ay) * t });
-    }
+/* where segments cross, found through a grid so only near neighbours are tested */
+function crossings(strands){
+  const G = 10, cells = new Map(), out = [];
+  strands.forEach((S, s) => { for (let i = 0; i < S.pts.length - 1; i++){
+    const [ax, ay] = S.pts[i], [bx, by] = S.pts[i + 1];
+    for (let gx = Math.floor(Math.min(ax, bx) / G); gx <= Math.floor(Math.max(ax, bx) / G); gx++)
+      for (let gy = Math.floor(Math.min(ay, by) / G); gy <= Math.floor(Math.max(ay, by) / G); gy++){
+        const key = gx + "," + gy; (cells.get(key) || cells.set(key, []).get(key)).push([s, i]); } } });
+  const seen = new Set();
+  for (const list of cells.values()) for (let p = 0; p < list.length; p++) for (let q = p + 1; q < list.length; q++){
+    let [s, i] = list[p], [u, j] = list[q];
+    if (s > u || (s === u && i > j)) [s, i, u, j] = [u, j, s, i];
+    const key = s + ":" + i + ":" + u + ":" + j; if (seen.has(key)) continue; seen.add(key);
+    if (s === u){ const n = strands[s].pts.length - 1; if (Math.abs(i - j) < 3 || (strands[s].closed && n - Math.abs(i - j) < 3)) continue; }
+    const A = strands[s].pts, B = strands[u].pts, [ax, ay] = A[i], [bx, by] = A[i + 1], [cx, cy] = B[j], [dx, dy] = B[j + 1];
+    const den = (bx - ax) * (dy - cy) - (by - ay) * (dx - cx); if (!den) continue;
+    const t = ((cx - ax) * (dy - cy) - (cy - ay) * (dx - cx)) / den, v = ((cx - ax) * (by - ay) - (cy - ay) * (bx - ax)) / den;
+    if (t >= 0 && t < 1 && v >= 0 && v < 1) out.push({ a: s, b: u, ta: i + t, tb: j + v, x: ax + (bx - ax) * t, y: ay + (by - ay) * t, over: null });
   }
   return out;
 }
 
 function buildFigure(f){
-  const strands = [], thin = [], dots = [];
-  const add = (pts, closed) => strands.push({ pts: (closed ? [...pts, pts[0]] : pts).map(([x, y]) => at(f, x, y)), closed });
+  const [sx, sy, sw, sh, rot] = SLOT[f.id] || [500, 640, 200, 200, 0];
+  const cr = Math.cos(rot * RAD), srt = Math.sin(rot * RAD), turn = ([x, y]) => [x * cr - y * srt, x * srt + y * cr];
+  /* the parts, in the figure's own degrees, turned */
+  const raw = [], thinL = [], dotL = [];
   for (const p of f.parts){
-    if (p.c) add(spline(pairs(p.c), true), true);
-    else if (p.o) add(spline(pairs(p.o), false), false);
-    else if (p.ring) add(spline(ringPts(...p.ring), true, 4), true);
-    else if (p.eye) add(spline(eyePts(...p.eye), true, 6), true);
-    else if (p.eight) add(spline(eightPts(...p.eight), true, 4), true);
-    else if (p.tw) for (const s of twist(pairs(p.tw), p.a, p.l)) strands.push({ pts: s.map(([x, y]) => at(f, x, y)), closed: false });
-    else if (p.thin) thin.push(pairs(p.thin).map(([x, y]) => at(f, x, y)));
-    else if (p.dot) dots.push(at(f, ...p.dot));
+    if (p.c) raw.push({ pts: spline(pairs(p.c), true), closed: true, rope: !p.one, fill: true });
+    else if (p.o) raw.push({ pts: spline(pairs(p.o), false), closed: false, rope: !p.one, curl: p.curl });
+    else if (p.tw) raw.push({ pts: spline(pairs(p.tw), false, 8), closed: false, rope: true, curl: p.curl, wide: true });
+    else if (p.ring) raw.push({ pts: spline(ringPts(...p.ring), true, 4), closed: true });
+    else if (p.eye) raw.push({ pts: spline(eyePts(...p.eye), true, 6), closed: true, fill: true });
+    else if (p.eight) raw.push({ pts: spline(eightPts(...p.eight), true, 5), closed: true, rope: true });
+    else if (p.thin) thinL.push(pairs(p.thin));
+    else if (p.dot) dotL.push(p.dot);
   }
-  /* every crossing, then over and under in turn along each strand */
-  const X = [];
-  strands.forEach((A, a) => strands.forEach((B, b) => { if (b < a) return;
-    for (const c of cross(A.pts, B.pts, a === b, A.closed)) X.push({ a, b, ta: c.i, tb: c.j, x: c.x, y: c.y, over: null }); }));
-  strands.forEach((S, s) => {
+  raw.forEach(r => { r.pts = r.pts.map(turn); });
+  const all = raw.flatMap(r => r.pts), xs = all.map(p => p[0]), ys = all.map(p => p[1]);
+  const bx0 = Math.min(...xs), bx1 = Math.max(...xs), by0 = Math.min(...ys), by1 = Math.max(...ys);
+  const S = Math.min(sw / (bx1 - bx0), sh / (by1 - by0)), mx = (bx0 + bx1) / 2, my = (by0 + by1) / 2;
+  const scene = ([x, y]) => [sx + (x - mx) * S, sy - (y - my) * S];
+  /* into the scene: ropes become two strands, the rest one */
+  const strands = [], fills = [];
+  for (const r of raw){
+    let base = resample(r.pts.map(scene), 2.2, r.closed);
+    if (r.closed) base = base.slice(0, -1);
+    if (r.fill) fills.push(base);
+    const closedBase = r.closed ? [...base, base[0]] : base;
+    if (r.rope && lengthOf(closedBase) > 30){ for (const s of rope(closedBase, r.closed, r.wide ? 3.1 : 2.5)) strands.push({ pts: s, closed: r.closed }); }
+    else strands.push({ pts: closedBase, closed: r.closed });
+    if (r.curl && !r.closed) strands.push({ pts: [closedBase[closedBase.length - 1], ...curl(closedBase, r.curl, r.wide ? 9 : 7)], closed: false });
+  }
+  const thin = thinL.map(l => l.map(turn).map(scene)), dots = dotL.map(d => scene(turn(d)));
+  /* over and under in turn along each strand */
+  const X = crossings(strands);
+  strands.forEach((_, s) => {
     const mine = X.filter(c => c.a === s || c.b === s).map(c => ({ c, t: c.a === s ? c.ta : c.tb })).sort((p, q) => p.t - q.t);
     let next = null;
-    for (const { c } of mine){
-      const other = c.a === s ? c.b : c.a, me = c.a === s ? "a" : "b";
+    for (const { c, t } of mine){
+      const me = c.a === s && (c.b !== s || t === c.ta) ? "a" : "b";
       if (c.over != null){ next = c.over === me ? "under" : "over"; continue; }
       if (next == null) next = "over";
       c.over = next === "over" ? me : (me === "a" ? "b" : "a");
-      if (other === s && c.a === c.b) c.over = next === "over" ? "a" : "b";
       next = next === "over" ? "under" : "over";
     }
   });
-  /* the over strand's piece at each crossing, redrawn on top */
-  const pieces = X.map(c => { const S = strands[c.over === "a" ? c.a : c.b].pts, t = c.over === "a" ? c.ta : c.tb, i = Math.floor(t);
-    const out = [], want = 7; let k = i;
-    while (k > 0 && Math.hypot(S[k][0] - c.x, S[k][1] - c.y) < want) k--;
-    out.push(S[k]); for (let m = k + 1; m < S.length; m++){ out.push(S[m]); if (m > i && Math.hypot(S[m][0] - c.x, S[m][1] - c.y) >= want) break; }
+  const pieces = X.map(c => { const P = strands[c.over === "a" ? c.a : c.b].pts, t = c.over === "a" ? c.ta : c.tb, i = Math.floor(t), want = 5.4;
+    let k = i; while (k > 0 && Math.hypot(P[k][0] - c.x, P[k][1] - c.y) < want) k--;
+    const out = [P[k]]; for (let m = k + 1; m < P.length; m++){ out.push(P[m]); if (m > i && Math.hypot(P[m][0] - c.x, P[m][1] - c.y) >= want) break; }
     return out; });
+  /* the figure's own stars: every star in its window, in true places to one another */
+  const win = { x0: sx - sw / 2 - 10, x1: sx + sw / 2 + 10, y0: sy - sh / 2 - 10, y1: sy + sh / 2 + 10 };
+  const stars = [];
+  for (let i = 0; i < D.stars.length; i += 3){
+    const [lx, ly] = local(f, D.stars[i], D.stars[i + 1]); if (Math.abs(lx) > 60 || Math.abs(ly) > 60) continue;
+    const [x, y] = scene(turn([lx, ly])); if (x < win.x0 || x > win.x1 || y < win.y0 || y > win.y1) continue;
+    stars.push([x, y, D.stars[i + 2], (i * 7.31) % 1]);
+  }
   const lines = [];
-  if (typeof f.lines === "string") for (const seg of (D.lines[f.lines] || [])) lines.push(pairs(seg).map(([ra, dec]) => proj(ra, dec)));
-  else for (const seg of (f.lines || [])) lines.push(pairs(seg).map(([x, y]) => at(f, x, y)));
-  const all = strands.flatMap(s => s.pts), xs = all.map(p => p[0]), ys = all.map(p => p[1]);
-  const box = { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
-  const cx = (box.x0 + box.x1) / 2, cy = (box.y0 + box.y1) / 2;
-  return { f, strands, pieces, thin, dots, lines, box, c: [cx, cy], r: Math.max(box.x1 - box.x0, box.y1 - box.y0) / 2, crossings: X.length };
+  const L = typeof f.lines === "string" ? (D.lines[f.lines] || []).map(seg => pairs(seg).map(([ra, dec]) => local(f, ra, dec))) : (f.lines || []).map(pairs);
+  for (const seg of L) lines.push(seg.map(turn).map(scene));
+  const box = { x0: sx - sw / 2, x1: sx + sw / 2, y0: sy - sh / 2, y1: sy + sh / 2 };
+  return { f, strands, pieces, fills, thin, dots, stars, lines, box, c: [sx, sy], crossings: X.length };
 }
 
-/* each figure drawn once, opaque, on its own small canvas; the sky turns them as pictures */
-const W = 5.2;
+/* each figure painted once, on its own small canvas: a glow, a faint body, then the ribbons */
+const W = 3.4;
 function paint(G, k){
-  const pad = 8, bw = G.box.x1 - G.box.x0 + pad * 2, bh = G.box.y1 - G.box.y0 + pad * 2;
-  const cv = document.createElement("canvas"); cv.width = Math.max(2, Math.ceil(bw * k)); cv.height = Math.max(2, Math.ceil(bh * k));
+  const pad = 14, x0 = Math.min(G.box.x0, ...G.strands.flatMap(s => s.pts.map(p => p[0]))) - pad, y0 = Math.min(G.box.y0, ...G.strands.flatMap(s => s.pts.map(p => p[1]))) - pad;
+  const x1 = Math.max(G.box.x1, ...G.strands.flatMap(s => s.pts.map(p => p[0]))) + pad, y1 = Math.max(G.box.y1, ...G.strands.flatMap(s => s.pts.map(p => p[1]))) + pad;
+  const cv = document.createElement("canvas"); cv.width = Math.max(2, Math.ceil((x1 - x0) * k)); cv.height = Math.max(2, Math.ceil((y1 - y0) * k));
   const c = cv.getContext("2d"), L = LOOK[G.f.kind];
-  c.setTransform(k, 0, 0, k, (pad - G.box.x0) * k, (pad - G.box.y0) * k);
-  c.lineJoin = "round";
+  c.setTransform(k, 0, 0, k, -x0 * k, -y0 * k); c.lineJoin = "round";
   const path = list => { const p = new Path2D(); for (const s of list) s.forEach((q, i) => i ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1])); return p; };
+  const all = path(G.strands.map(s => s.pts));
+  for (const F of G.fills){ const p = path([F]); p.closePath(); c.fillStyle = `rgba(${L.glow},.07)`; c.fill(p); }
+  c.save(); c.filter = `blur(${Math.max(1.5, 3.2 * k)}px)`; c.strokeStyle = `rgba(${L.glow},.55)`; c.lineWidth = W * 2.4; c.lineCap = "round"; c.stroke(all); c.restore();
   const ribbon = (p, cap) => { c.lineCap = cap;
-    c.strokeStyle = "#070320"; c.lineWidth = W + 2.6; c.stroke(p);
+    c.strokeStyle = "#060219"; c.lineWidth = W + 2.2; c.stroke(p);
     c.strokeStyle = L.band; c.lineWidth = W; c.stroke(p);
-    c.strokeStyle = "#0b0626"; c.lineWidth = W * .36; c.stroke(p); };
-  ribbon(path(G.strands.map(s => s.pts)), "round");
+    c.strokeStyle = L.core; c.lineWidth = W * .3; c.stroke(p); };
+  ribbon(all, "round");
   for (const piece of G.pieces) ribbon(path([piece]), "butt");
-  c.lineCap = "round"; c.strokeStyle = L.band; c.lineWidth = 1.3; c.stroke(path(G.thin));
-  c.fillStyle = L.band; for (const [x, y] of G.dots){ c.beginPath(); c.arc(x, y, 2.1, 0, TAU); c.fill(); }
-  return { cv, x: G.box.x0 - pad, y: G.box.y0 - pad, w: bw, h: bh };
+  c.lineCap = "round"; c.strokeStyle = L.band; c.lineWidth = 1.2; c.stroke(path(G.thin));
+  c.fillStyle = L.band; for (const [x, y] of G.dots){ c.beginPath(); c.arc(x, y, 2.4, 0, TAU); c.fill(); }
+  return { cv, x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
 }
 
-/* the stars, by brightness, as a few paths; the Milky Way as a soft glow, painted once */
+/* the sky behind the figures: the real stars, faint, and the Milky Way, as seen about the pole above Asgard */
 function starPaths(){
-  const groups = [[-2, 1, 3.1], [1, 2, 2.3], [2, 3, 1.7], [3, 4, 1.2], [4, 9, .8]].map(([lo, hi, r]) => ({ lo, hi, r, p: new Path2D() }));
-  const bright = [];
+  const groups = [[-2, 2, 1.5, .55], [2, 3, 1.15, .45], [3, 4, .9, .36], [4, 9, .65, .28]].map(([lo, hi, r, a]) => ({ lo, hi, r, a, p: new Path2D() }));
   for (let i = 0; i < D.stars.length; i += 3){ const [x, y] = proj(D.stars[i], D.stars[i + 1]), m = D.stars[i + 2];
-    const g = groups.find(g => m >= g.lo && m < g.hi) || groups[4];
-    g.p.moveTo(x + g.r, y); g.p.arc(x, y, g.r, 0, TAU);
-    if (m < 1.6) bright.push([x, y, m, (i * 7.31) % 1]); }
-  return { groups, bright };
+    const g = groups.find(g => m >= g.lo && m < g.hi) || groups[3]; g.p.moveTo(x + g.r, y); g.p.arc(x, y, g.r, 0, TAU); }
+  return groups;
 }
 function milkyWay(k){
   const span = R * 2 * Math.tan(65 * RAD) * 2.05, q = Math.min(.5, k * .5), n = Math.ceil(span * q);
   const cv = document.createElement("canvas"); cv.width = cv.height = n;
   const c = cv.getContext("2d"); c.setTransform(q, 0, 0, q, n / 2, n / 2);
   c.filter = `blur(${Math.max(2, 14 * q)}px)`;
-  for (const [lv, f] of D.mw){ c.fillStyle = `rgba(${130 + lv * 12},${140 + lv * 10},255,${.022 + lv * .012})`; c.beginPath();
+  for (const [lv, f] of D.mw){ c.fillStyle = `rgba(${130 + lv * 12},${140 + lv * 10},255,${.026 + lv * .014})`; c.beginPath();
     for (let i = 0; i < f.length; i += 2){ if (f[i + 1] < -55) continue; const [x, y] = proj(f[i], f[i + 1]); c.lineTo(x, y); } c.closePath(); c.fill(); }
   return { cv, s: span };
 }
@@ -318,41 +381,32 @@ function draw(ctx, pole, th, sel, time = 0, z = 1){
   ctx.save(); ctx.translate(pole[0], pole[1]); ctx.rotate(th);
   const M = built.mw; ctx.globalCompositeOperation = "lighter"; ctx.drawImage(M.cv, -M.s / 2, -M.s / 2, M.s, M.s);
   ctx.globalCompositeOperation = "source-over";
-  /* the stars' own figures, faint */
-  for (const G of built.figs){ ctx.strokeStyle = `rgba(${LOOK[G.f.kind].glow},${sel === G.f.id ? .5 : .2})`; ctx.lineWidth = .9 / sz; ctx.beginPath();
-    for (const s of G.lines) s.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke(); }
-  for (const G of built.figs){ ctx.globalAlpha = sel === G.f.id ? .95 : .5; const I = G.img; ctx.drawImage(I.cv, I.x, I.y, I.w, I.h); }
-  ctx.globalAlpha = 1;
-  for (const g of built.stars.groups){ ctx.fillStyle = `rgba(232,240,255,${g.lo < 2 ? .95 : g.lo < 3 ? .8 : g.lo < 4 ? .62 : .42})`; ctx.save(); ctx.scale(1, 1); ctx.fill(g.p); ctx.restore(); }
-  ctx.globalCompositeOperation = "lighter";
-  for (const [x, y, m, ph] of built.stars.bright){
-    const a = .5 + .5 * Math.sin(time * 1.1 + ph * 40), l = (4.2 - m) * 3.2 * (.7 + .3 * a);
-    ctx.strokeStyle = `rgba(220,240,255,${.32 * a})`; ctx.lineWidth = .8 / sz;
-    ctx.beginPath(); ctx.moveTo(x - l, y); ctx.lineTo(x + l, y); ctx.moveTo(x, y - l); ctx.lineTo(x, y + l); ctx.stroke();
-  }
-  ctx.globalCompositeOperation = "source-over";
+  for (const g of built.stars){ ctx.fillStyle = `rgba(226,236,255,${g.a})`; ctx.fill(g.p); }
   ctx.restore();
-  /* names, upright wherever the sky has turned them */
-  const cs = Math.cos(th), sn = Math.sin(th);
-  ctx.textAlign = "center";
   for (const G of built.figs){
-    const [bx, by] = [G.c[0], G.box.y1 + 4], x = pole[0] + bx * cs - by * sn, y = pole[1] + bx * sn + by * cs;
-    const on = sel === G.f.id;
-    ctx.fillStyle = on ? "#fff" : LOOK[G.f.kind].label; ctx.globalAlpha = on ? 1 : .78;
-    ctx.font = `italic ${(on ? 14 : 12.5) / sz}px Georgia, 'Times New Roman', serif`;
-    ctx.fillText(`${G.f.name} · ${G.f.gloss}`, x, y + 12 / sz);
-    ctx.font = `${10 / sz}px ui-monospace, Menlo, monospace`; ctx.globalAlpha = on ? .95 : .6;
-    ctx.fillText(G.f.tag, x, y + 25 / sz);
+    const on = sel === G.f.id, L = LOOK[G.f.kind];
+    ctx.strokeStyle = `rgba(${L.glow},${on ? .55 : .22})`; ctx.lineWidth = .9 / sz; ctx.beginPath();
+    for (const s of G.lines) s.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke();
+    ctx.globalAlpha = on ? 1 : .74; const I = G.img; ctx.drawImage(I.cv, I.x, I.y, I.w, I.h); ctx.globalAlpha = 1;
+    /* its stars, the bright ones glinting */
+    ctx.globalCompositeOperation = "lighter";
+    for (const [x, y, m, ph] of G.stars){
+      const r = Math.max(.7, 2.9 - m * .5);
+      if (m < 2.6){ const a = .55 + .45 * Math.sin(time * 1.3 + ph * 40), l = (3.4 - m) * 3.4 * (.75 + .25 * a);
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r * 4); g.addColorStop(0, `rgba(255,255,255,${.5 * a})`); g.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 4, 0, TAU); ctx.fill();
+        ctx.strokeStyle = `rgba(235,245,255,${.5 * a})`; ctx.lineWidth = .8 / sz;
+        ctx.beginPath(); ctx.moveTo(x - l, y); ctx.lineTo(x + l, y); ctx.moveTo(x, y - l); ctx.lineTo(x, y + l); ctx.stroke(); }
+      ctx.fillStyle = `rgba(240,246,255,${m < 3 ? .95 : m < 4 ? .7 : .45})`; ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+    }
+    ctx.globalCompositeOperation = "source-over";
   }
-  ctx.globalAlpha = 1;
 }
 
-function hit(x, y, pole, th){
+function hit(x, y){
   if (!built) return null;
-  const dx = x - pole[0], dy = y - pole[1], bx = dx * Math.cos(-th) - dy * Math.sin(-th), by = dx * Math.sin(-th) + dy * Math.cos(-th);
-  let best = null, bd = Infinity;
-  for (const G of built.figs){ const d = Math.hypot(bx - G.c[0], by - G.c[1]); if (d < Math.max(26, G.r * .85) && d < bd){ bd = d; best = G.f.id; } }
-  return best;
+  for (const G of built.figs){ const b = G.box; if (x >= b.x0 - 6 && x <= b.x1 + 6 && y >= b.y0 - 6 && y <= b.y1 + 6) return G.f.id; }
+  return null;
 }
 
 function figure(id){
@@ -360,5 +414,5 @@ function figure(id){
   return { ...f, note: f.note || GREEK_NOTE, credit: D.credit };
 }
 
-window.WyrdSky = { prepare, build, draw, hit, figure, FIGS, at: (ra, dec) => proj(ra, dec), get built(){ return built; } };
+window.WyrdSky = { prepare, build, draw, hit, figure, FIGS, SLOT, at: (ra, dec) => proj(ra, dec), local: (id, ra, dec) => local(FIGS.find(f => f.id === id), ra, dec), get built(){ return built; } };
 })();

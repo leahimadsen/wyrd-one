@@ -124,11 +124,12 @@ function half(kind, side){
 }
 const HALVES = [half("crown", -1), half("crown", 1), half("root", -1), half("root", 1)];
 const STRANDS = Array.from({ length: 22 }, (_, i) => ({ i, f: i / 21 }));
-/* the sky behind: the real stars, turning slowly about the north celestial pole, which this drawing
-   sets above Asgard's crown (sky.js). Its figures are knotwork: Norse names in gold, Greek figures in ice. */
-const SKY_R = 325, SKY_TURN = 360 / 1200;                 /* one turn in twenty minutes */
+/* the sky behind: the real stars about the north celestial pole, which this drawing sets above Asgard's
+   crown, and round the margins twelve figures in knotwork, each on its own stars (sky.js): Norse names
+   in gold, Greek figures in ice. */
+const SKY_R = 325;
 for (let i = 0; i < 990; i++) rnd();   /* the old made-up stars drew from this seeded sequence: spending it keeps the tree's twigs and the rocks as they were */
-const skyAngle = time => -(((Date.now() / 1000) * SKY_TURN) % 360) * RAD * (reduce ? 0 : 1) - (reduce ? 2.2 : 0);
+const skyAngle = () => -1.15;                              /* the Milky Way laid diagonally across the scene */
 function rock(cx, cy, w, h){
   const top = [], bot = [];
   for (let i = 0; i <= 14; i++){ const u = i / 14 * 2 - 1; top.push([cx + u * w / 2, cy - Math.abs(Math.sin(i * 1.7)) * 5 - (1 - u * u) * 4]); }
@@ -675,7 +676,7 @@ function panel(){
       <dl>
         <dt>The stars</dt><dd>${f.stars}</dd>
         <dt>Its source</dt><dd>${f.note}</dd>
-        <dt>Drawn here</dt><dd>The stars are real and stand in their true places, turning about the north celestial pole. Setting that pole above Asgard is this drawing's choice; no source fixes the sky to the tree. The knotwork is drawn for the console${f.kind === "norse" ? "" : ", round a Greek figure"}.</dd>
+        <dt>Drawn here</dt><dd>The stars in the figure are real and keep their true places to one another. Where it sits round the tree, its size and its turn are composed for the drawing, and so is the sky behind, set about the pole above Asgard; no source fixes the sky to the tree. The knotwork is drawn for the console${f.kind === "norse" ? "" : ", round a Greek figure"}.</dd>
       </dl><p class="ey-src">${f.credit}</p>`;
     return;
   }
@@ -783,7 +784,7 @@ function mount(el, C, o = {}){
     let best = null, bd = Infinity;
     for (const n of NODES){ const d = Math.hypot(n.x - x, n.y - y), dd = d - (n.planet ? 1000 : 0); if (d < n.r + 10 / (scale * cam.z) && dd < bd){ bd = dd; best = n.id; } }
     if (!best){ const dx = x - CX, dy = y - MY, rr = Math.hypot(dx, dy / K); if (rr > 168 && rr < 415) best = "jotunheim"; }
-    if (!best && window.WyrdSky){ const f = WyrdSky.hit(x, y, POLES.above.at, skyAngle(performance.now() / 1000)); if (f){ choose("sky:" + f, false); return; } }
+    if (!best && window.WyrdSky){ const f = WyrdSky.hit(x, y); if (f){ choose("sky:" + f, false); return; } }
     if (best) choose(best, true);
   });
   addEventListener("resize", () => { if (running) size(); });

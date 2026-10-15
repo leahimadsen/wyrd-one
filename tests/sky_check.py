@@ -34,10 +34,10 @@ check("the offline copy keeps the sky", '"/static/sky-data.js"' in sw and '"/sta
 check("the made-up stars and corner constellations are gone", not any(k in eye for k in ("const CONST", "const BRIGHT", "const STARS", "of CONST", "of BRIGHT")))
 check("the tree's seeded twigs and rocks are kept as they were", "for (let i = 0; i < 990; i++) rnd();" in eye)
 check("the sky turns about the pole above Asgard", "WyrdSky.draw(ctx, POLES.above.at, skyAngle(time)" in eye)
-check("and holds still for those who ask for less motion", "* (reduce ? 0 : 1)" in eye)
+check("nothing is written on the sky: no names, no tags", "fillText" not in sky and "label" not in sky.split("/* ---------------- drawing")[1])
 check("a tap on a figure opens its record", 'choose("sky:" + f, false)' in eye and 'sel.startsWith("sky:")' in eye)
-check("the record gives the stars, the source, and says the pole's place is a choice",
-      all(k in eye for k in ("<dt>The stars</dt>", "<dt>Its source</dt>", "this drawing's choice", "no source fixes the sky to the tree")))
+check("the record gives the stars and the source, and says what is composed",
+      all(k in eye for k in ("<dt>The stars</dt>", "<dt>Its source</dt>", "keep their true places to one another", "composed for the drawing", "no source fixes the sky to the tree")))
 
 # ---- the figures ----
 figs = re.findall(r'\{ id: "(\w+)", kind: (NORSE|GREEK), name: "([^"]+)", gloss: "([^"]+)", tag: "([^"]+)", at: \[([\d.\-]+), ([\d.\-]+)\]', sky)
@@ -67,7 +67,10 @@ const N = window.WYRD_SKY_DATA.named, th = -86 * rad;          /* Orion turned t
 const B = turn(S.at(...N.Betelgeuse), th), Rg = turn(S.at(...N.Rigel), th), Si = turn(S.at(...N.Sirius), th);
 const figs = S.build(R);
 const alt = figs.map(G => [G.f.id, G.crossings]);
-console.log(JSON.stringify({ B, Rg, Si, alt, assigned: figs.every(G => G.pieces.length === G.crossings),
+const boxes = figs.map(G => G.box), overlap = boxes.some((a, i) => boxes.some((b, j) => j > i && a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1));
+const inside = boxes.every(b => b.x0 >= 0 && b.x1 <= 1000 && b.y0 >= 0 && b.y1 <= 1280), starsIn = figs.map(G => G.stars.length);
+const ropes = figs.filter(G => G.strands.length > G.f.parts.length).length;
+console.log(JSON.stringify({ B, Rg, Si, alt, overlap, inside, starsIn, ropes, assigned: figs.every(G => G.pieces.length === G.crossings),
   inside: figs.every(G => G.strands.every(s => s.pts.every(p => isFinite(p[0]) && isFinite(p[1])))) }));
 """ % (os.path.join(ROOT, "static", "sky-data.js"), os.path.join(ROOT, "static", "sky.js"))
     r = subprocess.run(["node", "-e", js], capture_output=True, text=True)
@@ -80,6 +83,9 @@ console.log(JSON.stringify({ B, Rg, Si, alt, assigned: figs.every(G => G.pieces.
     cross = dict(out.get("alt", []))
     check("the ribbons cross: every figure is interlaced", len(cross) == 12 and all(n >= 1 for n in cross.values()))
     check("every crossing has its over strand drawn on top", out.get("assigned") is True)
+    check("the figures are spread through the margins, no two in the same place", out.get("overlap") is False and out.get("inside") is True)
+    check("every figure shows its own real stars", all(n >= 2 for n in out.get("starsIn", [])))
+    check("the outlines are ropes of interlace, two strands where one was drawn", out.get("ropes", 0) >= 10)
 
 print("\nall good" if not bad else f"\n{bad} failed")
 sys.exit(1 if bad else 0)

@@ -188,8 +188,11 @@
     const at = lon => Math.floor((((lon % 360) + 360) % 360) / 10) % 36, dec = lon => C.decans[at(lon)], ay = FRAME.ayanamsa.degrees;
     const third = lon => ["first", "second", "third"][at(lon) % 3];
     const mid = (start + end) / 2, b = dec(mid), ends = [start + ay, end + ay - 1e-9];
-    const nordic = ends.filter((l, k) => k === 0 || at(l) !== at(ends[0])).map(l => { const d = dec(l); return { minor: d.nordic.minor, trump: d.nordic.trump, ruler: d.ruler, sign: d.sign, decan: third(l) }; });
-    return { buddhist: { minor: b.buddhist.minor, trump: b.buddhist.trump, ruler: b.ruler, sign: b.sign, decan: third(mid) }, nordic,
+    const p2 = n => String(n).padStart(2, "0");
+    /* glyph codes (wyrd-glyphs.js): the Nordic minor by decan, each deck's trump by its sign */
+    const nordic = ends.filter((l, k) => k === 0 || at(l) !== at(ends[0])).map(l => { const d = dec(l);
+      return { minor: d.nordic.minor, trump: d.nordic.trump, ruler: d.ruler, sign: d.sign, decan: third(l), glyph: "N" + p2(at(l) + 1), major: "MN" + p2(Math.floor(at(l) / 3) + 1) }; });
+    return { buddhist: { minor: b.buddhist.minor, trump: b.buddhist.trump, ruler: b.ruler, sign: b.sign, decan: third(mid), major: "MB" + p2(Math.floor(at(mid) / 3) + 1) }, nordic,
       void: C.voids[Math.round(start / PADA)] || "", gate: start === 0 ? C.gate : null };
   }
   const pad3 = n => String(n).padStart(3, "0");
