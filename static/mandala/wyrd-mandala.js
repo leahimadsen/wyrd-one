@@ -64,6 +64,7 @@
           <li><i style="border-color: var(--wm-ink-2)"></i>Cross: the four cardinal sign starts</li>
           <li><span style="color: var(--wm-brass)">○</span> vargottama pada</li>
           <li><span class="key-void"></span> Asura void: the tunnels, thirty-six dark padas on a 3-2-4 spacing</li>
+          <li><span class="key-card"></span> Outside the rim: the Nordic deck's planetary trumps, each at its planet's exaltation</li>
           <li><i style="border-color: var(--wm-verd); border-top-width: 6px"></i>Tropical rings, outside: the Nordic cards and the tropical signs, turned by the ayanamsa</li>
           <li><i style="border-color: var(--wm-verd); border-top-style: dashed"></i>The equinox: 0° tropical Aries</li>
           <li data-wm="plKey" hidden><span style="color: var(--wm-pl)">☉</span> your planets, at their sidereal places</li>
@@ -241,18 +242,22 @@
       }
       for (const s of D.SIGNS) o += `<path d="${radial(r0, r1, s.start - AY())}" class="tz-div-s"/>`;
       /* the equinox: 0° tropical Aries, where the receiving ring begins */
-      const [ex, ey] = pt(ring("tropical")[1] + 44, -AY());
+      const [ex, ey] = pt(ring("tropical")[1] + 44, 4 - AY());   /* set a little east of the line, clear of the Empress at 27° Pisces */
       o += `<path d="${radial(ring("nordic")[0] - 4, r1 + 22, -AY())}" class="eq"/><text x="${f(ex)}" y="${f(ey)}" class="eq-lab" text-anchor="middle" dominant-baseline="central">EQUINOX</text>`;
       return o;
     }
     function drawRim() {
-      const r = ring("tropical")[1] + 6;
+      const r = ring("tropical")[1] + 6, ex = (D.TRUMP_EXALT || []).map(x => norm(x.trop - AY()));
       let o = `<circle r="${r}" class="rim"/><circle r="${r + 16}" class="rim"/>`;
       for (let d = 0; d < 360; d++) {
         const len = d % 10 === 0 ? 11 : d % 5 === 0 ? 7 : 3.5;
         o += `<path d="${radial(r, r + len, d)}" class="${d % 10 === 0 ? "rim-t10" : "rim-t"}"/>`;
       }
-      for (let d = 0; d < 360; d += 30) { const [x, y] = pt(r + 30, d); o += `<text x="${f(x)}" y="${f(y)}" class="rim-lab" text-anchor="middle" dominant-baseline="central">${d}°</text>`; }
+      for (let d = 0; d < 360; d += 30) { if (ex.some(a => Math.abs(((a - d + 540) % 360) - 180) < 7)) continue;
+        const [x, y] = pt(r + 30, d); o += `<text x="${f(x)}" y="${f(y)}" class="rim-lab" text-anchor="middle" dominant-baseline="central">${d}°</text>`; }
+      /* the Nordic planetary trumps, outside the rim, each at its planet's exaltation on the tropical ring */
+      (D.TRUMP_EXALT || []).forEach((x, i) => { const a = norm(x.trop - AY());
+        o += `<path d="${radial(ring("tropical")[1], r + 24, a)}" class="ex-tick"/>` + card("MX" + String(i + 1).padStart(2, "0"), r + 38, a, 17, "trump-glyph ex-glyph", ` data-exalt="${x.planet}"`); });
       return o;
     }
     /* your planets, inside the field: a tick to the exact degree at the zodiac's edge, the glyph stepped inward when two crowd */
@@ -279,7 +284,11 @@
     function drawSelection() {
       const s = state.sel; if (!s) return "";
       const r0 = ring("zodiac")[0], r1 = ring("tropical")[1];
-      const [lx, ly] = pt(r1 + 60, mid(s));
+      /* the station's code stands outside the rim; it steps aside from a planetary trump seated there */
+      let la = mid(s);
+      for (const x of D.TRUMP_EXALT || []) { const e = norm(x.trop - AY()), d = ((la - e + 540) % 360) - 180;
+        if (Math.abs(d) < 5.5) la = e + (d >= 0 ? 5.5 : -5.5); }
+      const [lx, ly] = pt(r1 + 60, la);
       return `<path d="${sector(r0, r1, s.zodiacStart, s.zodiacEnd)}" class="sel-wedge"/>
         <path d="${radial(14, r0, mid(s))}" class="sel-ray"/>
         <text x="${f(lx)}" y="${f(ly)}" class="sel-code" text-anchor="middle" dominant-baseline="central">${s.code}</text>`;
@@ -339,6 +348,9 @@
           <p class="m-syl">This pada's sound: <b>${esc(s.syllable)}</b> <small>· the four padas of ${esc(s.nakshatra)} sound ${m.syllables.map(esc).join(" · ")}</small></p>
         </section>`;
     }
+    /* the planetary trumps whose exaltation degree falls in this station, on the tropical ring */
+    const exaltIn = (s, ay) => (D.TRUMP_EXALT || []).map((x, i) => ({ ...x, code: "MX" + String(i + 1).padStart(2, "0") }))
+      .filter(x => { const lo = norm(s.zodiacStart + ay), d = norm(x.trop - lo); return d < s.zodiacEnd - s.zodiacStart; });
     /* the two decks, one per rotor: Buddhist on the sidereal ring (emanating), Nordic on the true tropical ring (receiving) */
     function cardsText(s) {
       const t = s.tarot, c = s.cards, ay = D.FRAME.ayanamsa;
@@ -355,6 +367,8 @@
             </ul>
           ${c.gate ? `<div class="gate-card"><div class="c-pair">${glyph("MB00", c.gate.buddhist)}</div><p class="c-deck">At the gate · 0° sidereal Aries</p><p class="c-name">${esc(c.gate.buddhist)}</p>
             <p class="c-det">${esc(c.gate.reading)}. ${esc(c.gate.note)}</p></div>` : ""}
+          ${exaltIn(s, ay.degrees).map(x => `<div class="gate-card"><div class="c-pair">${glyph(x.code, x.nordic)}</div><p class="c-deck">Exaltation · tropical ring</p>
+            <p class="c-name">${esc(x.nordic)} <small>· ${esc(x.planet)} exalted, ${inSign(x.trop)}</small></p></div>`).join("")}
           ${voidOf(s) ? `<dl class="kv"><dt>Asura void</dt><dd>${esc(voidOf(s))}</dd></dl>` : ""}`
           : `<dl class="kv"><dt>Card</dt><dd>${t.name ? esc(t.name) : NA}</dd></dl>`}
         </section>`;

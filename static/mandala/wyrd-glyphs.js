@@ -7,6 +7,7 @@
      MB00          The Fool, at the gate (0° sidereal Aries)
      MB01 … MB12   the Buddhist trumps, by sidereal sign
      MN01 … MN12   the Nordic trumps, by tropical sign
+     MX01 … MX07   the Nordic planetary trumps, at their planets' exaltations
 
    Until The Völva's artwork exists, each station carries a simple
    drawn glyph of its Buddhist (sidereal) card: the decan's number at
@@ -113,17 +114,26 @@
     "Mara": `<path d="M8.6 11.8C13.2 14.6 13.2 21.4 8.6 24.2" class="g-em"/><path d="M8.6 11.8V24.2" class="g-em g-thin"/><path d="M8.6 18H17.4M15.6 16.4L17.4 18L15.6 19.6" class="g-em"/>`,
     "The Tara": `<path d="M12 11.6L12.9 13.9L15.3 14L13.4 15.5L14.1 17.8L12 16.5L9.9 17.8L10.6 15.5L8.7 14L11.1 13.9Z" class="g-em g-thin"/><path d="M12 18.4C10.6 20.2 10.6 22.2 12 23.6C13.4 22.2 13.4 20.2 12 18.4ZM11.4 23.6C9 23.4 7.8 21.6 7.9 20.2C9.6 20.4 10.9 21.8 11.4 23.6ZM12.6 23.6C15 23.4 16.2 21.6 16.1 20.2C14.4 20.4 13.1 21.8 12.6 23.6Z" class="g-em g-thin"/>`,
     "Nirvana": `<path d="M8.4 21H15.6L14.2 24H9.8Z" class="g-em"/><path d="M12 21V19.4" class="g-em g-thin"/><path d="M12 18.6C10.8 17 13.2 15.6 12 13.6C11.2 12.4 12.4 11.8 12.6 11.4" class="g-em g-thin"/>`,
+    /* the Nordic deck's planetary trumps (Golden Dawn), seated at their planets' exaltations */
+    "The Magician": `<path d="M12 16V25" class="g-em"/><path d="M12 13.2C10.8 11.2 8.4 11.2 8.4 13.2C8.4 15.2 10.8 15.2 12 13.2C13.2 11.2 15.6 11.2 15.6 13.2C15.6 15.2 13.2 15.2 12 13.2Z" class="g-em g-thin"/><path d="M9.6 20H14.4" class="g-em g-thin"/>`,
+    "The High Priestess": `<path d="M7.6 12.4V24.4M16.4 12.4V24.4" class="g-em"/><path d="M13.2 15.4A3 3 0 1 0 13.2 20.6A2.3 2.3 0 1 1 13.2 15.4Z" class="g-em g-thin"/>`,
+    "The Empress": `<circle cx="12" cy="15.6" r="3.4" class="g-em"/><path d="M12 19V25M9.6 22.4H14.4" class="g-em"/>`,
+    "Wheel of Fortune": `<circle cx="12" cy="18" r="5.6" class="g-em"/><circle cx="12" cy="18" r="2.2" class="g-em g-thin"/><path d="M12 12.4V15.8M12 20.2V23.6M6.4 18H9.8M14.2 18H17.6M8 14L10.4 16.4M13.6 19.6L16 22M16 14L13.6 16.4M10.4 19.6L8 22" class="g-em g-thin"/>`,
+    "The Tower": `<path d="M9.4 24.6V14.4H14.6V24.6Z" class="g-em"/><path d="M9.4 14.4V12.8H10.7V14.4M11.35 14.4V12.8H12.65V14.4M13.3 14.4V12.8H14.6V14.4" class="g-em g-thin"/><path d="M18.2 10.6L15.6 15H17.2L14.8 19" class="g-em g-thin"/>`,
+    "The Sun": `<circle cx="12" cy="18" r="3.2" class="g-em"/><path d="M12 11.6V13.4M12 22.6V24.4M5.6 18H7.4M16.6 18H18.4M7.5 13.5L8.8 14.8M15.2 21.2L16.5 22.5M16.5 13.5L15.2 14.8M8.8 21.2L7.5 22.5" class="g-em"/>`,
+    "The World": `<ellipse cx="12" cy="18" rx="4.6" ry="6.4" class="g-em"/><ellipse cx="12" cy="18" rx="2.9" ry="4.7" class="g-em g-thin"/><circle cx="12" cy="18" r=".9" class="g-dot"/>`,
     /* at the gate: the nought, and the going-forth */
     "The Fool": `<path d="M15.8 14.2A5.4 5.4 0 1 0 17.2 19.6" class="g-em"/><path d="M13.6 18H19.2M17.6 16.4L19.2 18L17.6 19.6" class="g-em"/>`,
   };
-  const WAITE = { "The Fool": "0", "The Emperor": "IV", "The Hierophant": "V", "The Lovers": "VI", "The Chariot": "VII", "Strength": "VIII", "The Hermit": "IX",
+  const WAITE = { "The Fool": "0", "The Magician": "I", "The High Priestess": "II", "The Empress": "III", "Wheel of Fortune": "X", "The Tower": "XVI", "The Sun": "XIX", "The World": "XXI", "The Emperor": "IV", "The Hierophant": "V", "The Lovers": "VI", "The Chariot": "VII", "Strength": "VIII", "The Hermit": "IX",
     "Justice": "XI", "Death": "XIII", "Temperance": "XIV", "The Devil": "XV", "The Star": "XVII", "The Moon": "XVIII" };
   const SIGN_GLYPH = ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"].map(g => g + "︎");
   const DOUBLE = `<rect x=".75" y=".75" width="${W - 1.5}" height="${H - 1.5}" rx="1.6" class="g-card"/><rect x="2.6" y="2.6" width="${W - 5.2}" height="${H - 5.2}" rx=".6" class="g-frame"/><rect x="4" y="4" width="${W - 8}" height="${H - 8}" rx=".4" class="g-frame"/>`;
-  function trumpCard(name, sign, nordic) {
+  function trumpCard(name, sign, nordic, footGlyph) {
     const em = TRUMP_EMBLEM[nordic ? name : (name === "The Chariot" ? "The Chariot · Buddhist" : name)]; if (!em) return null;
     const head = nordic && WAITE[name] ? `<text x="12" y="7.6" class="g-rom" text-anchor="middle" dominant-baseline="central">${WAITE[name]}</text>` : `<circle cx="12" cy="7.4" r=".9" class="g-dot"/>`;
-    const foot = sign == null ? `<circle cx="12" cy="29.6" r="1.6" class="g-em g-thin"/>` : `<text x="12" y="29.4" class="g-sign" text-anchor="middle" dominant-baseline="central">${SIGN_GLYPH[sign]}</text>`;
+    const foot = footGlyph ? `<text x="12" y="29.4" class="g-sign" text-anchor="middle" dominant-baseline="central">${footGlyph}︎</text>`
+      : sign == null ? `<circle cx="12" cy="29.6" r="1.6" class="g-em g-thin"/>` : `<text x="12" y="29.4" class="g-sign" text-anchor="middle" dominant-baseline="central">${SIGN_GLYPH[sign]}</text>`;
     return `${DOUBLE}${head}${em}${foot}`;
   }
   const pad2 = n => String(n).padStart(2, "0");
@@ -135,6 +145,9 @@
     if (b) registry["MB" + pad2(i + 1)] = { code: "MB" + pad2(i + 1), svg: b, placeholder: true, name: d.buddhist.trump };
     if (nn) registry["MN" + pad2(i + 1)] = { code: "MN" + pad2(i + 1), svg: nn, placeholder: true, name: d.nordic.trump };
   }
+  /* the Nordic planetary trumps, MX01 … MX07, in the order of the wheel's TRUMP_EXALT table */
+  ((root.WYRD && root.WYRD.TRUMP_EXALT) || []).forEach((x, i) => { const svg = trumpCard(x.nordic, null, true, x.glyph);
+    if (svg) registry["MX" + pad2(i + 1)] = { code: "MX" + pad2(i + 1), svg, placeholder: true, name: x.nordic }; });
   const gate = root.WYRD_MANSIONS && root.WYRD_MANSIONS.cards && root.WYRD_MANSIONS.cards.gate;
   if (gate) registry.MB00 = { code: "MB00", svg: trumpCard(gate.buddhist, null, false), placeholder: true, name: gate.buddhist };
   for (const c of Object.keys(CUSTOM)) if (registry[c] && !/^T\d/.test(c)) registry[c] = { code: c, svg: CUSTOM[c], placeholder: false };

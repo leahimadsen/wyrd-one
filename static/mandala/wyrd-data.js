@@ -311,5 +311,17 @@
     FRAME.ayanamsa.degrees = AY0 + (year - EPOCH) * RATE;
     stations.splice(0, stations.length, ...buildStations());
   }
-  root.WYRD = { FRAME, SIGNS, NAKSHATRAS, RECORDS, LAYERS, RELATIONS, PROVENANCE, PADA, stations, setYear, EPOCH };
+  /* the planetary trumps (Golden Dawn), seated at their planets' exaltations, each deck on its own rotor (The Völva's
+     ruling): the Nordic card on the tropical ring at the Western degree, the Buddhist card on the sidereal ring at the
+     degree Parashara gives (sid). The Buddhist deck's names for these are still to come. */
+  const TRUMP_EXALT = [
+    { planet: "Sun", glyph: "☉", nordic: "The Sun", trop: 19, sid: 10 },
+    { planet: "Moon", glyph: "☽", nordic: "The High Priestess", trop: 33, sid: 33 },
+    { planet: "Mercury", glyph: "☿", nordic: "The Magician", trop: 165, sid: 165 },
+    { planet: "Venus", glyph: "♀", nordic: "The Empress", trop: 357, sid: 357 },
+    { planet: "Mars", glyph: "♂", nordic: "The Tower", trop: 298, sid: 298 },
+    { planet: "Jupiter", glyph: "♃", nordic: "Wheel of Fortune", trop: 105, sid: 95 },
+    { planet: "Saturn", glyph: "♄", nordic: "The World", trop: 201, sid: 200 },
+  ];
+  root.WYRD = { FRAME, SIGNS, NAKSHATRAS, RECORDS, LAYERS, RELATIONS, PROVENANCE, PADA, stations, setYear, EPOCH, TRUMP_EXALT };
 })(window);
