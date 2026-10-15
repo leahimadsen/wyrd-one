@@ -26,8 +26,8 @@ if (!D) { window.WyrdSky = null; return; }
 
 const NORSE = "norse", GREEK = "greek";
 const LOOK = {
-  [NORSE]: { band: "#f6c768", core: "#3a1f05", glow: "255,190,96" },
-  [GREEK]: { band: "#a6e0ff", core: "#0a2440", glow: "140,210,255" },
+  [NORSE]: { band: "#f8d48a", edge: "#2a1503", glow: "255,186,90" },
+  [GREEK]: { band: "#d6f0ff", edge: "#071a33", glow: "130,205,255" },
 };
 const GREEK_NOTE = "The figure is Greek, as Ptolemy lists it; only the ornament is Norse.";
 
@@ -260,39 +260,79 @@ function crossings(strands){
   return out;
 }
 
-function buildFigure(f){
-  const [sx, sy, sw, sh, rot] = SLOT[f.id] || [500, 640, 200, 200, 0];
-  const cr = Math.cos(rot * RAD), srt = Math.sin(rot * RAD), turn = ([x, y]) => [x * cr - y * srt, x * srt + y * cr];
-  /* the parts, in the figure's own degrees, turned */
-  const raw = [], thinL = [], dotL = [];
-  for (const p of f.parts){
-    if (p.c) raw.push({ pts: spline(pairs(p.c), true), closed: true, rope: !p.one, fill: true });
-    else if (p.o) raw.push({ pts: spline(pairs(p.o), false), closed: false, rope: !p.one, curl: p.curl });
-    else if (p.tw) raw.push({ pts: spline(pairs(p.tw), false, 8), closed: false, rope: true, curl: p.curl, wide: true });
-    else if (p.ring) raw.push({ pts: spline(ringPts(...p.ring), true, 4), closed: true });
-    else if (p.eye) raw.push({ pts: spline(eyePts(...p.eye), true, 6), closed: true, fill: true });
-    else if (p.eight) raw.push({ pts: spline(eightPts(...p.eight), true, 5), closed: true, rope: true });
-    else if (p.thin) thinL.push(pairs(p.thin));
-    else if (p.dot) dotL.push(p.dot);
+/* ---------------- knotwork ----------------
+   A body is woven, not outlined: its shape is filled with a knot field, built as Celtic knotwork is
+   drawn by hand from a grid of dots. Each edge between two dots inside the shape is a crossing; round
+   each dot the strand turns from one edge's crossing to the next. Every arc goes over where it starts
+   and under where it ends, so the whole field alternates over and under. A few edges are broken, and
+   there the strands turn back on themselves in loops. Limbs, horns and tails are plaits of three
+   strands; rings are two-strand ropes; the eyes are set into the weave. */
+const pip = (P, x, y) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++){
+  const [xi, yi] = P[i], [xj, yj] = P[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
+const cubic = (a, b, c, d, n = 8) => Array.from({ length: n + 1 }, (_, i) => { const t = i / n, u = 1 - t;
+  return [0, 1].map(k => u * u * u * a[k] + 3 * u * u * t * b[k] + 3 * u * t * t * c[k] + t * t * t * d[k]); });
+const unit = (x, y) => { const m = Math.hypot(x, y) || 1; return [x / m, y / m]; };
+/* the strand round dot v, from the crossing m1 (edge at angle a1) to m2 (edge at a2, a2 > a1) */
+function turnArc(v, m1, a1, m2, a2){
+  const t1 = [Math.cos(a1), Math.sin(a1)], n1 = [-t1[1], t1[0]], t2 = [Math.cos(a2), Math.sin(a2)], n2 = [-t2[1], t2[0]];
+  const d1 = unit(-t1[0] + n1[0], -t1[1] + n1[1]), d2 = unit(t2[0] + n2[0], t2[1] + n2[1]), span = a2 - a1;
+  const anchors = [[m1, d1]], parts = Math.ceil(span / (100 * RAD));
+  if (parts > 1){ const rho = (Math.hypot(m1[0] - v[0], m1[1] - v[1]) + Math.hypot(m2[0] - v[0], m2[1] - v[1])) / 2;
+    for (let j = 1; j < parts; j++){ const a = a1 + span * j / parts; anchors.push([[v[0] + rho * Math.cos(a), v[1] + rho * Math.sin(a)], [-Math.sin(a), Math.cos(a)]]); } }
+  anchors.push([m2, d2]);
+  const out = [];
+  for (let j = 0; j < anchors.length - 1; j++){
+    const [p, dp] = anchors[j], [q, dq] = anchors[j + 1], L = Math.hypot(q[0] - p[0], q[1] - p[1]) * (parts > 1 ? .42 : .36);
+    const seg = cubic(p, [p[0] + dp[0] * L, p[1] + dp[1] * L], [q[0] - dq[0] * L, q[1] - dq[1] * L], q); if (j) seg.shift(); out.push(...seg);
   }
-  raw.forEach(r => { r.pts = r.pts.map(turn); });
-  const all = raw.flatMap(r => r.pts), xs = all.map(p => p[0]), ys = all.map(p => p[1]);
-  const bx0 = Math.min(...xs), bx1 = Math.max(...xs), by0 = Math.min(...ys), by1 = Math.max(...ys);
-  const S = Math.min(sw / (bx1 - bx0), sh / (by1 - by0)), mx = (bx0 + bx1) / 2, my = (by0 + by1) / 2;
-  const scene = ([x, y]) => [sx + (x - mx) * S, sy - (y - my) * S];
-  /* into the scene: ropes become two strands, the rest one */
-  const strands = [], fills = [];
-  for (const r of raw){
-    let base = resample(r.pts.map(scene), 2.2, r.closed);
-    if (r.closed) base = base.slice(0, -1);
-    if (r.fill) fills.push(base);
-    const closedBase = r.closed ? [...base, base[0]] : base;
-    if (r.rope && lengthOf(closedBase) > 30){ for (const s of rope(closedBase, r.closed, r.wide ? 3.1 : 2.5)) strands.push({ pts: s, closed: r.closed }); }
-    else strands.push({ pts: closedBase, closed: r.closed });
-    if (r.curl && !r.closed) strands.push({ pts: [closedBase[closedBase.length - 1], ...curl(closedBase, r.curl, r.wide ? 9 : 7)], closed: false });
+  return out;
+}
+function knotField(polys, d, seed){
+  const inside = (x, y) => polys.some(P => pip(P, x, y));
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const P of polys) for (const [x, y] of P){ x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
+  let sd = seed; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+  const nx = Math.floor((x1 - x0) / d) + 1, ny = Math.floor((y1 - y0) / d) + 1, ox = x0 + ((x1 - x0) - (nx - 1) * d) / 2, oy = y0 + ((y1 - y0) - (ny - 1) * d) / 2;
+  const V = new Map();
+  for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++){ const x = ox + i * d, y = oy + j * d;
+    if (inside(x, y)) V.set(i + "," + j, { x: x + (rnd() - .5) * d * .16, y: y + (rnd() - .5) * d * .16, nb: [] }); }
+  const E = [];
+  for (const [key, v] of V){ const [i, j] = key.split(",").map(Number);
+    for (const [di, dj] of [[1, 0], [0, 1]]){ const w = V.get((i + di) + "," + (j + dj));
+      if (w && inside((v.x + w.x) / 2, (v.y + w.y) / 2)) E.push({ a: v, b: w }); } }
+  E.forEach(e => { e.a.nb.push(e); e.b.nb.push(e); });
+  /* breaks, for loops; never leaving a dot with fewer than two strands */
+  for (const e of E){ if (rnd() < .26 && e.a.nb.length > 2 && e.b.nb.length > 2){ e.cut = true; e.a.nb = e.a.nb.filter(x => x !== e); e.b.nb = e.b.nb.filter(x => x !== e); } }
+  const live = E.filter(e => !e.cut);
+  live.forEach((e, k) => { e.id = k; e.m = [(e.a.x + e.b.x) / 2, (e.a.y + e.b.y) / 2]; e.starts = []; });
+  const arcs = [];
+  for (const v of V.values()){
+    if (!v.nb.length) continue;
+    const nb = v.nb.map(e => { const w = e.a === v ? e.b : e.a; return { e, ang: Math.atan2(w.y - v.y, w.x - v.x) }; }).sort((p, q) => p.ang - q.ang);
+    nb.forEach((p, i) => {
+      const q = nb[(i + 1) % nb.length]; let a2 = q.ang; if (nb.length === 1) a2 = p.ang + TAU; else if (a2 <= p.ang) a2 += TAU;
+      const pts = turnArc([v.x, v.y], p.e.m, p.ang, q.e.m, a2), arc = { pts };
+      arcs.push(arc); p.e.starts.push(arc);
+    });
   }
-  const thin = thinL.map(l => l.map(turn).map(scene)), dots = dotL.map(d => scene(turn(d)));
-  /* over and under in turn along each strand */
+  /* at each crossing the strand made of the two arcs that start there goes over */
+  const lead = (P, want) => { const out = [P[0]]; let s = 0; for (let i = 1; i < P.length; i++){ s += Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]); out.push(P[i]); if (s >= want) break; } return out; };
+  const overs = live.filter(e => e.starts.length === 2).map(e => [...lead(e.starts[0].pts, d * .55).reverse(), ...lead(e.starts[1].pts, d * .55).slice(1)]);
+  return { arcs: arcs.map(a => a.pts), overs, dots: V.size };
+}
+/* a plait of three strands along a path; a two-strand rope round a closed one */
+function plait(P, closed, a, want, n){
+  const len = lengthOf(P), k = Math.max(closed ? 3 : 1, Math.round(len / want)), l = len / k, acc = [0];
+  for (let i = 1; i < P.length; i++) acc.push(acc[i - 1] + Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]));
+  const N = P.length - (closed ? 1 : 0);
+  return Array.from({ length: n }, (_, s) => P.map((p, i) => {
+    const q = P[closed ? (i + 1) % N : Math.min(P.length - 1, i + 1)], o = P[closed ? (i - 1 + N) % N : Math.max(0, i - 1)];
+    const [nx, ny] = unit(-(q[1] - o[1]), q[0] - o[0]);
+    const taper = closed ? 1 : Math.min(1, acc[i] / (l * .6), (len - acc[i]) / (l * .6));
+    const w = a * Math.sin(acc[i] / l * TAU * (n === 2 ? .5 : 1) + s * TAU / n) * taper;
+    return [p[0] + nx * w, p[1] + ny * w]; }));
+}
+function alternate(strands){
   const X = crossings(strands);
   strands.forEach((_, s) => {
     const mine = X.filter(c => c.a === s || c.b === s).map(c => ({ c, t: c.a === s ? c.ta : c.tb })).sort((p, q) => p.t - q.t);
@@ -305,10 +345,56 @@ function buildFigure(f){
       next = next === "over" ? "under" : "over";
     }
   });
-  const pieces = X.map(c => { const P = strands[c.over === "a" ? c.a : c.b].pts, t = c.over === "a" ? c.ta : c.tb, i = Math.floor(t), want = 5.4;
+  return X.map(c => { const P = strands[c.over === "a" ? c.a : c.b].pts, t = c.over === "a" ? c.ta : c.tb, i = Math.floor(t), want = 4.4;
     let k = i; while (k > 0 && Math.hypot(P[k][0] - c.x, P[k][1] - c.y) < want) k--;
     const out = [P[k]]; for (let m = k + 1; m < P.length; m++){ out.push(P[m]); if (m > i && Math.hypot(P[m][0] - c.x, P[m][1] - c.y) >= want) break; }
     return out; });
+}
+
+function buildFigure(f){
+  const [sx, sy, sw, sh, rot] = SLOT[f.id] || [500, 640, 200, 200, 0];
+  const cr = Math.cos(rot * RAD), srt = Math.sin(rot * RAD), turn = ([x, y]) => [x * cr - y * srt, x * srt + y * cr];
+  const raw = [], thinL = [], dotL = [];
+  for (const p of f.parts){
+    if (p.c) raw.push({ kind: "body", pts: spline(pairs(p.c), true), closed: true });
+    else if (p.o) raw.push({ kind: p.one ? "line" : "limb", pts: spline(pairs(p.o), false), closed: false, curl: p.curl });
+    else if (p.tw) raw.push({ kind: "limb", pts: spline(pairs(p.tw), false, 8), closed: false, curl: p.curl, wide: true });
+    else if (p.ring) raw.push({ kind: "ring", pts: spline(ringPts(...p.ring), true, 4), closed: true });
+    else if (p.eye) raw.push({ kind: "ring", pts: spline(eyePts(...p.eye), true, 6), closed: true, eye: true });
+    else if (p.eight) raw.push({ kind: "limb", pts: spline(eightPts(...p.eight), true, 5), closed: true });
+    else if (p.thin) thinL.push(pairs(p.thin));
+    else if (p.dot) dotL.push(p.dot);
+  }
+  raw.forEach(r => { r.pts = r.pts.map(turn); });
+  const all = raw.flatMap(r => r.pts), xs = all.map(p => p[0]), ys = all.map(p => p[1]);
+  const bx0 = Math.min(...xs), bx1 = Math.max(...xs), by0 = Math.min(...ys), by1 = Math.max(...ys);
+  const S = Math.min(sw / (bx1 - bx0), sh / (by1 - by0)), mx = (bx0 + bx1) / 2, my = (by0 + by1) / 2;
+  const scene = ([x, y]) => [sx + (x - mx) * S, sy - (y - my) * S];
+  raw.forEach(r => { r.pts = resample(r.pts.map(scene), 2, r.closed); });
+  /* the body: every broad closed shape woven together as one field, framed by its contour; a thin one
+     (a wing, a flame, a feather) is a plaited loop that follows its own shape */
+  const d = Math.max(8, Math.min(14, Math.min(sw, sh) / 9));
+  const area = P => Math.abs(P.reduce((s, p, i) => { const q = P[(i + 1) % P.length]; return s + p[0] * q[1] - q[0] * p[1]; }, 0)) / 2;
+  raw.forEach(r => { if (r.kind === "body" && 2 * area(r.pts) / lengthOf([...r.pts, r.pts[0]]) < 2.3 * d) r.kind = "loop"; });
+  const bodies = raw.filter(r => r.kind === "body").map(r => r.pts);
+  let seed = 7; for (const ch of f.id) seed = (seed * 31 + ch.charCodeAt(0)) % 2147483647;
+  const field = bodies.length ? knotField(bodies, d, seed) : { arcs: [], overs: [], dots: 0 };
+  const inBody = P => bodies.length && P.filter(([x, y]) => bodies.some(B => pip(B, x, y))).length / P.length > .6;
+  /* limbs and rings: plaits and ropes over the body; a body too small to weave keeps its outline */
+  const strands = [];
+  if (field.dots < 4) for (const B of bodies) for (const s of plait([...B, B[0]], true, 2.2, 12, 2)) strands.push({ pts: s, closed: true });
+  for (const r of raw){
+    if (r.kind === "body") continue;
+    if (r.kind === "loop"){ for (const s of plait([...r.pts, r.pts[0]], true, 2.3, 12, 2)) strands.push({ pts: s, closed: true }); continue; }
+    if (r.kind === "limb" && !r.closed && inBody(r.pts)) continue;          /* lies on the body: the weave already shows it */
+    const len = lengthOf(r.pts);
+    if (r.kind === "limb" && len > 34) for (const s of plait(r.pts, r.closed, r.wide ? 3.6 : 2.9, r.wide ? 17 : 14, r.closed ? 2 : 3)) strands.push({ pts: s, closed: r.closed });
+    else if (r.kind === "ring" && len > 26 && !r.eye) for (const s of plait(r.pts, true, 1.6, 9, 2)) strands.push({ pts: s, closed: true });
+    else strands.push({ pts: r.pts, closed: r.closed });
+    if (r.curl && !r.closed) strands.push({ pts: [r.pts[r.pts.length - 1], ...curl(r.pts, r.curl, r.wide ? 9 : 7)], closed: false });
+  }
+  const pieces = alternate(strands);
+  const thin = thinL.map(l => l.map(turn).map(scene)), eyes = dotL.map(p => scene(turn(p)));
   /* the figure's own stars: every star in its window, in true places to one another */
   const win = { x0: sx - sw / 2 - 10, x1: sx + sw / 2 + 10, y0: sy - sh / 2 - 10, y1: sy + sh / 2 + 10 };
   const stars = [];
@@ -321,29 +407,40 @@ function buildFigure(f){
   const L = typeof f.lines === "string" ? (D.lines[f.lines] || []).map(seg => pairs(seg).map(([ra, dec]) => local(f, ra, dec))) : (f.lines || []).map(pairs);
   for (const seg of L) lines.push(seg.map(turn).map(scene));
   const box = { x0: sx - sw / 2, x1: sx + sw / 2, y0: sy - sh / 2, y1: sy + sh / 2 };
-  return { f, strands, pieces, fills, thin, dots, stars, lines, box, c: [sx, sy], crossings: X.length };
+  return { f, d, field, bodies: field.dots >= 4 ? bodies : [], strands, pieces, thin, eyes, stars, lines, box, c: [sx, sy], crossings: field.overs.length + pieces.length, plaitCrossings: pieces.length };
 }
 
-/* each figure painted once, on its own small canvas: a glow, a faint body, then the ribbons */
-const W = 3.4;
+/* each figure painted once, on its own small canvas: a glow, then the ribbons with dark edges */
 function paint(G, k){
-  const pad = 14, x0 = Math.min(G.box.x0, ...G.strands.flatMap(s => s.pts.map(p => p[0]))) - pad, y0 = Math.min(G.box.y0, ...G.strands.flatMap(s => s.pts.map(p => p[1]))) - pad;
-  const x1 = Math.max(G.box.x1, ...G.strands.flatMap(s => s.pts.map(p => p[0]))) + pad, y1 = Math.max(G.box.y1, ...G.strands.flatMap(s => s.pts.map(p => p[1]))) + pad;
+  const pts = [...G.field.arcs.flat(), ...G.strands.flatMap(s => s.pts)], pad = 14;
+  const x0 = Math.min(G.box.x0, ...pts.map(p => p[0])) - pad, y0 = Math.min(G.box.y0, ...pts.map(p => p[1])) - pad;
+  const x1 = Math.max(G.box.x1, ...pts.map(p => p[0])) + pad, y1 = Math.max(G.box.y1, ...pts.map(p => p[1])) + pad;
   const cv = document.createElement("canvas"); cv.width = Math.max(2, Math.ceil((x1 - x0) * k)); cv.height = Math.max(2, Math.ceil((y1 - y0) * k));
   const c = cv.getContext("2d"), L = LOOK[G.f.kind];
   c.setTransform(k, 0, 0, k, -x0 * k, -y0 * k); c.lineJoin = "round";
   const path = list => { const p = new Path2D(); for (const s of list) s.forEach((q, i) => i ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1])); return p; };
-  const all = path(G.strands.map(s => s.pts));
-  for (const F of G.fills){ const p = path([F]); p.closePath(); c.fillStyle = `rgba(${L.glow},.07)`; c.fill(p); }
-  c.save(); c.filter = `blur(${Math.max(1.5, 3.2 * k)}px)`; c.strokeStyle = `rgba(${L.glow},.55)`; c.lineWidth = W * 2.4; c.lineCap = "round"; c.stroke(all); c.restore();
-  const ribbon = (p, cap) => { c.lineCap = cap;
-    c.strokeStyle = "#060219"; c.lineWidth = W + 2.2; c.stroke(p);
-    c.strokeStyle = L.band; c.lineWidth = W; c.stroke(p);
-    c.strokeStyle = L.core; c.lineWidth = W * .3; c.stroke(p); };
-  ribbon(all, "round");
-  for (const piece of G.pieces) ribbon(path([piece]), "butt");
+  const field = path(G.field.arcs), limbs = path(G.strands.map(s => s.pts));
+  const Wk = G.d * .36, Wl = 2.8, edge = Math.max(.9, 1.1 / k);
+  const body = new Path2D(); for (const B of G.bodies){ B.forEach((q, i) => i ? body.lineTo(q[0], q[1]) : body.moveTo(q[0], q[1])); body.closePath(); }
+  c.save(); c.filter = `blur(${Math.max(1.5, 4 * k)}px)`; c.strokeStyle = `rgba(${L.glow},.5)`; c.lineCap = "round";
+  c.lineWidth = Wk * 2.2; c.stroke(body); c.fillStyle = `rgba(${L.glow},.12)`; c.fill(body); c.lineWidth = Wl * 2.4; c.stroke(limbs); c.restore();
+  const ribbon = (p, w, cap) => { c.lineCap = cap; c.strokeStyle = L.edge; c.lineWidth = w + edge * 2; c.stroke(p); c.strokeStyle = L.band; c.lineWidth = w; c.stroke(p); };
+  c.save(); c.clip(body, "nonzero");
+  ribbon(field, Wk, "round");
+  for (const o of G.field.overs) ribbon(path([o]), Wk, "butt");
+  c.restore();
+  ribbon(body, Wk * 1.2, "round");
+  ribbon(limbs, Wl, "round");
+  for (const piece of G.pieces) ribbon(path([piece]), Wl, "butt");
   c.lineCap = "round"; c.strokeStyle = L.band; c.lineWidth = 1.2; c.stroke(path(G.thin));
-  c.fillStyle = L.band; for (const [x, y] of G.dots){ c.beginPath(); c.arc(x, y, 2.4, 0, TAU); c.fill(); }
+  /* the eyes, set into the weave: an almond, a dark pupil, a glint */
+  for (const [x, y] of G.eyes){
+    const r = Math.max(3.2, G.d * .5);
+    c.beginPath(); c.moveTo(x - r * 1.5, y); c.quadraticCurveTo(x, y - r * 1.25, x + r * 1.5, y); c.quadraticCurveTo(x, y + r * 1.25, x - r * 1.5, y); c.closePath();
+    c.fillStyle = L.band; c.fill(); c.strokeStyle = L.edge; c.lineWidth = edge * 1.6; c.stroke();
+    c.fillStyle = L.edge; c.beginPath(); c.arc(x, y, r * .55, 0, TAU); c.fill();
+    c.fillStyle = "#fff"; c.beginPath(); c.arc(x - r * .18, y - r * .2, r * .17, 0, TAU); c.fill();
+  }
   return { cv, x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
 }
 
