@@ -39,6 +39,7 @@ check("the console's theme is deep night with gold for the chosen", '--wm-paper:
 # the Asura voids, the tunnels: drawn on the wheel now, not only in the record
 mans = read("wyrd-mansions.js"); M = __import__("json").loads(mans[mans.index("{"):mans.rindex("}") + 1])
 check("thirty-six voids in the data, every one named; station 90's is Narakasura", sum(1 for v in M["cards"]["voids"] if v) == 36 and "UNNAMED" not in M["cards"]["voids"] and M["cards"]["voids"][89] == "Narakasura")
+check("79 is Vrishaparvan and 103 Kamalaksha", M["cards"]["voids"][78] == "Vrishaparvan" and M["cards"]["voids"][102] == "Kamalaksha")
 check("the voids are the fourth, seventh and ninth pada of every sidereal sign", [i + 1 for i, v in enumerate(M["cards"]["voids"]) if v] == [9 * k + n for k in range(12) for n in (4, 7, 9)])
 check("each void is a dark pada with a mouth ringed in mauve", '${voidOf(s) ? " p-void" : ""}' in mand and 'class="void-mouth"' in mand and ".wm .p-sec.p-void" in css)
 check("no open seat left in the wheel", "open seat" not in mand and "UNNAMED" not in mand)
