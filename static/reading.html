@@ -122,10 +122,58 @@ footer{margin-top:60px;color:var(--dim);font-size:14px;border-top:1px solid var(
   .bg-sparks{display:none}.bg-ch{stroke:#e2e2e2;stroke-width:2}.bg-c path{stroke:#888}.bg-c text{fill:#222}.bg-c.on text{fill:#fff}.bg-pair{break-inside:avoid}.bg-pair{margin:6pt 0!important;padding:6pt!important}.bg-fig{flex:0 0 2.3in!important;max-width:2.3in!important}.mf svg{max-height:4.2in;width:auto!important}
   .rd-entry{margin:12pt 0}.rd-entry p,.rd-body p{margin:4pt 0}.rd-step{break-inside:avoid}
   .rd-ask{background:none}a{color:inherit}
+  .rd-plate{break-inside:avoid;padding:6pt!important;margin:6pt 0!important}.rd-plate .wx-bar,.rd-plate .wx-card,.rd-plate .tz-layers,.rd-plate .tz-cap,.rd-plate .hb-ctl,.rd-plate .hb-hint,.rd-plate .hb-strip,.rd-plate .hb-read,.rd-plate .hb-intro{display:none!important}
+  .rd-wheel .wx-stage{max-width:5.6in}.rd-tz{max-width:3.8in}.rd-hb .hb-stage{width:4.6in!important}
 }
+/* the console's own drawings, each on a night plate like the bodygraphs (static/reading-figs.js draws them) */
+.rd-plate{background:#0b0322;border:4px inset #8f7ce0;padding:12px;margin:18px 0 10px;color:#eaf3ff;font-size:16px;line-height:1.55;
+  --ivory:#eaf3ff;--ivory-dim:rgba(222,236,255,.72);--dim:rgba(222,236,255,.72);--celadon:#9ff3ff;--jade:#9a6bff;--gold:#ffb43a;--rule:rgba(160,140,255,.22);
+  --serif:'Space Grotesk','Trebuchet MS',Verdana,sans-serif;--mono:'Space Mono',ui-monospace,Menlo,Consolas,monospace;--ease:cubic-bezier(.22,.61,.28,1);--out:cubic-bezier(.16,1,.3,1);--rune:'Noto Sans Runic','Segoe UI Historic','Segoe UI Symbol',sans-serif;
+  font-family:var(--serif);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.rd-plate a{color:var(--celadon)}
+.rd-plate .wx-card{margin-bottom:6px}
+.rd-tz{max-width:540px;margin:0 auto}
+.rd-plate .tz-layers{margin:8px auto}
+.rd-plate .tz-cap{text-align:center;font-size:14.5px}
+.rd-plate .hb-intro,.rd-plate .hb-gather,.rd-plate .hb-credit,.rd-plate .hb-hint{font-size:14.5px}
+/* the Harmonic Body's station, thread and centre styles, as static/console.css gives them on the console, kept to the figure */
+.rd-hb .thread line{stroke:var(--jade);stroke-width:.8;opacity:.32}
+.rd-hb .thread .cap{fill:var(--jade);opacity:.5}
+.rd-hb .thread text{fill:var(--jade);font-family:var(--mono);font-size:8px; letter-spacing:.2em;opacity:.55;text-anchor:middle}
+.rd-hb .station{cursor:pointer}
+.rd-hb .station .halo{fill:var(--gold);opacity:0;transform-box:fill-box;transform-origin:center; transition:opacity 500ms var(--ease)}
+.rd-hb .station .ring{fill:none;stroke:var(--gold);stroke-width:.85;opacity:.5;transition:all 500ms var(--ease)}
+.rd-hb .station .core{fill:var(--gold);opacity:.85;transition:fill 500ms var(--ease)}
+.rd-hb .station .bar{stroke:var(--gold);stroke-width:.85;opacity:.5;transition:all 500ms var(--ease)}
+.rd-hb .station .lead{stroke:var(--gold);stroke-width:.55;fill:none;opacity:.24;transition:opacity 500ms var(--ease)}
+.rd-hb .station .tag{fill:var(--ivory);font-family:var(--mono);font-size:8.2px;letter-spacing:.22em; text-transform:uppercase;opacity:.3;transition:all 500ms var(--ease)}
+.rd-hb .station:hover .tag,.rd-hb .station:focus-visible .tag{opacity:.95}
+.rd-hb .station:hover .lead{opacity:.55}
+.rd-hb .station:hover .ring,.rd-hb .station:hover .bar{opacity:1}
+.rd-hb .station:hover .halo,.rd-hb .station:focus-visible .halo{opacity:.13;animation:pulse 2.6s var(--ease) infinite}
+.rd-hb .station.live .core,.rd-hb .station.live .ring,.rd-hb .station.live .bar{fill:var(--jade);stroke:var(--jade);opacity:1}
+.rd-hb .station.live .tag{fill:var(--jade);opacity:1}
+.rd-hb .station.live .lead{opacity:.5}
+.rd-hb .station.live .halo{fill:var(--jade);opacity:.15;animation:pulse 3.4s var(--ease) infinite}
+.rd-hb .stations.dimmed .station:not(.live){opacity:.16}
+.rd-hb .stations .station{transition:opacity 700ms var(--ease)}
+.rd-hb .centre .shape{fill:none;stroke-width:.9;transition:all 700ms var(--ease)}
+.rd-hb .centre .lbl{font-family:var(--mono);font-size:6.6px;letter-spacing:.14em;text-transform:uppercase; text-anchor:middle;transition:all 700ms var(--ease)}
+.rd-hb .centre.rave .shape{stroke:var(--gold);fill:rgba(184,146,74,.22)}
+.rd-hb .centre.rave .lbl{fill:var(--gold);opacity:.9}
+.rd-hb .centre.dharma .shape{stroke:var(--jade);fill:rgba(95,156,134,.2)}
+.rd-hb .centre.dharma .lbl{fill:var(--jade);opacity:.9}
+.rd-hb .centre.both .shape{stroke:var(--ivory);fill:rgba(217,212,196,.2);stroke-width:1.2}
+.rd-hb .centre.both .lbl{fill:var(--ivory);opacity:1}
+.rd-hb .centre.undefined .shape{stroke:var(--ivory);stroke-dasharray:2.5 3;opacity:.2}
+.rd-hb .centre.undefined .lbl{fill:var(--ivory);opacity:.14}
+@keyframes pulse{0%{transform:scale(1);opacity:.15}60%{transform:scale(2);opacity:0}100%{transform:scale(2);opacity:0}}
+.rd-key{justify-content:flex-start;margin:4px 0 18px;color:var(--dim)}.rd-key i{border-color:rgba(29,23,18,.35)}
 .mf-sw{display:inline-block;width:.7em;height:.7em;border-radius:50%;margin-right:.4em;vertical-align:baseline;border:1px solid rgba(0,0,0,.4)}
 </style>
 <link rel="stylesheet" href="/static/look/wyrd90.css">
+<link rel="stylesheet" href="/static/map.css?v=2">
+<link rel="stylesheet" href="/static/body.css?v=2">
 <link rel="icon" href="/static/icons/favicon-32.png?v=2" sizes="32x32" type="image/png">
 <link rel="icon" href="/static/icons/icon.svg?v=2" type="image/svg+xml">
 </head>
@@ -146,9 +194,14 @@ footer{margin-top:60px;color:var(--dim);font-size:14px;border-top:1px solid var(
 <p class="closing">{{CLOSING}}</p>
 {{FOOTER}}
 </div>
+<script src="/static/viz.js?v=2"></script>
+<script src="/static/body.js?v=2"></script>
+<script src="/static/wheel.js?v=2"></script>
+<script src="/static/torus.js?v=2"></script>
+<script src="/static/reading-figs.js?v=1"></script>
 <script>
-/* the PDF link in the delivery email: the reading opens with the save-as-PDF window */
-if (new URLSearchParams(location.search).get("pdf") === "1") addEventListener("load", () => setTimeout(() => window.print(), 600));
+/* the PDF link in the delivery email: the reading opens with the save-as-PDF window, once the drawings have built */
+if (new URLSearchParams(location.search).get("pdf") === "1") addEventListener("load", () => setTimeout(() => window.print(), document.querySelector("[data-fig]") ? 3200 : 600));
 </script>
 </body>
 </html>
