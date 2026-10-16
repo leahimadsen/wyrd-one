@@ -643,10 +643,28 @@ def admin_reading():
     meta = {k: request.form.get(k, "") for k in BIRTH_KEYS}
     if not meta["lat"]: meta.pop("lat"); meta.pop("lon"); meta.pop("tz")
     try:
-        return render_reading(meta, "Generated in your admin — no payment taken. Save it as a PDF from your browser's print menu.")
+        birth_from(meta)
     except (BadInput, ValueError) as e:
         return admin_page("admin.html").get_data(as_text=True).replace(
             '<p class="err" id="admErr" role="alert"></p>', f'<p class="err" id="admErr" role="alert">{html.escape(str(e) or "Check the details.")}</p>'), 400
+    # The reading opens at its own address, one anyone can open, so "Copy link to this reading",
+    # the PDF and whatever you send all go to the same reading. (This admin address only answers
+    # the form; opened from a link it has nothing to show.)
+    return redirect(shared_reading_url(meta), code=303)
+
+@app.get("/admin/reading")
+def admin_reading_link():
+    if is_admin(): return redirect("/admin")
+    return private("Ask for a fresh link", f"""<h1>This link has no reading in it</h1>
+<p>It's the private address the reading was made at, and it only works for {esc(config.AUTHOR)}.
+Ask {esc(config.AUTHOR)} to send you your reading's own link.</p>""", status=410)
+
+ADMIN_SHARE_NOTE = ("Generated in your admin — no payment taken. This page's address is the link to send: "
+                    "anyone can open it for two years. This note is only shown to you.")
+
+def shared_reading_url(meta):
+    """A reading's own address, made in the admin: it opens for whoever has it, with no banner."""
+    return f"{config.BASE_URL}/gift/{gift_signer().dumps({**meta, 'via': 'admin'})}"
 
 # ---------------- pulse: anonymous counts, so the console notices what people use ----------------
 atexit.register(pulse.flush)
@@ -1345,8 +1363,12 @@ def gift_reading(token):
     try: meta = gift_signer().loads(token, max_age=GIFT_READING_DAYS * 86400)
     except _BadSig: abort(404)
     if not isinstance(meta, dict): abort(404)
+    if meta.get("via") == "admin":                  # a reading made in the admin: it reads like a paid one
+        banner = ADMIN_SHARE_NOTE if is_admin() else ""
+    else:
+        banner = f"A gift from {config.AUTHOR}."
     try:
-        return render_reading({k: str(v) for k, v in meta.items() if k in BIRTH_KEYS}, f"A gift from {config.AUTHOR}.")
+        return render_reading({k: str(v) for k, v in meta.items() if k in BIRTH_KEYS}, banner)
     except (BadInput, ValueError):
         abort(404)
 
