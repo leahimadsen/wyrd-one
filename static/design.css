@@ -50,6 +50,33 @@ table.kt td { vertical-align: top; } .kt-n { white-space: nowrap; font-variant-n
 .rn-g { font-family: var(--rune); font-size: 1.3em; margin-right: 4px; }
 .rn-means { margin: 4px 0 8px; } .rn-thru { padding-left: 18px; } .rn-thru li { margin: 8px 0; } .rn-thru p { margin: 2px 0 0; }
 .rn-call { color: var(--celadon); } .kar-plain { padding-left: 18px; }
+/* the rune wheel (runes.js wheel) */
+.rw { margin: 18px auto 26px; max-width: 620px; }
+.rw svg { width: 100%; height: auto; display: block; overflow: visible; }
+.rw text { text-anchor: middle; dominant-baseline: central; }
+.rw figcaption { font-size: 14px; color: var(--ivory-dim); text-align: center; margin-top: 6px; }
+.rw-house { opacity: .5; stroke: rgba(0,0,0,.4); stroke-width: 1; }
+.rw-hn { fill: #fff; font-family: var(--mono); font-size: 13px; font-weight: 600; }
+.rw-cell { fill: #120a2e; stroke: rgba(160,140,255,.22); stroke-width: 1; }
+.rw-strokes line { stroke: rgba(230,214,168,.32); stroke-width: 2.4; stroke-linecap: round; }
+.rw-rune.lit .rw-cell { fill: color-mix(in srgb, var(--h) 34%, #120a2e); stroke: color-mix(in srgb, var(--h) 70%, #fff); }
+.rw-rune.lit .rw-strokes line { stroke: #fff4d6; stroke-width: 2.8; filter: drop-shadow(0 0 3px color-mix(in srgb, var(--h) 80%, #fff)); }
+.rw-rune.top .rw-cell { stroke: #f2d48a; stroke-width: 2; }
+.rw-rune.lit { cursor: pointer; }
+.rw-rune.lit:hover .rw-cell, .rw-rune.lit:focus-visible .rw-cell { fill: color-mix(in srgb, var(--h) 55%, #120a2e); }
+.rw-rune:focus-visible { outline: none; }
+.rw-rank { fill: #f2d48a; } .rw-rank-n { fill: #1a0e00; font-family: var(--mono); font-size: 11px; font-weight: 700; }
+.rw-div { stroke: rgba(160,140,255,.18); stroke-width: 1; } .rw-div.house { stroke: rgba(234,243,255,.5); stroke-width: 1.4; }
+.rw-tick { stroke: rgba(234,243,255,.75); stroke-width: 1.4; }
+.rw-pl { fill: #eaf3ff; font-size: 19px; }
+.rw-asc { stroke: #f2d48a; stroke-width: 1.4; stroke-dasharray: 5 4; opacity: .85; }
+.rw-asc-l { fill: #f2d48a; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; }
+.rw-core { fill: #0b0322; stroke: rgba(160,140,255,.35); }
+.rw-count { fill: #f2d48a; font-size: 30px; } .rw-count-l { fill: var(--ivory-dim); font-family: var(--mono); font-size: 11px; letter-spacing: .08em; }
+.rn-card { scroll-margin-top: 80px; }
+.rn-flash { animation: rnFlash 1.6s ease-out; }
+@keyframes rnFlash { 0% { background: rgba(242,212,138,.22); } 100% { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .rn-flash { animation: none; } }
 .dg-chs li { margin: 10px 0; } .dg-chs p { margin: 3px 0; }
 .dg-gates h5 { margin: 14px 0 4px; color: var(--celadon); font-weight: 400; font-size: 15px; }
 .dg-gates ul { padding-left: 18px; margin: 0; } .dg-gates li { margin: 8px 0; } .dg-gates p { margin: 2px 0 0; }
