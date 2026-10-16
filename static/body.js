@@ -445,8 +445,9 @@ function torusSVG(){
   return o;
 }
 
-/* ---------- mount ---------- */
-function mount(host, chart){
+/* ---------- mount ----------
+   opts.intro replaces the paragraph that introduces the figure (the paid reading has its own) */
+function mount(host, chart, opts = {}){
   C = chart; root = host;
   const BM = C.bodyMap || {}, KEY = ["crown", "brow", "throat", "heart", "solar", "sacrum", "root"];
   W8 = {}; HEAVY = [];
@@ -476,7 +477,7 @@ function mount(host, chart){
     </div>
     <p class="hb-hint">Drag to turn the figure${matchMedia("(pointer:fine)").matches ? " and tip it back" : ""}. The rings, the body and the stations sit at different depths.</p>
     ${C.bodyMap && C.bodyMap.line ? `<p class="hb-gather">${C.bodyMap.line} <small>The glow round each station is how much of your chart lands there.</small></p>` : ""}
-    <p class="hb-intro">The same body seen another way. The Harmonic Body is an old anatomy engraving with seven stations from crown to root, each fed by one of your planets, standing beside it on its own thread; the label under each planet is the house it stands in, which gives that station its colour. Your design's centres and live channels sit on the figure too, switched on and off with the Birth Design and Dharma Design buttons (the switch at the top of this page sets them too). The seven stations and the nine design centres are different maps: the Heart station is not the Heart centre. Around the figure is its torus field, and the two zodiacs: tropical outside, sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on the inner ring.</p>
+    ${opts.intro != null ? opts.intro : `<p class="hb-intro">The same body seen another way. The Harmonic Body is an old anatomy engraving with seven stations from crown to root, each fed by one of your planets, standing beside it on its own thread; the label under each planet is the house it stands in, which gives that station its colour. Your design's centres and live channels sit on the figure too, switched on and off with the Birth Design and Dharma Design buttons (the switch at the top of this page sets them too). The seven stations and the nine design centres are different maps: the Heart station is not the Heart centre. Around the figure is its torus field, and the two zodiacs: tropical outside, sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on the inner ring.</p>`}
     <p class="hb-credit">Engraving by J. Caldwall after John Brisbane, <i>The Anatomy of Painting</i>, 1769.</p>
     <div class="hb-strip" role="group" aria-label="The seven stations">${ST.map(s =>
       `<button class="hb-chipbtn" data-hb-station="${s.id}" style="--band:${s.band}"><i></i>${s.roman} · ${s.station}<span>${GLYPH[s.feeder]} ${s.feeder}</span></button>`).join("")}</div>

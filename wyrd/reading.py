@@ -4,6 +4,7 @@ Every interpretive sentence comes from corpus.json; this file only chooses
 which passages a chart calls for and lays them out.
 
   Prologue         a silly story of how you got here (wyrd/story.py, lib/story.json)
+  0    The Chart           the whole chart drawn, flat and as a torus (drawn in the page by static/reading-figs.js)
   I    The Seat            rising sign and mansion: frame, bearing, features
   II   The Engine          the Moon's mansion, worked in full
   III  The Matrix          Saturn as the builder of your reality, and the world seen from the Moon
@@ -12,7 +13,7 @@ which passages a chart calls for and lays them out.
   VI   The Clock           the periods running now, and the whole life by period
   VII  The Runes           the runes the chart lights, ranked, and the periods that wake them
   VIII The Work            personality and design Suns and Earths, from the register
-  IX   The Body            centres, channels, and the mansions and padas that feed them
+  IX   The Body            centres, channels, the mansions and padas that feed them, and the Harmonic Body
   X    The Body's Old Map  medical astrology: every map of the body on the ladder's seven stations (wyrd/medical.py)
   XI   Where You Thrive    culture, places and work
   XII  The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
@@ -191,6 +192,49 @@ def dharma_table(N, Dh):
       <p>Every body at birth and in the dharma. Where a gate repeats, the repetition is load-bearing.</p>
       <div class="rd-tw"><table><tr><th>Body</th><th>Birth</th><th>Dharma</th><th></th></tr>{''.join(rows)}</table></div>"""
 
+def chart_data(C):
+    """The chart as the page's drawings read it (static/reading-figs.js): the same fields the console's
+    wheel, torus and Harmonic Body read from a cast, with the body map's weights for the stations' glow."""
+    keep = {k: C[k] for k in ("sid", "trop", "ascS", "ay", "mcS", "tropDes", "natal", "dharma", "karaka", "unknownTime") if k in C}
+    bm = MEDICAL.free(C); keep["bodyMap"] = {"weights": bm["weights"], "heavy": bm["heavy"], "line": bm["line"]}
+    data = json.dumps(keep, ensure_ascii=False, separators=(",", ":"), default=lambda v: v.item()).replace("</", "<\\/")
+    return f'<script type="application/json" id="rd-chart">{data}</script>'
+
+
+def chart_drawn(C):
+    """The chart itself, before the reading takes it apart: flat, and as a torus."""
+    unknown = bool(C.get("unknownTime"))
+    return f"""
+      <p>Before the reading takes your chart apart, here it is whole. The flat wheel reads from the outside in: the tropical
+      signs, the sidereal signs, the twenty-four runes, two to a house, the sixty-four gates with yours lit, the twenty-seven
+      mansions, the twelve houses in their colours, and your planets, with the aspects between them at the centre. Tap a
+      planet to follow it through every ring.</p>
+      {'<p class="rd-note">Your birth time is unknown, so the houses are counted from your Sun’s sign, as everywhere in this reading.</p>' if unknown else ''}
+      <div class="rd-plate rd-wheel"><div data-fig="wheel"></div></div>
+      <p class="wh-key rd-key"><span><i style="background:#a21caf"></i>gate at birth</span><span><i style="background:#0e7490"></i>design gate</span><span><i style="background:#4c1d95;border-color:#7ff6ff"></i>rune a planet stands in</span></p>
+      <h3 class="rd-tier">The chart as a torus</h3>
+      <p>The same chart, turned into a shape. The zodiac runs around the ring, from your first house, and the layers wrap
+      around the tube: the houses on the outer equator, the signs over the top, the runes and gates toward the hole, the
+      mansions underneath. Your planets ride the outer equator at their degrees. Drag it to turn it, tap it to see what is
+      there, and read it in either zodiac.</p>
+      <div class="rd-plate rd-torus"><div class="tz-layers" data-tz-zodiac></div><div class="rd-tz" data-fig="torus"></div>
+        <div class="tz-layers" data-tz-layers></div><p class="tz-cap" data-tz-cap></p></div>"""
+
+
+def harmonic_body():
+    """The Harmonic Body, as on the console, with the reading's own introduction."""
+    return f"""<h3 class="rd-tier">The Harmonic Body</h3>
+      <p>The same body seen another way: an old anatomy engraving with the seven stations of the Planetary Ladder from
+      crown to root. Each station is fed by one of your planets, which stands beside it on its own thread; the label under
+      the planet is the house it stands in, and gives the station its colour. The glow round each station is how much of
+      your chart lands there, read in full in section {{{{SEC:{MEDICAL.T["TITLE"]}}}}}. Around the figure are its torus field
+      and the two zodiacs, tropical outside and sidereal inside, offset by the ayanamsa, with the twenty-seven mansions on
+      the inner ring. The seven stations and the nine centres are different maps: the Heart station is not the Heart centre.</p>
+      <p>Tap a station, or the planet beside it, to wake it, and drag to turn the figure. The buttons lay your Birth Design
+      and your Dharma Design over the body, and the Descent scan wakes the stations one by one from the crown.</p>
+      <div class="rd-plate rd-hb"><div data-fig="harmonic"></div></div>"""
+
+
 def build(chart, dasha, who):
     MORE.reset()                                    # each stock line once per reading
     C = chart
@@ -297,7 +341,7 @@ def build(chart, dasha, who):
       question for the end.</p>{work}"""))
 
     # ---------- the body ----------
-    out.append(section(0, "The Body", "your centres and channels, and the mansions that feed them", MORE.body(C)))
+    out.append(section(0, "The Body", "your centres and channels, the mansions that feed them, and the Harmonic Body", MORE.body(C) + harmonic_body()))
     out.append(section(0, MEDICAL.T["TITLE"], MEDICAL.T["SUB"], MEDICAL.body(C, dasha, asks)))
     out.append(section(0, "Where You Thrive", "culture, places and work", MORE.thrive(C)))
 
@@ -400,9 +444,12 @@ def build(chart, dasha, who):
     # ---------- for the record: the look-it-up details, kept out of the story's way ----------
     out.append(section(0, "For the Record", "every planet's position, mansion, rune, cards and gates", MORE.record(C)))
 
+    # ---------- the chart itself, drawn: first, before the Seat ----------
+    out.insert(0, section(0, "The Chart", "your whole chart, flat and as a torus", chart_drawn(C)))
+
     for i in range(len(out)):                       # number the sections in the order they stand
         out[i] = out[i].replace("{{N}}", ROMAN[i], 1)
     import re
     num = {re.search(r"<h2>(.*?)</h2>", s).group(1): ROMAN[i] for i, s in enumerate(out)}
     out = [re.sub(r"\{\{?SEC:(.*?)\}\}?", lambda m: num[m.group(1)], s) for s in out]
-    return STORY.tell(C, dasha, (who or {}).get("name"), ENG) + "".join(out)     # the prologue opens it, unnumbered
+    return STORY.tell(C, dasha, (who or {}).get("name"), ENG) + "".join(out) + chart_data(C)     # the prologue opens it, unnumbered
