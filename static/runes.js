@@ -3,14 +3,14 @@
    RUNES
    The twenty-four runes drawn as strokes on a stave, so they can be
    bound: a bind rune is several runes sharing one upright.
-   - WyrdRunes.mount(host, C): your activated runes. Every rune your planets
-     and Ascendant light, ranked, and how each plays out through the lunar
-     mansion of the planet that lights it.
+   - WyrdRunes.mount(host, C): your activated runes. The rune wheel with them
+     lit on it, then every rune your planets and Ascendant light, ranked, and
+     how each plays out through the lunar mansion of the planet that lights it.
    - WyrdRunes.pairHTML(A, B): the runes between two charts, for Compare.
    The words here are drafts for The Völva to edit.
    ============================================================ */
 (() => {
-const { norm, GLYPH } = Wyrd.helpers;
+const { norm, GLYPH, HOUSES } = Wyrd.helpers;
 const { esc } = WyrdCommon;
 
 /* the Elder Futhark in house order: two to a house, opening then closing */
@@ -91,6 +91,56 @@ function lit(C){
   return Object.values(by).sort((a, b) => b.score - a.score);
 }
 
+/* ---------- the rune wheel ----------
+   The twenty-four runes in their ring, two to each house from the rising sign, oriented like every
+   wheel in the console (house 1 opens at one o'clock, the houses run clockwise). A rune is lit when
+   a planet or the Ascendant stands in it; the planets stand inside the ring at their degrees, and
+   the three strongest runes carry their rank. Tap a lit rune to go to its reading below. */
+const ONE = typeof HOUSE_ONE_ANGLE === "number" ? HOUSE_ONE_ANGLE : -60;
+function wheel(C, L){
+  const cx = 300, cy = 300, f = n => n.toFixed(1), rad = a => a * Math.PI / 180;
+  const P = (r, a) => [cx + r * Math.cos(rad(a)), cy + r * Math.sin(rad(a))];
+  const cell = (r0, r1, a0, a1) => { const [x0, y0] = P(r1, a0), [x1, y1] = P(r1, a1), [x2, y2] = P(r0, a1), [x3, y3] = P(r0, a0);
+    return `M${f(x0)},${f(y0)}A${r1},${r1} 0 0 1 ${f(x1)},${f(y1)}L${f(x2)},${f(y2)}A${r0},${r0} 0 0 0 ${f(x3)},${f(y3)}Z`; };
+  const cusp = Math.floor(norm(C.ascS) / 30) * 30, ang = l => ONE + norm(norm(l) - cusp);
+  const rank = Object.fromEntries(L.slice(0, 3).map((r, i) => [r.name, i + 1])), on = Object.fromEntries(L.map(r => [r.name, r]));
+  const HR = [252, 282], RR = [168, 246], PR = 146;
+  let o = "";
+  /* the houses, in their colours */
+  for (let h = 0; h < 12; h++){
+    const a0 = ONE + h * 30, [x, y] = P((HR[0] + HR[1]) / 2, a0 + 15);
+    o += `<path d="${cell(HR[0], HR[1], a0, a0 + 30)}" class="rw-house" style="fill:${HOUSES[h].hex}"/>`
+      + `<text x="${f(x)}" y="${f(y)}" class="rw-hn">${h + 1}</text>`;
+  }
+  /* the runes: drawn upright in their cells, lit ones in the house's colour */
+  for (let i = 0; i < 24; i++){
+    const n = NAMES[i], r = on[n], a0 = ONE + i * 15, [x, y] = P((RR[0] + RR[1]) / 2 + 4, a0 + 7.5), hex = HOUSES[Math.floor(i / 2)].hex;
+    const g = GEOM[n].map(([p, q, s2, t]) => `<line x1="${f(x - 11 + p * 22)}" y1="${f(y - 20 + q * 20)}" x2="${f(x - 11 + s2 * 22)}" y2="${f(y - 20 + t * 20)}"/>`).join("");
+    const tip = `${n} · house ${Math.floor(i / 2) + 1}, ${i % 2 ? "closing" : "opening"} · ${MEANS[n]}${r ? ` · lit by ${r.holders.map(b => b === "Ascendant" ? "your Ascendant" : `your ${b}`).join(", ")}` : ""}`;
+    o += `<g class="rw-rune${r ? " lit" : ""}${rank[n] ? " top" : ""}"${r ? ` data-rune="${n}" tabindex="0" role="button" aria-label="${esc(tip)}"` : ""} style="--h:${hex}">
+      <title>${esc(tip)}</title><path d="${cell(RR[0], RR[1], a0, a0 + 15)}" class="rw-cell"/><g class="rw-strokes">${g}</g>
+      ${rank[n] ? (([rx, ry]) => `<circle cx="${f(rx)}" cy="${f(ry)}" r="8" class="rw-rank"/><text x="${f(rx)}" y="${f(ry)}" class="rw-rank-n">${rank[n]}</text>`)(P(RR[0] + 12, a0 + 7.5)) : ""}</g>`;
+  }
+  for (let i = 0; i < 24; i++){ const [x0, y0] = P(RR[0], ONE + i * 15), [x1, y1] = P(i % 2 ? RR[1] : HR[1], ONE + i * 15);
+    o += `<line x1="${f(x0)}" y1="${f(y0)}" x2="${f(x1)}" y2="${f(y1)}" class="${i % 2 ? "rw-div" : "rw-div house"}"/>`; }
+  /* the planets inside the ring, at their degrees, stepped inward where they crowd */
+  const bodies = ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Rahu","Ketu","Uranus","Neptune","Pluto"].filter(b => C.sid[b] != null)
+    .map(b => ({ b, a: ang(C.sid[b]) })).sort((p, q) => p.a - q.a), placed = [];
+  for (const p of bodies){
+    let r = PR; while (placed.some(x => x.r === r && Math.abs(((p.a - x.a + 540) % 360) - 180) < 9)) r -= 22;
+    placed.push({ ...p, r });
+    const [tx0, ty0] = P(RR[0] - 1, p.a), [tx1, ty1] = P(RR[0] - 9, p.a), [gx, gy] = P(r, p.a);
+    o += `<line x1="${f(tx0)}" y1="${f(ty0)}" x2="${f(tx1)}" y2="${f(ty1)}" class="rw-tick"/><text x="${f(gx)}" y="${f(gy)}" class="rw-pl">${GLYPH[p.b] || p.b[0]}︎<title>${p.b}</title></text>`;
+  }
+  if (!C.unknownTime){
+    const a = ang(C.ascS), [x0, y0] = P(46, a), [x1, y1] = P(HR[1] + 6, a), [lx, ly] = P(HR[1] + 18, a);
+    o += `<line x1="${f(x0)}" y1="${f(y0)}" x2="${f(x1)}" y2="${f(y1)}" class="rw-asc"/><text x="${f(lx)}" y="${f(ly)}" class="rw-asc-l">ASC</text>`;
+  }
+  o += `<circle cx="${cx}" cy="${cy}" r="44" class="rw-core"/><text x="${cx}" y="${cy - 8}" class="rw-count">${L.length}</text><text x="${cx}" y="${cy + 14}" class="rw-count-l">of 24 lit</text>`;
+  return `<figure class="rw"><svg viewBox="-12 -12 624 624" role="group" aria-label="Your rune wheel: the twenty-four runes two to each house, ${L.length} of them lit by your planets${C.unknownTime ? "" : " and Ascendant"}">${o}</svg>
+    <figcaption>The twenty-four runes, two to each house, counted from your ${C.unknownTime ? "Sun's sign (your birth time is unknown)" : "rising sign"}. A rune is lit where a planet${C.unknownTime ? "" : " or your Ascendant"} stands in it; the numbers mark your three strongest. Tap a lit rune to read it below.</figcaption></figure>`;
+}
+
 /* how a rune plays out through the mansion of the planet that lights it */
 function through(C, r, b){
   const { NAKSHATRA, nakIndex } = Wyrd.helpers, L = C.lex || {};
@@ -104,7 +154,7 @@ function through(C, r, b){
 
 function mount(host, C, opts = {}){
   const L = lit(C), R = (C.lex || {}).rune || {}, all = !!opts.all;       /* members: every rune in full */
-  const card = (r, i) => `<div class="rn-card${i < 3 ? " lead" : ""}">
+  const card = (r, i) => `<div class="rn-card${i < 3 ? " lead" : ""}" id="rn-${r.name}">
     <h3><span class="rn-g" aria-hidden="true">${r.glyph}</span> ${r.name} <span class="fine">· house ${r.house}, ${r.opening ? "opening" : "closing"} rune${i < 3 ? " · one of your three strongest" : ""}</span></h3>
     <p class="rn-means">${MEANS[r.name].charAt(0).toUpperCase() + MEANS[r.name].slice(1)}.</p>
     ${i === 0 || all ? `<ul class="rn-thru">${r.holders.map(b => through(C, r, b)).join("")}</ul>
@@ -114,9 +164,21 @@ function mount(host, C, opts = {}){
     <p>Twenty-four runes ring your chart, two to each house, counted from your rising sign. A rune is activated when a planet or your Ascendant stands in it.
     Each activated rune works through the lunar mansion of the planet that lights it, so the same rune reads differently in different charts. Strongest first:
     a rune is strongest when it holds your Ascendant, your soul-planet, your Sun or Moon, or the lord of the period you are in.</p>
+    ${wheel(C, L)}
     ${L.map(card).join("")}
     <p class="fine">${all ? "In the Order, every rune is read in full here." : "Your strongest rune is read in full above, as a taste; the Order sees every one in full."} The Wyrd Reading reads every one of them through its mansion, ranks them, and names the years each one wakes. To learn the runes themselves, see <a href="/learn/runes">Learn the runes</a>.</p>`;
 }
+
+/* the wheel's lit runes go to their reading */
+document.addEventListener("click", e => {
+  const g = e.target.closest && e.target.closest(".rw-rune.lit"); if (!g) return;
+  const c = document.getElementById("rn-" + g.dataset.rune); if (!c) return;
+  c.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  c.classList.remove("rn-flash"); void c.offsetWidth; c.classList.add("rn-flash");
+});
+document.addEventListener("keydown", e => {
+  if ((e.key === "Enter" || e.key === " ") && e.target.closest && e.target.closest(".rw-rune.lit")){ e.preventDefault(); e.target.dispatchEvent(new MouseEvent("click", { bubbles: true })); }
+});
 
 /* ---------- two charts: the runes between you ---------- */
 function pairHTML(A, B){
@@ -128,5 +190,5 @@ function pairHTML(A, B){
       : `<p>You activate no rune in common: each of you brings the other a force they do not carry.</p>`}`;
 }
 
-window.WyrdRunes = { mount, pairHTML, svg, lit, runeAt, NAMES, GLYPHS, GEOM };
+window.WyrdRunes = { mount, pairHTML, svg, wheel, lit, runeAt, NAMES, GLYPHS, GEOM };
 })();
