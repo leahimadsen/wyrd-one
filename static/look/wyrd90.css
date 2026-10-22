@@ -76,6 +76,9 @@ body:not(.paper) .cast input{border:2px inset #6d5bc4;background:#05011a;color:#
 .btn-cast:active,.btn-buy:active,.cp-buybtn:active{border-style:inset!important;box-shadow:1px 1px 0 rgba(0,0,0,.35);transform:translate(2px,2px)}
 
 /* ---------------- the manuscript ---------------- */
+/* the paper is light only: a browser's forced dark mode lightens dark ink but leaves the paper
+   image alone, so titles and links went pale grey on cream. */
+html:has(body.paper){color-scheme:light}
 body.paper{
   --void:var(--paper); --void-lift:#f3ecdf; --ivory:var(--ink); --ivory-dim:var(--ink-soft); --dim:var(--ink-soft);
   --celadon:var(--violet); --jade:var(--violet-hi); --jade-deep:#d9cdf5; --gold:var(--orange); --rule:rgba(29,23,18,.2);
