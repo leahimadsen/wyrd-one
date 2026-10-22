@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>A reading together · Admin · The Wyrd Console</title>
+<link rel="icon" href="/static/icons/favicon-32.png?v=2" sizes="32x32" type="image/png">
+<link rel="icon" href="/static/icons/icon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/static/console.css">
+<link rel="stylesheet" href="/static/site.css">
+<link rel="stylesheet" href="/static/learn.css">
+<link rel="stylesheet" href="/static/a11y.css">
+<link rel="stylesheet" href="/static/look/wyrd90.css">
+<style>
+  .tg-person { border: 1px solid rgba(150,130,230,.28); border-radius: 3px; padding: 14px 16px 18px; margin: 0 0 18px; }
+  .tg-person legend { padding: 0 8px; color: var(--celadon); font-size: 15px; }
+  .tg-person .cast { border: 0; box-shadow: none; background: none; padding: 0; margin: 0; }
+  .tg-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 4px 0 0; }
+  .tg-row .unk { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+  .tg-recent { max-width: 100%; }
+  .tg-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 6px 0 12px; }
+</style>
+</head>
+<body>
+<header class="seat"><div class="seat-in">
+  <p class="crumbs"><a href="/admin">Admin</a></p>
+  <h1>A reading together</h1>
+  <p class="seat-sub">The full synastry reading for two to nine people, no checkout. It opens in a new tab at its own link: send that link, or save it as a PDF.</p>
+  <form id="tgForm" method="post" action="/admin/together" target="_blank" autocomplete="off">
+    <div id="people"></div>
+    <div class="tg-actions">
+      <button type="button" class="alt" id="addPerson">Add another person</button>
+      <span class="muted" id="count"></span>
+    </div>
+    <button type="submit" class="btn-cast">Generate the reading together</button>
+    <p class="err" id="tgErr" role="alert">{{ERROR}}</p>
+  </form>
+  <p class="seat-links"><a href="/admin">Generate a single reading →</a> <a href="/admin/gifts">Gifts →</a></p>
+</div></header>
+<script src="/static/common.js"></script>
+<script>
+(() => {
+  const MAX = 9, MIN = 2, KEY = "wyrdAdminRecent";
+  const f = document.getElementById("tgForm"), box = document.getElementById("people"), err = document.getElementById("tgErr");
+  const { esc } = WyrdCommon;
+  const recent = () => { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (_) { return []; } };
+  const fields = ["name", "full_name", "date", "time", "place_id", "lat", "lon", "tz", "place_label"];
+  const places = {};          // person number -> the place picked from the list
+
+  function personHTML(i){
+    const r = recent();
+    const rec = r.length ? `<label class="f-name">Fill from a recent birth <span>made in this browser</span>
+        <select class="tg-recent" data-recent="${i}"><option value="">Choose…</option>${r.map((b, j) =>
+          `<option value="${j}">${esc(b.name || "Unnamed")} · ${esc(b.date)} · ${esc((b.place_label || "").split(",")[0])}</option>`).join("")}</select></label>` : "";
+    return `<fieldset class="tg-person" data-i="${i}"><legend>Person ${i}</legend>
+      <div class="cast">
+        ${rec}
+        <label class="f-name">Name <span>as it should appear on the reading</span><input name="p${i}_name" maxlength="80" required></label>
+        <label class="f-name">Full name at birth <span>optional, for the numbers</span><input name="p${i}_full_name" maxlength="80"></label>
+        <label>Date of birth <input name="p${i}_date" type="date" required min="1850-01-01" max="2149-12-31"></label>
+        <label>Time of birth <input name="p${i}_time" type="time"></label>
+        <label class="unk f-name" style="display:flex"><input type="checkbox" name="p${i}_unknown" value="1"> Birth time unknown <span>the reading says which parts depend on it</span></label>
+        <label class="f-place">Place of birth
+          <input id="pl${i}" data-place="${i}" placeholder="Start typing a town or city" required role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="pll${i}">
+          <ul id="pll${i}" class="adm-list" role="listbox" hidden></ul></label>
+        ${["place_id", "lat", "lon", "tz", "place_label"].map(k => `<input type="hidden" name="p${i}_${k}">`).join("")}
+      </div>
+      ${i > MIN ? `<div class="tg-row"><button type="button" class="link-btn" data-remove="${i}">Remove person ${i}</button></div>` : ""}
+    </fieldset>`;
+  }
+
+  function wire(i){
+    const sc = box.querySelector(`[data-i="${i}"]`);
+    WyrdCommon.placeSearch(sc.querySelector(`#pl${i}`), sc.querySelector(`#pll${i}`), p => {
+      places[i] = p;
+      for (const [k, v] of [["place_id", p && p.id], ["lat", p && p.lat], ["lon", p && p.lon], ["tz", p && p.tz], ["place_label", p && p.label]])
+        f.elements[`p${i}_${k}`].value = v ?? "";
+    });
+  }
+
+  function add(){
+    const n = box.children.length + 1; if (n > MAX) return;
+    box.insertAdjacentHTML("beforeend", personHTML(n)); wire(n); count();
+  }
+  function count(){
+    const n = box.children.length;
+    document.getElementById("count").textContent = `${n} ${n === 1 ? "person" : "people"} · up to ${MAX}`;
+    document.getElementById("addPerson").hidden = n >= MAX;
+  }
+
+  box.addEventListener("click", e => {
+    const rm = e.target.closest("[data-remove]"); if (!rm) return;
+    // remove the last person only, so the numbering stays 1..n with no gaps
+    if (+rm.dataset.remove === box.children.length){ delete places[box.children.length]; box.lastElementChild.remove(); count(); }
+  });
+  box.addEventListener("change", e => {
+    const s = e.target.closest("[data-recent]"); if (!s || s.value === "") return;
+    const i = +s.dataset.recent, b = recent()[+s.value], p = +s.closest("[data-i]").dataset.i;
+    for (const k of fields) if (f.elements[`p${p}_${k}`]) f.elements[`p${p}_${k}`].value = b[k] ?? "";
+    document.getElementById(`pl${p}`).value = b.place_label || ""; places[p] = { id: b.place_id };
+  });
+  document.getElementById("addPerson").addEventListener("click", add);
+
+  f.addEventListener("submit", e => {
+    err.textContent = "";
+    for (let i = 1; i <= box.children.length; i++){
+      if (!places[i]){ e.preventDefault(); err.textContent = `Person ${i}: choose the birthplace from the list as you type.`; return; }
+      const unk = f.elements[`p${i}_unknown`].checked;
+      if (!unk && !f.elements[`p${i}_time`].value){ e.preventDefault(); err.textContent = `Person ${i}: add the time of birth, or tick "Birth time unknown".`; return; }
+    }
+    // keep each person in the same recent list the single-reading form uses
+    try {
+      let list = recent();
+      for (let i = 1; i <= box.children.length; i++){
+        const b = Object.fromEntries(fields.map(k => [k, f.elements[`p${i}_${k}`].value]));
+        list = [b, ...list.filter(x => !(x.date === b.date && x.time === b.time && x.name === b.name))];
+      }
+      localStorage.setItem(KEY, JSON.stringify(list.slice(0, 15)));
+    } catch (_) {}
+  });
+
+  add(); add();
+})();
+</script>
+</body>
+</html>

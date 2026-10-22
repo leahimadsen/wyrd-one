@@ -130,7 +130,7 @@ def consult_offer(slug):
     link = html.escape(config.CONSULTATION_PAYMENT_LINK_URL or "")
     return Response(page.replace("{{PAY_LINK}}", link).replace("{{AUTHOR}}", config.AUTHOR), mimetype="text/html")
 
-PRIVATE_PATHS = ("/c/", "/admin", "/gift/", "/welcome", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/", "/hall", "/api/hall", "/r/")
+PRIVATE_PATHS = ("/c/", "/admin", "/gift/", "/together/", "/welcome", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/", "/hall", "/api/hall", "/r/")
 
 @app.after_request
 def private_reading_headers(response):
@@ -665,6 +665,61 @@ ADMIN_SHARE_NOTE = ("Generated in your admin — no payment taken. This page's a
 def shared_reading_url(meta):
     """A reading's own address, made in the admin: it opens for whoever has it, with no banner."""
     return f"{config.BASE_URL}/gift/{gift_signer().dumps({**meta, 'via': 'admin'})}"
+
+# ---------------- a reading together, made in the admin ----------------
+# Two to nine people, any births, no checkout: the same reading a customer pays for, at its own link.
+ADMIN_TOGETHER_NOTE = ("Generated in your admin — no payment taken. This page's address is the link to send: "
+                       "anyone can open it for two years. This note is only shown to you.")
+TOGETHER_TOKEN_MAX = 3600          # the whole address has to stay under gunicorn's 4094-character request line
+
+def together_signer():
+    return URLSafeTimedSerializer(config.SECRET_KEY, salt="wyrd-admin-together")
+
+def admin_together_form(error="", status=200):
+    r = admin_page("admin-together.html", ERROR=html.escape(error))
+    r.status_code = status
+    return r
+
+@app.get("/admin/together")
+def admin_together():
+    if not is_admin(): abort(404)
+    return admin_together_form()
+
+@app.post("/admin/together")
+def admin_together_make():
+    if not is_admin() or not same_origin(): abort(404)
+    meta, n = {"kind": "together", "via": "admin"}, 0
+    for i in range(1, together.MAX_PEOPLE + 1):
+        d = {k: request.form.get(f"p{i}_{k}", "").strip()[:80] for k in BIRTH_KEYS}
+        if not (d["date"] or d["name"] or d["place_id"] or d["lat"]): continue          # an empty slot
+        n += 1
+        if not d["lat"]: d.pop("lat"); d.pop("lon"); d.pop("tz")
+        if request.form.get(f"p{i}_unknown"):
+            d["unknown_time"] = "1"
+            d["time"] = d["time"] or "12:00"
+        try:
+            meta[f"p{n}"] = pack_person(d, birth_from(d))
+        except (BadInput, ValueError) as e:
+            return admin_together_form(f"{d['name'] or f'Person {n}'}: {e or 'check the birth details.'}", 400)
+    if not 2 <= n <= together.MAX_PEOPLE:
+        return admin_together_form(f"A reading together is for two to {together.MAX_PEOPLE} people.", 400)
+    meta["people"] = str(n)
+    token = together_signer().dumps(meta)
+    if len(token) > TOGETHER_TOKEN_MAX:
+        return admin_together_form("That's more detail than one link can hold. Try fewer people, or shorter names.", 400)
+    return redirect(f"{config.BASE_URL}/together/{token}", code=303)
+
+@app.get("/together/<token>")
+def together_reading(token):
+    """A reading together made in the admin: it opens for whoever has the link, and reads like a paid one."""
+    if not config.SECRET_KEY or len(token) > TOGETHER_TOKEN_MAX + 200: abort(404)
+    try: meta = together_signer().loads(token, max_age=GIFT_READING_DAYS * 86400)
+    except _BadSig: abort(404)
+    if not isinstance(meta, dict) or meta.get("kind") != "together": abort(404)
+    try:
+        return render_together({k: str(v) for k, v in meta.items()}, ADMIN_TOGETHER_NOTE if is_admin() else "")
+    except (BadInput, ValueError):
+        abort(404)
 
 # ---------------- pulse: anonymous counts, so the console notices what people use ----------------
 atexit.register(pulse.flush)
