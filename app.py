@@ -715,6 +715,9 @@ def page(title, desc, body, ld="", robots="index, follow", script="", status=200
     who = (f'<a href="/account">Your account</a>' if signed_in() else '<a href="/signin">Sign in</a>')
     room = room_of(request.path)
     fill = {"BODYCLASS": f"pg room room-{room}" if room else "pg paper", "THEMECOLOR": ROOM_COLOR.get(room, "#e9e1d2"),
+            # parchment pages are light only (a browser's forced dark mode turned their ink pale grey);
+            # the members' rooms are already night
+            "COLORSCHEME": "dark" if room else "light",
             "TITLE": html.escape(title), "DESC": html.escape(desc), "ROBOTS": robots, "LD": ld, "BODY": body,
             "CANON": html.escape(config.BASE_URL + request.path), "BASE": html.escape(config.BASE_URL), "WHO": who, "SCRIPT": script}
     for k, v in fill.items(): t = t.replace("{{" + k + "}}", v)
