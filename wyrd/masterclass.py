@@ -87,13 +87,17 @@ def guide_page(substack):
     C = T["CLOSE"]
     links = " · ".join(f'<a href="{e(u)}">{e(n)}</a>' for n, u in C["LINKS"])
     toc = "".join(f'<li><a href="#{e(i)}">{e(t)}</a></li>' for i, t in zip([L["id"] for L in lessons[:4]] + ["worked"] + [L["id"] for L in lessons[4:]], contents()))
-    body = f"""<p class="eyebrow">{e(T["SUB"])}</p>
+    # the printed guide is a manuscript: parchment on every page, the knotwork in its corners, the emblem on the cover
+    body = f"""<div class="mc-guide"><div class="mc-page" aria-hidden="true"><i class="mc-knot-tr"></i><i class="mc-knot-bl"></i></div>
+<header class="mc-cover"><img class="mc-emblem" src="/static/look/emblem.png" alt="" width="237" height="240">
+<p class="eyebrow">{e(T["SUB"])}</p>
 <h1>{e(T["TITLE"])}</h1>
+<p class="mc-by">The Völva · The Web of Wyrd</p></header>
 <p class="mc-print-row"><button class="btn-cast mc-print" type="button" onclick="window.print()">{e(T["PRINT"])}</button> <span class="muted">{e(T["PRINT_NOTE"])}</span></p>
 <nav class="mc-toc" aria-label="Contents"><ol>{toc}</ol></nav>
 {"".join(_lesson(L) for L in lessons[:4])}
 {worked}
 {"".join(_lesson(L) for L in lessons[4:])}
 <section class="mc-lesson" id="close"><h2>{e(C["TITLE"])}</h2>{_ps(C["PARAS"])}<p class="mc-links">{links}</p></section>
-<p class="mc-sign">The Völva · <a href="{e(substack)}">The Web of Wyrd</a></p>"""
+<p class="mc-sign"><img src="/static/look/emblem.png" alt="" width="64" height="65"><br>The Völva · <a href="{e(substack)}">The Web of Wyrd</a></p></div>"""
     return f'{T["TITLE"]} · The Wyrd Console', T["SUB"] + ": " + T["TITLE"], body

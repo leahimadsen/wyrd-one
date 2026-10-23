@@ -254,13 +254,47 @@ body.paper .tc-back .price { color: var(--arc-mid) !important; }
 .mc-record { font-size: 14px; opacity: .8; }
 .mc-blanks li { line-height: 2; }
 .mc-wrong dt { font-weight: 600; margin-top: 12px; } .mc-wrong dd { margin: 2px 0 0; }
-.mc-sign { margin-top: 40px; font-size: 14px; opacity: .75; }
+.mc-sign { margin-top: 40px; font-size: 14px; text-align: center; color: var(--ink-soft); }
+.mc-cover { text-align: center; }
+.mc-emblem { display: block; width: 120px; height: auto; margin: 0 auto 10px; }
+.mc-by { font-family: var(--fellsc); color: var(--ink-soft); }
+.mc-page { display: none; }
+/* printed, the guide is a manuscript like the reading: her parchment on every page, the knotwork in the corners
+   of every page, the emblem on the cover and over each lesson, blackletter titles and old press type.
+   print-color-adjust keeps the paper when "Background graphics" is off. */
 @media print {
-  .pg-top, .pg-foot, .skip, .mc-print-row, .mc-links { display: none !important; }
-  body.pg, .pg-main { background: #fff !important; color: #111 !important; }
+  @page { size: letter; margin: 0; }
+  html, body.pg.paper { background: #eee8db url(/static/look/paper.jpg) repeat !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pg-top, .pg-foot, .skip, .mc-print-row, .mc-links, .mc-toc a::after { display: none !important; }
+  body.paper .pg-main { padding: .85in .95in .9in !important; max-width: none !important; margin: 0 !important; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  body.paper .pg-main::before, body.paper .pg-main::after { display: none !important; }
+  .mc-page { display: block; }
+  .mc-page i { display: block; position: fixed; z-index: 2; width: 1.7in; height: 1.7in; background: center/contain no-repeat; opacity: 1; filter: contrast(1.6) brightness(.8); }
+  .mc-knot-tr { top: .1in; right: .1in; background-image: url(/static/look/knot-tr.png) !important; }
+  .mc-knot-bl { bottom: .1in; left: .1in; background-image: url(/static/look/knot-bl.png) !important; }
+  .mc-guide { font-family: 'IM Fell English', Georgia, serif; font-size: 12.5pt; line-height: 1.5; color: #1d1712; }
+  .mc-guide p, .mc-guide li, .mc-guide dd { max-width: none !important; }
+  body.pg .mc-guide h1, body.pg .mc-guide h2 { font-family: var(--black) !important; letter-spacing: 0; color: #14100c; }
+  body.pg .mc-guide h3, body.pg .mc-guide .mc-by, body.pg .mc-guide .eyebrow { font-family: 'IM Fell English SC', Georgia, serif !important; }
+  .mc-guide h3 { color: var(--violet); font-size: 17pt; }
+  .mc-cover { padding-top: .5in; }
+  .mc-cover .mc-emblem { width: 2.3in; margin-bottom: .3in; }
+  .mc-cover h1 { font-size: 46pt; line-height: 1.05; margin: .1in 0 .2in; }
+  .mc-cover .eyebrow, .mc-cover .mc-by { font-size: 15pt; }
+  .mc-toc { break-after: page; }
+  .mc-toc { margin: .45in auto 0; width: fit-content; }
+  .mc-toc ol { columns: 1; font-size: 14pt; line-height: 1.9; }
+  .mc-toc a { color: #1d1712 !important; text-decoration: none !important; }
+  .mc-lesson h2 { font-size: 28pt; margin-top: 0; }
+  .mc-lesson > h2::before { content: ""; display: block; width: .55in; height: .55in; margin: 0 0 6pt; background: url(/static/look/emblem.png) left/contain no-repeat; }
+  .mc-worked { border-left-color: rgba(75, 29, 158, .35); }
+  .mc-record { font-size: 10.5pt; }
   .mc-steps li, .mc-blanks li, .mc-wrong dd { break-inside: avoid; }
   .mc-lesson h2, .mc-worked h3 { break-after: avoid; }
   #worked, #mistakes, #yours, #close { break-before: page; }
-  .mc-toc a { color: inherit; text-decoration: none; }
   .mc-blanks li { line-height: 2.6; }
+  .mc-sign { break-inside: avoid; font-size: 12pt; }
+  .mc-sign img { width: 1.1in; height: auto; }
+  .mc-sign a { color: inherit !important; text-decoration: none !important; }
+  .mc-sign a::after { content: " · " attr(href); }
 }
