@@ -2,16 +2,17 @@
    it open without a connection.
    - The pages and their scripts come from the network when there is one, and
      from the cache when there isn't, so a deploy shows up on the next visit.
-   - Readings, checkout and the consultation pages are never cached: they are
-     private and paid for.
+   - Readings, checkout, the consultation pages and members' rooms are never
+     cached: they are private. Nor is anything the server marks no-store, so a
+     private page left off NEVER still stays off the device.
    Bump VERSION to throw the old cache away. */
-const VERSION = "wyrd-v57";
+const VERSION = "wyrd-v58";
 const SHELL = ["/", "/chart", "/today", "/mandala", "/offline",
   "/static/console.css", "/static/site.css", "/static/map.css", "/static/learn.css", "/static/body.css", "/static/dasha.css", "/static/a11y.css", "/static/design.css",
   "/static/viz.js", "/static/glossary.js", "/static/common.js", "/static/body.js", "/static/design.js", "/static/runes.js", "/static/vargas.js", "/static/skytorus.js", "/static/tarot.js", "/static/mandala.json", "/static/mandala/wyrd-mandala.css", "/static/mandala/wyrd-mansions.js", "/static/mandala/wyrd-data.js", "/static/mandala/wyrd-glyphs.js", "/static/mandala/wyrd-mandala.js", "/static/kuta.js", "/static/synastry.js", "/static/wheel.js", "/static/torus.js", "/static/sky-data.js", "/static/sky.js", "/static/eye.js", "/static/eye.css", "/static/dasha.js",
   "/static/now.js", "/static/colour.js", "/static/bench.js", "/static/rooms.css", "/static/learn.js", "/static/pulse.js", "/static/dharma.js", "/static/dynamics.js", "/static/compare.js", "/static/music.js", "/static/numbers.js", "/static/chart.js", "/static/app.js", "/static/today.js",
   "/static/icons/icon-192.png?v=2", "/static/icons/apple-touch-icon.png?v=2", "/static/icons/favicon-32.png?v=2"];
-const NEVER = [/^\/admin/, /^\/api\/pulse/, /^\/reading/, /^\/consultation/, /^\/c\//, /^\/sample/, /^\/(account|signin|signout|auth|pro|billing|membership|jobs|welcome)/, /^\/api\/(subscribe|account|me)/, /^\/api\/(checkout|consultation|places|chart|calendar)/, /\.mp3$/];
+const NEVER = [/^\/admin/, /^\/api\/pulse/, /^\/reading/, /^\/consultation/, /^\/c\//, /^\/sample/, /^\/(account|signin|signout|auth|pro|billing|membership|jobs|welcome|hall|path|together|gift|r\/|masterclass\/)/, /^\/api\/(subscribe|account|me)/, /^\/api\/(checkout|consultation|places|chart|calendar)/, /\.mp3$/];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -26,7 +27,7 @@ self.addEventListener("fetch", e => {
   const key = req.mode === "navigate" ? url.pathname : req;          // one cached copy per page, whatever its query or hash
   e.respondWith(
     fetch(req).then(res => {
-      if (res.ok && res.type === "basic") { const copy = res.clone(); caches.open(VERSION).then(c => c.put(key, copy)); }
+      if (res.ok && res.type === "basic" && !/no-store/.test(res.headers.get("Cache-Control") || "")) { const copy = res.clone(); caches.open(VERSION).then(c => c.put(key, copy)); }
       return res;
     }).catch(async () => {
       const hit = await caches.match(key) || (url.pathname.startsWith("/static/") && await caches.match(url.pathname));

@@ -255,7 +255,7 @@ def signs_index(base):
 
 
 def sitemap(base):
-    urls = ["/", "/reports", "/letmelightyourpath", "/contact", "/membership", "/today", "/mandala", "/sample", "/learn", "/learn/signs", "/learn/sukuyo", "/learn/mandala", "/masterclass"]
+    urls = ["/", "/reports", "/letmelightyourpath", "/contact", "/membership", "/today", "/mandala", "/sample", "/learn", "/learn/signs", "/learn/sukuyo", "/learn/mandala", "/masterclass", "/privacy"]
     urls += [f"/learn/gates/{g}" for g in GATES] + [f"/learn/nakshatras/{s}" for s, _ in NAKS] + [f"/learn/signs/{s}" for s, _ in SIGNS]
     urls += ["/learn/runes"] + [f"/learn/runes/{r[0]}" for r in RUNES] + ["/learn/numbers", "/learn/dharma"] + [f"/learn/dharma/gates/{g}" for g in GATES]
     rows = "".join(f"<url><loc>{e(base + u)}</loc></url>" for u in urls)

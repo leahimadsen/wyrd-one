@@ -81,3 +81,10 @@ PATH_MONTHLY_PRICE   = os.environ.get("STRIPE_PATH_MONTHLY_PRICE", "")          
 CONSULT_CENTS        = int(os.environ.get("CONSULT_CENTS", "10000"))            # the first 1:1 consult, $100 (shown; the Payment Link charges it)
 BOOKING_URL          = os.environ.get("BOOKING_URL", "").strip()                # your booking page for the calls (Calendly or similar)
 MESSAGES_TO          = os.environ.get("MESSAGES_TO", "").strip() or OWNER_EMAIL or "support@wyrdconsole.com"   # where members' messages go
+
+# --- the privacy policy (/privacy). The address people write to about their data is shown publicly,
+# so it's never your personal inbox unless you set it to be. PRIVACY_OPERATOR is the legal name (and,
+# if you like, the postal address) of whoever runs the site; the policy names The Völva until it's set.
+PRIVACY_EMAIL    = os.environ.get("PRIVACY_EMAIL", "").strip() or "support@wyrdconsole.com"
+PRIVACY_OPERATOR = os.environ.get("PRIVACY_OPERATOR", "").strip()
+PRIVACY_UPDATED  = "23 October 2026"      # change when the policy's words change
