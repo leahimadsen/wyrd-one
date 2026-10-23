@@ -850,6 +850,12 @@ def learn_dharma_gate(g):
     if not p: abort(404)
     return page(*p)
 
+@app.get("/deck")
+def deck_page():
+    """The Wyrd deck: the cards engraved so far, each opening large, and the way to draw your own."""
+    title, desc, body, ld = pages.deck(config.BASE_URL)
+    return page(title, desc, body, ld, script=pages.DECK_SCRIPT)
+
 @app.get("/learn/mandala")
 def learn_mandala():
     from wyrd import mandala_learn

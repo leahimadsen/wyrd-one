@@ -1,0 +1,60 @@
+/* The Wyrd deck on the site: a person's card on the chart page, the card faces in the
+   Mandala's station record, the deck page, and the large view any card opens into. */
+.wd-card svg, .wd-card img { display: block; width: 100%; height: auto; }
+.wd-card { border-radius: 2.2% / 1.25%; box-shadow: 0 18px 40px rgba(0, 0, 0, .35), 0 2px 6px rgba(0, 0, 0, .25); overflow: hidden; background: #e9e1d2; }
+.wd-btn { font: inherit; cursor: pointer; }
+
+/* ---------- Your card, on the chart page ---------- */
+.yc { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 36px; align-items: start; margin-top: 18px; }
+.yc-card { margin: 0; }
+.yc-kicker { font-family: 'Wyrd Fell SC', 'IM Fell English SC', 'IM Fell English', Georgia, serif; letter-spacing: .18em; font-size: 15px; opacity: .8; margin: 0 0 4px; }
+.yc-title { font-family: 'Wyrd Fraktur', 'UnifrakturMaguntia', serif; font-size: clamp(34px, 4.4vw, 50px); line-height: 1.05; margin: 0 0 6px; font-weight: 400; }
+.yc-why { font-style: italic; margin: 0 0 14px; opacity: .88; }
+.yc-btns { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 8px; }
+.yc-btns button[disabled] { opacity: .55; cursor: progress; }
+.yc-note { min-height: 1.4em; font-size: 14px; margin: 4px 0 14px; }
+.yc-hand { list-style: none; padding: 0; margin: 10px 0 18px; display: flex; flex-wrap: wrap; gap: 14px; }
+.yc-hand button { display: grid; grid-template-columns: 64px auto; gap: 12px; align-items: center; text-align: left; padding: 8px 14px 8px 8px;
+  border: 1px solid currentColor; border-radius: 10px; background: transparent; color: inherit; font: inherit; cursor: pointer; opacity: .82; max-width: 300px; }
+.yc-hand button:hover, .yc-hand button:focus-visible { opacity: 1; }
+.yc-hand button[aria-pressed="true"] { opacity: 1; box-shadow: 0 0 0 2px currentColor; }
+.yc-hand .wd-card { box-shadow: 0 3px 8px rgba(0, 0, 0, .3); }
+.yc-hand b { display: block; font-weight: 400; font-size: 16px; }
+.yc-hand small { display: block; font-size: 12.5px; opacity: .8; line-height: 1.3; }
+.yc-h4 { font-family: 'Wyrd Fell SC', 'IM Fell English SC', 'IM Fell English', Georgia, serif; letter-spacing: .14em; font-weight: 400; font-size: 15px; margin: 22px 0 0; }
+.yc-private { font-size: 14px; opacity: .85; }
+@media (max-width: 760px) {
+  .yc { grid-template-columns: 1fr; gap: 22px; }
+  .yc-card { max-width: 420px; margin: 0 auto; width: 100%; }
+}
+
+/* ---------- card faces in the Mandala's station record ---------- */
+.rec-deck { display: flex; flex-wrap: wrap; gap: 12px; margin: 6px 0 14px; }
+.rec-deck:empty { display: none; }
+.rec-deck button { width: 104px; padding: 0; border: 0; background: none; cursor: zoom-in; color: inherit; font: inherit; text-align: center; }
+.rec-deck button span { display: block; font-size: 11.5px; line-height: 1.25; margin-top: 6px; opacity: .85; }
+.rec-deck .wd-card { box-shadow: 0 4px 10px rgba(0, 0, 0, .35); transition: transform .15s ease; }
+.rec-deck button:hover .wd-card, .rec-deck button:focus-visible .wd-card { transform: translateY(-3px); }
+@media (prefers-reduced-motion: reduce) { .rec-deck .wd-card { transition: none; } .rec-deck button:hover .wd-card { transform: none; } }
+
+/* ---------- the deck page ---------- */
+.dk-sign { margin: 34px 0 10px; }
+.dk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 22px 18px; }
+.dk-grid button { padding: 0; border: 0; background: none; cursor: zoom-in; color: inherit; font: inherit; text-align: center; }
+.dk-grid button span { display: block; font-size: 14px; margin-top: 8px; line-height: 1.3; }
+.dk-grid button small { display: block; font-size: 12px; opacity: .75; }
+.dk-fam { font-family: 'Wyrd Fell SC', 'IM Fell English SC', 'IM Fell English', Georgia, serif; letter-spacing: .14em; font-size: 14px; margin: 18px 0 8px; opacity: .85; }
+.dk-cta { margin: 30px 0; }
+.dk-loading { opacity: .7; font-style: italic; }
+
+/* ---------- the large view ---------- */
+.wd-lb { position: fixed; inset: 0; z-index: 1000; background: rgba(12, 8, 16, .95); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); box-sizing: border-box; }
+.wd-lb[hidden] { display: none; }
+.wd-lb .wd-card { width: min(100%, calc(min(78vh, 1100px) * var(--arw, .5625))); flex: none; }
+.wd-lb-bar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; color: #f1e8d8; }
+.wd-lb-bar button, .wd-lb-bar a { font: 15px 'Wyrd Fell', 'IM Fell English', Georgia, serif; color: #f1e8d8; background: rgba(255, 255, 255, .08); border: 1px solid rgba(241, 232, 216, .55);
+  border-radius: 999px; padding: 8px 16px; cursor: pointer; text-decoration: none; }
+.wd-lb-bar button:hover, .wd-lb-bar a:hover, .wd-lb-bar button:focus-visible, .wd-lb-bar a:focus-visible { background: rgba(255, 255, 255, .18); }
+.wd-lb-close { position: absolute; top: 12px; right: 14px; font-size: 26px; line-height: 1; padding: 6px 12px; }
+.wd-lb-note { color: #f1e8d8; font-size: 14px; min-height: 1.2em; margin: 0; text-align: center; }
