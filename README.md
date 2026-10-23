@@ -113,6 +113,24 @@ readings. Setting a Stripe key switches previews off.
 Discount codes made in Stripe (Products → Coupons → Promotion codes) work at
 checkout, so you can give your Substack readers a code.
 
+## The free masterclass and your Substack
+
+`/masterclass` offers **How I Read the Wyrd Mandala**, a free guide in your voice: the method step by step,
+stations 001 and 090 read all the way through, the mistakes people make, and a worksheet for your own Moon.
+Visitors subscribe to The Web of Wyrd through the Substack form on the page, and the guide arrives in their
+welcome email. The words are a draft in `lib/masterclass.json`; the guide has a "Save as PDF" button and prints cleanly.
+
+To switch the funnel on:
+1. In Render, set `MASTERCLASS_PATH` to a word nobody would guess, e.g. `lantern-7q`. The guide is then at
+   `https://YOUR-SITE/masterclass/lantern-7q`, kept out of search, and the sign-up page stops linking to it.
+   Until you set it, the guide is at `/masterclass/guide` and the sign-up page links straight there.
+2. In Substack: Settings → Emails → Welcome email (for free subscribers). Add the guide's link, and if you
+   like, attach a PDF made with its "Save as PDF" button.
+3. `SUBSTACK_URL` defaults to `https://thewebofwyrd.substack.com`; change it only if the letter moves.
+
+The sign-up page is linked from Learn, from Learn the Wyrd Mandala and from the Mandala page, and is in the sitemap.
+Test: `WYRD_DEV_NODE_EPH=1 python tests/masterclass_check.py`.
+
 ## The unlisted 1:1 consultation page
 1. In Stripe, make a Payment Link for the consultation. Under **After payment**, choose
    "Don't show confirmation page" and redirect to

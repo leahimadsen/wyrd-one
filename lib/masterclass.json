@@ -1,0 +1,253 @@
+{
+  "_note": "DRAFT for The Völva to edit. The free masterclass, How I Read the Wyrd Mandala: the landing page at /masterclass (the Substack sign-up) and the guide itself, which the Substack welcome email links to. It teaches the reading the way the paid readings do it: one station at a time, from the inside out, ending on a question. The two worked stations name their cards; the site checks those names against the wheel (tests/masterclass_check.py), so if you change a station, change its cards with it. The course's own teaching stays in the course.",
+  "TITLE": "How I Read the Wyrd Mandala",
+  "SUB": "A free masterclass from The Völva",
+  "LANDING": {
+    "LEDE": "The Mandala is free to open and study, and the whole instrument is on the page. What isn't on the page is how I actually read it. This is that: the order I go in, what I listen for at each ring, and two stations read all the way through, the way I read them in the readings.",
+    "INSIDE_INTRO": "Inside the guide:",
+    "FORM_INTRO": "The guide is free. Subscribe to The Web of Wyrd, my letter on Substack, and it arrives in your welcome email. Keep it, print it, save it as a PDF. Put your email in below, or press the button to subscribe on Substack.",
+    "FORM_AFTER": "Already subscribed? Look for the welcome email, or write to me through {contact} and I'll send the link.",
+    "OPEN_NOW": "Open the guide now",
+    "WHY": "Why Substack: that's where I write between readings. The sky as it moves, the stations as they light up, new parts of the Mandala as I open them. You can leave whenever you like."
+  },
+  "LESSONS": [
+    {
+      "id": "before",
+      "title": "Before you begin",
+      "paras": [
+        "The Mandala doesn't predict anything. It describes. Every one of its hundred and eight stations is a small arc of sky, three and a third degrees wide, and the rings tell you what that arc is made of. When I read, I'm not asking what will happen. I'm asking what this piece of sky is, and what it asks of the person standing in it.",
+        "So read one station at a time. People open the wheel, see two hundred things, and try to hold them all at once. You can't, and you don't need to. One station, read properly, says more than the whole wheel skimmed.",
+        "You don't need a birth chart to start. The wheel is complete on its own. When you want to, lay your chart on it, and your planets stand at their stations like people standing in rooms. That comes in the last lesson."
+      ]
+    },
+    {
+      "id": "rotors",
+      "title": "Where it comes from, and where it lands",
+      "paras": [
+        "Everything I do with the Mandala hangs on one sentence: the stars emanate, the seasons receive. The inner rings are sidereal, measured from the stars. That's where a thing comes from, its karma, the reality underneath. The outer rings are tropical, measured from the spring equinox. That's where it lands: how it's lived, how it feels from inside a life.",
+        "So every station gets read twice, and the two readings are not the same. This is the part people miss. A station can come from fire and land in water. It can come from a beginning and land at an end. The gap between the two is not a mistake to be fixed. It's the shape of the work.",
+        "When I'm reading, I say it out loud as a sentence: this comes from here, and lands there. If you only learn one thing from this guide, learn to make that sentence for any station you open."
+      ]
+    },
+    {
+      "id": "inside-out",
+      "title": "Reading from the inside out",
+      "paras": [
+        "I always go in the same order, from the centre of the wheel to the rim. It keeps me honest. The order matters because each ring sits on the one beneath it, and if you start at the cards you'll read the cards and miss the sky."
+      ],
+      "steps": [
+        [
+          "Name the station",
+          "Its mansion and its pada. Say it plainly: Ashwini, first pada. That's the address. Everything else is what lives there."
+        ],
+        [
+          "Hear the mansion's engine",
+          "Every mansion has a power, its shakti, and two things moving through it: something that comes down and something that rises to meet it. What they make together is the mansion's fruit. This is the motor of the station. Get it before anything else."
+        ],
+        [
+          "Look at the field",
+          "Is the station on the cross, where a cardinal sign begins? On the triangle, where a sign and a mansion start together? Does its small ring mark it vargottama, its navamsa home in its own sign? These are the places where the wheel holds still, and they read stronger."
+        ],
+        [
+          "Make the sentence",
+          "The sidereal sign it comes from, the tropical sign it lands in. Comes from here, lands there."
+        ],
+        [
+          "Lay the two cards",
+          "The Buddhist card says where it comes from. The Nordic card says where it lands. The trump is the room; the minor card is what happens in the room; the ruler is who keeps the house. Read the two cards as a conversation, not as two separate answers."
+        ],
+        [
+          "Check the gate, the exaltations and the void",
+          "The Fool stands at the gate. Seven trumps stand outside the rim at their planets' exaltations. And a third of the stations are Asura voids. If the station carries one, it changes the reading. The next lesson but one is about that."
+        ],
+        [
+          "Choose two lenses",
+          "The correspondences are many: runes, colour, numbers, sound, gates, the I Ching, the chakras, the body. Pick two or three that speak to the question in front of you. They are all ways of looking at the same arc. None of them is the source of another, so never let one explain another."
+        ],
+        [
+          "End on the question",
+          "Every mansion has a question, and every reading I write ends on questions. A station isn't finished until it's turned back to the person: so what will you do with this?"
+        ]
+      ]
+    },
+    {
+      "id": "voids",
+      "title": "When the station is a void",
+      "paras": [
+        "Thirty-six of the hundred and eight stations are Asura voids: the fourth, the seventh and the ninth pada of every sidereal sign. Every sign closes on one. People see the dark pada and flinch. Don't.",
+        "In the oldest hymns asura is a title, not an enemy. It means a lord, a holder of power. The voids are the tunnels, passages beneath the wheel, where power goes down to be kept. A void isn't a curse on a station. It's a basement. Something is stored there: a force that was too strong for the room above it, and was put underneath.",
+        "So when I meet a void, I name the asura and tell its story, because every one of them has a story, and the story is the reading. Then I ask what's being kept underneath in this life, and whether it's time to go down and get it."
+      ]
+    },
+    {
+      "id": "mistakes",
+      "title": "What I see people get wrong",
+      "items": [
+        [
+          "Reading the cards first",
+          "The cards are the outer rings. They make sense only after the mansion has spoken. Read from the inside out."
+        ],
+        [
+          "Choosing one rotor",
+          "Sidereal people throw out the tropical ring and tropical people throw out the sidereal. The Mandala exists to keep both. The reading is in the gap between them."
+        ],
+        [
+          "Letting one lens explain another",
+          "The rune doesn't come from the gate, and the colour doesn't come from the rune. They are lenses on one station, side by side."
+        ],
+        [
+          "Fearing the voids",
+          "They're the most interesting stations on the wheel. Name the asura and listen."
+        ],
+        [
+          "Stopping before the question",
+          "A reading that only describes is half a reading. Turn it back to the person."
+        ]
+      ]
+    },
+    {
+      "id": "yours",
+      "title": "Now read your own",
+      "paras": [
+        "Cast your chart and open the Mandala from it. Your planets stand at their stations. Start with your Moon: in Jyotish the Moon is the mind, and its station is where your days are lived. Go through the steps on paper, in order, and don't skip to the end."
+      ],
+      "blanks": [
+        "My Moon stands at station ____, in ____________, pada ____.",
+        "The mansion's power: ____________________. What comes down: ____________. What rises to meet it: ____________.",
+        "It sits on the cross / the triangle / a vargottama pada / none of these.",
+        "It comes from ____________ (sidereal) and lands in ____________ (tropical).",
+        "Buddhist card: ____________ under ____________. Nordic card: ____________ under ____________.",
+        "The void, if there is one: ____________. What it keeps: ____________________.",
+        "My two lenses: ____________ and ____________.",
+        "The question: ______________________________________________?"
+      ]
+    }
+  ],
+  "WORKED_INTRO": "Here are two stations read the way I read them, step by step. The first is the gate, where the wheel opens. The second is a void, and the deepest point of Mars.",
+  "WORKED": [
+    {
+      "station": 1,
+      "title": "Station 001: the gate",
+      "cards": {
+        "buddhist": [
+          "2 of Double Vajras",
+          "The King"
+        ],
+        "nordic": [
+          "4 of Wands",
+          "The Emperor"
+        ]
+      },
+      "steps": [
+        [
+          "Name the station",
+          "Ashwini, first pada. The very first station on the wheel, at 0° sidereal Aries."
+        ],
+        [
+          "Hear the mansion's engine",
+          "Ashwini's power is to reach quickly. What comes down is the need of those to be healed; what rises to meet it is the remedy. Their meeting is cure. This is the horse-headed twins arriving first, with the medicine, before the wound has time to organise into an illness."
+        ],
+        [
+          "Look at the field",
+          "It sits on the cross, at the start of a cardinal sign, and on the triangle, where a sign and a mansion begin together. Its navamsa is Aries, so it's vargottama: the station repeats its own sign. And it's gandanta, the knot where the water of Pisces has just turned to fire. Four ways of saying the same thing. Here the wheel holds very still, and everything reads twice as strong."
+        ],
+        [
+          "Make the sentence",
+          "It comes from the first degrees of sidereal Aries and lands at about 24° tropical Aries, in 2026. A beginning that lands still inside the beginning, but later, nearer its end. The impulse is fresh. The life that receives it has already been at it a while."
+        ],
+        [
+          "Lay the two cards",
+          "The Buddhist card is the 2 of Double Vajras under The King, ruled by Mars: where it comes from is the first decision, the choice of a direction made by one who rules himself. The Nordic card is the 4 of Wands under The Emperor, ruled by Venus: where it lands is the settled house, the celebration, the threshold built and garlanded. So the reading runs: a sovereign choice, made fast, becomes a home. The Mars fire at the source is met with Venus at the landing."
+        ],
+        [
+          "Check the gate, the exaltations and the void",
+          "The Fool stands here, at the gate: The Great Departure, the going-forth that begins with nothing. No void. No exaltation trump falls in its tropical span, though the Sun's, at 19° tropical Aries, is close by. So the King and the Emperor set out on their road with the Fool walking ahead of them, empty-handed."
+        ],
+        [
+          "Choose two lenses",
+          "Its rune is Fehu, moveable wealth, energy that must circulate. On the tropical ring it runs from gate 42, Increase, into gate 3, Difficulty at the Beginning. I don't make one come from the other. I hold them side by side and see what they agree on: what's given at the start grows only by being moved on, and the start is never easy."
+        ],
+        [
+          "End on the question",
+          "Ashwini's question: when you get there first, and you always do, what do you bring?"
+        ]
+      ]
+    },
+    {
+      "station": 90,
+      "title": "Station 090: Narakasura",
+      "cards": {
+        "buddhist": [
+          "4 of Jewels",
+          "Mara"
+        ],
+        "nordic": [
+          "7 of Swords",
+          "The Star"
+        ]
+      },
+      "steps": [
+        [
+          "Name the station",
+          "Dhanishta, second pada. The last station of sidereal Capricorn, from 26°40′ to 30°."
+        ],
+        [
+          "Hear the mansion's engine",
+          "Dhanishta's power is to give abundance and renown. What comes down is birth; what rises to meet it is prosperity. The drum sounds because it is hollow. What is born here prospers only if the vessel stays empty enough to ring."
+        ],
+        [
+          "Look at the field",
+          "No cross, no triangle. Its navamsa is Virgo, so it isn't vargottama. But this is where sidereal Capricorn closes, and every sign closes on a void."
+        ],
+        [
+          "Make the sentence",
+          "It comes from the end of sidereal Capricorn, the summit, the last step of the climb, and lands in the early twenties of tropical Aquarius, among other people. What was earned alone at the top arrives in the crowd."
+        ],
+        [
+          "Lay the two cards",
+          "The Buddhist card is the 4 of Jewels under Mara, ruled by the Sun: the hand closed round what it has, under the one who tempts with keeping. The Nordic card is the 7 of Swords under The Star, ruled by the Moon: something carried off quietly, under the open sky of hope. So the reading runs: the grip at the summit, if it isn't loosened, becomes stealth in the crowd. And the Star says the other way is there too: what's let go of becomes light for others."
+        ],
+        [
+          "Check the gate, the exaltations and the void",
+          "No gate here, and no exaltation trump in its span. Mars is exalted at its deepest, 28° Capricorn, in this very station on the sidereal ring. And the void is Narakasura, son of the Earth, called Bhauma, the earth-born, which is also a name of Mars. He grew so strong he took the earrings of the mother of the gods and held sixteen thousand women captive. Krishna killed him, and the day is kept as Naraka Chaturdashi, in the days of Diwali, with lamps lit against the dark."
+        ],
+        [
+          "Choose two lenses",
+          "Its rune is Mannaz, the self among others. On the tropical ring it sits in gate 49, Principles: in the I Ching, Revolution. Held side by side they agree: the overthrow that matters here is among people, and it's made on principle, not for gain. That's Narakasura's story told the other way round."
+        ],
+        [
+          "End on the question",
+          "What I ask at Narakasura: what are you holding underneath that was won by strength, and would it shine more if you let it go? And Dhanishta's own: what would you have to empty out for your life to ring again?"
+        ]
+      ]
+    }
+  ],
+  "CLOSE": {
+    "TITLE": "Where to go from here",
+    "PARAS": [
+      "That's the method. It's the same one I use in every reading: one station at a time, from the inside out, both rotors, both decks, and a question at the end. Practise it on a station a day and in a month you'll read the wheel without the guide.",
+      "Learning the Mandala, the full course, goes further: the ninth harmonic and the vargottama twelve, the years and what the turning does to the cards, what lights together across the rings, and a whole chart read from first station to last. It's coming, and members of the Order will find it in the Hall."
+    ],
+    "LINKS": [
+      [
+        "Open the Wyrd Mandala",
+        "/mandala"
+      ],
+      [
+        "Cast your chart",
+        "/"
+      ],
+      [
+        "Learn the Wyrd Mandala",
+        "/learn/mandala"
+      ],
+      [
+        "Your Wyrd Reading",
+        "/reports"
+      ]
+    ]
+  },
+  "SUBSCRIBE": "Subscribe to The Web of Wyrd",
+  "PRINT": "Save as PDF",
+  "PRINT_NOTE": "Choose \"Save as PDF\" as the printer to keep a copy."
+}
