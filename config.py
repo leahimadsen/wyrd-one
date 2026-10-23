@@ -16,6 +16,11 @@ CONSULTATION_PAYMENT_LINK_URL = os.environ.get("CONSULTATION_PAYMENT_LINK_URL", 
 # The unlisted 1:1 consultation page lives at /c/<CONSULT_PATH>. Pick something
 # nobody would guess (e.g. "inner-room-7k2q"). Leave it empty to switch the page off.
 CONSULT_PATH = os.environ.get("CONSULT_PATH", "").strip()
+# The Web of Wyrd on Substack: the free masterclass (/masterclass) signs people up here.
+SUBSTACK_URL = os.environ.get("SUBSTACK_URL", "https://thewebofwyrd.substack.com").strip().rstrip("/")
+# The masterclass guide lives at /masterclass/<MASTERCLASS_PATH>: put that link in your Substack welcome
+# email. Leave it empty and the guide is at /masterclass/guide, linked straight from the sign-up page.
+MASTERCLASS_PATH = os.environ.get("MASTERCLASS_PATH", "").strip()
 # Your private admin at /admin: generate any reading without paying. It only
 # exists when both are set (in Render: Environment). Use a long password.
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")

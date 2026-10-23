@@ -111,6 +111,8 @@ def index_page(base):
 
 <h2 id="try">Try it</h2><p>{e(T["TRY_INTRO"])}</p><ol class="ml-try">{tries}</ol>
 <p><a class="btn-cast" href="/mandala">{e(T["OPEN"])}</a> <a class="ml-alt" href="/">Cast your chart first</a></p>
+<div class="cta"><p><b>Want to see how I read a station?</b> The free masterclass walks the method step by step, with two stations read all the way through and a worksheet for your own Moon.</p>
+<p><a class="btn-cast" href="/masterclass">Get the free masterclass</a></p></div>
 
 <h2 id="course">Learning the Mandala: the course</h2>
 <p>{e(T["COURSE_INTRO"])}</p>

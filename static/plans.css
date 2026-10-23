@@ -243,3 +243,24 @@ body.paper .tc-back .price { color: var(--arc-mid) !important; }
   .ml-scroll .ml-voids td { display: grid; grid-template-columns: 74px minmax(0, 1fr); border: 0; padding: 3px 0; }
   .ml-voids td::before { content: attr(data-n); grid-row: span 2; font-size: 12.5px; opacity: .6; padding-top: 2px; }
 }
+
+/* the free masterclass (/masterclass): the sign-up, and the guide that prints to PDF */
+.mc-inside li, .mc-steps li, .mc-blanks li { margin: 0 0 10px; }
+.mc-form iframe { display: block; width: 100%; max-width: 480px; height: 150px; border: 1px solid rgba(127, 127, 127, .35); border-radius: 3px; background: #fff; margin: 12px 0; }
+.mc-print-row .muted { margin-left: 10px; font-size: 14px; }
+.mc-toc ol { columns: 2 240px; margin: 18px 0 28px; }
+.mc-lesson { margin: 34px 0; }
+.mc-worked { border-left: 3px solid var(--jade-dim); padding-left: 16px; margin: 26px 0; }
+.mc-record { font-size: 14px; opacity: .8; }
+.mc-blanks li { line-height: 2; }
+.mc-wrong dt { font-weight: 600; margin-top: 12px; } .mc-wrong dd { margin: 2px 0 0; }
+.mc-sign { margin-top: 40px; font-size: 14px; opacity: .75; }
+@media print {
+  .pg-top, .pg-foot, .skip, .mc-print-row, .mc-links { display: none !important; }
+  body.pg, .pg-main { background: #fff !important; color: #111 !important; }
+  .mc-steps li, .mc-blanks li, .mc-wrong dd { break-inside: avoid; }
+  .mc-lesson h2, .mc-worked h3 { break-after: avoid; }
+  #worked, #mistakes, #yours, #close { break-before: page; }
+  .mc-toc a { color: inherit; text-decoration: none; }
+  .mc-blanks li { line-height: 2.6; }
+}

@@ -130,7 +130,7 @@ def consult_offer(slug):
     link = html.escape(config.CONSULTATION_PAYMENT_LINK_URL or "")
     return Response(page.replace("{{PAY_LINK}}", link).replace("{{AUTHOR}}", config.AUTHOR), mimetype="text/html")
 
-PRIVATE_PATHS = ("/c/", "/admin", "/gift/", "/together/", "/welcome", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/", "/hall", "/api/hall", "/r/")
+PRIVATE_PATHS = ("/c/", "/masterclass/", "/admin", "/gift/", "/together/", "/welcome", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/", "/hall", "/api/hall", "/r/")
 
 @app.after_request
 def private_reading_headers(response):
@@ -796,7 +796,7 @@ def google_site_verification():
 @app.get("/robots.txt")
 def robots():
     lines = ["User-agent: *", "Disallow: /admin", "Disallow: /account", "Disallow: /reading", "Disallow: /consultation",
-             "Disallow: /c/", "Disallow: /pro", "Disallow: /hall", "Disallow: /r/", "Disallow: /auth/", "Disallow: /api/", f"Sitemap: {config.BASE_URL}/sitemap.xml"]
+             "Disallow: /c/", "Disallow: /masterclass/", "Disallow: /pro", "Disallow: /hall", "Disallow: /r/", "Disallow: /auth/", "Disallow: /api/", f"Sitemap: {config.BASE_URL}/sitemap.xml"]
     return Response("\n".join(lines) + "\n", mimetype="text/plain")
 
 @app.get("/sitemap.xml")
@@ -854,6 +854,20 @@ def learn_dharma_gate(g):
 def learn_mandala():
     from wyrd import mandala_learn
     return page(*mandala_learn.index_page(config.BASE_URL))
+
+@app.get("/masterclass")
+def masterclass():
+    """The free masterclass: subscribe to The Web of Wyrd on Substack and the guide comes in the welcome email."""
+    from wyrd import masterclass as mc
+    return page(*mc.landing_page(config.BASE_URL, config.SUBSTACK_URL, config.MASTERCLASS_PATH))
+
+@app.get("/masterclass/<slug>")
+def masterclass_guide(slug):
+    """The guide itself, at the link the welcome email carries."""
+    from wyrd import masterclass as mc
+    if not hmac.compare_digest(slug.encode(), mc.guide_slug(config.MASTERCLASS_PATH).encode()): abort(404)
+    title, desc, body = mc.guide_page(config.SUBSTACK_URL)
+    return page(title, desc, body, robots="noindex, nofollow")
 
 @app.get("/learn/sukuyo")
 def learn_sukuyo():
