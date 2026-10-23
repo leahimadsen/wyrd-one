@@ -67,7 +67,7 @@ def landing_page(base, substack, path):
 <div class="cta mc-form" id="subscribe">
 <p>{e(L["FORM_INTRO"])}</p>
 <iframe src="{e(substack)}/embed" title="Subscribe to The Web of Wyrd on Substack" width="480" height="150" loading="lazy" frameborder="0" scrolling="no"></iframe>
-<p class="muted">The form not showing? <a href="{e(substack)}/subscribe">Subscribe on Substack</a>.</p>
+<p><a class="btn-buy mc-sub" href="{e(substack)}/subscribe" target="_blank" rel="noopener">{e(T["SUBSCRIBE"])}</a></p>
 <p class="muted">{e(L["FORM_AFTER"]).replace("{contact}", '<a href="/contact">the contact page</a>')}</p>
 </div>
 {direct}
@@ -98,6 +98,6 @@ def guide_page(substack):
 {"".join(_lesson(L) for L in lessons[:4])}
 {worked}
 {"".join(_lesson(L) for L in lessons[4:])}
-<section class="mc-lesson" id="close"><h2>{e(C["TITLE"])}</h2>{_ps(C["PARAS"])}<p class="mc-links">{links}</p></section>
+<section class="mc-lesson" id="close"><h2>{e(C["TITLE"])}</h2>{_ps(C["PARAS"])}<p class="mc-links"><a class="btn-buy mc-sub" href="{e(substack)}/subscribe" target="_blank" rel="noopener">{e(T["SUBSCRIBE"])}</a></p><p class="mc-links">{links}</p></section>
 <p class="mc-sign"><img src="/static/look/emblem.png" alt="" width="64" height="65"><br>The Völva · <a href="{e(substack)}">The Web of Wyrd</a></p></div>"""
     return f'{T["TITLE"]} · The Wyrd Console', T["SUB"] + ": " + T["TITLE"], body

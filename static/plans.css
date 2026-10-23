@@ -247,6 +247,7 @@ body.paper .tc-back .price { color: var(--arc-mid) !important; }
 /* the free masterclass (/masterclass): the sign-up, and the guide that prints to PDF */
 .mc-inside li, .mc-steps li, .mc-blanks li { margin: 0 0 10px; }
 .mc-form iframe { display: block; width: 100%; max-width: 480px; height: 150px; border: 1px solid rgba(127, 127, 127, .35); border-radius: 3px; background: #fff; margin: 12px 0; }
+.mc-sub { display: inline-block; max-width: 100%; text-align: center; text-decoration: none !important; }
 .mc-print-row .muted { margin-left: 10px; font-size: 14px; }
 .mc-toc ol { columns: 2 240px; margin: 18px 0 28px; }
 .mc-lesson { margin: 34px 0; }

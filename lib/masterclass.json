@@ -5,7 +5,7 @@
   "LANDING": {
     "LEDE": "The Mandala is free to open and study, and the whole instrument is on the page. What isn't on the page is how I actually read it. This is that: the order I go in, what I listen for at each ring, and two stations read all the way through, the way I read them in the readings.",
     "INSIDE_INTRO": "Inside the guide:",
-    "FORM_INTRO": "The guide is free. Subscribe to The Web of Wyrd, my letter on Substack, and it arrives in your welcome email. Keep it, print it, save it as a PDF.",
+    "FORM_INTRO": "The guide is free. Subscribe to The Web of Wyrd, my letter on Substack, and it arrives in your welcome email. Keep it, print it, save it as a PDF. Put your email in below, or press the button to subscribe on Substack.",
     "FORM_AFTER": "Already subscribed? Look for the welcome email, or write to me through {contact} and I'll send the link.",
     "OPEN_NOW": "Open the guide now",
     "WHY": "Why Substack: that's where I write between readings. The sky as it moves, the stations as they light up, new parts of the Mandala as I open them. You can leave whenever you like."
@@ -247,6 +247,7 @@
       ]
     ]
   },
+  "SUBSCRIBE": "Subscribe to The Web of Wyrd",
   "PRINT": "Save as PDF",
   "PRINT_NOTE": "Choose \"Save as PDF\" as the printer to keep a copy."
 }

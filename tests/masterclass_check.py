@@ -21,12 +21,15 @@ A.config.MASTERCLASS_PATH = ""
 r = web.get("/masterclass"); land = r.get_data(as_text=True)
 check("the sign-up page opens and is indexed", r.status_code == 200 and 'content="index, follow"' in land)
 check("it signs people up to The Web of Wyrd on Substack", 'src="https://thewebofwyrd.substack.com/embed"' in land and "https://thewebofwyrd.substack.com/subscribe" in land)
+check("a button subscribes on Substack, on the sign-up page",
+      land.count('class="btn-buy mc-sub" href="https://thewebofwyrd.substack.com/subscribe"') == 1)
 check("it lists what's inside", all(t in land for t in MC.contents()))
 check("with no path set, it links straight to the guide", 'href="/masterclass/guide"' in land)
 g = web.get("/masterclass/guide"); guide = g.get_data(as_text=True)
 check("the guide opens at /masterclass/guide", g.status_code == 200)
 check("the guide is kept out of search", "noindex" in g.headers.get("X-Robots-Tag", "") and 'content="noindex, nofollow"' in guide
       and "Disallow: /masterclass/" in web.get("/robots.txt").get_data(as_text=True))
+check("the guide ends with the subscribe button", 'class="btn-buy mc-sub" href="https://thewebofwyrd.substack.com/subscribe"' in guide)
 check("it saves as a PDF", "window.print()" in guide and "@media print" in open(os.path.join(A.HERE, "static", "plans.css"), encoding="utf-8").read())
 check("it teaches every lesson, the worked stations and the worksheet",
       all(f'id="{i}"' in guide for i in ("before", "rotors", "inside-out", "voids", "worked", "mistakes", "yours", "close")) and guide.count('class="mc-worked"') == 2)
