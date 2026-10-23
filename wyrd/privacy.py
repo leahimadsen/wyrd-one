@@ -2,6 +2,7 @@
 
 Every sentence here describes what the code does. When the site starts keeping something new,
 sending it somewhere new, or keeping it longer, change the words here and PRIVACY_UPDATED in config.py."""
+import logging, re
 from html import escape as e
 
 # What the site keeps in a browser, by key. "Clear this browser" removes exactly these.
@@ -12,6 +13,28 @@ BROWSER_KEYS = {
     "wyrdVid":   ("local storage", "a random id for the anonymous counts below; it never leaves with anything else and the server never stores it"),
     "wyrdMusic": ("local storage", "whether you switched the music on"),
 }
+
+class NoEmails(logging.Filter):
+    """Takes email addresses out of every log line (a Stripe or mail error can quote one): logs are
+    kept by the host and read when something breaks, and they're no place for personal details."""
+    PATTERN = re.compile(r"[^@\s<>\"'(),;:]{1,64}@[^@\s<>\"'(),;:]{1,190}\.[A-Za-z]{2,24}")
+
+    def filter(self, record):
+        try: text = record.getMessage()
+        except Exception: return True
+        record.msg, record.args = self.PATTERN.sub("[email]", text), None
+        return True
+
+
+def quiet_logs(*loggers):
+    """Put NoEmails on every handler these loggers (and the root) write through."""
+    f = NoEmails()
+    if not logging.getLogger().handlers: logging.basicConfig()
+    for lg in (logging.getLogger(), *loggers):
+        for h in lg.handlers:
+            if f not in h.filters: h.addFilter(f)
+    return f
+
 
 # Clears every key above (and any other wyrd* key), and the offline copies the app keeps.
 CLEAR_SCRIPT = """<script>
@@ -47,7 +70,7 @@ and how to have it removed.</p>
 <ul>
 <li><b>A free chart isn't stored on our server.</b> Your birth details are sent to cast it and then forgotten; the chart stays in your own browser.</li>
 <li><b>We never see your card.</b> Payments happen on Stripe's pages.</li>
-<li><b>No advertising, no tracking cookies, nothing sold.</b> We count what people use on the site anonymously, and not at all if your browser sends Do Not Track or Global Privacy Control.</li>
+<li><b>No advertising, no tracking cookies, nothing sold, no outside scripts.</b> We count what people use on the site anonymously, and not at all if your browser sends Do Not Track or Global Privacy Control.</li>
 <li><b>You can have it all removed.</b> Members can download or delete their records from <a href="/account/data">Your data</a>; anyone can write to {mail}.</li>
 </ul>
 
@@ -59,12 +82,14 @@ Write to {mail} about anything on this page.</p>
 <h3>Casting a free chart</h3>
 <p>Your date, time and place of birth (and a name and full name at birth, if you add them) go to our server to calculate the chart,
 and come straight back. The server doesn't save them. Your browser keeps the chart while the tab is open, and keeps the charts
-you choose to save on your device. A "Copy link" share link carries the birth details inside the link itself, so anyone you send it to can see them.</p>
+you choose to save on your device. A "Copy link" share link carries the birth details inside the link itself, so anyone you send it to can see them;
+they sit after the <code>#</code>, the part of a link your browser never sends to a server, so they don't reach us or our logs.</p>
 
 <h3>Buying a reading</h3>
 <p>The birth details for the reading (and the full name at birth, if given, for the numbers) are stored with your payment at Stripe.
 That is how the reading rebuilds itself every time you open its link, without us keeping a copy. Stripe collects your email address
-and payment details; we use the email to send you the reading's links, once. Anyone with your reading's link can open it, so keep it as you would a receipt.
+and payment details; we use the email to send you the reading's links, once. Anyone with your reading's link can open it, so keep it as you would a receipt. A reading given as a gift travels in its link,
+encrypted, so the details in it can't be read from the address.
 For a reading together, each person's details ride with the payment in the same way: please only add people who are happy for you to.</p>
 
 <h3>Membership: the Order, the Inner Circle and the Lightning Path</h3>
@@ -101,10 +126,9 @@ All of this stays on your device and you can remove it here at any time:</p>
 <p>We use a small number of services to run the site. Each handles only what it needs, for us:</p>
 <ul>
 <li><b>Stripe</b> takes payments and holds plans, receipts, and the birth details stored with a reading or a member's chart.</li>
-<li><b>Render</b> hosts the site. Like any web host it keeps short-lived server logs of requests (the address asked for, the time and your IP address), used for keeping the site running. Because a shared chart link carries its birth details in the address, opening one appears in those logs too.</li>
+<li><b>Render</b> hosts the site. Like any web host it keeps short-lived server logs of requests (the address asked for, the time and your IP address), used for keeping the site running. Email addresses are taken out of the site's own logs.</li>
 <li><b>Neon</b> (Postgres) holds the members' and practitioners' records described above.</li>
 <li><b>Our email provider</b> (Google Mail or Resend) sends sign-in links, readings and letters, and carries messages to {e(author)}.</li>
-<li><b>Google Fonts</b> supplies some of the lettering; your browser fetches the fonts from Google, which sees your IP address when it does.</li>
 <li><b>GitHub</b> stores the anonymous daily counts. No personal information goes there.</li>
 </ul>
 <p>We don't sell, rent or trade personal information, or share it for advertising. We'd hand it over only if the law required it.
@@ -128,7 +152,8 @@ Wherever you live, these choices are yours; if you're in the UK, the European Un
 data-protection authority if you think we've got something wrong. We'd be glad to hear from you first.</p>
 
 <h2>Keeping it safe</h2>
-<p>The site runs over encrypted connections only. Sign-in uses expiring links rather than passwords, so there are no passwords to leak.
+<p>The site runs over encrypted connections only. Sign-in uses expiring, encrypted links rather than passwords, so there are no passwords to leak.
+The lettering is served from this site, so your browser doesn't ask anyone else for it while you read.
 Card details never reach us. Private pages (readings, accounts, the practice desk) are never cached or shown to search engines, and only {e(author)}
 can open the site's administration. No system is perfect: if something ever went wrong with your information, we'd tell you.</p>
 

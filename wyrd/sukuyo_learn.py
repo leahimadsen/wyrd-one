@@ -76,16 +76,14 @@ def ring_svg():
 
 
 def jp_font(body):
-    """Noto Serif JP, cut down to just the kanji and kana this page uses (a few kilobytes), so they look the same everywhere."""
-    from urllib.parse import quote
+    """Noto Serif JP, cut down to the kanji and kana the site uses (tools/fonts.py) and served from here, so they look the same everywhere."""
     chars = "".join(sorted({c for c in body if "\u3000" <= c <= "\u9fff"}))
-    return (f'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700&display=swap&text={quote(chars)}">'
-            if chars else "")
+    return '<link rel="stylesheet" href="/static/fonts/jp.css">' if chars else ""
 
 
 def find_form(a="", b=""):
     lo, hi = SK_RANGE
-    return f"""<form class="pg-form sk-find" method="get" action="/learn/sukuyo/find">
+    return f"""<form class="pg-form sk-find" method="post" action="/learn/sukuyo/find">
 <label>A birth date <input type="date" name="a" required value="{e(a)}" min="{lo}-01-01" max="{hi}-12-31"></label>
 <label>A second birth date (optional) <input type="date" name="b" value="{e(b)}" min="{lo}-01-01" max="{hi}-12-31"></label>
 <button class="btn-cast" type="submit">Find the shuku</button></form>"""

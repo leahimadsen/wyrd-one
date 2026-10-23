@@ -11,14 +11,15 @@ const g = (k, l) => Wyrd.gloss(k, l);
 
 /* ---------- which chart: a shared link, or the one cast in this tab ---------- */
 let saved = current();
-const linkParam = new URLSearchParams(location.search).get("b");
+const fromHash = location.hash.startsWith("#b=");                 // a share link: /chart#b=… (older ones used ?b=)
+const linkParam = fromHash ? location.hash.slice(3) : new URLSearchParams(location.search).get("b");
 if (linkParam){
   const b = fromLink(linkParam);
   if (b){
     try { const j = await cast(b); keep(b, j); saved = { birth: b, result: j }; }
     catch (x) { document.body.innerHTML = `<p class="err" style="padding:40px">${esc(x.message)} <a href="/">Cast a chart</a></p>`; return; }
   }
-  history.replaceState(null, "", "/chart" + location.hash);     // the details don't stay in the address bar
+  history.replaceState(null, "", "/chart" + (fromHash ? "" : location.hash));     // the details don't stay in the address bar
 }
 if (!saved || !saved.result || !saved.result.chart){ location.replace("/"); return; }
 if (!fresh(saved.result) && navigator.onLine !== false){       // cast by an older engine: bring it up to date

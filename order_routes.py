@@ -20,9 +20,9 @@ FIRST = lambda b, email: ((b or {}).get("name") or "").split(" ")[0] or email.sp
 
 
 def _chart_link(b):
-    """The free chart for a set of birth details, opened straight from a link."""
+    """The free chart for a set of birth details, opened straight from a link (after the #, so never sent to the server)."""
     q = base64.urlsafe_b64encode(json.dumps({k: b[k] for k in A.BIRTH_KEYS if b.get(k)}).encode()).decode().rstrip("=")
-    return f"/chart?b={q}"
+    return f"/chart#b={q}"
 
 
 def _member():

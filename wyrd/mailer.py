@@ -28,7 +28,7 @@ def send(to, subject, html, text="", reply_to=None):
         return False
     OUTBOX.append({"to": to, "subject": subject, "html": html, "text": text, "reply_to": reply_to})
     del OUTBOX[:-50]
-    log.warning("mail not sent (no mail settings): %s -> %s", subject, to)
+    log.warning("mail not sent (no mail settings)")      # never the address or subject: logs are not for personal details
     return False
 
 

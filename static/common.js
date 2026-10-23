@@ -57,13 +57,14 @@ function current(){
   try { return JSON.parse(sessionStorage.getItem("wyrdChart") || "null"); } catch (_) { return null; }
 }
 
-/* ---------- the share link: the birth details ride in the link itself ---------- */
+/* ---------- the share link: the birth details ride in the link itself, after the #, which browsers
+   never send to a server: they can't land in a log or be told to another site ---------- */
 const b64 = s => btoa(unescape(encodeURIComponent(s))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const unb64 = s => decodeURIComponent(escape(atob(s.replace(/-/g, "+").replace(/_/g, "/"))));
 const SHARE_KEYS = ["name", "date", "time", "place_id", "lat", "lon", "tz", "place_label", "unknown_time"];
 function shareLink(birth){
   const o = {}; for (const k of SHARE_KEYS) if (birth[k] != null && birth[k] !== "" && birth[k] !== false) o[k] = birth[k];
-  return `${location.origin}/chart?b=${b64(JSON.stringify(o))}`;
+  return `${location.origin}/chart#b=${b64(JSON.stringify(o))}`;
 }
 function fromLink(param){
   try { const o = JSON.parse(unb64(param)); return o && o.date && o.time ? o : null; } catch (_) { return null; }

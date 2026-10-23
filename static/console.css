@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Texturina:ital,opsz,wght@0,12..72,300;0,12..72,400;0,12..72,500;0,12..72,600;1,12..72,300;1,12..72,400&display=swap');
+@import url('/static/fonts/texturina.css');
 :root{
   /* the temple runs on jade. Gold is an accent and appears rarely;
      the pale celadon carries most of the reading weight. */

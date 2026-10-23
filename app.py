@@ -4,7 +4,7 @@
     python scripts/build_places.py        # once: world places index
     python app.py                          # http://localhost:8000
 """
-import html, hmac, json, math, os, re, threading, time
+import html, hmac, json, logging, math, os, re, threading, time
 from collections import defaultdict, deque
 from datetime import date, datetime, timedelta, timezone
 
@@ -20,7 +20,7 @@ from wyrd.transits import transits
 from wyrd.extras import extras
 from wyrd import calendar as wcal
 from wyrd import pulse
-from wyrd import accounts, billing, mailer, pages, weather, store, privacy
+from wyrd import accounts, billing, mailer, pages, weather, store, privacy, sealed
 from wyrd import together, together_more, sukuyo
 import atexit
 
@@ -31,6 +31,7 @@ app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Strict"
                   SESSION_COOKIE_SECURE=config.BASE_URL.startswith("https://"),
                   PERMANENT_SESSION_LIFETIME=30 * 86400)     # members stay signed in a month; the admin, 12 hours (is_admin)
 ADMIN_HOURS = 12
+privacy.quiet_logs(app.logger, logging.getLogger("gunicorn.error"))        # no email addresses in the host's logs
 
 # ---------------- ephemeris ----------------
 def _load_ephemeris():
@@ -130,7 +131,7 @@ def consult_offer(slug):
     link = html.escape(config.CONSULTATION_PAYMENT_LINK_URL or "")
     return Response(page.replace("{{PAY_LINK}}", link).replace("{{AUTHOR}}", config.AUTHOR), mimetype="text/html")
 
-PRIVATE_PATHS = ("/c/", "/masterclass/", "/admin", "/gift/", "/together/", "/welcome", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/", "/hall", "/api/hall", "/r/")
+PRIVATE_PATHS = ("/learn/sukuyo/find", "/c/", "/masterclass/", "/admin", "/gift/", "/together/", "/welcome", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/", "/hall", "/api/hall", "/r/")
 
 @app.after_request
 def private_reading_headers(response):
@@ -685,7 +686,7 @@ ADMIN_TOGETHER_NOTE = ("Generated in your admin — no payment taken. This page'
 TOGETHER_TOKEN_MAX = 3600          # the whole address has to stay under gunicorn's 4094-character request line
 
 def together_signer():
-    return URLSafeTimedSerializer(config.SECRET_KEY, salt="wyrd-admin-together")
+    return sealed.Sealer(config.SECRET_KEY, "wyrd-admin-together")
 
 def admin_together_form(error="", status=200):
     r = admin_page("admin-together.html", ERROR=html.escape(error))
@@ -886,13 +887,14 @@ def learn_sukuyo():
     from wyrd import sukuyo_learn
     return page(*sukuyo_learn.index_page(config.BASE_URL))
 
-@app.get("/learn/sukuyo/find")
+@app.route("/learn/sukuyo/find", methods=["GET", "POST"])
 def learn_sukuyo_find():
-    """A birth shuku, or two people's Sukuyō relation, from birth dates alone."""
+    """A birth shuku, or two people's Sukuyō relation, from birth dates alone. The form posts, so the dates stay
+    out of the address (and the logs); an old link with ?a= still works."""
     from wyrd import sukuyo_learn
     if limited(20): return private("Wait a minute", "<h1>Wait a minute</h1><p>Too many tries. Try again shortly.</p>", status=429)
     try:
-        r = sukuyo_learn.find_page(EPH, request.args.get("a", ""), request.args.get("b", ""))
+        r = sukuyo_learn.find_page(EPH, request.values.get("a", ""), request.values.get("b", ""))
     except (ValueError, OverflowError):
         r = None
     if not r:
@@ -1390,13 +1392,13 @@ def pro_reading():
         return private("Practice desk", '<h1>Try again</h1><p>We couldn\'t reach the payment system. <a href="/pro">Back</a></p>', status=502)
 
 # ---------------- gifts, from the admin only ----------------
-from itsdangerous import URLSafeTimedSerializer, BadSignature as _BadSig
+from itsdangerous import BadSignature as _BadSig
 GIFT_READING_DAYS = 730
 GIFT_LENGTHS = {"30d": "30 days", "1": 1, "3": 3, "6": 6, "12": 12, "forever": None}
 GIFT_DEFAULT = "30d"            # complimentary access for creators: no card, nothing charged
 
 def gift_signer():
-    return URLSafeTimedSerializer(config.SECRET_KEY, salt="wyrd-gift-reading")
+    return sealed.Sealer(config.SECRET_KEY, "wyrd-gift-reading")
 
 def admin_only():
     if not is_admin(): abort(404)
