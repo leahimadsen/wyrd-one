@@ -364,6 +364,7 @@
           <p class="c-det">${esc(x.sign)}${x.decan ? `, ${x.decan} decan` : ""}, ruled by ${esc(x.ruler)}</p>`)).join("")}<p class="c-det">${where}</p></li>`;
       return `<section class="rec-sec">
           <h3>Cards</h3>
+          <div class="rec-deck" data-st="${s.id}"></div>
           ${c ? `<ul class="cands">
               ${deck("Buddhist deck", "sidereal ring", `where it comes from: ${inSign(s.zodiacStart)} – ${inSign(s.zodiacEnd)}`, [{ ...c.buddhist, glyph: t.glyph }])}
               ${deck("Nordic deck", "tropical ring", `where it lands: ${inSign(s.zodiacStart + ay.degrees)} – ${inSign(s.zodiacEnd + ay.degrees)} (${ay.epoch})${c.nordic.length > 1 ? "; the pada crosses a decan line, so both cards" : ""}`, c.nordic)}
@@ -416,12 +417,35 @@
           ${s.source ? `<p class="src">Source: ${esc(s.source)}</p>` : ""}</section>` : ""}`;
     }
 
+    /* the Wyrd deck's own cards for the selected station, drawn by static/deck.js, which loads the first time a record opens */
+    let deckP = null;
+    const needDeck = () => deckP || (deckP = new Promise(res => {
+      if (window.WyrdDeck) return res();
+      if (!document.querySelector('link[href^="/static/deck.css"]')) { const l = document.createElement("link"); l.rel = "stylesheet"; l.href = "/static/deck.css?v=1"; document.head.appendChild(l); }
+      const sc = document.createElement("script"); sc.src = "/static/deck.js?v=1"; sc.onload = res; sc.onerror = res; document.head.appendChild(sc);
+    }).then(() => window.WyrdDeck ? WyrdDeck.ready() : Promise.reject(new Error("The deck didn't load."))));
+    function fillDeck(s) {
+      const host = panel.querySelector(".rec-deck"); if (!host || !s) return;
+      needDeck().then(Dk => {
+        if (state.sel !== s || !host.isConnected) return;
+        host.innerHTML = Dk.stationCards(s.id - 1).map(x => { const c = Dk.card(x.id);
+          return `<button type="button" data-open-card="${x.id}" aria-label="Open the card ${esc(c.title)}"><div class="wd-card">${Dk.svg(x.id, { face: true })}</div>
+            <span>${esc(c.title)}<br><small>${esc(x.why)}${Dk.engraved(x.id) ? "" : " · engraving to come"}</small></span></button>`; }).join("");
+      }).catch(() => { deckP = null; });
+    }
+    panel.addEventListener("click", e => {
+      const b = e.target.closest("[data-open-card]"); if (!b || !window.WyrdDeck) return;
+      const onChart = location.pathname === "/chart";
+      WyrdDeck.open(b.dataset.openCard, { links: [{ href: "/deck", text: "See the whole deck" }, onChart ? { href: "#card", text: "Your own card" } : { href: "/", text: "Draw your own card" }] });
+    });
+
     /* ============ 3. INTERACTION ============ */
     function select(id, o = {}) {
       state.sel = id ? S[(id - 1 + 108) % 108] : null;
       if (o.align && state.sel) { state.rot = (360 - mid(state.sel)) % 360; els.rot.value = Math.round(state.rot); }
       render();
       panel.innerHTML = record(state.sel);
+      fillDeck(state.sel);
       panel.classList.toggle("has-sel", !!state.sel);
       els.nak.value = state.sel ? state.sel.nakshatraIndex : "";
       els.padas.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", !!state.sel && +b.dataset.p === state.sel.pada));

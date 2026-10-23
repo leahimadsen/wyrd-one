@@ -136,7 +136,7 @@ def learn_index(base):
 <ul class="terms">{naks}</ul>
 <h2 id="gates">The 64 gates</h2><ul class="terms">{gates}</ul>
 <h2 id="mandala">The Wyrd Mandala</h2>
-<p>Two zodiacs turning against each other, with the mansions, the padas, a Buddhist and a Nordic deck, and the Asura voids laid on them. <a href="/learn/mandala">Learn to read the Wyrd Mandala</a>, then <a href="/mandala">open it</a>. Or take the free masterclass, <a href="/masterclass">How I Read the Wyrd Mandala</a>.</p>
+<p>Two zodiacs turning against each other, with the mansions, the padas, a Buddhist and a Nordic deck, and the Asura voids laid on them. <a href="/learn/mandala">Learn to read the Wyrd Mandala</a>, then <a href="/mandala">open it</a>. Its cards are <a href="/deck">the Wyrd deck</a>, 108 of them, and your Moon draws yours. Or take the free masterclass, <a href="/masterclass">How I Read the Wyrd Mandala</a>.</p>
 <h2 id="sukuyo">Sukuyō</h2>
 <p>The Japanese art of the lunar mansions: twenty-seven shuku read from the old lunar calendar, and the six relations that say how two people stand to each other. <a href="/learn/sukuyo">Learn Sukuyō and find your shuku</a>.</p>
 <h2>Go further</h2><ul class="terms"><li><a href="/learn/runes">Learn the runes: the 24 runes of the Elder Futhark</a></li>
@@ -255,11 +255,56 @@ def signs_index(base):
 
 
 def sitemap(base):
-    urls = ["/", "/reports", "/letmelightyourpath", "/contact", "/membership", "/today", "/mandala", "/sample", "/learn", "/learn/signs", "/learn/sukuyo", "/learn/mandala", "/masterclass"]
+    urls = ["/", "/reports", "/letmelightyourpath", "/contact", "/membership", "/today", "/mandala", "/sample", "/learn", "/learn/signs", "/learn/sukuyo", "/learn/mandala", "/masterclass", "/deck"]
     urls += [f"/learn/gates/{g}" for g in GATES] + [f"/learn/nakshatras/{s}" for s, _ in NAKS] + [f"/learn/signs/{s}" for s, _ in SIGNS]
     urls += ["/learn/runes"] + [f"/learn/runes/{r[0]}" for r in RUNES] + ["/learn/numbers", "/learn/dharma"] + [f"/learn/dharma/gates/{g}" for g in GATES]
     rows = "".join(f"<url><loc>{e(base + u)}</loc></url>" for u in urls)
     return f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{rows}</urlset>'
+
+
+# ---------------- the Wyrd deck ----------------
+DECK_SCRIPT = """<link rel="stylesheet" href="/static/deck.css?v=1">
+<script src="/static/deck.js?v=1"></script>
+<script>
+(() => {
+  const host = document.getElementById("deckHost"), todo = document.getElementById("deckTodo");
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const FAM = [["b", "The Buddhist deck · where it comes from"], ["n", "The Nordic deck · where it lands"], ["v", "The Asura voids"]];
+  WyrdDeck.ready().then(D => {
+    const all = D.all(), bySign = D.SIGNS.map((_, s) => all.filter(id => D.signOf(id) === s));
+    const done = bySign.map((ids, s) => ids.some(D.engraved) ? s : -1).filter(s => s >= 0);
+    const cardBtn = id => { const c = D.card(id), sub = c.kind === "v" ? `station ${c.numeral}` : c.trump;
+      return `<button type="button" data-card="${id}" aria-label="Open the card ${esc(c.title)}"><div class="wd-card">${D.svg(id, { face: true })}</div><span>${esc(c.title)}<small>${esc(sub)}</small></span></button>`; };
+    host.innerHTML = done.map(s => `<section class="dk-sign"><h2>${D.SIGNS[s]}</h2>${FAM.map(([k, name]) => `<p class="dk-fam">${name}</p>
+      <div class="dk-grid">${bySign[s].filter(id => id[0] === k).map(cardBtn).join("")}</div>`).join("")}</section>`).join("");
+    const rest = D.SIGNS.filter((_, s) => done.indexOf(s) < 0);
+    todo.innerHTML = rest.length ? `<p>Still being engraved: ${rest.join(", ")}. Until a set is done its cards are set as pips of their suit, so every card can already be drawn.</p>` : "";
+    const station = id => { const c = D.card(id); if (c.kind === "v") return c.station + 1; if (c.kind === "b") return c.decan * 3 + 1;
+      const t = c.decan * 10 - (window.WYRD && WYRD.FRAME ? WYRD.FRAME.ayanamsa.degrees : 24.225); return Math.floor((((t % 360) + 360) % 360) / (10 / 3)) % 108 + 1; };
+    host.addEventListener("click", e => { const b = e.target.closest("[data-card]"); if (!b) return;
+      D.open(b.dataset.card, { links: [{ href: `/mandala#s${String(station(b.dataset.card)).padStart(3, "0")}`, text: "Find it in the Mandala" }, { href: "/", text: "Draw your own card" }] }); });
+  }).catch(() => { host.innerHTML = `<p class="err">The deck couldn't load just now. Please try again in a moment.</p>`; });
+})();
+</script>"""
+
+
+def deck(base):
+    body = """<h1>The Wyrd Deck</h1>
+<p class="lede">The Völva's deck of 108 cards, one for every station of the Wyrd Mandala.</p>
+<p>The deck is read off the Mandala's two rings. <b>The Buddhist deck</b> has 36 cards, one for each decan of the sidereal ring: where a thing comes from.
+<b>The Nordic deck</b> has 36, one for each decan of the tropical ring: where it lands. And <b>the Asura voids</b> have 36, the tunnels beneath the mansions,
+one at the fourth, seventh and ninth pada of every sign. Each card carries its decan or its station, its trump and the runes of its sign.</p>
+<p>Everyone has a card. Your Moon draws it: the card of the decan your Moon was born in, read on both rings, and the void it sits over if it sits over one.
+Your card adds your Moon's mansion, its deity and its rune, and the first gates of your Path of Dharma, ready to share.</p>
+<p class="dk-cta"><a class="btn-cast" href="/">Cast your free chart and draw your card</a> <a class="alt" href="/mandala">Open the Wyrd Mandala</a></p>
+<div id="deckHost"><p class="dk-loading">Laying out the deck…</p></div>
+<div id="deckTodo"></div>"""
+    ld = _ld({"@context": "https://schema.org", "@type": "CreativeWork", "name": "The Wyrd Deck", "creator": {"@type": "Person", "name": "The Völva"},
+              "description": "A deck of 108 cards read off the Wyrd Mandala: the Buddhist deck on the sidereal ring, the Nordic deck on the tropical ring, and the 36 Asura voids.",
+              "url": base + "/deck"})
+    return ("The Wyrd Deck: 108 Cards of the Wyrd Mandala · The Wyrd Console",
+            "The Völva's deck of 108 cards: the Buddhist deck on the sidereal ring, the Nordic deck on the tropical ring, and the 36 Asura voids. Draw your own card from your chart.",
+            body, ld)
 
 
 # ---------------- the runes ----------------
