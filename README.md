@@ -156,6 +156,27 @@ To switch the funnel on:
 The sign-up page is linked from Learn, from Learn the Wyrd Mandala and from the Mandala page, and is in the sitemap.
 Test: `WYRD_DEV_NODE_EPH=1 python tests/masterclass_check.py`.
 
+## The Wyrd deck and Your card
+
+The deck has 108 cards read off the Mandala: the Buddhist deck's 36 minors (one per sidereal decan), the
+Nordic deck's 36 (one per tropical decan) and the 36 Asura voids (the 4th, 7th and 9th pada of each sign).
+Each is a 1080 × 1920 story card in your engraved style, drawn in the browser by `static/deck.js`.
+
+- **Your card** (`/chart#card`, and the ❖ button in the chart's tools): the card a person's Moon draws, its
+  Buddhist card first, then where it lands and the void it sits over, if any. It prints their Moon's mansion,
+  deity and rune and the first four gates of the Path of Dharma, never a name or birth details. On a phone
+  "Share your card" opens the share sheet (Instagram stories, messages); everywhere "Save the image" saves a PNG.
+- **The Mandala's record** shows each station's cards; tap one to see it large and save it.
+- **`/deck`** shows the cards engraved so far, sign by sign, and is in the sitemap.
+
+The engravings live in `static/deck/plates.js`, made from the design canvas: export the cards' `.dc.html`
+files to a folder and run `python3 scripts/deck_plates.py <folder> > static/deck/plates.js`. A file named
+`Gemini-B8` is the Buddhist card of Gemini's first decan, `Gemini-N9` the Nordic card of its second,
+`Gemini-V22` the void at station XXII. Until a card is engraved it is set as pips of its suit, so every card
+can already be drawn. The card type (IM Fell English and UnifrakturMaguntia, SIL Open Font License) is served
+from `static/fonts` so a saved image carries it. Air and water's colours are provisional until their first sets.
+Test: `python tests/deck_check.py`.
+
 ## The unlisted 1:1 consultation page
 1. In Stripe, make a Payment Link for the consultation. Under **After payment**, choose
    "Don't show confirmation page" and redirect to

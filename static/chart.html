@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="/static/body.css">
 <link rel="stylesheet" href="/static/dasha.css">
 <link rel="stylesheet" href="/static/mandala/wyrd-mandala.css?v=103">
+<link rel="stylesheet" href="/static/deck.css?v=1">
 <link rel="stylesheet" href="/static/a11y.css">
 <link rel="stylesheet" href="/static/rooms.css">
 <link rel="stylesheet" href="/static/look/wyrd90.css">
@@ -127,6 +128,13 @@
     <h3 class="sec-h" id="coming">What's coming</h3>
     <div id="calHost"></div>
   </section>
+  <section class="land-panel" id="p-card" hidden aria-labelledby="h-card">
+    <h2 id="h-card">Your card</h2>
+    <p class="lede">Which card of the Wyrd deck does my Moon draw?</p>
+    <p class="mand-intro">The Wyrd deck has 108 cards, laid on the Mandala: the Buddhist deck's 36 on the sidereal ring, where things come from; the Nordic deck's 36 on the tropical ring, where they land; and the 36 Asura voids, the tunnels beneath the mansions. Your Moon draws the card of the decan it was born in, read on both rings, and the void it sits over if it sits over one. Share it, or keep it.</p>
+    <div id="cardHost"></div>
+  </section>
+
   <section class="land-panel" id="p-mandala" hidden aria-labelledby="h-mandala">
     <h2 id="h-mandala">The Wyrd Mandala</h2>
     <p class="lede">Where does each of my planets stand among the 108 stations, and what does each mansion hold?</p>
@@ -214,7 +222,8 @@
 <script src="/static/mandala/wyrd-mansions.js?v=103"></script>
 <script src="/static/mandala/wyrd-data.js?v=103"></script>
 <script src="/static/mandala/wyrd-glyphs.js?v=103"></script>
-<script src="/static/mandala/wyrd-mandala.js?v=103"></script>
+<script src="/static/mandala/wyrd-mandala.js?v=104"></script>
+<script src="/static/deck.js?v=1"></script>
 <script src="/static/learn.js"></script>
 <script src="/static/now.js"></script>
 <script src="/static/colour.js"></script>

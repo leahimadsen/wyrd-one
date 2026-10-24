@@ -79,6 +79,8 @@ const LANDS = [
     terms: [], prompt: "The reading together writes your bond out in full: your story at one table, the old match, and the next thirty years." },
   { id: "reading",   name: "The Wyrd Reading",           short: "Reading", mark: "✦", gold: true,
     teaser: "Your story, then fifteen sections that decode it, written for you", terms: [] },
+  { id: "card",      name: "Your card",              short: "Card", mark: "❖", explore: true, teaser: "The card your Moon draws from the Wyrd deck, to keep and to share",
+    terms: ["nakshatra", "pada"] },
   { id: "mandala",   name: "The Wyrd Mandala",       short: "Mandala", mark: "✺", explore: true, teaser: "The 108 stations, a card for each, your planets among them",
     terms: ["nakshatra", "pada", "navamsa"] },
   { id: "armillary", name: "The armillary",          short: "Armillary", mark: "◎", explore: true, teaser: "Your sky as a sphere you can open",
@@ -112,6 +114,7 @@ function drawTools(){
   const html = short => `<a class="ctool" href="/?edit=1" data-pulse="act:edit" ${short ? `aria-label="Edit birth details" title="Edit birth details"` : ""}>✎${short ? "" : " Edit details"}</a>
     <button type="button" class="ctool" data-tool="save" aria-pressed="${sv}" ${short ? `aria-label="${sv ? "Saved" : "Save chart"}" title="${sv ? "Saved" : "Save chart"}"` : ""}>${sv ? "★" : "☆"}${short ? "" : sv ? " Saved" : " Save chart"}</button>
     <button type="button" class="ctool" data-tool="share" ${short ? `aria-label="Copy link" title="Copy link"` : ""}>⤴${short ? "" : " Copy link"}</button>
+    <a class="ctool" href="#card" ${short ? `aria-label="Your card" title="Your card"` : ""}>❖${short ? "" : " Your card"}</a>
     ${short ? "" : `<button type="button" class="ctool" data-install hidden>⬇ Install the app</button>`}`;
   $("tools").innerHTML = html(false);
   $("tabTools").innerHTML = html(true);
@@ -358,6 +361,66 @@ function skyTorus(){
   });
 }
 
+/* ---------- Your card: the card the Moon draws from the Wyrd deck, to keep and to share ----------
+   Drawn here, in the browser, from the chart already on this page: the image carries the Moon's
+   mansion, deity and rune and the Path of Dharma's first gates, never a name or birth details. */
+function cardLand(){
+  const host = $("cardHost");
+  if (!window.WyrdDeck){ host.innerHTML = `<p class="err">Your card couldn't be drawn in this browser.</p>`; return; }
+  host.innerHTML = `<p class="fine">Drawing your card…</p>`;
+  WyrdDeck.ready().then(() => {
+    const P = WyrdDeck.person(C), hand = WyrdDeck.forMoon(C), share = WyrdDeck.canShareFiles();
+    const st = Math.floor(norm(C.sid.Moon) / (10 / 3)) % 108 + 1;
+    let cur = hand[0].id, blob = null, making = null, imgURL = null;
+    const touch = matchMedia("(pointer: coarse)").matches;
+    const note = t => { const n = host.querySelector(".yc-note"); if (n) n.textContent = t; };
+    const draw = () => {
+      const c = WyrdDeck.card(cur), h = hand.find(x => x.id === cur);
+      host.innerHTML = `<div class="yc">
+        <figure class="yc-card"><div class="wd-card">${WyrdDeck.svg(cur, { person: P })}</div></figure>
+        <div class="yc-side">
+          <p class="yc-kicker">Your Moon draws</p>
+          <h3 class="yc-title">${esc(c.title)}</h3>
+          <p class="yc-why">${esc(h.why[0].toUpperCase() + h.why.slice(1))}.</p>
+          ${WyrdDeck.engraved(cur) ? "" : `<p class="fine">This card's engraving is still being cut. Until it's done the card is set as pips of its suit; everything on it is already yours.</p>`}
+          <div class="yc-btns">
+            ${share ? `<button type="button" class="btn-buy" data-yc="share" disabled>Share your card</button>` : ""}
+            <button type="button" class="${share ? "btn-cast" : "btn-buy"}" data-yc="save" disabled>Save the image</button></div>
+          <p class="yc-note" aria-live="polite">Making the image…</p>
+          ${hand.length > 1 ? `<h4 class="yc-h4">Your Moon's cards</h4>
+          <ul class="yc-hand">${hand.map(x => `<li><button type="button" data-card="${x.id}" aria-pressed="${x.id === cur}">
+            <div class="wd-card">${WyrdDeck.svg(x.id, { face: true })}</div><span><b>${esc(WyrdDeck.card(x.id).title)}</b><small>${esc(x.why)}</small></span></button></li>`).join("")}</ul>` : ""}
+          <p class="yc-private">Your card shows your Moon's mansion, its deity and its rune, and the first gates of your Path of Dharma. It never shows your name, your birth date, time or place.${share ? "" : " To post it, save the image and share it from your photos or downloads."}${touch ? " You can also press and hold the card to save it to your photos." : ""}</p>
+          ${unknown ? `<p class="unknown-note">Your birth time is unknown, so your Moon is set for noon${C.moonSpan && C.moonSpan.length > 1 ? ` and may have been in ${esc(C.moonSpan.join(" or "))}` : ""}. Your card may be a different one.</p>` : ""}
+          <p class="fine"><a href="/deck">See the whole deck →</a> · <a href="#mandala/s${String(st).padStart(3, "0")}">Find your Moon's station in the Mandala →</a></p>
+        </div></div>`;
+      blob = null;
+      const mine = cur;
+      making = WyrdDeck.png(cur, { person: P }).then(b => {
+        if (mine !== cur) return b;
+        blob = b; host.querySelectorAll("[data-yc]").forEach(x => { x.disabled = false; }); note("");
+        /* the card becomes the image itself, so pressing and holding it saves it, even in an app's own browser */
+        const fig = host.querySelector(".yc-card .wd-card"), sv = fig && fig.querySelector("svg");
+        if (fig && sv){ if (imgURL) URL.revokeObjectURL(imgURL); imgURL = URL.createObjectURL(b);
+          fig.innerHTML = `<img src="${imgURL}" alt="${esc(sv.getAttribute("aria-label") || "")}" width="1080" height="1920">`; }
+        return b;
+      }).catch(() => { if (mine === cur) note("The image couldn't be made in this browser. You can still screenshot your card."); });
+    };
+    host.addEventListener("click", async e => {
+      const pick = e.target.closest("[data-card]");
+      if (pick && pick.dataset.card !== cur){ cur = pick.dataset.card; draw(); return; }
+      const b = e.target.closest("[data-yc]"); if (!b) return;
+      const name = WyrdDeck.fileName(cur), title = WyrdDeck.card(cur).title;
+      if (Wyrd.pulse) Wyrd.pulse("act", b.dataset.yc === "share" ? "share" : "download");
+      const img = blob || await making; if (!img) return;
+      if (b.dataset.yc === "save"){ WyrdDeck.download(img, name); note("Saved. Post it from your photos or downloads."); return; }
+      const r = await WyrdDeck.share(img, name, `My card in the Wyrd deck: ${title}. Draw yours at wyrdconsole.com`);
+      note(r === "saved" ? "Your browser couldn't open its share sheet, so the image was saved instead." : "");
+    });
+    draw();
+  }).catch(() => { host.innerHTML = `<p class="err">Your card couldn't be drawn just now. Please try again in a moment.</p>`; });
+}
+
 /* ---------- each land, built on first visit ---------- */
 let learn = null, MAND = null;
 const BUILD = {
@@ -367,6 +430,7 @@ const BUILD = {
     if (unknown) $("dashaHost").insertAdjacentHTML("afterbegin", `<p class="unknown-note">The clock is set by the Moon. Without a birth time your Moon could be anywhere in a day's travel, so these dates may be out by months.</p>`); },
   design: designLand,
   runes: () => WyrdRunes.mount($("runesHost"), C, { all: MEMBER }),
+  card: cardLand,
   mandala: () => {
     const pl = Object.fromEntries(BODIES.map(b => [b, C.sid[b]]));
     if (!unknown){ pl.Ascendant = C.ascS; pl.Midheaven = C.mcS; }

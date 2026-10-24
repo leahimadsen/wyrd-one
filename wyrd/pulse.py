@@ -19,7 +19,7 @@ REPO = os.environ.get("GITHUB_REPO", "leahimadsen/wyrd-one")
 BRANCH = os.environ.get("DATA_BRANCH", "wyrd-data")
 FLUSH_EVERY = 600
 
-LANDS = {"map", "learn", "chart", "body", "design", "runes", "dharma", "clock", "calendar", "armillary", "reading", "compare", "sky", "colour", "bench"}
+LANDS = {"map", "learn", "chart", "body", "design", "runes", "dharma", "clock", "calendar", "armillary", "reading", "compare", "sky", "colour", "bench", "mandala", "card"}
 EVENTS = {
     "land": lambda d: d in LANDS,
     "move": lambda d: "-" in d and all(x in LANDS for x in d.split("-", 1)),
