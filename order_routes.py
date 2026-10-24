@@ -20,9 +20,9 @@ FIRST = lambda b, email: ((b or {}).get("name") or "").split(" ")[0] or email.sp
 
 
 def _chart_link(b):
-    """The free chart for a set of birth details, opened straight from a link."""
+    """The free chart for a set of birth details, opened straight from a link (after the #, so never sent to the server)."""
     q = base64.urlsafe_b64encode(json.dumps({k: b[k] for k in A.BIRTH_KEYS if b.get(k)}).encode()).decode().rstrip("=")
-    return f"/chart?b={q}"
+    return f"/chart#b={q}"
 
 
 def _member():
@@ -161,7 +161,7 @@ def hall():
     circle = f"""<section class="hall-sec"><h2>The Inner Circle</h2><p><a class="btn-cast" href="/pro">Open your practice desk</a>
 <span class="muted">{st["proUse"]} of {config.PRO_READINGS_A_MONTH} client readings used this month.</span></p></section>""" if st["pro"] else ""
     plan = f"""<section class="hall-sec"><h2>Your place in the Order</h2>{_plans_html(st)}
-<form method="post" action="/signout" style="margin-top:24px"><button class="alt" type="submit">Sign out</button></form></section>"""
+{A.DATA_LINK}<form method="post" action="/signout" style="margin-top:24px"><button class="alt" type="submit">Sign out</button></form></section>"""
     return A.private("The Hall", f"""<p class="hall-kicker">The Order</p><h1>The Hall</h1>
 <p class="lede">Welcome back, {esc(FIRST(b, email))}. This is your room in the Order: your weather, your letters, your people.</p>
 <p class="muted">Signed in as {esc(email)}</p>{joined}

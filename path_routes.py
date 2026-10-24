@@ -133,7 +133,7 @@ def path_page():
 <button class="btn-cast" type="submit">Send</button></form>
 {past}
 <h2>Your plan</h2>{plans}
-<p><a href="/account">Your account</a></p>"""
+<p><a href="/account">Your account</a> · <a href="/account/data">Your data</a></p>"""
     return A.private(config.PATH_NAME, body)
 
 
@@ -166,6 +166,7 @@ def contact_page():
 <label>Your message <textarea name="body" rows="8" maxlength="{MAX}" required></textarea></label>
 <label class="hp" aria-hidden="true">Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label>
 <button class="btn-cast" type="submit">Send</button></form>
+<p class="muted">Your name, email and message come to me by email and a copy is kept on the site; see <a href="/privacy">Privacy</a>.</p>
 <p class="muted">Looking for something one to one? See <a href="/letmelightyourpath">a lantern for your path</a>: a first consult and the Lightning Path.</p>"""
     return A.page("Contact The Völva · The Wyrd Console", "Write to The Völva about a reading, the Order, or a consult one to one.", body)
 

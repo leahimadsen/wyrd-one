@@ -45,7 +45,32 @@ or IP addresses, and nothing at all from browsers that send Do Not Track or Glob
 - Counts are saved every ten minutes to the **`wyrd-data` branch** of this repository (never `main`, so
   saving never redeploys the site). In Render set `GITHUB_TOKEN`: a fine-grained GitHub token for this
   repository only, with **Contents: read and write**. Without it, counts live in memory until a restart.
-- Mention the anonymous counting in your privacy policy.
+- The privacy policy (`/privacy`) describes the anonymous counting.
+
+## Privacy
+
+`/privacy` is the privacy policy, linked from every footer, the contact form and the sitemap. Its words are in
+`wyrd/privacy.py` and describe what the code actually does: if the site starts keeping something new or sending
+it somewhere new, change the words there and `PRIVACY_UPDATED` in `config.py`.
+- In Render set `PRIVACY_EMAIL` to the address people write to about their data (it's shown publicly; it defaults
+  to support@wyrdconsole.com, never your personal inbox) and `PRIVACY_OPERATOR` to your legal name, and a postal
+  address if you have one for the business. Until it's set the policy names The Völva.
+- **Your data** at `/account/data`: a signed-in member downloads a copy of everything kept under their email
+  (letters, loved ones, clients, readings, messages, the Body Weather chart) or deletes it all at once. Deleting
+  clears the chart from Stripe too, and doesn't touch plans or payments. Anyone without an account writes to
+  `PRIVACY_EMAIL`; to remove birth details from a bought reading, edit that Checkout Session's metadata in Stripe.
+- Anyone can clear what their browser keeps (saved charts, progress, offline copies) from the policy page.
+- **Nothing private travels readable in a link.** Gift-reading, reading-together and sign-in links are encrypted
+  (`wyrd/sealed.py`, keyed from `SECRET_KEY`); links already sent keep working. Share links carry the birth after the
+  `#`, which browsers never send to the server, and the Sukuyō finder posts its dates. Email addresses are filtered
+  out of the logs.
+- **No third parties see visitors.** The fonts are served from `static/fonts`, made by `python tools/fonts.py`;
+  run it again after changing a font or adding kanji to the Sukuyō pages (the privacy test checks the Japanese
+  font covers every character used).
+- Every response carries security headers (no sniffing, no framing by other sites, origin-only referrers,
+  no camera/microphone/location, and HSTS once `BASE_URL` is https). The app never keeps private pages offline.
+
+Test: `WYRD_DEV_NODE_EPH=1 python tests/privacy_check.py`.
 
 ## Odin's Eye and the torus
 - `static/eye.js` + `eye.css` — the map's opening picture: **Odin's Eye**, the world tree seen from above, laid

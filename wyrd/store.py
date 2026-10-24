@@ -11,6 +11,8 @@ Tables, each keyed to the member's or practitioner's email:
   clients    a practitioner's clients: name, birth details, email, notes
   readings   every client reading generated, with a private token for its share link
   messages   what a member of the Lightning Path has written to The Völva between calls
+
+everything() gives a person a copy of their own records and forget() deletes them (/account/data).
 """
 import json, os, secrets, sqlite3, threading, time
 
@@ -215,3 +217,25 @@ def add_message(email, body):
 
 def messages(email, limit=50):
     return _run("SELECT id, body, created FROM messages WHERE email = ? ORDER BY created DESC LIMIT ?", (_clean(email), int(limit)), "all")
+
+
+# ---------------- a person's own records: a copy, and forgetting them ----------------
+def everything(email):
+    """All that is kept under this email, for the copy a person can download from /account/data."""
+    email = _clean(email)
+    rows = lambda sql: _run(sql, (email,), "all")
+    out = {"letters": rows("SELECT week, created FROM letters WHERE email = ? ORDER BY week"),
+           "kin": kin(email), "practice": practice_name(email), "clients": clients(email),
+           "readings": rows("SELECT token, client, name, created, sent_to FROM readings WHERE pro = ? ORDER BY created"),
+           "messages": rows("SELECT body, created FROM messages WHERE email = ? ORDER BY created")}
+    for c in out["clients"]: c.pop("id", None)
+    return out
+
+
+def forget(email):
+    """Delete everything kept under this email: letters, loved ones, the practice, its clients and their
+    reading links, and messages. Returns how many records went."""
+    email = _clean(email)
+    return sum(_run(sql, (email,)) or 0 for sql in (
+        "DELETE FROM letters WHERE email = ?", "DELETE FROM kin WHERE email = ?", "DELETE FROM practice WHERE email = ?",
+        "DELETE FROM clients WHERE pro = ?", "DELETE FROM readings WHERE pro = ?", "DELETE FROM messages WHERE email = ?"))

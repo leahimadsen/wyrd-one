@@ -4,3 +4,4 @@ skyfield>=1.49
 numpy
 tzdata
 psycopg[binary]==3.2.*
+cryptography>=42

@@ -4,7 +4,7 @@
     python scripts/build_places.py        # once: world places index
     python app.py                          # http://localhost:8000
 """
-import html, hmac, json, math, os, re, threading, time
+import html, hmac, json, logging, math, os, re, threading, time
 from collections import defaultdict, deque
 from datetime import date, datetime, timedelta, timezone
 
@@ -20,7 +20,7 @@ from wyrd.transits import transits
 from wyrd.extras import extras
 from wyrd import calendar as wcal
 from wyrd import pulse
-from wyrd import accounts, billing, mailer, pages, weather, store
+from wyrd import accounts, billing, mailer, pages, weather, store, privacy, sealed
 from wyrd import together, together_more, sukuyo
 import atexit
 
@@ -31,6 +31,7 @@ app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Strict"
                   SESSION_COOKIE_SECURE=config.BASE_URL.startswith("https://"),
                   PERMANENT_SESSION_LIFETIME=30 * 86400)     # members stay signed in a month; the admin, 12 hours (is_admin)
 ADMIN_HOURS = 12
+privacy.quiet_logs(app.logger, logging.getLogger("gunicorn.error"))        # no email addresses in the host's logs
 
 # ---------------- ephemeris ----------------
 def _load_ephemeris():
@@ -130,7 +131,7 @@ def consult_offer(slug):
     link = html.escape(config.CONSULTATION_PAYMENT_LINK_URL or "")
     return Response(page.replace("{{PAY_LINK}}", link).replace("{{AUTHOR}}", config.AUTHOR), mimetype="text/html")
 
-PRIVATE_PATHS = ("/c/", "/masterclass/", "/admin", "/gift/", "/together/", "/welcome", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/", "/hall", "/api/hall", "/r/")
+PRIVATE_PATHS = ("/learn/sukuyo/find", "/c/", "/masterclass/", "/admin", "/gift/", "/together/", "/welcome", "/account", "/signin", "/auth/", "/signout", "/pro", "/billing", "/api/subscribe", "/api/account", "/jobs/", "/hall", "/api/hall", "/r/")
 
 @app.after_request
 def private_reading_headers(response):
@@ -139,6 +140,18 @@ def private_reading_headers(response):
         # the admin's own forms need the browser to say they came from this site
         response.headers["Referrer-Policy"] = "same-origin" if request.path.startswith("/admin") else "no-referrer"
         response.headers["X-Robots-Tag"] = "noindex, nofollow"
+    return response
+
+@app.after_request
+def security_headers(response):
+    """On every response: no sniffing, no framing by other sites, no camera, microphone or location,
+    and only this site's address (never a page's, which can carry birth details) told to other sites."""
+    h = response.headers
+    h.setdefault("X-Content-Type-Options", "nosniff")
+    h.setdefault("X-Frame-Options", "SAMEORIGIN")
+    h.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    h.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=(), browsing-topics=()")
+    if config.BASE_URL.startswith("https://"): h.setdefault("Strict-Transport-Security", "max-age=31536000")
     return response
 
 def consultation_session(sid):
@@ -673,7 +686,7 @@ ADMIN_TOGETHER_NOTE = ("Generated in your admin — no payment taken. This page'
 TOGETHER_TOKEN_MAX = 3600          # the whole address has to stay under gunicorn's 4094-character request line
 
 def together_signer():
-    return URLSafeTimedSerializer(config.SECRET_KEY, salt="wyrd-admin-together")
+    return sealed.Sealer(config.SECRET_KEY, "wyrd-admin-together")
 
 def admin_together_form(error="", status=200):
     r = admin_page("admin-together.html", ERROR=html.escape(error))
@@ -880,13 +893,14 @@ def learn_sukuyo():
     from wyrd import sukuyo_learn
     return page(*sukuyo_learn.index_page(config.BASE_URL))
 
-@app.get("/learn/sukuyo/find")
+@app.route("/learn/sukuyo/find", methods=["GET", "POST"])
 def learn_sukuyo_find():
-    """A birth shuku, or two people's Sukuyō relation, from birth dates alone."""
+    """A birth shuku, or two people's Sukuyō relation, from birth dates alone. The form posts, so the dates stay
+    out of the address (and the logs); an old link with ?a= still works."""
     from wyrd import sukuyo_learn
     if limited(20): return private("Wait a minute", "<h1>Wait a minute</h1><p>Too many tries. Try again shortly.</p>", status=429)
     try:
-        r = sukuyo_learn.find_page(EPH, request.args.get("a", ""), request.args.get("b", ""))
+        r = sukuyo_learn.find_page(EPH, request.values.get("a", ""), request.values.get("b", ""))
     except (ValueError, OverflowError):
         r = None
     if not r:
@@ -1258,6 +1272,7 @@ def account_page():
 })();</script>"""
     return private("Your account", f"""<h1>Your account</h1><p class="muted">Signed in as {esc(email)}</p>{joined}
 <h2>Your plan</h2>{plans}{chart}{pro}
+<h2>Your data</h2>{DATA_LINK}
 <form method="post" action="/signout" style="margin-top:40px"><button class="alt" type="submit">Sign out</button></form>""", script=script)
 
 WEEK_LINK = '<h2>This week</h2><p><a href="/hall">Read this week&#39;s Body Weather →</a></p>'
@@ -1276,6 +1291,72 @@ def account_chart():
     try: billing.save_birth(config.STRIPE_SECRET, email, b)
     except stripe_api.StripeError: return jsonify(error="Couldn't save just now."), 502
     return jsonify(ok=True)
+
+# ---------------- privacy: the policy, and a member's own records ----------------
+@app.get("/privacy")
+def privacy_page():
+    return page(*privacy.page(config.AUTHOR, config.PRIVACY_EMAIL, config.PRIVACY_UPDATED, config.PRIVACY_OPERATOR, config.SUBSTACK_URL),
+                script=privacy.CLEAR_SCRIPT)
+
+DATA_LINK = '<p><a href="/account/data">Your data: download a copy or delete it</a> · <a href="/privacy">Privacy</a></p>'
+
+@app.get("/account/data")
+def account_data():
+    email = signed_in()
+    if not email: return redirect("/signin?next=/account/data")
+    kept = store.everything(email) if store.ready() else {}
+    st = account_status(email) or billing._empty()
+    count = lambda k, one, many: (f"{len(kept[k])} {one if len(kept[k]) == 1 else many}") if kept.get(k) else ""
+    rows = [x for x in (count("letters", "Body Weather letter", "Body Weather letters"), count("kin", "chart for a loved one", "charts for loved ones"),
+                        count("clients", "client", "clients"), count("readings", "client reading link", "client reading links"),
+                        count("messages", "message", "messages"), "your practice name" if kept.get("practice") else "",
+                        "the chart you chose for Body Weather (kept at Stripe)" if st.get("birth") else "") if x]
+    held = f'<ul>{"".join(f"<li>{esc(r)}</li>" for r in rows)}</ul>' if rows else "<p>Nothing beyond your email address and your plan.</p>"
+    pro = ("<li>your clients' records and the links to their readings, which stop working: download a copy first if you need it</li>"
+           if kept.get("clients") or kept.get("readings") else "")
+    return private("Your data", f"""<p class="crumbs"><a href="/account">Your account</a> › Your data</p>
+<h1>Your data</h1><p class="muted">Signed in as {esc(email)}</p>
+<h2>What the site keeps for you</h2>{held}
+<p><a class="btn-cast" href="/account/data.json" download>Download a copy</a></p>
+<h2>Delete it</h2>
+<p>This deletes, straight away and for good:</p>
+<ul><li>your past letters, your loved ones' charts and your messages</li>{pro}<li>the chart saved for Body Weather</li></ul>
+<p>It doesn't cancel a plan: <a href="/account">cancel that first</a> if you mean to leave. Payments and receipts stay with Stripe as the law requires;
+to have the birth details removed from a reading you bought, write to <a href="mailto:{esc(config.PRIVACY_EMAIL)}">{esc(config.PRIVACY_EMAIL)}</a>.</p>
+<form class="pg-form" method="post" action="/account/forget">
+<label class="tick"><input type="checkbox" name="sure" value="1" required> I understand this can't be undone</label>
+<button class="alt" type="submit">Delete my data and sign me out</button></form>
+<h2>This browser</h2><p>Charts you saved and your learning progress live only in this browser.</p>{privacy.CLEAR_BUTTON}
+<p class="muted"><a href="/privacy">How the site handles your information</a></p>""", script=privacy.CLEAR_SCRIPT)
+
+@app.get("/account/data.json")
+def account_data_json():
+    email = signed_in()
+    if not email: return redirect("/signin?next=/account/data")
+    st = account_status(email) or billing._empty()
+    out = {"email": email, "exported": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+           "body_weather_chart": st.get("birth"), **(store.everything(email) if store.ready() else {})}
+    r = Response(json.dumps(out, indent=2, ensure_ascii=False), mimetype="application/json")
+    r.headers["Content-Disposition"] = 'attachment; filename="wyrd-console-my-data.json"'
+    return r
+
+@app.post("/account/forget")
+def account_forget():
+    email = signed_in()
+    if not email or not same_origin(): return redirect("/signin?next=/account/data")
+    if request.form.get("sure") != "1": return redirect("/account/data")
+    try:
+        if config.STRIPE_SECRET: billing.forget_birth(config.STRIPE_SECRET, email)
+    except stripe_api.StripeError as e:
+        app.logger.error("forget: stripe: %s", e)
+        return private("Your data", '<h1>Nothing was deleted yet</h1><p>We couldn\'t reach the payment system to clear your saved chart. '
+                                    'Please <a href="/account/data">try again</a> in a moment.</p>', status=502)
+    if store.ready(): store.forget(email)
+    session.pop("email", None)
+    return private("Your data", f"""<h1>Your data is deleted</h1>
+<p class="lede">Your records are gone and you're signed out.</p>
+<p>To clear this browser too:</p>{privacy.CLEAR_BUTTON}
+<p class="muted">Anything else? Write to <a href="mailto:{esc(config.PRIVACY_EMAIL)}">{esc(config.PRIVACY_EMAIL)}</a>.</p>""", script=privacy.CLEAR_SCRIPT)
 
 def weather_for(b, start=None):
     c = cast_for(birth_from(b))
@@ -1317,13 +1398,13 @@ def pro_reading():
         return private("Practice desk", '<h1>Try again</h1><p>We couldn\'t reach the payment system. <a href="/pro">Back</a></p>', status=502)
 
 # ---------------- gifts, from the admin only ----------------
-from itsdangerous import URLSafeTimedSerializer, BadSignature as _BadSig
+from itsdangerous import BadSignature as _BadSig
 GIFT_READING_DAYS = 730
 GIFT_LENGTHS = {"30d": "30 days", "1": 1, "3": 3, "6": 6, "12": 12, "forever": None}
 GIFT_DEFAULT = "30d"            # complimentary access for creators: no card, nothing charged
 
 def gift_signer():
-    return URLSafeTimedSerializer(config.SECRET_KEY, salt="wyrd-gift-reading")
+    return sealed.Sealer(config.SECRET_KEY, "wyrd-gift-reading")
 
 def admin_only():
     if not is_admin(): abort(404)

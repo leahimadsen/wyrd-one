@@ -91,6 +91,14 @@ def save_birth(secret, email, birth):
     forget(email)
 
 
+def forget_birth(secret, email):
+    """Clear the saved chart from every Stripe customer with this email (an empty value removes the key)."""
+    for c in stripe_api.find_customers(secret, email):
+        if (c.get("metadata") or {}).get("wyrd_birth"):
+            stripe_api.update_customer_metadata(secret, c["id"], {"wyrd_birth": ""})
+    forget(email)
+
+
 def month():
     return time.strftime("%Y-%m", time.gmtime())
 
