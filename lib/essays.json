@@ -1,0 +1,8 @@
+{
+  "_note": "The Völva's long essays on The Web of Wyrd, keyed by the nakshatra page they belong to (the page's address after /learn/nakshatras/). Each nakshatra page links to its essay, and Learn lists them all. Add a line here when a new part of The Starry Estates is published.",
+  "NAKSHATRA": {
+    "ashwini": {"title": "Ashwini: The Dawn Horse", "series": "The Starry Estates", "part": 1, "url": "https://thewebofwyrd.substack.com/p/ashwini-the-dawn-horse"},
+    "bharani": {"title": "Bharani: The Portal", "series": "The Starry Estates", "part": 2, "url": "https://thewebofwyrd.substack.com/p/bharani-the-portal"},
+    "krittika": {"title": "Krittika: The Star of Fire", "series": "The Starry Estates", "part": 3, "url": "https://thewebofwyrd.substack.com/p/krittika-the-star-of-fire"}
+  }
+}

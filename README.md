@@ -233,5 +233,10 @@ At `/admin/gifts` give anyone a Membership or Professional plan by email for 30 
 
 `/reports`, `/membership`, `/learn` and a page for every gate, nakshatra and sign are server-rendered with titles, descriptions, share previews and structured data (price, FAQ). `/sitemap.xml` and `/robots.txt` tell Google what to read; private pages send noindex. Add the site to Google Search Console and submit the sitemap.
 
+- **Your essays** (`lib/essays.json`): each nakshatra page links to The Völva's long essay on it, and Learn lists them all. When a new part of *The Starry Estates* is published, add a line there (the key is the page's address after `/learn/nakshatras/`). Link back from each essay to its page, e.g. `https://wyrdconsole.com/learn/nakshatras/krittika`.
+- **One author everywhere**: the learning pages carry Article data naming The Völva as author, with The Web of Wyrd as her page (`_author()` in `wyrd/pages.py`). Add an Instagram or YouTube address to its `sameAs` list when there is one.
+- **The first page** ends with plain links to all 27 mansions and 24 runes (`home_explore()` in `wyrd/pages.py`), so crawlers reach the learning pages from the page everyone lands on.
+- **A shared card** carries a link to the Moon's mansion page (`static/chart.js`).
+
 Tests: `python tests/members_check.py` (accounts, plans, Body Weather, weekly job, search pages; no Stripe calls).
 `python tests/numbers_check.py` (life path, birthday, personal year and the name's numbers, browser against server; needs node). `python tests/karaka_check.py` (the karakas in both zodiacs; needs node). `python tests/together_deeper_check.py` (the thirty years, the sky's appointments, the old match against kuta.js, the bodygraphs, the numbers, the story; needs node). `python tests/together_check.py` (prices, checkout and the reading together). `python tests/gifts_check.py` (granting, expiry and revoking complimentary access; checks no checkout or subscription is ever made).
