@@ -113,6 +113,14 @@ main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
   border: 1px solid rgba(150,130,230,.35); border-radius: 20px; padding: 8px 14px; backdrop-filter: blur(6px); }
 .music[aria-pressed="true"] { border-color: var(--jade); color: var(--celadon); }
 
+/* the first page's quiet way into Learn: every mansion and rune as plain links */
+.explore { width: min(980px, 100% - 32px); margin: 10px auto 0; padding: 26px 0 8px; border-top: 1px solid var(--rule); color: var(--ivory-dim); }
+.explore h2 { font-weight: 400; font-size: 17px; color: var(--celadon); margin: 0 0 6px; }
+.explore h3 { font-weight: 400; font-size: 14.5px; color: var(--gold, #b8924a); margin: 16px 0 6px; letter-spacing: .02em; }
+.ex-links, .ex-more { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0; font-size: 15px; line-height: 1.5; }
+.ex-more { margin-top: 18px; }
+.explore a { color: var(--ivory-dim); text-decoration: none; border-bottom: 1px solid rgba(156,180,166,.25); }
+.explore a:hover, .explore a:focus-visible { color: var(--celadon); border-bottom-color: var(--celadon); }
 .foot { width: min(980px, 100% - 32px); margin: 0 auto; padding: 30px 0 50px; border-top: 1px solid var(--rule); color: var(--ivory-dim); }
 .foot p { margin: 4px 0; }
 

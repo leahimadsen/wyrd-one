@@ -414,7 +414,11 @@ function cardLand(){
       if (Wyrd.pulse) Wyrd.pulse("act", b.dataset.yc === "share" ? "share" : "download");
       const img = blob || await making; if (!img) return;
       if (b.dataset.yc === "save"){ WyrdDeck.download(img, name); note("Saved. Post it from your photos or downloads."); return; }
-      const r = await WyrdDeck.share(img, name, `My card in the Wyrd deck: ${title}. Draw yours at wyrdconsole.com`);
+      /* the link goes to the Moon's mansion page (already printed on the card, so it tells no one anything new),
+         which says what the mansion is and leads to a free chart of one's own */
+      const nakSlug = String(P.nak || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      const link = location.origin + (nakSlug ? `/learn/nakshatras/${nakSlug}` : "/");
+      const r = await WyrdDeck.share(img, name, `My card in the Wyrd deck: ${title}.${P.nak ? ` My Moon is in ${P.nak}.` : ""} Draw yours: ${link}`);
       note(r === "saved" ? "Your browser couldn't open its share sheet, so the image was saved instead." : "");
     });
     draw();

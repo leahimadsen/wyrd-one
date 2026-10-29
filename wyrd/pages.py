@@ -8,6 +8,8 @@ import html, json, os, re
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C = json.load(open(os.path.join(HERE, "lib", "corpus.json"), encoding="utf-8"))
+ESSAYS = json.load(open(os.path.join(HERE, "lib", "essays.json"), encoding="utf-8"))["NAKSHATRA"]   # the long essays, by page
+SUBSTACK = os.environ.get("SUBSTACK_URL", "https://thewebofwyrd.substack.com").strip().rstrip("/")
 e = html.escape
 
 
@@ -36,6 +38,30 @@ def _ld(obj):
 def _crumbs(base, trail):
     items = [{"@type": "ListItem", "position": i + 1, "name": n, "item": base + u} for i, (n, u) in enumerate(trail)]
     return _ld({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items})
+
+
+# who wrote the pages, told to search engines the same way everywhere, so the site and The Web of Wyrd read as one author
+def _author():
+    return {"@type": "Person", "name": "The Völva", "url": SUBSTACK, "sameAs": [SUBSTACK]}
+
+
+def _publisher(base):
+    return {"@type": "Organization", "name": "The Wyrd Console", "url": base + "/", "logo": base + "/static/icons/icon-512.png?v=2"}
+
+
+def _article(base, path, headline, desc):
+    return _ld({"@context": "https://schema.org", "@type": "Article", "headline": headline[:110], "description": desc[:300],
+                "author": _author(), "publisher": _publisher(base), "mainEntityOfPage": base + path, "inLanguage": "en",
+                "image": base + "/static/look/share.jpg"})
+
+
+def _essay(s, name):
+    """The Völva's long essay on a mansion, where there is one (lib/essays.json)."""
+    x = ESSAYS.get(s)
+    if not x: return ""
+    part = f'the {ORD27[x["part"] - 1]} part of <i>{e(x["series"])}</i>' if x.get("part") else f'from <i>{e(x["series"])}</i>'
+    return (f'<h2>The full essay</h2><p>The Völva\'s long essay on {e(name)} is <a href="{e(x["url"])}">{e(x["title"])}</a>, '
+            f'{part}, on The Web of Wyrd.</p>')
 
 
 PRICE = "$44"      # the one-off reading's price; app.py sets it from config.PRICE_CENTS
@@ -124,6 +150,9 @@ def learn_index(base):
     from .zodiac import Z
     signs = "".join(f'<li><a href="/learn/signs/{s}">{Z["SIGNS"][i]["glyph"]}︎ {e(C["SIGN_FRAME"][i][0])}</a> '
                     f'<span class="muted">· {e(Z["SIGNS"][i]["skt"])}</span></li>' for s, i in SIGNS)
+    long = [x for s, _ in NAKS if (x := ESSAYS.get(s))]
+    essays = (f'<p>The Völva\'s long essays on the mansions, <i>{e(long[0]["series"])}</i>, appear on The Web of Wyrd: '
+              + ", ".join(f'<a href="{e(x["url"])}">{e(x["title"])}</a>' for x in long) + ".</p>") if long else ""
     body = f"""<h1>Learn astrology with the Wyrd Console</h1>
 <p class="lede">The building blocks of your birth chart: the twelve signs, the twenty-seven nakshatras, the sixty-four gates and the twenty-four runes, each in The Völva's words.</p>
 <div class="cta"><p><b>New to charts?</b> The quickest way in is your own: cast it, then walk it in short steps, one ring at a time.</p>
@@ -134,6 +163,7 @@ def learn_index(base):
 <h2 id="nakshatras">The 27 nakshatras (lunar mansions)</h2>
 <p>The oldest map of the sky in Jyotish: twenty-seven mansions of 13°20′ that the Moon passes through, one a day. Each has a ruling planet, a deity, a power of its own, and a part of the body. Each page reads one in full: what it's about, what it's good for, where it goes wrong, and its question.</p>
 <ul class="terms">{naks}</ul>
+{essays}
 <h2 id="gates">The 64 gates</h2><ul class="terms">{gates}</ul>
 <h2 id="mandala">The Wyrd Mandala</h2>
 <p>Two zodiacs turning against each other, with the mansions, the padas, a Buddhist and a Nordic deck, and the Asura voids laid on them. <a href="/learn/mandala">Learn to read the Wyrd Mandala</a>, then <a href="/mandala">open it</a>. Its cards are <a href="/deck">the Wyrd deck</a>, 108 of them, and your Moon draws yours. Or take the free masterclass, <a href="/masterclass">How I Read the Wyrd Mandala</a>.</p>
@@ -161,9 +191,10 @@ def gate(base, g):
 <h2>A question to carry</h2><p><i>{e(first(r.get("a")))}</i></p>
 <p class="muted">The full passage for this gate, with its shadow and how it breaks, is in the paid reading when the gate is in your chart.</p>
 <p><a href="/learn/gates/{prev_g}">← Gate {prev_g}</a> · <a href="/learn/gates/{next_g}">Gate {next_g} →</a></p>{_cta()}"""
-    return (f"Gate {g} {name} Meaning · Human Design & Astrology · The Wyrd Console",
-            f"Gate {g}, {name}: {first(r.get('e'))}"[:300],
-            body, _crumbs(base, [("Learn", "/learn"), (f"Gate {g}", f"/learn/gates/{g}")]))
+    desc = f"Gate {g}, {name}: {first(r.get('e'))}"[:300]
+    return (f"Gate {g} {name} Meaning · Human Design & Astrology · The Wyrd Console", desc, body,
+            _crumbs(base, [("Learn", "/learn"), (f"Gate {g}", f"/learn/gates/{g}")])
+            + _article(base, f"/learn/gates/{g}", f"Gate {g}: {name}", desc))
 
 
 ORD27 = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth",
@@ -235,11 +266,12 @@ def nakshatra(base, s):
 
 <h2>Its question</h2>
 <p class="rd-ask"><i>{e(g[10])}</i></p>
-
+{_essay(s, n[0])}
 <p><a href="/learn/nakshatras/{slug(names[i - 1])}">← {e(names[i - 1])}</a> · <a href="/learn/nakshatras/{slug(names[(i + 1) % 27])}">{e(names[(i + 1) % 27])} →</a></p>{_cta()}"""
-    return (f"{n[0]} Nakshatra: Meaning, Ruler, Deity, Padas · The Wyrd Console",
-            f"{n[0]} nakshatra in Vedic astrology: ruled by {n[1]}, deity {n[2]}. {n[6]} What it's good for, where it goes wrong, its padas and its question."[:300],
-            body, _crumbs(base, [("Learn", "/learn"), (n[0], f"/learn/nakshatras/{s}")]))
+    desc = f"{n[0]} nakshatra in Vedic astrology: ruled by {n[1]}, deity {n[2]}. {n[6]} What it's good for, where it goes wrong, its padas and its question."[:300]
+    return (f"{n[0]} Nakshatra: Meaning, Ruler, Deity, Padas · The Wyrd Console", desc, body,
+            _crumbs(base, [("Learn", "/learn"), (n[0], f"/learn/nakshatras/{s}")])
+            + _article(base, f"/learn/nakshatras/{s}", f"{n[0]} Nakshatra: Meaning, Ruler, Deity and Padas", desc))
 
 
 def sign(base, s):
@@ -299,7 +331,7 @@ Your card adds your Moon's mansion, its deity and its rune, and the first gates 
 <p class="dk-cta"><a class="btn-cast" href="/">Cast your free chart and draw your card</a> <a class="alt" href="/mandala">Open the Wyrd Mandala</a></p>
 <div id="deckHost"><p class="dk-loading">Laying out the deck…</p></div>
 <div id="deckTodo"></div>"""
-    ld = _ld({"@context": "https://schema.org", "@type": "CreativeWork", "name": "The Wyrd Deck", "creator": {"@type": "Person", "name": "The Völva"},
+    ld = _ld({"@context": "https://schema.org", "@type": "CreativeWork", "name": "The Wyrd Deck", "creator": _author(),
               "description": "A deck of 108 cards read off the Wyrd Mandala: the Buddhist deck on the sidereal ring, the Nordic deck on the tropical ring, and the 36 Asura voids.",
               "url": base + "/deck"})
     return ("The Wyrd Deck: 108 Cards of the Wyrd Mandala · The Wyrd Console",
@@ -361,9 +393,24 @@ def rune(base, s):
 {f"<h2>Gates that run through {e(name)}</h2><p>{gl}</p>" if gates else ""}
 <p class="muted">Where {e(name)} falls in your chart depends on your rising sign. Cast your chart to see whether it is lit, and buy the reading to see the years it wakes.</p>
 <p><a href="/learn/runes/{prev[0]}">← {prev[1]} {e(prev[2])}</a> · <a href="/learn/runes/{nxt[0]}">{nxt[1]} {e(nxt[2])} →</a></p>{_cta()}"""
-    return (f"{name} Rune Meaning ({glyph}) · Elder Futhark · The Wyrd Console",
-            f"The {name} rune {glyph}: {R['means']} Lit well: {R['light']} Its call: {R['call']}",
-            body, _crumbs(base, [("Learn", "/learn"), ("Runes", "/learn/runes"), (name, f"/learn/runes/{s}")]))
+    desc = f"The {name} rune {glyph}: {R['means']} Lit well: {R['light']} Its call: {R['call']}"
+    return (f"{name} Rune Meaning ({glyph}) · Elder Futhark · The Wyrd Console", desc, body,
+            _crumbs(base, [("Learn", "/learn"), ("Runes", "/learn/runes"), (name, f"/learn/runes/{s}")])
+            + _article(base, f"/learn/runes/{s}", f"The {name} Rune: Meaning in the Elder Futhark", desc))
+
+
+# ---------------- the first page's way into Learn ----------------
+def home_explore():
+    """Plain links from the first page to every mansion and rune, so search engines (and people who scroll)
+    find the learning pages from the page everyone lands on."""
+    naks = "".join(f'<a href="/learn/nakshatras/{s}">{e(C["NAKSHATRA"][i][0])}</a>' for s, i in NAKS)
+    runes = "".join(f'<a href="/learn/runes/{r[0]}"><span aria-hidden="true">{r[1]}</span> {e(r[2])}</a>' for r in RUNES)
+    return f"""<section class="explore" aria-labelledby="exH">
+  <h2 id="exH">Learn the building blocks</h2>
+  <h3>The twenty-seven lunar mansions</h3><p class="ex-links">{naks}</p>
+  <h3>The twenty-four runes of the Elder Futhark</h3><p class="ex-links">{runes}</p>
+  <p class="ex-more"><a href="/learn/signs">The twelve signs</a> <a href="/learn#gates">The sixty-four gates</a> <a href="/learn/dharma">The Dharma Design</a> <a href="/learn/numbers">The numbers</a> <a href="/deck">The Wyrd deck</a> <a href="/learn">Everything to learn</a></p>
+</section>"""
 
 
 # ---------------- the Dharma Design ----------------
@@ -426,9 +473,10 @@ def dharma_gate(base, g):
 <ul>{"".join(f"<li>{e(x)}</li>" for x in _dharma_arcs(g))}</ul>
 <p class="muted">At birth this gate sits at {e(r["h"])}. See <a href="/learn/gates/{g}">Gate {g} in the birth design</a>.</p>
 <p><a href="/learn/dharma/gates/{prev_g}">← Gate {prev_g} of dharma</a> · <a href="/learn/dharma/gates/{next_g}">Gate {next_g} of dharma →</a></p>{_cta()}"""
-    return (f"Gate {g} of Dharma: {name} · Dharma Design · The Wyrd Console",
-            f"Gate {g}, {name}, in the Dharma Design: {first(r.get('e'))}"[:300],
-            body, _crumbs(base, [("Learn", "/learn"), ("Dharma Design", "/learn/dharma"), (f"Gate {g}", f"/learn/dharma/gates/{g}")]))
+    desc = f"Gate {g}, {name}, in the Dharma Design: {first(r.get('e'))}"[:300]
+    return (f"Gate {g} of Dharma: {name} · Dharma Design · The Wyrd Console", desc, body,
+            _crumbs(base, [("Learn", "/learn"), ("Dharma Design", "/learn/dharma"), (f"Gate {g}", f"/learn/dharma/gates/{g}")])
+            + _article(base, f"/learn/dharma/gates/{g}", f"Gate {g} of Dharma: {name}", desc))
 
 
 # ---------------- the numbers ----------------
