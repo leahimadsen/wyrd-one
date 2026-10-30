@@ -5,7 +5,8 @@
     python3 scripts/deck_art/build.py --sheet DIR     also a contact sheet of each sign, for checking by eye
 
 Each sign's nine cards are drawn in scripts/deck_art/<sign>.py (Aries and Taurus were engraved on
-the design canvas and come from scripts/deck_plates.py). A plate is written to
+the design canvas and come from scripts/deck_plates.py), and the 24 trumps of the zodiac in
+trumps_buddhist.py and trumps_nordic.py. A plate is written to
 static/deck/plates/<card>.json as { label, svg }, with the suit's colours written onto every shape
 and every id marked "@@" so static/deck.js can make it unique on the page."""
 import importlib, json, os, re, sys
@@ -16,7 +17,7 @@ import lib
 from deck_plates import rules, resolve, prefix_ids
 
 OUT = os.path.join(ROOT, "static", "deck", "plates")
-SIGN_FILES = ["gemini", "cancer", "leo", "virgo", "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"]
+SIGN_FILES = ["gemini", "cancer", "leo", "virgo", "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces", "trumps_buddhist", "trumps_nordic"]
 
 
 def finish(plate):

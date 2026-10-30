@@ -422,7 +422,7 @@
     const needDeck = () => deckP || (deckP = new Promise(res => {
       if (window.WyrdDeck) return res();
       if (!document.querySelector('link[href^="/static/deck.css"]')) { const l = document.createElement("link"); l.rel = "stylesheet"; l.href = "/static/deck.css?v=1"; document.head.appendChild(l); }
-      const sc = document.createElement("script"); sc.src = "/static/deck.js?v=2"; sc.onload = res; sc.onerror = res; document.head.appendChild(sc);
+      const sc = document.createElement("script"); sc.src = "/static/deck.js?v=3"; sc.onload = res; sc.onerror = res; document.head.appendChild(sc);
     }).then(() => window.WyrdDeck ? WyrdDeck.ready() : Promise.reject(new Error("The deck didn't load."))));
     function fillDeck(s) {
       const host = panel.querySelector(".rec-deck"); if (!host || !s) return;

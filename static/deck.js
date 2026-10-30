@@ -6,7 +6,10 @@
      ("where it comes from");
    - the Nordic deck's 36 minors, one per decan of the tropical ring
      ("where it lands");
-   - the 36 Asura voids, the fourth, seventh and ninth pada of each sign.
+   - the 36 Asura voids, the fourth, seventh and ninth pada of each sign;
+   and beside the 108, the deck's crown: the 24 trumps of the zodiac, each
+   sign's Buddhist trump on the sidereal ring and its Nordic trump on the
+   tropical ring (ids tb00 - tb11 and tn00 - tn11, Aries to Pisces).
    Each card is a 1080 x 1920 story card in The Völva's engraved style: her
    paper, her knotwork, a plate, the card's name and its three facts. A
    person's card adds their Moon (its mansion, deity and rune) and the
@@ -27,6 +30,7 @@
    - WyrdDeck.png(id, { person, face }): Promise of a PNG Blob
    - WyrdDeck.share(blob, name, text): the share sheet, else a download
    - WyrdDeck.engraved(id): true once the card's own engraving has loaded
+   - WyrdDeck.all(): the 108; WyrdDeck.trumps(): the 24 trumps
    ============================================================ */
 (() => {
 const W = 1080, STORY_H = 1920, PAD_X = 96, TOP = 84, BOTTOM = 88;
@@ -128,7 +132,7 @@ function ready(){
   return readyP;
 }
 /* the engraved plates, one small file a card, fetched the first time a card is drawn */
-const PLATES_V = "2", plates = {}, platesP = {};
+const PLATES_V = "3", plates = {}, platesP = {};
 function need(ids){
   return ready().then(() => Promise.all([].concat(ids || []).filter(valid).map(id => platesP[id] || (platesP[id] =
     fetch(`/static/deck/plates/${id}.json?v=${PLATES_V}`).then(r => { if (r.ok === false) throw new Error(r.status); return r.json(); })
@@ -154,13 +158,14 @@ function padaList(ids){
 
 /* ---------- a card's words ---------- */
 const cache = {};
-const valid = id => { const m = /^([bnv])(\d+)$/.exec(id || ""); if (!m) return false; const k = +m[2];
+const valid = id => { const t = /^t([bn])(\d\d)$/.exec(id || ""); if (t) return +t[2] < 12;
+  const m = /^([bnv])(\d+)$/.exec(id || ""); if (!m) return false; const k = +m[2];
   return m[1] === "v" ? k >= 1 && k <= 108 && [3, 6, 8].includes((k - 1) % 9) : k >= 0 && k < 36; };
 function card(id){
   if (cache[id]) return cache[id];
   if (!valid(id)) return null;
-  const kind = id[0], k = parseInt(id.slice(1), 10);
-  const c = kind === "v" ? voidCard(k - 1) : minorCard(kind, k);
+  const kind = id[0], k = parseInt(id.slice(kind === "t" ? 2 : 1), 10);
+  const c = kind === "t" ? trumpCard(id[1], k) : kind === "v" ? voidCard(k - 1) : minorCard(kind, k);
   const plate = plates[id];
   if (plate){ c.engraved = true; c.plate = plate; c.label = plate.label; if (plate.words) applyWords(c, plate.words); }
   return (cache[id] = c);
@@ -203,6 +208,31 @@ function minorCard(kind, k){
     numeral: ROMAN(mp.n), title: deck.minor, trump: deck.trump, deck: kind === "b" ? "buddhist" : "nordic",
     cols: [col1, col2, col3], label: `${deck.minor}, ${kind === "b" ? "the Buddhist deck" : "the Nordic deck"}` };
 }
+/* the trumps of the zodiac: numbered as the Golden Dawn numbers them, whose sign attributions the deck follows */
+const TRUMP_NO = [4, 5, 6, 7, 8, 9, 11, 13, 14, 15, 17, 18];
+const SIGN_RULER = ["Mars", "Venus", "Mercury", "the Moon", "the Sun", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Saturn", "Jupiter"];
+const GOLD = "#b38a36";
+function trumpCard(kind, s){
+  const d0 = M.decans[3 * s], deck = kind === "b" ? d0.buddhist : d0.nordic, fam = ELEMENT[s % 4];
+  const pal = { ...PAL[fam], ring: GOLD, plateRing: GOLD }, L = lineKit(pal), frameName = kind === "b" ? "sidereal" : "tropical";
+  const a = 30 * s, b = a + 30, minors = [0, 1, 2].map(j => minorParts((kind === "b" ? M.decans[3 * s + j].buddhist : M.decans[3 * s + j].nordic).minor));
+  const col1 = { label: "its sign", lines: [L.value(SIGNS[s]), L.sub(`ruled by ${SIGN_RULER[s]}`), L.sub(`${a}° to ${b}° ${frameName}`)] };
+  if (kind === "b"){ for (const [p, x] of EX_SID) if (x >= a && x < b) col1.lines.push(L.accent(`${p === "Sun" || p === "Moon" ? "the " : ""}${p} exalted at ${x % 30}°`)); }
+  else for (const [t, x] of EX_TROP) if (x >= a && x < b){ const long = `${t} stands at ${x % 30}°`; col1.lines.push(L.accent(width(long, "fell", 21, true) <= COL_W ? long : `${t} at ${x % 30}°`)); }
+  const col2 = { label: "its minors", lines: [L.value(`${minors.map(m => m.n).join(" · ")} of ${minors[0].suit}`), L.sub([RUNES[2 * s], RUNES[2 * s + 1]].join(" · "))] };
+  let col3;
+  if (kind === "b"){
+    const ids = [...Array(9).keys()].map(j => 9 * s + j), naks = [...new Set(ids.map(i => M.padas[i].nak))].join(" · ");
+    col3 = { label: "its stations", lines: [L.value(`${ROMAN(ids[0] + 1)} – ${ROMAN(ids[8] + 1)}`), L.sub(naks), s === 0 ? L.accent("the Fool stands at its gate") : voidsLine(ids, L)].filter(Boolean) };
+  } else {
+    const ids = stationsBetween(a - AY(), b - AY()), naks = [...new Set(ids.map(i => M.padas[i].nak))].join(" · ");
+    const crosses = ids.indexOf(107) >= 0 && ids.indexOf(0) > ids.indexOf(107);
+    col3 = { label: "it lands on", lines: [L.value(`${ROMAN(ids[0] + 1)} – ${ROMAN(ids[ids.length - 1] + 1)}`), L.sub(`${naks}, in 2026`), crosses ? L.accent("it crosses the Fool's gate") : voidsLine(ids, L)].filter(Boolean) };
+  }
+  return { id: `t${kind}${pad2(s)}`, kind: "t", fam, pal, sign: s, n: 1, suit: minors[0].suit, numeral: ROMAN(TRUMP_NO[s]), title: deck.trump, trump: deck.trump,
+    deck: kind === "b" ? "buddhist" : "nordic", tagline: `the trump of ${SIGNS[s]}`, cols: [col1, col2, col3],
+    label: `${deck.trump}, the trump of ${SIGNS[s]} in the ${kind === "b" ? "Buddhist" : "Nordic"} deck` };
+}
 function voidCard(i){
   const s = station(i), pal = PAL.void, L = lineKit(pal), mid = (i + .5) * 10 / 3;
   const b = M.decans[decanAt(mid)].buddhist.minor, n = M.decans[decanAt(mid + AY())].nordic.minor;
@@ -242,6 +272,8 @@ function forMoon(C){
   const out = [{ id: "b" + pad2(decanAt(sid)), why: "where your Moon comes from: its decan on the sidereal ring" },
                { id: "n" + pad2(decanAt(trop)), why: "where your Moon lands: its decan on the tropical ring" }];
   if (M.padas[i].void) out.push({ id: "v" + pad3(i + 1), why: `the Asura void your Moon sits over, at station ${ROMAN(i + 1)}` });
+  out.push({ id: "tb" + pad2(Math.floor(norm(sid) / 30)), why: `the trump of your Moon's sign on the sidereal ring` },
+           { id: "tn" + pad2(Math.floor(norm(trop) / 30)), why: `the trump of your Moon's sign on the tropical ring` });
   return out;
 }
 /* the cards at one of the Mandala's 108 stations (0-based): its Buddhist card, the Nordic card(s) where it lands, and its void */
@@ -251,6 +283,8 @@ function stationCards(i){
   out.push({ id: "n" + pad2(n0), why: "where it lands" });
   if (n1 !== n0) out.push({ id: "n" + pad2(n1), why: "where it lands" });
   if (M.padas[i].void) out.push({ id: "v" + pad3(i + 1), why: "its Asura void" });
+  out.push({ id: "tb" + pad2(Math.floor(i / 9)), why: "the trump of its sign" });
+  for (const t of [...new Set([n0, n1].map(n => Math.floor(n / 3)))]) out.push({ id: "tn" + pad2(t), why: "the trump of the sign where it lands" });
   return out;
 }
 function person(C){
@@ -368,7 +402,7 @@ function blocks(c, person, face){
     const t = { t: c.title, f: "frak", size, lh: size <= 88 ? 1.06 : 1.04, color: p.title };
     const deckH = MET.fell.lh * 27;
     out.push({ h: box(t) + 6 + deckH, draw: top => {
-      const by = top + box(t) + 6 + MET.fell.asc * 27, a = `the ${c.deck} deck · `, b = c.deck === "buddhist" ? "where it comes from" : "where it lands";
+      const by = top + box(t) + 6 + MET.fell.asc * 27, a = `the ${c.deck} deck · `, b = c.tagline || (c.deck === "buddhist" ? "where it comes from" : "where it lands");
       const wa = width(a, "sc", 25, false, 5), wb = width(b, "fell", 27, true), x0 = W / 2 - (wa + wb) / 2;
       return textEl(t, W / 2, top) + `<text x="${x0.toFixed(1)}" y="${by.toFixed(1)}" text-anchor="start"><tspan font-family="${FAM.sc}" font-size="25" letter-spacing="5" fill="${p.accent}">${esc(a)}</tspan><tspan font-family="${FAM.fell}" font-size="27" font-style="italic" fill="${p.text2}">${esc(b)}</tspan></text>`;
     } });
@@ -437,8 +471,9 @@ function geometry(c, person, face){
   if (face){ const g = c.kind === "v" ? 28 : 45, H = Math.round(TOP + sum + g * (bl.length - 1) + BOTTOM + 30); return { bl, H, g }; }
   return { bl, H: STORY_H, g: (STORY_H - TOP - BOTTOM - sum) / (bl.length - 1) };
 }
-function frame(p, H){
-  return `<rect x="36.5" y="36.5" width="1007" height="${H - 73}" rx="19.5" fill="none" stroke="${p.line}" stroke-width="5"/>
+function frame(p, H, gilt = false){
+  return (gilt ? `<rect x="24.5" y="24.5" width="1031" height="${H - 49}" rx="26" fill="none" stroke="${GOLD}" stroke-width="5"/><rect x="30.5" y="30.5" width="1019" height="${H - 61}" rx="23" fill="none" stroke="${p.line}" stroke-width="1.2"/>` : "")
+    + `<rect x="36.5" y="36.5" width="1007" height="${H - 73}" rx="19.5" fill="none" stroke="${p.line}" stroke-width="5"/>
     <rect x="46.5" y="46.5" width="987" height="${H - 93}" rx="9.5" fill="none" stroke="${p.inner}" stroke-width="15"/>
     <rect x="55.5" y="55.5" width="969" height="${H - 111}" rx="1" fill="none" stroke="${p.line}" stroke-width="3"/>
     <rect x="61" y="61" width="958" height="${H - 122}" fill="none" stroke="${p.ring}" stroke-width="8"/>`;
@@ -460,7 +495,7 @@ function svg(id, { person = null, face = false, bg = true, fonts = "", title = "
   for (const b of bl){ body += b.draw(y); y += b.h + g; }
   const label = title || (person ? `${c.label}. The Moon in ${person.nak}, its deity ${person.deity}, its rune ${person.rune} in house ${ROMAN(person.house)}. ${person.caption}.` : c.label);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(label)}">${fonts ? `<style>${fonts}</style>` : ""}`
-    + (bg ? background(u, p, H, typeof bg === "object" ? bg : IMAGES) : "") + frame(p, H) + body.replace(/@@/g, u) + `</svg>`;
+    + (bg ? background(u, p, H, typeof bg === "object" ? bg : IMAGES) : "") + frame(p, H, c.kind === "t") + body.replace(/@@/g, u) + `</svg>`;
 }
 
 /* ---------- the card as an image ---------- */
@@ -548,9 +583,10 @@ function open(id, { person = null, links = [] } = {}){
 }
 
 /* the card as the rules alone would set it, before any approved words: used to check the rules against the engraved cards */
-const rules = id => valid(id) ? (id[0] === "v" ? voidCard(parseInt(id.slice(1), 10) - 1) : minorCard(id[0], parseInt(id.slice(1), 10))) : null;
+const rules = id => !valid(id) ? null : id[0] === "t" ? trumpCard(id[1], parseInt(id.slice(2), 10)) : id[0] === "v" ? voidCard(parseInt(id.slice(1), 10) - 1) : minorCard(id[0], parseInt(id.slice(1), 10));
 const api = { ready, need, card, rules, valid, forMoon, stationCards, person, svg, png, share, download, fileName, canShareFiles, open, close: closeLB, engraved: id => !!plates[id],
   all: () => [...Array(36).keys()].flatMap(k => ["b" + pad2(k), "n" + pad2(k)]).concat([...Array(108).keys()].filter(i => i % 9 === 3 || i % 9 === 6 || i % 9 === 8).map(i => "v" + pad3(i + 1))),
+  trumps: () => ["b", "n"].flatMap(k => [...Array(12).keys()].map(s => `t${k}${pad2(s)}`)),
   signOf: id => card(id).sign, SIGNS };
 window.WyrdDeck = api;
 })();

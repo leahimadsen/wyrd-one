@@ -296,25 +296,27 @@ def sitemap(base):
 
 # ---------------- the Wyrd deck ----------------
 DECK_SCRIPT = """<link rel="stylesheet" href="/static/deck.css?v=1">
-<script src="/static/deck.js?v=2"></script>
+<script src="/static/deck.js?v=3"></script>
 <script>
 (() => {
   const host = document.getElementById("deckHost");
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const FAM = [["b", "The Buddhist deck · where it comes from"], ["n", "The Nordic deck · where it lands"], ["v", "The Asura voids"]];
+  const FAM = [["t", "The trumps of the sign"], ["b", "The Buddhist deck · where it comes from"], ["n", "The Nordic deck · where it lands"], ["v", "The Asura voids"]];
   WyrdDeck.ready().then(D => {
-    const all = D.all(), bySign = D.SIGNS.map((_, s) => all.filter(id => D.signOf(id) === s));
-    const cardBtn = id => { const c = D.card(id), sub = c.kind === "v" ? `station ${c.numeral}` : c.trump;
+    const all = D.all(), bySign = D.SIGNS.map((_, s) => ["tb", "tn"].map(k => k + String(s).padStart(2, "0")).concat(all.filter(id => D.signOf(id) === s)));
+    const cardBtn = id => { const c = D.card(id), sub = c.kind === "v" ? `station ${c.numeral}` : c.kind === "t" ? `the ${c.deck === "buddhist" ? "Buddhist" : "Nordic"} trump · ${c.numeral}` : c.trump;
       return `<button type="button" data-card="${id}" aria-label="Open the card ${esc(c.title)}"><div class="wd-card">${D.svg(id, { face: true })}</div><span>${esc(c.title)}<small>${esc(sub)}</small></span></button>`; };
     /* the twelve signs are laid out at once, and each sign's nine plates are fetched and drawn in turn */
     host.innerHTML = D.SIGNS.map((name, s) => `<section class="dk-sign" data-sign="${s}"><h2>${name}</h2><p class="dk-loading">Laying out ${name}…</p></section>`).join("");
     bySign.reduce((p, ids, s) => p.then(() => D.need(ids)).then(() => {
       const sec = host.querySelector(`[data-sign="${s}"]`);
       sec.innerHTML = `<h2>${D.SIGNS[s]}</h2>` + FAM.map(([k, name]) => `<p class="dk-fam">${name}</p>
-        <div class="dk-grid">${ids.filter(id => id[0] === k).map(cardBtn).join("")}</div>`).join("");
+        <div class="dk-grid${k === "t" ? " dk-trumps" : ""}">${ids.filter(id => id[0] === k).map(cardBtn).join("")}</div>`).join("");
     }), Promise.resolve());
+    const AYD = window.WYRD && WYRD.FRAME ? WYRD.FRAME.ayanamsa.degrees : 24.225;
     const station = id => { const c = D.card(id); if (c.kind === "v") return c.station + 1; if (c.kind === "b") return c.decan * 3 + 1;
-      const t = c.decan * 10 - (window.WYRD && WYRD.FRAME ? WYRD.FRAME.ayanamsa.degrees : 24.225); return Math.floor((((t % 360) + 360) % 360) / (10 / 3)) % 108 + 1; };
+      if (c.kind === "t" && c.deck === "buddhist") return c.sign * 9 + 1;
+      const t = (c.kind === "t" ? c.sign * 30 : c.decan * 10) - AYD; return Math.floor((((t % 360) + 360) % 360) / (10 / 3)) % 108 + 1; };
     host.addEventListener("click", e => { const b = e.target.closest("[data-card]"); if (!b) return;
       D.open(b.dataset.card, { links: [{ href: `/mandala#s${String(station(b.dataset.card)).padStart(3, "0")}`, text: "Find it in the Mandala" }, { href: "/", text: "Draw your own card" }] }); });
   }).catch(() => { host.innerHTML = `<p class="err">The deck couldn't load just now. Please try again in a moment.</p>`; });
@@ -328,8 +330,10 @@ def deck(base):
 <p>The deck is read off the Mandala's two rings. <b>The Buddhist deck</b> has 36 cards, one for each decan of the sidereal ring: where a thing comes from.
 <b>The Nordic deck</b> has 36, one for each decan of the tropical ring: where it lands. And <b>the Asura voids</b> have 36, the tunnels beneath the mansions,
 one at the fourth, seventh and ninth pada of every sign. Each card carries its decan or its station, its trump and the runes of its sign.</p>
+<p>Above the 108 stand <b>the trumps of the zodiac</b>, two for every sign: its Buddhist trump on the sidereal ring and its Nordic trump on the tropical ring,
+each carrying its sign, its ruler, its three minors and its runes.</p>
 <p>Everyone has a card. Your Moon draws it: the card of the decan your Moon was born in, read on both rings, and the void it sits over if it sits over one.
-Your card adds your Moon's mansion, its deity and its rune, and the first gates of your Path of Dharma, ready to share.</p>
+Your card adds your Moon's mansion, its deity and its rune, and the first gates of your Path of Dharma, ready to share, and your Moon's sign gives you its two trumps.</p>
 <p class="dk-cta"><a class="btn-cast" href="/">Cast your free chart and draw your card</a> <a class="alt" href="/mandala">Open the Wyrd Mandala</a></p>
 <div id="deckHost"><p class="dk-loading">Laying out the deck…</p></div>"""
     ld = _ld({"@context": "https://schema.org", "@type": "CreativeWork", "name": "The Wyrd Deck", "creator": _author(),
