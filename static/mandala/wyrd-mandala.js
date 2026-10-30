@@ -422,15 +422,15 @@
     const needDeck = () => deckP || (deckP = new Promise(res => {
       if (window.WyrdDeck) return res();
       if (!document.querySelector('link[href^="/static/deck.css"]')) { const l = document.createElement("link"); l.rel = "stylesheet"; l.href = "/static/deck.css?v=1"; document.head.appendChild(l); }
-      const sc = document.createElement("script"); sc.src = "/static/deck.js?v=1"; sc.onload = res; sc.onerror = res; document.head.appendChild(sc);
+      const sc = document.createElement("script"); sc.src = "/static/deck.js?v=2"; sc.onload = res; sc.onerror = res; document.head.appendChild(sc);
     }).then(() => window.WyrdDeck ? WyrdDeck.ready() : Promise.reject(new Error("The deck didn't load."))));
     function fillDeck(s) {
       const host = panel.querySelector(".rec-deck"); if (!host || !s) return;
-      needDeck().then(Dk => {
+      needDeck().then(Dk => Dk.need(Dk.stationCards(s.id - 1).map(x => x.id))).then(Dk => {
         if (state.sel !== s || !host.isConnected) return;
         host.innerHTML = Dk.stationCards(s.id - 1).map(x => { const c = Dk.card(x.id);
           return `<button type="button" data-open-card="${x.id}" aria-label="Open the card ${esc(c.title)}"><div class="wd-card">${Dk.svg(x.id, { face: true })}</div>
-            <span>${esc(c.title)}<br><small>${esc(x.why)}${Dk.engraved(x.id) ? "" : " · engraving to come"}</small></span></button>`; }).join("");
+            <span>${esc(c.title)}<br><small>${esc(x.why)}</small></span></button>`; }).join("");
       }).catch(() => { deckP = null; });
     }
     panel.addEventListener("click", e => {

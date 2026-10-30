@@ -296,21 +296,23 @@ def sitemap(base):
 
 # ---------------- the Wyrd deck ----------------
 DECK_SCRIPT = """<link rel="stylesheet" href="/static/deck.css?v=1">
-<script src="/static/deck.js?v=1"></script>
+<script src="/static/deck.js?v=2"></script>
 <script>
 (() => {
-  const host = document.getElementById("deckHost"), todo = document.getElementById("deckTodo");
+  const host = document.getElementById("deckHost");
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const FAM = [["b", "The Buddhist deck · where it comes from"], ["n", "The Nordic deck · where it lands"], ["v", "The Asura voids"]];
   WyrdDeck.ready().then(D => {
     const all = D.all(), bySign = D.SIGNS.map((_, s) => all.filter(id => D.signOf(id) === s));
-    const done = bySign.map((ids, s) => ids.some(D.engraved) ? s : -1).filter(s => s >= 0);
     const cardBtn = id => { const c = D.card(id), sub = c.kind === "v" ? `station ${c.numeral}` : c.trump;
       return `<button type="button" data-card="${id}" aria-label="Open the card ${esc(c.title)}"><div class="wd-card">${D.svg(id, { face: true })}</div><span>${esc(c.title)}<small>${esc(sub)}</small></span></button>`; };
-    host.innerHTML = done.map(s => `<section class="dk-sign"><h2>${D.SIGNS[s]}</h2>${FAM.map(([k, name]) => `<p class="dk-fam">${name}</p>
-      <div class="dk-grid">${bySign[s].filter(id => id[0] === k).map(cardBtn).join("")}</div>`).join("")}</section>`).join("");
-    const rest = D.SIGNS.filter((_, s) => done.indexOf(s) < 0);
-    todo.innerHTML = rest.length ? `<p>Still being engraved: ${rest.join(", ")}. Until a set is done its cards are set as pips of their suit, so every card can already be drawn.</p>` : "";
+    /* the twelve signs are laid out at once, and each sign's nine plates are fetched and drawn in turn */
+    host.innerHTML = D.SIGNS.map((name, s) => `<section class="dk-sign" data-sign="${s}"><h2>${name}</h2><p class="dk-loading">Laying out ${name}…</p></section>`).join("");
+    bySign.reduce((p, ids, s) => p.then(() => D.need(ids)).then(() => {
+      const sec = host.querySelector(`[data-sign="${s}"]`);
+      sec.innerHTML = `<h2>${D.SIGNS[s]}</h2>` + FAM.map(([k, name]) => `<p class="dk-fam">${name}</p>
+        <div class="dk-grid">${ids.filter(id => id[0] === k).map(cardBtn).join("")}</div>`).join("");
+    }), Promise.resolve());
     const station = id => { const c = D.card(id); if (c.kind === "v") return c.station + 1; if (c.kind === "b") return c.decan * 3 + 1;
       const t = c.decan * 10 - (window.WYRD && WYRD.FRAME ? WYRD.FRAME.ayanamsa.degrees : 24.225); return Math.floor((((t % 360) + 360) % 360) / (10 / 3)) % 108 + 1; };
     host.addEventListener("click", e => { const b = e.target.closest("[data-card]"); if (!b) return;
@@ -329,8 +331,7 @@ one at the fourth, seventh and ninth pada of every sign. Each card carries its d
 <p>Everyone has a card. Your Moon draws it: the card of the decan your Moon was born in, read on both rings, and the void it sits over if it sits over one.
 Your card adds your Moon's mansion, its deity and its rune, and the first gates of your Path of Dharma, ready to share.</p>
 <p class="dk-cta"><a class="btn-cast" href="/">Cast your free chart and draw your card</a> <a class="alt" href="/mandala">Open the Wyrd Mandala</a></p>
-<div id="deckHost"><p class="dk-loading">Laying out the deck…</p></div>
-<div id="deckTodo"></div>"""
+<div id="deckHost"><p class="dk-loading">Laying out the deck…</p></div>"""
     ld = _ld({"@context": "https://schema.org", "@type": "CreativeWork", "name": "The Wyrd Deck", "creator": _author(),
               "description": "A deck of 108 cards read off the Wyrd Mandala: the Buddhist deck on the sidereal ring, the Nordic deck on the tropical ring, and the 36 Asura voids.",
               "url": base + "/deck"})
