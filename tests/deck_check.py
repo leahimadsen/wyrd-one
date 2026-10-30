@@ -16,15 +16,21 @@ def check(name, ok):
     bad += not ok
 read = lambda *p: open(os.path.join(ROOT, *p), encoding="utf-8").read()
 
-# ---------- the plates ----------
-plates = read("static", "deck", "plates.js")
-ids = re.findall(r"^  ([bnv]\d+): ", plates, re.M)
-check("eighteen engraved plates: Aries and Taurus, both decks and their voids", sorted(ids) == sorted(
+# ---------- the plates: one file a card ----------
+PD = os.path.join(ROOT, "static", "deck", "plates")
+EVERY = [f"{k}{d:02d}" for d in range(36) for k in "bn"] + [f"v{n:03d}" for n in range(1, 109) if (n - 1) % 9 in (3, 6, 8)]
+files = sorted(f[:-5] for f in os.listdir(PD) if f.endswith(".json")) if os.path.isdir(PD) else []
+check("all 108 cards have their own engraved plate: 36 Buddhist, 36 Nordic, 36 voids", files == sorted(EVERY))
+P = {i: json.load(open(os.path.join(PD, i + ".json"), encoding="utf-8")) for i in files}
+check("every plate has its label and its engraving", all(p.get("label") and p.get("svg", "").startswith("<defs>") for p in P.values()))
+check("the eighteen cut on the design canvas keep the words approved with them", sorted(i for i, p in P.items() if p.get("words")) == sorted(
     ["b00", "b01", "b02", "b03", "b04", "b05", "n00", "n01", "n02", "n03", "n04", "n05", "v004", "v007", "v009", "v013", "v016", "v018"]))
-check("the plates carry their own look, no style sheet needed", "class=" not in plates)
-svg_ids = re.findall(r'id=\\"([^"\\]+)\\"', plates)
+check("the plates carry their own look, no style sheet needed", not any("class=" in p["svg"] for p in P.values()))
+svg_ids = [x for p in P.values() for x in re.findall(r'id="([^"]+)"', p["svg"])]
 check("every id in a plate is marked to be made unique on the page", svg_ids and all(i.startswith("@@") for i in svg_ids))
-check("no plate fetches anything from another site", not re.search(r'href=\\"(https?:)?//', plates))
+check("no plate fetches anything from another site", not any(re.search(r'href="(https?:)?//', p["svg"]) for p in P.values()))
+check("no plate draws a name or a date", not any(re.search(r"<text|\b(19|20)\d\d\b", p["svg"]) for p in P.values()))
+check("each plate is small enough to fetch on a phone", max((os.path.getsize(os.path.join(PD, i + ".json")) for i in files), default=0) < 40000)
 for f in ["fell.woff", "fell-italic.woff", "fell-sc.woff", "fraktur.woff", "OFL-IMFellEnglish.txt", "OFL-UnifrakturMaguntia.txt"]:
     check(f"the card type is served from the site: {f}", os.path.exists(os.path.join(ROOT, "static", "fonts", f)))
 
@@ -35,12 +41,15 @@ check("the chart page loads the deck", '/static/deck.js' in chart_html and '/sta
 check("Your card is in the header's tools", 'href="#card"' in chart_js)
 check("the anonymous counts know the card and the Mandala", '"card"' in pulse and '"mandala"' in pulse)
 check("the Mandala's record shows the station's cards, loading the deck when first opened", 'class="rec-deck"' in mand and "/static/deck.js" in mand and "stationCards" in mand)
+check("each place fetches the plates it draws before drawing them", "D.need(D.forMoon(C)" in chart_js and "Dk.need(Dk.stationCards(" in mand)
+check("no page still says an engraving is to come", not re.search(r"engraving to come|still being (cut|engraved)", chart_js + mand + read("wyrd", "pages.py")))
 
 import app as A
 web = A.app.test_client()
 r = web.get("/deck"); page = r.get_data(as_text=True)
 check("the deck page opens and is indexed", r.status_code == 200 and 'content="index, follow"' in page)
 check("the deck page loads the deck and offers to draw your own", "/static/deck.js" in page and 'id="deckHost"' in page and 'href="/"' in page)
+check("the deck page lays out all twelve signs and fetches each sign's plates", "D.SIGNS.map((name, s)" in page and "D.need(ids)" in page and "Still being engraved" not in page)
 check("the deck is in the sitemap", "/deck</loc>" in web.get("/sitemap.xml").get_data(as_text=True))
 check("Völva, never anyone's surname, in the deck's words", "Völva" in page)
 
@@ -52,21 +61,23 @@ else:
 const fs = require("fs"), path = require("path"), root = %s;
 global.window = global; global.document = { createElement: () => ({ getContext: () => null }), head: { appendChild: () => {} } };
 global.fetch = u => Promise.resolve({ json: () => JSON.parse(fs.readFileSync(path.join(root, u.split("?")[0]), "utf8")) });
-eval(fs.readFileSync(path.join(root, "static/deck/plates.js"), "utf8"));
 eval(fs.readFileSync(path.join(root, "static/deck.js"), "utf8"));
 const out = {};
 (async () => {
   const D = await WyrdDeck.ready().catch(e => { out.err = String(e); });
   if (!D){ console.log(JSON.stringify(out)); return; }
   const all = D.all(); out.n = all.length; out.kinds = [...new Set(all.map(i => i[0]))];
+  out.pip = D.svg("b20", { person: { nak: "Ashwini", deity: "Ashwini Kumaras", rune: "Fehu", house: 1, gates: [["Signature", 39], ["Crucible", 38], ["Aura", 21], ["Objective", 48]], caption: "" } });
+  out.voidPip = D.svg("v058", { face: true });
+  out.before = all.filter(D.engraved).length;
+  await D.need(all);
   out.broken = all.filter(id => { const s = D.svg(id, { face: true }); return !/viewBox="0 0 1080 \d+"/.test(s) || /undefined|NaN|null/.test(s); });
   out.engraved = all.filter(D.engraved);
+  out.platesIn = all.filter(id => D.card(id).engraved && D.svg(id, { face: true }).indexOf("feTurbulence") > 0).length;
   const P = { nak: "Ashwini", deity: "Ashwini Kumaras", rune: "Fehu", house: 1, gates: [["Signature", 39], ["Crucible", 38], ["Aura", 21], ["Objective", 48]], caption: "Signature · Gate 39 · Provocation" };
   out.story = D.svg("b00", { person: P });
   out.story2 = D.svg("b00", { person: P });
   out.words = { b00: D.card("b00").cols, n00: D.card("n00").cols, v016: D.card("v016").cols, v004: D.card("v004") };
-  out.pip = D.svg("b20", { person: P });
-  out.voidPip = D.svg("v058", { face: true });
   out.invalid = [D.valid("v057"), D.valid("v058"), D.valid("b36"), D.valid("n35")];
   const C = m => ({ sid: { Moon: m, Sun: 100 }, trop: { Moon: m + 24.2 }, ascS: 5, natal: { personality: { Sun: { gate: 39 }, Earth: { gate: 38 } }, design: { Sun: { gate: 21 }, Earth: { gate: 48 } } } });
   out.moon5 = D.forMoon(C(5)).map(x => x.id); out.moon12 = D.forMoon(C(12)).map(x => x.id); out.moon359 = D.forMoon(C(359.9)).map(x => x.id);
@@ -84,7 +95,8 @@ const out = {};
     check("the deck loads", not o.get("err") and o.get("n"))
     check("all 108 cards: 36 Buddhist, 36 Nordic, 36 voids", o.get("n") == 108 and sorted(o.get("kinds", [])) == ["b", "n", "v"])
     check("every card draws, with no missing words", o.get("n") and not o.get("broken"))
-    check("the eighteen engraved cards use their plates", len(o.get("engraved", [])) == 18)
+    check("a plate is fetched only when its card is wanted", o.get("before") == 0)
+    check("once fetched, all 108 cards are drawn from their own engravings", len(o.get("engraved", [])) == 108 and o.get("platesIn") == 108)
     s = o.get("story", "")
     check("a story card is 1080 x 1920", 'viewBox="0 0 1080 1920"' in s)
     for t in ["2 of Double Vajras", "I – III · Ashwini", "the Fool stands at its gate", "The King", "Fehu · Uruz", "the moon in ashwini", "Kumaras",
@@ -101,8 +113,8 @@ const out = {};
     off = o.get("rulesOff", [])
     for i, g, a in off: print(f"         {i}: rules {g}\n               card  {a}")
     check("the rules set the engraved cards' facts just as they were approved", o.get("n") and not off)
-    check("a card not engraved yet is set as pips of its suit", "4 of Vajras" in o.get("pip", "") and "Karma" in o.get("pip", ""))
-    check("an unengraved void is drawn too", "Tarakasura" in o.get("voidPip", ""))
+    check("a card whose plate can't be fetched is still drawn, as pips of its suit", "4 of Vajras" in o.get("pip", "") and "Karma" in o.get("pip", ""))
+    check("and so is such a void", "Tarakasura" in o.get("voidPip", ""))
     check("only real cards: the voids are the 4th, 7th and 9th pada of a sign", o.get("invalid") == [False, True, False, True])
     check("a Moon at 5° sidereal draws the 2 of Double Vajras first, then where it lands", (o.get("moon5") or [""])[0] == "b00" and len(o.get("moon5", [])) == 2)
     check("a Moon over Vritra's station draws its void too", o.get("moon12") == ["b01", "n03", "v004"])

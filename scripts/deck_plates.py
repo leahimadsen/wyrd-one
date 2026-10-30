@@ -15,7 +15,10 @@ makes it stand alone:
     the site prints exactly what was approved on the canvas.
 
 Usage:
-    python3 scripts/deck_plates.py <folder of .dc.html cards> > static/deck/plates.js
+    python3 scripts/deck_plates.py <folder of .dc.html cards>
+
+Each plate is written to static/deck/plates/<card>.json as { label, words, svg }, beside the plates
+drawn by scripts/deck_art/build.py for the other ten signs.
 
 File names say which card each is: Aries-B2 is the Buddhist card of Aries's
 first decan, Taurus-N7 the Nordic card of Taurus's third, Aries-V04 the Asura
@@ -112,15 +115,11 @@ def main(folder):
         ws = words(src)
         cards[cid] = {"label": label, "svg": inner, "words": ws, "source": f.name}
     order = sorted(cards)
-    out = ["'use strict';",
-           "/* The Völva's engraved plates for the Wyrd deck, made by scripts/deck_plates.py from the design canvas.",
-           "   Do not edit by hand: change the card on the canvas and run the script again. */",
-           "window.WYRD_PLATES = {"]
+    out = Path(__file__).resolve().parent.parent / "static" / "deck" / "plates"
+    out.mkdir(parents=True, exist_ok=True)
     for cid in order:
         c = cards[cid]
-        out.append(f"  {cid}: {json.dumps({'label': c['label'], 'words': c['words'], 'svg': c['svg']}, ensure_ascii=False)},")
-    out.append("};")
-    sys.stdout.write("\n".join(out) + "\n")
+        (out / f"{cid}.json").write_text(json.dumps({"label": c["label"], "words": c["words"], "svg": c["svg"]}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(f"{len(cards)} plates: {', '.join(order)}", file=sys.stderr)
 
 

@@ -368,7 +368,7 @@ function cardLand(){
   const host = $("cardHost");
   if (!window.WyrdDeck){ host.innerHTML = `<p class="err">Your card couldn't be drawn in this browser.</p>`; return; }
   host.innerHTML = `<p class="fine">Drawing your card…</p>`;
-  WyrdDeck.ready().then(() => {
+  WyrdDeck.ready().then(D => D.need(D.forMoon(C).map(x => x.id))).then(() => {
     const P = WyrdDeck.person(C), hand = WyrdDeck.forMoon(C), share = WyrdDeck.canShareFiles();
     const st = Math.floor(norm(C.sid.Moon) / (10 / 3)) % 108 + 1;
     let cur = hand[0].id, blob = null, making = null, imgURL = null;
@@ -382,7 +382,6 @@ function cardLand(){
           <p class="yc-kicker">Your Moon draws</p>
           <h3 class="yc-title">${esc(c.title)}</h3>
           <p class="yc-why">${esc(h.why[0].toUpperCase() + h.why.slice(1))}.</p>
-          ${WyrdDeck.engraved(cur) ? "" : `<p class="fine">This card's engraving is still being cut. Until it's done the card is set as pips of its suit; everything on it is already yours.</p>`}
           <div class="yc-btns">
             ${share ? `<button type="button" class="btn-buy" data-yc="share" disabled>Share your card</button>` : ""}
             <button type="button" class="${share ? "btn-cast" : "btn-buy"}" data-yc="save" disabled>Save the image</button></div>

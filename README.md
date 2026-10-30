@@ -167,14 +167,24 @@ Each is a 1080 × 1920 story card in your engraved style, drawn in the browser b
   deity and rune and the first four gates of the Path of Dharma, never a name or birth details. On a phone
   "Share your card" opens the share sheet (Instagram stories, messages); everywhere "Save the image" saves a PNG.
 - **The Mandala's record** shows each station's cards; tap one to see it large and save it.
-- **`/deck`** shows the cards engraved so far, sign by sign, and is in the sitemap.
+- **`/deck`** shows all 108 cards, sign by sign, and is in the sitemap.
 
-The engravings live in `static/deck/plates.js`, made from the design canvas: export the cards' `.dc.html`
-files to a folder and run `python3 scripts/deck_plates.py <folder> > static/deck/plates.js`. A file named
-`Gemini-B8` is the Buddhist card of Gemini's first decan, `Gemini-N9` the Nordic card of its second,
-`Gemini-V22` the void at station XXII. Until a card is engraved it is set as pips of its suit, so every card
-can already be drawn. The card type (IM Fell English and UnifrakturMaguntia, SIL Open Font License) is served
-from `static/fonts` so a saved image carries it. Air and water's colours are provisional until their first sets.
+Every card has its own engraved plate, one small file a card in `static/deck/plates/<card>.json`; a page
+fetches only the plates of the cards it draws. Two scripts make them:
+
+- **Aries and Taurus** were engraved on the design canvas: export the cards' `.dc.html` files to a folder and
+  run `python3 scripts/deck_plates.py <folder>`. A file named `Aries-B2` is the Buddhist card of Aries's first
+  decan, `Aries-N3` the Nordic card of its second, `Aries-V04` the void at station IV. Their approved words
+  are kept with them.
+- **Gemini to Pisces** are drawn in code, one file a sign in `scripts/deck_art/<sign>.py`, from the shared
+  parts in `scripts/deck_art/lib.py` (the planets' seals, each sign's device, the suit emblems, the grounds and
+  weather). Change a card there and run `python3 scripts/deck_art/build.py <sign> --sheet <folder>`: it
+  rewrites that sign's nine plates and makes a contact sheet to check them by eye.
+
+If a plate can't be fetched the card is set as pips of its suit, so a card can always be drawn. When you
+change plates, raise `PLATES_V` in `static/deck.js` so browsers fetch the new ones. The card type (IM Fell
+English and UnifrakturMaguntia, SIL Open Font License) is served from `static/fonts` so a saved image carries
+it. Air is saffron and water blue.
 Test: `python tests/deck_check.py`.
 
 ## The unlisted 1:1 consultation page

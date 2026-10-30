@@ -12,18 +12,21 @@
    person's card adds their Moon (its mansion, deity and rune) and the
    Path of Dharma, and can be shared as an image.
 
-   The engraved plates are in static/deck/plates.js (made from the design
-   canvas by scripts/deck_plates.py). A card whose engraving isn't done yet
-   is set as a pip card of its suit, so every card can be drawn today.
+   Every card has its own engraved plate, one file a card in
+   static/deck/plates/<card>.json (Aries and Taurus from the design canvas by
+   scripts/deck_plates.py, the other signs by scripts/deck_art/build.py). A
+   plate is fetched the first time its card is drawn; if it can't be fetched
+   the card is set as pips of its suit, so a card can always be drawn.
 
-   - WyrdDeck.ready(): Promise, once the mandala, plates and fonts are in
+   - WyrdDeck.ready(): Promise, once the mandala and fonts are in
+   - WyrdDeck.need(ids): Promise, once those cards' plates are in (call it before svg)
    - WyrdDeck.card(id): the card's words and look ("b00", "n35", "v004")
    - WyrdDeck.forMoon(C): the cards a chart's Moon draws, primary first
    - WyrdDeck.person(C): the Moon and Path of Dharma a person's card prints
    - WyrdDeck.svg(id, { person, face }): the card as SVG markup
    - WyrdDeck.png(id, { person, face }): Promise of a PNG Blob
    - WyrdDeck.share(blob, name, text): the share sheet, else a download
-   - WyrdDeck.engraved(id): true once the card's own engraving exists
+   - WyrdDeck.engraved(id): true once the card's own engraving has loaded
    ============================================================ */
 (() => {
 const W = 1080, STORY_H = 1920, PAD_X = 96, TOP = 84, BOTTOM = 88;
@@ -64,7 +67,7 @@ const AY = () => (window.WYRD && WYRD.FRAME && WYRD.FRAME.ayanamsa && WYRD.FRAME
 const PAL = {
   fire:  { bg: "#ecd3cc", vig: "rgba(80,30,20,.26)", tint: "#c4523c", wash: "#f5e1da", mid: "#8a2a1a", inner: "#f6e6e0", text2: "#5a4a3c", light: "#faf5ec" },
   earth: { bg: "#d3e5d9", vig: "rgba(20,50,40,.26)", tint: "#3e9c84", wash: "#e3efe7", mid: "#1d5e4f", inner: "#e8f2ec", text2: "#4c4a3e", light: "#faf7ef" },
-  /* air and water wait for their first engraved sets; these follow fire and earth's weights */
+  /* air in saffron and water in blue, set to the same weights as fire and earth */
   air:   { bg: "#ece0c2", vig: "rgba(70,50,10,.26)", tint: "#c2902a", wash: "#f5ecd8", mid: "#7a5312", inner: "#f7efdf", text2: "#5a4d36", light: "#fbf7ec" },
   water: { bg: "#d3dfec", vig: "rgba(20,35,60,.26)", tint: "#3f72a8", wash: "#e2eaf4", mid: "#1d3d68", inner: "#e8eff7", text2: "#45495a", light: "#f8f9fb" },
 };
@@ -117,14 +120,20 @@ function fit(l, maxW){
 
 /* ---------- the mandala's data ---------- */
 let M = null, readyP = null;
-function loadScript(src){ return new Promise(res => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = res; document.head.appendChild(s); }); }
 function ready(){
   if (readyP) return readyP;
   const mandala = (window.WyrdTarot ? WyrdTarot.load() : fetch("/static/mandala.json").then(r => r.json())).then(j => { M = j; });
-  const plates = window.WYRD_PLATES ? Promise.resolve() : loadScript("/static/deck/plates.js?v=1");
-  readyP = Promise.all([mandala, plates, loadFonts()]).then(() => { if (!M || !M.decans) throw new Error("The deck couldn't load."); return api; });
+  readyP = Promise.all([mandala, loadFonts()]).then(() => { if (!M || !M.decans) throw new Error("The deck couldn't load."); return api; });
   readyP.catch(() => { readyP = null; });
   return readyP;
+}
+/* the engraved plates, one small file a card, fetched the first time a card is drawn */
+const PLATES_V = "2", plates = {}, platesP = {};
+function need(ids){
+  return ready().then(() => Promise.all([].concat(ids || []).filter(valid).map(id => platesP[id] || (platesP[id] =
+    fetch(`/static/deck/plates/${id}.json?v=${PLATES_V}`).then(r => { if (r.ok === false) throw new Error(r.status); return r.json(); })
+      .then(j => { plates[id] = j; delete cache[id]; })
+      .catch(() => { delete platesP[id]; }))))).then(() => api);
 }
 const station = i => ({ i, n: i + 1, nak: M.padas[i].nak, pada: M.padas[i].pada, void: M.padas[i].void, sign: Math.floor(i / 9), q: i % 9 });
 const stationsBetween = (a, b) => { const out = []; let i = Math.floor(norm(a) / (10 / 3)) % 108; const end = Math.floor((norm(b) - 1e-9) / (10 / 3)) % 108; for (;;){ out.push(i); if (i === end) break; i = (i + 1) % 108; } return out; };
@@ -152,8 +161,8 @@ function card(id){
   if (!valid(id)) return null;
   const kind = id[0], k = parseInt(id.slice(1), 10);
   const c = kind === "v" ? voidCard(k - 1) : minorCard(kind, k);
-  const plate = window.WYRD_PLATES && WYRD_PLATES[id];
-  if (plate){ c.engraved = true; c.plate = plate; c.label = plate.label; applyWords(c, plate.words); }
+  const plate = plates[id];
+  if (plate){ c.engraved = true; c.plate = plate; c.label = plate.label; if (plate.words) applyWords(c, plate.words); }
   return (cache[id] = c);
 }
 const COL_W = (W - 2 * PAD_X - 2 * (2 + 36)) / 3;
@@ -255,7 +264,7 @@ function person(C){
     caption: gates[0][1] ? `Signature · Gate ${gates[0][1]}${GN[gates[0][1]] ? " · " + GN[gates[0][1]] : ""}` : "" };
 }
 
-/* ---------- the plates for cards not yet engraved: pips of the suit ---------- */
+/* ---------- a card whose plate couldn't be fetched: pips of its suit ---------- */
 const PIPS = {
   2: [[190, 100], [190, 260]], 3: [[190, 70], [190, 180], [190, 290]], 4: [[115, 95], [265, 95], [115, 265], [265, 265]],
   5: [[110, 85], [270, 85], [190, 180], [110, 275], [270, 275]], 6: [[115, 70], [265, 70], [115, 180], [265, 180], [115, 290], [265, 290]],
@@ -465,7 +474,7 @@ function embedFonts(){
 }
 const loadImg = src => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
 async function png(id, opts = {}){
-  await ready();
+  await need([id]);
   const c = card(id), p = c.pal, fonts = await embedFonts();
   const markup = svg(id, { ...opts, bg: false, fonts }), H = +/viewBox="0 0 \d+ (\d+)"/.exec(markup)[1];
   const cv = document.createElement("canvas"); cv.width = W; cv.height = H; const ctx = cv.getContext("2d");
@@ -512,7 +521,7 @@ const canShareFiles = () => { try { return !!(window.File && navigator.canShare 
 let lb = null, lbBack = null;
 function closeLB(){ if (!lb || lb.hidden) return; lb.hidden = true; lb.innerHTML = ""; document.documentElement.style.overflow = ""; if (lbBack && lbBack.focus) lbBack.focus(); }
 function open(id, { person = null, links = [] } = {}){
-  return ready().then(() => {
+  return need([id]).then(() => {
     const c = card(id); if (!c) return;
     if (!lb){
       lb = document.createElement("div"); lb.className = "wd-lb"; lb.hidden = true; lb.setAttribute("role", "dialog"); lb.setAttribute("aria-modal", "true");
@@ -540,7 +549,7 @@ function open(id, { person = null, links = [] } = {}){
 
 /* the card as the rules alone would set it, before any approved words: used to check the rules against the engraved cards */
 const rules = id => valid(id) ? (id[0] === "v" ? voidCard(parseInt(id.slice(1), 10) - 1) : minorCard(id[0], parseInt(id.slice(1), 10))) : null;
-const api = { ready, card, rules, valid, forMoon, stationCards, person, svg, png, share, download, fileName, canShareFiles, open, close: closeLB, engraved: id => !!(window.WYRD_PLATES && WYRD_PLATES[id]),
+const api = { ready, need, card, rules, valid, forMoon, stationCards, person, svg, png, share, download, fileName, canShareFiles, open, close: closeLB, engraved: id => !!plates[id],
   all: () => [...Array(36).keys()].flatMap(k => ["b" + pad2(k), "n" + pad2(k)]).concat([...Array(108).keys()].filter(i => i % 9 === 3 || i % 9 === 6 || i % 9 === 8).map(i => "v" + pad3(i + 1))),
   signOf: id => card(id).sign, SIGNS };
 window.WyrdDeck = api;
