@@ -13,7 +13,7 @@ os.environ.pop("DATABASE_URL", None); os.environ.pop("RENDER", None)
 import config
 config.SECRET_KEY = "test-key"; config.STRIPE_SECRET = "sk_test_x"
 import app as A
-from wyrd import billing, store, stripe_api
+from wyrd import billing, store, stripe_api, weather
 
 bad = 0
 def check(name, ok):
@@ -73,8 +73,9 @@ r = web.get("/account/data")
 check("signed out, your data asks you to sign in", r.status_code == 302 and "/signin" in r.headers["Location"])
 check("and the copy too", web.get("/account/data.json").status_code == 302)
 
+# this week's letter: opening the Hall keeps this week's Body Weather, so a letter for any other week would make two
 for who in (ME, OTHER):
-    store.save_letter(who, "2026-10-19", "<p>letter</p>")
+    store.save_letter(who, weather.monday().isoformat(), "<p>letter</p>")
     store.add_kin(who, "Mum", BIRTH)
     store.add_message(who, "hello")
     cid = store.save_client(who, "Client", BIRTH, "c@example.com", "notes")
