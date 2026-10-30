@@ -167,7 +167,11 @@ Each is a 1080 × 1920 story card in your engraved style, drawn in the browser b
   deity and rune and the first four gates of the Path of Dharma, never a name or birth details. On a phone
   "Share your card" opens the share sheet (Instagram stories, messages); everywhere "Save the image" saves a PNG.
 - **The Mandala's record** shows each station's cards; tap one to see it large and save it.
-- **`/deck`** shows all 108 cards, sign by sign, and is in the sitemap.
+- **`/deck`** shows all 108 cards and the 24 trumps, sign by sign, and is in the sitemap.
+- **The trumps of the zodiac** stand above the 108: each sign's Buddhist trump (sidereal ring) and Nordic trump
+  (tropical ring), ids `tb00`–`tb11` and `tn00`–`tn11`, Aries to Pisces, numbered as the Golden Dawn numbers
+  them and set in a gilded double frame. A person's hand adds the trumps of their Moon's sidereal and tropical
+  signs, and a station's record in the Mandala adds the trumps of its sign and of the sign where it lands.
 
 Every card has its own engraved plate, one small file a card in `static/deck/plates/<card>.json`; a page
 fetches only the plates of the cards it draws. Two scripts make them:
@@ -176,7 +180,7 @@ fetches only the plates of the cards it draws. Two scripts make them:
   run `python3 scripts/deck_plates.py <folder>`. A file named `Aries-B2` is the Buddhist card of Aries's first
   decan, `Aries-N3` the Nordic card of its second, `Aries-V04` the void at station IV. Their approved words
   are kept with them.
-- **Gemini to Pisces** are drawn in code, one file a sign in `scripts/deck_art/<sign>.py`, from the shared
+- **Gemini to Pisces**, and the 24 trumps (`trumps_buddhist.py`, `trumps_nordic.py`), are drawn in code, one file a sign in `scripts/deck_art/<sign>.py`, from the shared
   parts in `scripts/deck_art/lib.py` (the planets' seals, each sign's device, the suit emblems, the grounds and
   weather). Change a card there and run `python3 scripts/deck_art/build.py <sign> --sheet <folder>`: it
   rewrites that sign's nine plates and makes a contact sheet to check them by eye.

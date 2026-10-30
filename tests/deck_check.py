@@ -19,8 +19,9 @@ read = lambda *p: open(os.path.join(ROOT, *p), encoding="utf-8").read()
 # ---------- the plates: one file a card ----------
 PD = os.path.join(ROOT, "static", "deck", "plates")
 EVERY = [f"{k}{d:02d}" for d in range(36) for k in "bn"] + [f"v{n:03d}" for n in range(1, 109) if (n - 1) % 9 in (3, 6, 8)]
+TRUMPS = [f"t{k}{s:02d}" for k in "bn" for s in range(12)]
 files = sorted(f[:-5] for f in os.listdir(PD) if f.endswith(".json")) if os.path.isdir(PD) else []
-check("all 108 cards have their own engraved plate: 36 Buddhist, 36 Nordic, 36 voids", files == sorted(EVERY))
+check("all 108 cards and the 24 trumps have their own engraved plate", files == sorted(EVERY + TRUMPS))
 P = {i: json.load(open(os.path.join(PD, i + ".json"), encoding="utf-8")) for i in files}
 check("every plate has its label and its engraving", all(p.get("label") and p.get("svg", "").startswith("<defs>") for p in P.values()))
 check("the eighteen cut on the design canvas keep the words approved with them", sorted(i for i, p in P.items() if p.get("words")) == sorted(
@@ -50,6 +51,7 @@ r = web.get("/deck"); page = r.get_data(as_text=True)
 check("the deck page opens and is indexed", r.status_code == 200 and 'content="index, follow"' in page)
 check("the deck page loads the deck and offers to draw your own", "/static/deck.js" in page and 'id="deckHost"' in page and 'href="/"' in page)
 check("the deck page lays out all twelve signs and fetches each sign's plates", "D.SIGNS.map((name, s)" in page and "D.need(ids)" in page and "Still being engraved" not in page)
+check("and shows each sign's two trumps first", '["t", "The trumps of the sign"]' in page and '["tb", "tn"]' in page)
 check("the deck is in the sitemap", "/deck</loc>" in web.get("/sitemap.xml").get_data(as_text=True))
 check("Völva, never anyone's surname, in the deck's words", "Völva" in page)
 
@@ -70,7 +72,11 @@ const out = {};
   out.pip = D.svg("b20", { person: { nak: "Ashwini", deity: "Ashwini Kumaras", rune: "Fehu", house: 1, gates: [["Signature", 39], ["Crucible", 38], ["Aura", 21], ["Objective", 48]], caption: "" } });
   out.voidPip = D.svg("v058", { face: true });
   out.before = all.filter(D.engraved).length;
-  await D.need(all);
+  const T = D.trumps(); out.trumps = T;
+  await D.need(all.concat(T));
+  out.trumpBroken = T.filter(id => { const s = D.svg(id, { face: true }); return !/viewBox="0 0 1080 \d+"/.test(s) || /undefined|NaN|null/.test(s) || !D.card(id).engraved; });
+  out.trumpWords = Object.fromEntries(["tb00", "tn04", "tb11", "tn03"].map(id => [id, [D.card(id).numeral, D.card(id).title, ...D.card(id).cols.map(c => [c.label, ...c.lines.map(l => l.t)].join(" / "))]]));
+  out.trumpStory = D.svg("tb04", { person: { nak: "Magha", deity: "the Pitris", rune: "Hagalaz", house: 9, gates: [["Signature", 39], ["Crucible", 38], ["Aura", 21], ["Objective", 48]], caption: "Signature · Gate 39 · Provocation" } });
   out.broken = all.filter(id => { const s = D.svg(id, { face: true }); return !/viewBox="0 0 1080 \d+"/.test(s) || /undefined|NaN|null/.test(s); });
   out.engraved = all.filter(D.engraved);
   out.platesIn = all.filter(id => D.card(id).engraved && D.svg(id, { face: true }).indexOf("feTurbulence") > 0).length;
@@ -97,6 +103,16 @@ const out = {};
     check("every card draws, with no missing words", o.get("n") and not o.get("broken"))
     check("a plate is fetched only when its card is wanted", o.get("before") == 0)
     check("once fetched, all 108 cards are drawn from their own engravings", len(o.get("engraved", [])) == 108 and o.get("platesIn") == 108)
+    check("the 24 trumps of the zodiac: each sign's Buddhist and Nordic trump", o.get("trumps") == TRUMPS)
+    check("every trump draws from its own engraving, with no missing words", o.get("trumps") and not o.get("trumpBroken"))
+    tw = o.get("trumpWords", {})
+    check("the King: IV, Aries ruled by Mars, the Sun exalted, its minors and the Fool at its gate", (tw.get("tb00") or [""])[:2] == ["IV", "The King"]
+          and "its sign / Aries / ruled by Mars / 0° to 30° sidereal / the Sun exalted at 10°" in tw.get("tb00", []) and "its minors / 2 · 3 · 4 of Double Vajras / Fehu · Uruz" in tw.get("tb00", [])
+          and any("the Fool stands at its gate" in x for x in tw.get("tb00", [])))
+    check("Strength is VIII and lands where tropical Leo falls on the sidereal ring", (tw.get("tn04") or [""])[:2] == ["VIII", "Strength"] and any(x.startswith("it lands on / XXIX – XXXVIII") for x in tw.get("tn04", [])))
+    check("Nirvana is XVIII and carries Venus exalted", (tw.get("tb11") or [""])[:2] == ["XVIII", "Nirvana"] and any("Venus exalted at 27°" in x for x in tw.get("tb11", [])))
+    st = o.get("trumpStory", "")
+    check("a person's trump is a story card with its gilded frame, and no birth details", 'viewBox="0 0 1080 1920"' in st and "#b38a36" in st and "the trump of Leo" in st and not re.search(r"\b(19|20)\d\d-\d\d-\d\d\b", st))
     s = o.get("story", "")
     check("a story card is 1080 x 1920", 'viewBox="0 0 1080 1920"' in s)
     for t in ["2 of Double Vajras", "I – III · Ashwini", "the Fool stands at its gate", "The King", "Fehu · Uruz", "the moon in ashwini", "Kumaras",
@@ -116,13 +132,13 @@ const out = {};
     check("a card whose plate can't be fetched is still drawn, as pips of its suit", "4 of Vajras" in o.get("pip", "") and "Karma" in o.get("pip", ""))
     check("and so is such a void", "Tarakasura" in o.get("voidPip", ""))
     check("only real cards: the voids are the 4th, 7th and 9th pada of a sign", o.get("invalid") == [False, True, False, True])
-    check("a Moon at 5° sidereal draws the 2 of Double Vajras first, then where it lands", (o.get("moon5") or [""])[0] == "b00" and len(o.get("moon5", [])) == 2)
-    check("a Moon over Vritra's station draws its void too", o.get("moon12") == ["b01", "n03", "v004"])
+    check("a Moon at 5° sidereal draws the 2 of Double Vajras first, then where it lands, then its two trumps", o.get("moon5") == ["b00", "n02", "tb00", "tn00"])
+    check("a Moon over Vritra's station draws its void too, then the trumps of its sidereal and tropical signs", o.get("moon12") == ["b01", "n03", "v004", "tb00", "tn01"])
     check("a Moon at the end of Pisces draws the 10 of Lotuses", (o.get("moon359") or [""])[0] == "b35")
     pp = o.get("person", {})
     check("the person's card reads the Moon's mansion, deity and rune", pp.get("nak") and pp.get("rune") and pp.get("house"))
     check("and the Path of Dharma's first four gates", [g[1] for g in pp.get("gates", [])] == [39, 38, 21, 48])
-    check("a station's cards: Vritra's station has its Buddhist card, where it lands and its void", o.get("station3") == ["b01", "n03", "v004"])
+    check("a station's cards: Vritra's station has its Buddhist card, where it lands, its void and the trumps", o.get("station3") == ["b01", "n03", "v004", "tb00", "tn01"])
     check("no birth details are ever written on a card", not re.search(r"\b(19|20)\d\d-\d\d-\d\d\b|\b\d{1,2}:\d\d\b", s))
 
 print("\nAll deck checks passed." if not bad else f"\n{bad} deck check(s) failed.")
