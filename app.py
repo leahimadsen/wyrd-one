@@ -802,10 +802,13 @@ def not_found(_e):
 def private(title, body, script="", status=200):
     return page(title + " · The Wyrd Console", title, body, robots="noindex, nofollow", script=script, status=status)
 
-@app.get("/googled81e0f187c4a1868.html")
-def google_site_verification():
-    """Google Search Console checks this file to confirm the site is The Völva's."""
-    return send_from_directory(app.static_folder, "googled81e0f187c4a1868.html", mimetype="text/html")
+@app.get("/google<token>.html")
+def google_site_verification(token):
+    """Google Search Console checks these files to confirm the site is The Völva's: one per Google account
+    that manages the site (static/google<token>.html). Remove a file only when that account no longer needs it."""
+    name = f"google{token}.html"
+    if not re.fullmatch(r"[0-9a-f]{16}", token) or not os.path.isfile(os.path.join(app.static_folder, name)): abort(404)
+    return send_from_directory(app.static_folder, name, mimetype="text/html")
 
 @app.get("/robots.txt")
 def robots():
