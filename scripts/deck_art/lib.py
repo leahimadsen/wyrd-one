@@ -201,14 +201,10 @@ def device(c, sign):
                  '<path class="ink hair" d="M120 90L132 84L144 90L156 84L168 90L180 84L192 90L204 84L216 90L228 84L240 90L252 84L264 90"/>')
         c.d("urnclip", '<clipPath id="urnclip"><path d="M116 22H140L138 28C150 36 150 58 138 66H118C106 58 106 36 118 28Z"/></clipPath>')
         return mirror(urn + stream) + waves
-    if sign == "Pisces":            # two fishes, nose to tail about the seal, bound by a cord
-        fish = (f'<path class="wash ink thin" d="M146 18C132 22 120 34 118 48C116 58 122 66 130 70C124 60 126 48 134 38C140 30 148 24 158 22C156 18 152 16 146 18Z"/>'
-                f'<path class="hatchfill" d="M118 48C116 58 122 66 130 70C126 62 126 54 128 46Z"/>'
-                f'<path class="tint ink thin" d="M130 70L122 82L136 78Z"/><circle cx="150" cy="21" r="1.6" class="fill-ink"/>'
-                f'<path class="ink hair" d="M128 40C132 44 132 50 128 54M136 32C140 36 140 42 136 46"/>')
-        cord = f'<path class="ink hair" stroke-dasharray="3 2" d="M132 80C160 92 220 92 248 80"/>'
-        fish = f'<g transform="translate(138 44) scale(1.22) translate(-138 -44)">{fish}</g>'
-        return fish + f'<g transform="rotate(180 190 46)">{fish}</g>' + cord
+    if sign == "Pisces":            # two fishes rising either side of the seal, their tails tied by one cord
+        one = fish(c, 128, 48, .66, -120)
+        cord = f'<path fill="none" stroke="{p["K"]}" stroke-width="1.4" stroke-dasharray="3 2" d="M146 80C164 98 216 98 234 80"/><circle cx="146" cy="80" r="2.4" class="tint ink hair"/>'
+        return mirror(one) + cord
     if sign in ("Aries", "Taurus"):
         return canvas_horns(c, sign)
     return ""
@@ -1122,3 +1118,30 @@ def root_arch(c, pts, w0, w1, rootlets=(), cls="wash ink heavy"):
         d = f"M{f(x)} {f(y)}C{f(x + rng.uniform(-8, 8))} {f(y + length * .4)} {f(x + rng.uniform(-10, 10))} {f(y + length * .7)} {f(x + rng.uniform(-6, 6))} {f(y + length)}"
         out.append(f'<path class="ink thin" d="{d}"/><path class="ink hair" d="M{f(x)} {f(y + length * .3)}l{f(rng.uniform(-8, 8))} {f(length * .25)}"/>')
     return "".join(out)
+
+
+
+def fish(c, x, y, s=1, angle=0, cls="wash ink thin", fin="tint ink thin"):
+    """A fish as the old engravers cut one, about 100 long at s=1, centred on x, y, its head toward
+    angle (degrees; 0 is to the right): a full body over a slimmer tail stock, the head with its eye,
+    gill-cover and mouth, the lateral line and rows of scales, dorsal, pectoral and belly fins with
+    their rays, and a forked tail. The belly half is shaded."""
+    body = "M50 0C47 -9 38 -16 22 -18C4 -20 -18 -14 -34 -6L-41 -3L-41 3L-34 6C-18 14 4 20 22 18C38 16 47 9 50 0Z"
+    tail = "M-39 -3L-58 -19C-55 -10 -54 -4 -50 0C-54 4 -55 10 -58 19L-39 3Z"
+    dorsal = "M18 -18C12 -30 -2 -33 -16 -27L-22 -13C-10 -17 4 -19 18 -18Z"
+    belly = "M-6 17C-12 26 -22 28 -28 25L-28 9C-20 13 -12 16 -6 17Z"
+    pect = "M22 6C14 14 6 17 0 16C6 10 14 6 22 6Z"
+    rays = ("M14 -19L8 -29M8 -19L2 -31M2 -19L-4 -31M-4 -18L-10 -30M-10 -16L-16 -27M-16 -14L-20 -22"
+            "M-10 16L-14 24M-16 14L-20 25M-22 11L-26 23M-41 -2L-54 -14M-41 0L-52 0M-41 2L-54 14M16 8L6 14M12 7L2 15")
+    small = s < 1
+    grid = [(xx, yy) for xx in range(-26, 22, 10 if small else 7) for yy in ((-9, 2) if small else (-12, -5, 2, 9)) if abs(yy) < 16 - abs(xx) * .1 - 2]
+    scales = "".join(f"M{f(sx)} {f(sy)}a{4 if small else 3.4} {4 if small else 3.4} 0 0 0 0 {8 if small else 6.6}" for sx, sy in grid)
+    if small: rays = "M14 -19L8 -29M2 -19L-4 -31M-10 -16L-16 -27M-16 14L-20 25M-41 -2L-54 -14M-41 2L-54 14"
+    shade = "M-34 6C-18 14 4 20 22 18C38 16 47 9 50 0C40 5 24 8 4 8C-14 8 -26 6 -34 4Z"
+    out = (f'<path class="{fin}" d="{dorsal}"/><path class="{fin}" d="{belly}"/><path class="{fin}" d="{tail}"/>'
+           f'<path class="{cls}" d="{body}"/><path fill="url(#hd)" d="{shade}" opacity=".85"/>'
+           f'<path class="ink hair" d="{scales}"/><path class="ink hair" d="M30 -1C14 -3 -10 -2 -38 0"/>'
+           f'<path class="ink thin" d="M30 -14C24 -6 24 6 30 14"/>' + ("" if small else '<path class="ink hair" d="M34 -12C29 -5 29 5 34 12"/>') +
+           f'<circle cx="38" cy="-5" r="4.4" class="light ink thin"/><circle cx="38.8" cy="-5" r="2" class="fill-ink"/>'
+           f'<path class="ink thin" d="M50 0L42 3"/><path class="{fin}" d="{pect}"/><path class="ink hair" d="{rays}"/>')
+    return f'<g transform="translate({f(x)} {f(y)}) rotate({f(angle)}) scale({s})">{out}</g>'

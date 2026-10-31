@@ -76,22 +76,64 @@ def tn01():
     return c
 
 
+def carved(c, x, y0, h, female=False, lean=0):
+    """A figure carved from one forked branch of oak, as the old bog figures were: the fork makes the
+    legs, the trunk the body, and the head is cut at the top with drilled eyes, a brow, the long nose and
+    a slit mouth. The arms are cut in relief down the sides. The grain runs the length of the wood."""
+    hip, sh, nk, hd = y0 - .42 * h, y0 - .78 * h, y0 - .82 * h, y0 - .9 * h
+    hw, sw = (13, 15) if female else (14, 18)
+    out = []
+    legs = [taper([(x - 6, hip + 4), (x - 10, y0 - .2 * h), (x - 13, y0)], 13, 8), taper([(x + 6, hip + 4), (x + 10, y0 - .2 * h), (x + 13, y0)], 13, 8)]
+    out += [f'<path class="wash ink heavy" d="{d}"/>' for d in legs]
+    out.append(f'<path fill="url(#hd)" d="{taper([(x + 8, hip + 6), (x + 12, y0 - .2 * h), (x + 15, y0)], 6, 4)}" opacity=".85"/>')
+    torso = (f"M{f(x - hw)} {f(hip + 6)}C{f(x - hw - 2)} {f(hip - .14 * h)} {f(x - sw - 1)} {f(sh + .06 * h)} {f(x - sw)} {f(sh)}"
+             f"C{f(x - sw + 2)} {f(sh - 6)} {f(x - 7)} {f(nk + 2)} {f(x - 6)} {f(nk)}H{f(x + 6)}C{f(x + 7)} {f(nk + 2)} {f(x + sw - 2)} {f(sh - 6)} {f(x + sw)} {f(sh)}"
+             f"C{f(x + sw + 1)} {f(sh + .06 * h)} {f(x + hw + 2)} {f(hip - .14 * h)} {f(x + hw)} {f(hip + 6)}Z")
+    out.append(f'<path class="wash ink heavy" d="{torso}"/>')
+    out.append(f'<path fill="url(#hd)" d="M{f(x + hw * .4)} {f(hip + 6)}C{f(x + hw * .6)} {f(hip - .14 * h)} {f(x + sw * .6)} {f(sh + .06 * h)} {f(x + sw * .5)} {f(sh)}H{f(x + sw)}C{f(x + sw + 1)} {f(sh + .06 * h)} {f(x + hw + 2)} {f(hip - .14 * h)} {f(x + hw)} {f(hip + 6)}Z" opacity=".85"/>')
+    grain = "".join(f"M{f(x + dx)} {f(y0 - 4)}C{f(x + dx * 1.1)} {f(hip)} {f(x + dx * 1.2)} {f(sh + 20)} {f(x + dx * .8)} {f(sh + 4)}" for dx in (-9, -3, 4))
+    out.append(f'<path class="ink hair" d="{grain}"/>')
+    for side in (-1, 1):
+        out.append(f'<path class="ink thin" d="M{f(x + side * (sw - 3))} {f(sh + 4)}C{f(x + side * (sw - 1))} {f(sh + .14 * h)} {f(x + side * (hw + 1))} {f(hip - .08 * h)} {f(x + side * 4)} {f(hip - .04 * h)}"/>'
+                   f'<path class="ink hair" d="M{f(x + side * (sw - 7))} {f(sh + 8)}C{f(x + side * (sw - 5))} {f(sh + .13 * h)} {f(x + side * (hw - 3))} {f(hip - .1 * h)} {f(x + side * 3)} {f(hip - .07 * h)}"/>')
+    if female:
+        out.append(f'<path class="ink thin" d="M{f(x - 9)} {f(sh + 16)}a5 5 0 0 0 9 0M{f(x)} {f(sh + 16)}a5 5 0 0 0 9 0"/>')
+    else:
+        out.append(f'<path class="tint ink thin" d="M{f(x - hw - 1)} {f(hip - .06 * h)}H{f(x + hw + 1)}V{f(hip - .06 * h + 6)}H{f(x - hw - 1)}Z"/>')
+    out.append(f'<path class="wash ink heavy" d="M{f(x - 6)} {f(nk + 1)}V{f(hd + 14)}H{f(x + 6)}V{f(nk + 1)}Z"/>')
+    head = f"M{f(x)} {f(hd - 24)}C{f(x + 14)} {f(hd - 24)} {f(x + 15)} {f(hd - 6)} {f(x + 13)} {f(hd + 8)}C{f(x + 10)} {f(hd + 18)} {f(x + 5)} {f(hd + 21)} {f(x)} {f(hd + 21)}C{f(x - 5)} {f(hd + 21)} {f(x - 10)} {f(hd + 18)} {f(x - 13)} {f(hd + 8)}C{f(x - 15)} {f(hd - 6)} {f(x - 14)} {f(hd - 24)} {f(x)} {f(hd - 24)}Z"
+    out.append(f'<path class="wash ink heavy" d="{head}"/>')
+    out.append(f'<path fill="url(#hd)" d="M{f(x + 5)} {f(hd - 23)}C{f(x + 14)} {f(hd - 20)} {f(x + 15)} {f(hd - 6)} {f(x + 13)} {f(hd + 8)}C{f(x + 10)} {f(hd + 18)} {f(x + 6)} {f(hd + 20)} {f(x + 4)} {f(hd + 21)}C{f(x + 9)} {f(hd + 6)} {f(x + 9)} {f(hd - 10)} {f(x + 5)} {f(hd - 23)}Z" opacity=".8"/>')
+    out.append(f'<path class="ink thin" d="M{f(x - 10)} {f(hd - 6)}C{f(x - 6)} {f(hd - 10)} {f(x - 2)} {f(hd - 9)} {f(x)} {f(hd - 6)}C{f(x + 2)} {f(hd - 9)} {f(x + 6)} {f(hd - 10)} {f(x + 10)} {f(hd - 6)}"/>'
+               f'<path class="ink thin" d="M{f(x)} {f(hd - 6)}V{f(hd + 6)}L{f(x - 3)} {f(hd + 8)}"/>'
+               + "".join(f'<path class="light ink thin" d="M{f(x + k * 9.5)} {f(hd - 2)}C{f(x + k * 7.5)} {f(hd - 5)} {f(x + k * 3.5)} {f(hd - 5)} {f(x + k * 1.6)} {f(hd - 2)}C{f(x + k * 3.5)} {f(hd)} {f(x + k * 7.5)} {f(hd)} {f(x + k * 9.5)} {f(hd - 2)}Z"/><circle cx="{f(x + k * 5.5)}" cy="{f(hd - 2.2)}" r="1.3" class="fill-ink"/>' for k in (-1, 1)) +
+               f'<path class="ink thin" d="M{f(x - 4.5)} {f(hd + 11.5)}H{f(x + 4.5)}"/><path class="ink hair" d="M{f(x - 3)} {f(hd + 14)}H{f(x + 3)}"/>'
+               f'<path class="ink hair" d="M{f(x - 11)} {f(hd + 4)}C{f(x - 9)} {f(hd + 8)} {f(x - 7)} {f(hd + 10)} {f(x - 6)} {f(hd + 12)}M{f(x + 11)} {f(hd + 4)}C{f(x + 9)} {f(hd + 8)} {f(x + 7)} {f(hd + 10)} {f(x + 6)} {f(hd + 12)}"/>')
+    if female:
+        out.append(f'<path class="ink thin" d="M{f(x - 13)} {f(hd - 10)}C{f(x - 18)} {f(hd + 10)} {f(x - 16)} {f(nk + 10)} {f(x - 14)} {f(sh + 26)}M{f(x + 13)} {f(hd - 10)}C{f(x + 18)} {f(hd + 10)} {f(x + 16)} {f(nk + 10)} {f(x + 14)} {f(sh + 26)}"/>'
+                   + "".join(f'<path class="ink hair" d="M{f(x + side * 15)} {f(yy)}l{f(side * 3)} 3"/>' for side in (-1, 1) for yy in [hd + k * 7 for k in range(0, 9)])
+                   + f'<path class="ink hair" d="M{f(x - 12)} {f(hd - 16)}C{f(x - 6)} {f(hd - 22)} {f(x + 6)} {f(hd - 22)} {f(x + 12)} {f(hd - 16)}"/>')
+    else:
+        beard = f"M{f(x - 12)} {f(hd + 8)}C{f(x - 9)} {f(hd + 15)} {f(x - 5)} {f(hd + 15)} {f(x)} {f(hd + 15)}C{f(x + 5)} {f(hd + 15)} {f(x + 9)} {f(hd + 15)} {f(x + 12)} {f(hd + 8)}C{f(x + 12)} {f(hd + 22)} {f(x + 6)} {f(hd + 32)} {f(x)} {f(hd + 34)}C{f(x - 6)} {f(hd + 32)} {f(x - 12)} {f(hd + 22)} {f(x - 12)} {f(hd + 8)}Z"
+        out.append(f'<path class="mid ink thin" d="{beard}"/><path class="light ink hair" d="' + "".join(f"M{f(x + dx)} {f(hd + 17)}C{f(x + dx * 1.1)} {f(hd + 23)} {f(x + dx * .9)} {f(hd + 27)} {f(x + dx * .5)} {f(hd + 31)}" for dx in (-8, -4, 0, 4, 8)) + '"/>'
+                   f'<path class="ink thin" d="M{f(x - 7)} {f(hd + 9)}C{f(x - 4)} {f(hd + 6)} {f(x - 1)} {f(hd + 7)} {f(x)} {f(hd + 8)}C{f(x + 1)} {f(hd + 7)} {f(x + 4)} {f(hd + 6)} {f(x + 7)} {f(hd + 9)}"/>')
+    return f'<g transform="rotate({f(lean)} {f(x)} {f(y0)})">{"".join(out)}</g>'
+
+
 def tn02():
     s = 2
-    c = T(s, 402, "The Lovers, engraved: Ask and Embla, the ash and the elm, washed up as two trees on the shore and leaning together, their boughs grown into one another between them, under the seal of Mercury between the twin pillars",
-          glow=(190, 170, 220))
-    c(sea(c, top=250, bottom=300, rows=4), chop(c, 262, 0, 380, 46), chop(c, 282, 20, 380, 52))
-    c('<path class="light ink heavy" d="M-20 300C80 292 300 292 400 300V380H-20Z"/><path class="hatchfill" d="M-20 324C80 316 300 316 400 324V380H-20Z" opacity=".6"/>')
-    c(tree(c, 112, 312, 196, 58, lean=22))
-    ash = c.canopy
-    c(tree(c, 270, 312, 164, 86, lean=-26))
-    for pts, w0 in (([(128, 248), (158, 222), (196, 208), (232, 206), (254, 192)], 10), ([(254, 252), (226, 230), (190, 220), (154, 214), (128, 200)], 9)):
-        c(root_arch(c, pts, w0, 3, cls="wash ink thin"))
-    for x, y in ((206, 206), (176, 216)):
-        c(clump(c, x, y, 13))
-    for x0 in (112, 270):
-        c(f'<path class="ink thin" d="M{x0 - 16} 312C{x0 - 28} 318 {x0 - 38} 314 {x0 - 46} 322M{x0 + 16} 312C{x0 + 28} 314 {x0 + 38} 322 {x0 + 46} 318M{x0 - 4} 314C{x0 - 8} 324 {x0 - 2} 330 {x0 - 6} 338M{x0 + 6} 314C{x0 + 10} 324 {x0 + 6} 332 {x0 + 12} 338"/>')
-    c('<path class="ink hair" d="M40 344c6 -4 12 -4 16 0M320 346c6 -4 12 -4 16 0M180 350c6 -4 12 -4 16 0"/>')
+    c = T(s, 402, "The Lovers, engraved: Ask and Embla, the first man and woman, carved from two pieces of driftwood found on the shore, standing together where the sea gave them up, the breath of Odin turning above them, under the seal of Mercury between the twin pillars",
+          glow=(190, 190, 220))
+    c(sea(c, top=246, bottom=290, rows=3), chop(c, 258, 0, 380, 46), chop(c, 276, 20, 380, 52))
+    c('<path class="light ink heavy" d="M-20 292C80 284 300 284 400 292V380H-20Z"/><path class="hatchfill" d="M-20 320C80 312 300 312 400 320V380H-20Z" opacity=".6"/>')
+    c('<path class="wash ink thin" d="M96 332C100 318 120 312 150 314C176 310 214 310 240 314C266 312 282 318 286 332Z"/><path class="hatchfill" d="M240 314C266 312 282 318 286 332H254C254 324 250 318 240 314Z"/>',
+      '<path class="ink hair" d="M140 318l6 6M168 314l4 8M206 314l-4 8M236 318l-6 6"/>')
+    c(carved(c, 140, 324, 214, female=False, lean=6), carved(c, 240, 324, 200, female=True, lean=-6))
+    c(rope("M168 214C182 226 198 226 212 214", c.p, 5, 3, ".6 2.2", fill=c.p["T"]))
+    c('<path class="ink thin" d="M190 112C176 112 172 98 184 94C196 90 204 104 194 110C186 114 182 102 190 102"/><path class="ink hair" d="M178 118C166 116 160 102 170 92M202 118C214 114 218 100 208 90"/>')
+    c(sparkle(120, 140, 5), sparkle(262, 136, 5))
+    for x0, y0 in ((60, 318), (320, 322)):
+        c(f'<path class="wash ink thin" d="M{x0 - 30} {y0}C{x0 - 20} {y0 - 8} {x0 + 10} {y0 - 10} {x0 + 30} {y0 - 4}L{x0 + 34} {y0}Z"/><path class="ink hair" d="M{x0 - 20} {y0 - 3}C{x0 - 6} {y0 - 7} {x0 + 10} {y0 - 7} {x0 + 26} {y0 - 3}"/>')
     c(crown(c, SIGNS[s], RULER[s]))
     return c
 
