@@ -464,19 +464,33 @@ def waves(c, y, x0=-10, x1=390, amp=10, length=48, cls="wash ink thin", crest=Tr
 
 
 def cloud(c, cx, cy, w=120, h=34, cls="light ink thin", shade=True):
-    """A billowing cloud, flat beneath."""
+    """A cloud as an engraver cuts one: rounded billows, the larger behind and the smaller before,
+    each shaded on its underside, all resting on one flat base."""
     r = c.rng
+    key = f"cl{int(cx)}_{int(cy)}_{int(w)}"
+    c.d(key, f'<clipPath id="{key}"><rect x="{f(cx - w)}" y="{f(cy - h * 4)}" width="{f(w * 2)}" height="{f(h * 4)}"/></clipPath>')
     n = max(3, int(w / 26))
-    xs = [cx - w / 2 + (k + .5) * w / n for k in range(n)]
-    d = f"M{f(cx - w / 2)} {f(cy)}"
-    for k, x in enumerate(xs):
-        top = cy - h * (.55 + .45 * math.sin(math.pi * (k + .5) / n)) - r.uniform(0, 6)
-        x2 = cx - w / 2 + (k + 1) * w / n
-        d += f"C{f(x - w / n * .5)} {f(top)} {f(x + w / n * .5)} {f(top)} {f(x2)} {f(cy - (2 if k < n - 1 else 0))}"
-    d += "Z"
-    out = f'<path class="{cls}" d="{d}"/>'
-    if shade: out += f'<path class="hatchfill" d="M{f(cx - w / 2 + 8)} {f(cy)}C{f(cx - w / 4)} {f(cy - 8)} {f(cx + w / 4)} {f(cy - 8)} {f(cx + w / 2 - 8)} {f(cy)}Z" opacity=".8"/>'
-    return out
+    back, front = [], []
+    for k in range(n):
+        t = (k + .5) / n; bump = math.sin(math.pi * t)
+        pr = h * (.5 + .5 * bump) * r.uniform(.88, 1.08)
+        back.append((cx - w / 2 + t * w + r.uniform(-3, 3), cy - h * .32 * bump - pr * .25, pr))
+    for k in range(n - 1):
+        t = (k + 1) / n; bump = math.sin(math.pi * t)
+        pr = h * (.36 + .3 * bump) * r.uniform(.85, 1.05)
+        front.append((cx - w / 2 + t * w + r.uniform(-3, 3), cy - pr * .1, pr))
+    out = [f'<g clip-path="url(#{key})">']
+    for px, py, pr in back + front:
+        out.append(f'<circle cx="{f(px)}" cy="{f(py)}" r="{f(pr)}" class="{cls}"/>')
+        if shade:
+            a0, a1 = pol(px, py, pr * .92, 10), pol(px, py, pr * .92, 170)
+            out.append(f'<path fill="url(#hd)" d="M{f(a0[0])} {f(a0[1])}A{f(pr * .92)} {f(pr * .92)} 0 0 1 {f(a1[0])} {f(a1[1])}A{f(pr * 1.1)} {f(pr * .7)} 0 0 0 {f(a0[0])} {f(a0[1])}Z" opacity=".75"/>')
+        out.append(f'<path class="ink hair" d="M{f(px - pr * .5)} {f(py - pr * .2)}A{f(pr * .6)} {f(pr * .6)} 0 0 1 {f(px + pr * .1)} {f(py - pr * .62)}"/>')
+    out.append('</g>')
+    ends = [(px - math.sqrt(max(pr * pr - (cy - py) ** 2, 0)), px + math.sqrt(max(pr * pr - (cy - py) ** 2, 0))) for px, py, pr in back + front if pr > cy - py]
+    if ends:
+        out.append(f'<path class="ink thin" d="M{f(min(e[0] for e in ends))} {f(cy)}H{f(max(e[1] for e in ends))}"/>')
+    return "".join(out)
 
 
 def rain(c, x0, x1, y0, y1, n=40, slant=-6, length=12):
@@ -652,12 +666,15 @@ def storm(c, y, x0=-10, x1=390, depth=40, cls="mid ink thin"):
 
 
 def raven(c, x, y, s=1, flip=False):
-    """A raven, perched, facing left (or right)."""
+    """A raven perched in profile, facing left: heavy beak, the shaggy throat, wing folded, wedge tail."""
     p = c.p
-    body = (f'<path class="fill-ink" d="M0 0C-2 -12 6 -22 18 -24C24 -30 34 -30 38 -24L48 -26L40 -20C42 -10 36 -2 26 2L32 10H26L22 4L14 6L18 14H12L10 6C4 6 0 4 0 0Z"/>'
-            f'<path fill="none" stroke="{p["L"]}" stroke-width=".9" d="M6 -6C14 -14 22 -18 30 -18M10 -2C18 -8 24 -10 32 -10M-4 2L-14 8M-2 4L-12 12"/>'
-            f'<path class="fill-ink" d="M0 0L-16 10L-14 4L-20 6Z"/><circle cx="33" cy="-23" r="1.4" fill="{p["L"]}"/>')
-    sx = -s if not flip else s
+    body = ('<path class="fill-ink" d="M-20 -36C-14 -40 -6 -38 -2 -32C8 -28 18 -20 24 -10L38 2L34 8L22 4C14 6 6 6 -2 2C-10 -2 -14 -10 -16 -18'
+            'C-18 -22 -21 -24 -24 -26L-24 -31C-24 -34 -22 -36 -20 -36Z"/>'
+            '<path class="fill-ink" d="M-23 -32L-38 -28L-23 -25Z"/>'
+            f'<path fill="none" stroke="{p["L"]}" stroke-width=".9" d="M-4 -24C6 -22 14 -16 20 -8M-2 -18C8 -16 16 -10 22 -4M2 -12C10 -10 16 -6 24 0M28 0L36 4M-16 -20l-4 4M-14 -16l-4 4"/>'
+            f'<circle cx="-18" cy="-31" r="1.5" fill="{p["L"]}"/>'
+            '<path class="ink thin" d="M0 2L-2 12M-6 12H2M6 2L6 12M2 12H10"/>')
+    sx = -s if flip else s
     return f'<g transform="translate({f(x)} {f(y)}) scale({sx} {s})">{body}</g>'
 
 
@@ -922,9 +939,10 @@ def endless_knot(c, x, y, s=1):
 
 
 def footprint(x, y, s=1, r=0, cls="light ink thin"):
-    body = (f'<path class="{cls}" d="M0 -30C10 -30 14 -18 12 -4C10 10 12 22 6 30C0 36 -10 34 -12 24C-14 14 -8 6 -10 -6C-12 -20 -10 -30 0 -30Z"/>'
-            + "".join(f'<circle cx="{f(dx)}" cy="{f(dy)}" r="{f(rr)}" class="{cls}"/>' for dx, dy, rr in [(-10, -38, 4.2), (-1, -42, 3.6), (7, -41, 3.2), (13, -37, 2.8), (17, -31, 2.4)])
-            + '<path class="ink hair" d="M-4 -16C0 -10 2 0 0 10"/>')
+    """A bare footprint, its toes forward (up): the sole, narrow at the heel, and five toes."""
+    body = (f'<path class="{cls}" d="M-2 -30C8 -32 14 -24 13 -12C12 -2 11 8 9 18C7 28 2 33 -3 32C-9 31 -12 24 -11 14C-10 4 -12 -6 -12 -14C-12 -24 -8 -29 -2 -30Z"/>'
+            + "".join(f'<ellipse cx="{f(dx)}" cy="{f(dy)}" rx="{f(rr)}" ry="{f(rr * 1.25)}" class="{cls}"/>' for dx, dy, rr in [(-7, -36, 4.2), (0, -39, 3.2), (6, -38, 2.8), (11, -35, 2.5), (14.5, -30, 2.2)])
+            + '<path class="ink hair" d="M-6 -18C-4 -8 -4 4 -2 14"/>')
     return f'<g transform="translate({f(x)} {f(y)}) rotate({r}) scale({s})">{body}</g>'
 
 
@@ -1037,19 +1055,30 @@ def wolf(c, x, y, s=1, pose="lying", flip=False, cls="wash ink thin"):
 
 
 def horse(c, x, y, s=1, cls="wash ink thin"):
-    """A horse standing in profile, facing right, its legs straight as the Bronze Age smiths made it."""
-    body = ("M-46 -30C-30 -34 -8 -34 20 -36C30 -40 38 -50 44 -62L47 -76L53 -66C60 -66 66 -60 74 -48C78 -42 84 -38 84 -34"
-            "C82 -30 76 -30 70 -32C64 -34 60 -36 58 -38C54 -34 52 -28 50 -20C50 -10 46 -2 38 0C14 4 -14 4 -34 0C-46 -2 -54 -10 -54 -20C-54 -26 -50 -30 -46 -30Z")
-    legs = [taper([(38, -2), (40, 18), (40, 38)], 9, 6), taper([(28, 0), (27, 18), (26, 38)], 8, 6),
-            taper([(-36, -4), (-44, 16), (-40, 38)], 11, 6), taper([(-26, -2), (-32, 16), (-28, 38)], 9, 6)]
-    out = "".join(f'<path class="{cls}" d="{d}"/>' for d in legs[1::2])
-    out += f'<path class="{cls}" d="{taper([(-52, -22), (-60, -4), (-58, 18)], 10, 4)}"/>'
-    out += (f'<path class="{cls}" d="{body}"/><path fill="url(#hd)" d="M-34 0C-14 4 14 4 38 0C40 -6 30 -10 10 -10C-10 -10 -26 -8 -34 0Z" opacity=".8"/>'
-            '<path class="ink hair" d="M22 -38l-4 -6M28 -42l-4 -6M34 -48l-4 -6M40 -54l-4 -6M46 -62l-4 -5"/>'
-            '<circle cx="60" cy="-54" r="4" class="light ink thin"/><circle cx="60" cy="-54" r="1.8" class="fill-ink"/>'
-            '<circle cx="80" cy="-35" r="1.2" class="fill-ink"/><path class="ink hair" d="M76 -31C78 -30 80 -30 82 -31M46 -40C48 -30 48 -20 44 -10"/>')
-    out += "".join(f'<path class="{cls}" d="{d}"/>' for d in legs[0::2])
-    out += "".join(f'<path class="fill-ink" d="M{hx - 4} 36H{hx + 4}V40H{hx - 4}Z"/>' for hx in (40, 26, -40, -28))
+    """A horse standing in profile, facing right, its hooves on y: a deep chest and arched neck, the long
+    head with its large eye, ears pricked, mane and tail in strands, legs with knee, hock and hoof."""
+    body = ("M20 -70C8 -66 -6 -64 -20 -66C-30 -67 -38 -67 -44 -63C-50 -58 -52 -50 -50 -42C-48 -36 -42 -34 -36 -33"
+            "C-24 -30 -4 -29 14 -31C24 -32 32 -36 38 -44C42 -50 44 -58 50 -70C55 -78 58 -84 64 -88"
+            "L78 -72C82 -68 86 -66 86 -62C86 -58 82 -56 78 -58C72 -60 66 -66 60 -70C56 -66 52 -60 48 -50"
+            "C44 -40 38 -34 30 -34Z")
+    head = ("M50 -96C54 -102 60 -102 64 -98C70 -92 80 -80 88 -70C92 -66 92 -61 88 -59C84 -57 80 -59 76 -61"
+            "C70 -64 64 -70 58 -74C54 -78 50 -84 48 -90C47 -93 48 -95 50 -96Z")
+    neck = ("M22 -70C30 -80 38 -92 50 -96C52 -88 56 -80 60 -74C54 -64 48 -52 44 -44C38 -38 30 -36 22 -40Z")
+    legs = [taper([(34, -40), (35, -22), (37, -8), (38, -1)], 11, 6), taper([(24, -38), (22, -20), (21, -8), (20, -1)], 10, 6),
+            taper([(-38, -46), (-46, -24), (-41, -8), (-40, -1)], 17, 6), taper([(-28, -40), (-34, -22), (-29, -8), (-28, -1)], 13, 6)]
+    out = "".join(f'<path class="{cls}" d="{d}"/><path fill="url(#hd)" d="{d}" opacity=".7"/>' for d in legs[1::2])
+    out += f'<path class="{cls}" d="{taper([(-48, -60), (-58, -44), (-60, -24), (-56, -10)], 13, 4)}"/>'
+    out += '<path class="ink hair" d="M-50 -56C-56 -44 -58 -30 -56 -16M-54 -52C-58 -40 -60 -28 -60 -18"/>'
+    out += f'<path class="{cls}" d="{body}"/><path class="{cls}" d="{neck}"/><path class="{cls}" d="{head}"/>'
+    out += ('<path fill="url(#hd)" d="M-36 -33C-24 -30 -4 -29 14 -31C24 -32 30 -35 34 -40C20 -38 0 -38 -20 -40C-30 -41 -38 -40 -44 -38Z" opacity=".9"/>'
+            '<path class="mid ink thin" d="M50 -96C42 -94 34 -86 28 -78C24 -74 22 -72 20 -70C26 -72 30 -76 34 -80C36 -76 38 -74 40 -74C42 -80 46 -88 50 -96Z"/>'
+            '<path class="ink hair" d="M46 -92l-6 6M42 -88l-6 6M38 -84l-6 6M34 -80l-6 5"/>'
+            '<path class="mid ink thin" d="M52 -98L50 -110L57 -100ZM57 -99L58 -111L62 -100Z"/>'
+            '<circle cx="64" cy="-88" r="3.6" class="light ink thin"/><circle cx="64.6" cy="-88" r="1.8" class="fill-ink"/>'
+            '<path class="ink hair" d="M58 -92C62 -94 66 -94 70 -91M84 -64C86 -63 88 -63 89 -64M76 -62C80 -66 82 -70 84 -72M-10 -60C-2 -58 6 -58 14 -60M34 -58C38 -52 40 -46 40 -40"/>'
+            '<circle cx="86" cy="-64" r="1" class="fill-ink"/>')
+    out += "".join(f'<path class="{cls}" d="{d}"/><path fill="url(#hd)" d="{d}" opacity=".5"/>' for d in legs[0::2])
+    out += "".join(f'<path class="mid ink thin" d="M{hx - 4.5} -3H{hx + 4.5}L{hx + 5.5} 1H{hx - 5.5}Z"/>' for hx in (38, 20, -40, -28))
     return f'<g transform="translate({f(x)} {f(y)}) scale({s})">{out}</g>'
 
 
@@ -1060,3 +1089,36 @@ def root(c, pts, w0, w1, cls="wash ink heavy"):
     bark = "".join(f"M{f(px)} {f(py)}l{f(rr)} {f(-rr * .6)}" for px, py, rr in ((px, py, 3 + (k % 3)) for k, (px, py) in enumerate(P[1:-2:2])))
     side = taper([(px + 2, py + w0 * .18) for px, py in pts], w0 * .45, w1 * .3)
     return f'<path class="{cls}" d="{d}"/><path fill="url(#hd)" d="{side}" opacity=".85"/><path class="ink hair" d="{bark}"/>'
+
+
+
+def root_arch(c, pts, w0, w1, rootlets=(), cls="wash ink heavy"):
+    """A great root as an engraver cuts it: its bark running along its length in broken lines, knots
+    swelling on it, one side in shadow, and fine rootlets hanging from beneath."""
+    P = densify(pts, 10)
+    n = len(P)
+    outline = taper(pts, w0, w1)
+    out = [f'<path class="{cls}" d="{outline}"/>']
+    def offset(k_off, a=0, b=1):
+        Q = []
+        for i in range(int(a * (n - 1)), int(b * (n - 1)) + 1):
+            x, y = P[i]; x0, y0 = P[max(i - 1, 0)]; x1, y1 = P[min(i + 1, n - 1)]
+            dx, dy = x1 - x0, y1 - y0; m = math.hypot(dx, dy) or 1
+            w = (w0 + (w1 - w0) * i / (n - 1)) / 2
+            Q.append((x - dy / m * w * k_off, y + dx / m * w * k_off))
+        return Q
+    shade = offset(.25) + offset(.95)[::-1]
+    out.append(f'<path fill="url(#hd)" d="M' + "L".join(f"{f(a)} {f(b)}" for a, b in shade) + 'Z" opacity=".85"/>')
+    rng = c.rng
+    for k_off in (-.7, -.4, -.1, .2, .5):
+        a = rng.uniform(0, .25); b = rng.uniform(.55, 1)
+        Q = offset(k_off, a, b)
+        if len(Q) > 3: out.append(f'<path class="ink hair" d="{smooth(Q[::2])}"/>')
+    for t in (.22, .48, .74):
+        x, y = P[int(t * (n - 1))]; w = (w0 + (w1 - w0) * t) / 2
+        out.append(f'<ellipse cx="{f(x)}" cy="{f(y - w * .2)}" rx="{f(w * .42)}" ry="{f(w * .26)}" class="{cls.replace("heavy", "thin")}"/><ellipse cx="{f(x)}" cy="{f(y - w * .2)}" rx="{f(w * .18)}" ry="{f(w * .1)}" class="ink hair"/>')
+    for t, length in rootlets:
+        Q = offset(.9); x, y = Q[int(t * (len(Q) - 1))]
+        d = f"M{f(x)} {f(y)}C{f(x + rng.uniform(-8, 8))} {f(y + length * .4)} {f(x + rng.uniform(-10, 10))} {f(y + length * .7)} {f(x + rng.uniform(-6, 6))} {f(y + length)}"
+        out.append(f'<path class="ink thin" d="{d}"/><path class="ink hair" d="M{f(x)} {f(y + length * .3)}l{f(rng.uniform(-8, 8))} {f(length * .25)}"/>')
+    return "".join(out)

@@ -37,19 +37,21 @@ def wolf_running(x, y, s=1, cls="mid ink thin"):
 
 def tn00():
     s = 0
-    c = T(s, 400, "The Emperor, engraved: Hlidskjalf, the Allfather's high seat on its crag above the worlds, his two ravens Huginn and Muninn on its posts, under the seal of Mars between the ram's horns",
+    c = T(s, 400, "The Emperor, engraved: Hlidskjalf, the Allfather's high seat on its crag above the clouds of the worlds, its posts carved with dragons, his two ravens Huginn and Muninn perched on the rock beside it, under the seal of Mars between the ram's horns",
           glow=(190, 170, 220))
-    c(cloud(c, 70, 292, 140, 26, "light ink thin"), cloud(c, 310, 300, 140, 26, "light ink thin"))
-    c(hills(c, 330, [(40, 16), (330, 20)]))
-    c('<path class="wash ink heavy" d="M120 360L146 290L140 250L156 226L224 226L240 250L234 290L260 360Z"/>',
-      '<path class="hatchfill" d="M224 226L240 250L234 290L260 360H214C214 316 222 260 224 226Z"/>',
-      '<path class="ink hair" d="M150 300L162 274M172 320L176 290M200 330L204 296M160 252L172 240"/>')
-    c('<path class="wash ink heavy" d="M140 226V140H156V226ZM224 226V140H240V226Z"/><path class="hatchfill" d="M150 140H156V226H150ZM234 140H240V226H234Z"/>',
-      '<path class="tint ink thin" d="M150 192H230V206H150Z"/><path class="wash ink heavy" d="M144 206H236V226H144Z"/><path class="ink hair" d="M144 216H236"/>',
-      '<path class="ink thin" d="M156 160H224M156 176H224"/><path class="ink hair" d="' + "".join(f"M{x} 160V192" for x in range(166, 224, 12)) + '"/>')
-    c(dragon_head(148, 140, .42, cls="tint ink thin"), dragon_head(232, 140, .42, flip=True, cls="tint ink thin"))
-    c(raven(c, 130, 124, .7), raven(c, 250, 124, .7, flip=True))
-    c(stars(c, 6, y0=100, y1=180, avoid=lambda x, y: 100 < x < 280))
+    c(stars(c, 8, y0=100, y1=170, avoid=lambda x, y: 110 < x < 270))
+    c(cloud(c, 60, 300, 150, 34, "light ink thin"), cloud(c, 320, 306, 160, 34, "light ink thin"))
+    c('<path class="wash ink heavy" d="M110 360L132 300L124 266L140 240L152 236H228L240 240L256 266L248 300L270 360Z"/>',
+      '<path fill="url(#hd)" d="M228 236L240 240L256 266L248 300L270 360H226C230 320 232 276 228 236Z"/>',
+      '<path class="ink hair" d="M136 300L150 276M152 330L158 300M196 340L200 306M218 316L224 290M146 254L160 246M232 254L240 270"/>')
+    c('<path class="wash ink heavy" d="M140 236V226H240V236Z"/><path class="ink hair" d="M140 231H240"/>')
+    c('<path class="wash ink heavy" d="M150 226V128C150 122 154 118 160 118H220C226 118 230 122 230 128V226Z"/><path fill="url(#hd)" d="M214 118H220C226 118 230 122 230 128V226H214Z" opacity=".85"/>')
+    c('<path class="tint ink thin" d="M162 130H218V196H162Z"/>', rope("M168 140C180 152 200 152 212 140M168 186C180 174 200 174 212 186M168 140C182 160 198 168 212 186M212 140C198 160 182 168 168 186", c.p, 5, 3, ".6 2.2", fill=c.p["L"]))
+    c('<path class="light ink heavy" d="M140 196H240V210H140Z"/><path class="ink thin" d="M146 210V226M234 210V226"/>')
+    c('<path class="wash ink heavy" d="M136 226V106H150V226ZM230 226V106H244V226Z"/><path fill="url(#hd)" d="M146 106H150V226H146ZM240 106H244V226H240Z"/>',
+      '<path class="ink hair" d="M136 130H150M136 160H150M136 190H150M230 130H244M230 160H244M230 190H244"/>')
+    c(dragon_head(143, 104, .4, flip=True, cls="tint ink thin"), dragon_head(237, 104, .4, cls="tint ink thin"))
+    c(raven(c, 116, 262, .82), raven(c, 266, 262, .82, flip=True))
     c(crown(c, SIGNS[s], RULER[s]))
     return c
 
@@ -65,50 +67,61 @@ def tn01():
     c(ground(c, 330, wob=2))
     c('<path class="wash ink heavy" d="M110 330V264H270V330Z"/><path class="hatchfill" d="M244 264H270V330H244Z"/><path class="light ink thin" d="M102 254H278V266H102Z"/>',
       '<path class="ink hair" d="M110 286H270M110 308H270M150 264V330M230 264V330"/>')
-    c('<ellipse cx="160" cy="248" rx="30" ry="9" class="ink heavy"/><ellipse cx="160" cy="248" rx="30" ry="9" fill="none" stroke="' + c.p["T"] + '" stroke-width="3"/><ellipse cx="160" cy="246" rx="30" ry="9" class="ink hair"/>')
+    c(rope("M128 248C128 240 192 240 192 248C192 256 128 256 128 248Z", c.p, 10, 7, "1.4 2.4", fill=c.p["T"]), '<path class="ink hair" d="M134 246C150 243 170 243 186 246"/>', '<circle cx="128" cy="248" r="4" class="tint ink thin"/><circle cx="192" cy="248" r="4" class="tint ink thin"/>')
     c('<path class="tint ink thin" d="M204 252C204 268 256 268 256 252Z"/><ellipse cx="230" cy="252" rx="26" ry="6" class="light ink thin"/><ellipse cx="230" cy="252" rx="20" ry="4" class="mid"/>',
       '<path class="ink thin" d="M238 250L270 196"/>')
-    c(leaves(c, 270, 198, 9, 18, -170, 10, (.4, .6)))
-    c(flame(c, 190, 352, 20, 12))
+    c('<path class="ink thin" d="M266 200L274 186"/>' + "".join(f'<path class="ink hair" d="M{f(238 + t * 36)} {f(250 - t * 64)}l-7 -2M{f(238 + t * 36)} {f(250 - t * 64)}l5 -6M{f(240 + t * 36)} {f(246 - t * 64)}l-6 -4M{f(240 + t * 36)} {f(246 - t * 64)}l6 -3"/>' for t in [k / 10 for k in range(4, 11)]))
+    c('<path class="ink hair" d="M118 330C140 336 160 334 180 330"/>')
     c(crown(c, SIGNS[s], RULER[s]))
     return c
 
 
 def tn02():
     s = 2
-    c = T(s, 402, "The Lovers, engraved: Ask and Embla, the ash and the elm, two trees washed up on the shore and leaning together, their boughs grown into one, under the seal of Mercury between the twin pillars",
+    c = T(s, 402, "The Lovers, engraved: Ask and Embla, the ash and the elm, washed up as two trees on the shore and leaning together, their boughs grown into one another between them, under the seal of Mercury between the twin pillars",
           glow=(190, 170, 220))
-    c(waves(c, 250, amp=8, length=44), waves(c, 272, amp=7, length=40, hatch=False))
-    c('<path class="light ink heavy" d="M-20 300C80 290 300 290 400 300V380H-20Z"/><path class="hatchfill" d="M-20 322C80 314 300 314 400 322V380H-20Z" opacity=".6"/>')
-    c(tree(c, 112, 310, 160, 82, lean=50), tree(c, 268, 310, 160, 82, lean=-50))
-    for x0 in (116, 264):
-        c(f'<path class="ink thin" d="M{x0 - 14} 310C{x0 - 26} 316 {x0 - 36} 312 {x0 - 44} 320M{x0 + 14} 310C{x0 + 26} 312 {x0 + 36} 320 {x0 + 44} 316M{x0} 312C{x0 - 4} 322 {x0 + 2} 328 {x0 - 2} 336"/>')
-    c('<path class="ink hair" d="M60 340c6 -4 12 -4 16 0M300 344c6 -4 12 -4 16 0M140 352c6 -4 12 -4 16 0"/>')
+    c(sea(c, top=250, bottom=300, rows=4), chop(c, 262, 0, 380, 46), chop(c, 282, 20, 380, 52))
+    c('<path class="light ink heavy" d="M-20 300C80 292 300 292 400 300V380H-20Z"/><path class="hatchfill" d="M-20 324C80 316 300 316 400 324V380H-20Z" opacity=".6"/>')
+    c(tree(c, 112, 312, 196, 58, lean=22))
+    ash = c.canopy
+    c(tree(c, 270, 312, 164, 86, lean=-26))
+    for pts, w0 in (([(128, 248), (158, 222), (196, 208), (232, 206), (254, 192)], 10), ([(254, 252), (226, 230), (190, 220), (154, 214), (128, 200)], 9)):
+        c(root_arch(c, pts, w0, 3, cls="wash ink thin"))
+    for x, y in ((206, 206), (176, 216)):
+        c(clump(c, x, y, 13))
+    for x0 in (112, 270):
+        c(f'<path class="ink thin" d="M{x0 - 16} 312C{x0 - 28} 318 {x0 - 38} 314 {x0 - 46} 322M{x0 + 16} 312C{x0 + 28} 314 {x0 + 38} 322 {x0 + 46} 318M{x0 - 4} 314C{x0 - 8} 324 {x0 - 2} 330 {x0 - 6} 338M{x0 + 6} 314C{x0 + 10} 324 {x0 + 6} 332 {x0 + 12} 338"/>')
+    c('<path class="ink hair" d="M40 344c6 -4 12 -4 16 0M320 346c6 -4 12 -4 16 0M180 350c6 -4 12 -4 16 0"/>')
     c(crown(c, SIGNS[s], RULER[s]))
     return c
 
 
 def tn03():
     s = 3
-    c = T(s, 403, "The Chariot, engraved: the Trundholm chariot of the Bronze Age, its horse on wheels drawing the great disc, the disc turned to its dark side for the moon's journey through the night, under the seal of the Moon within the crab's claws",
+    c = T(s, 403, "The Chariot, engraved: the Trundholm chariot of the Bronze Age, its horse standing on wheels and drawing the great disc, the disc turned to its dark side for the moon's journey through the night, under the seal of the Moon within the crab's claws",
           glow=(260, 200, 190))
-    c(stars(c, 12, y0=100, y1=200, avoid=lambda x, y: x > 170 and y > 120))
-    c(hills(c, 300, [(60, 12), (320, 16)], shade=False))
-    c(ground(c, 300))
-    def wheel(x, y, r=17):
-        sp = "".join(f"M{f(pol(x, y, 4, a)[0])} {f(pol(x, y, 4, a)[1])}L{f(pol(x, y, r - 3, a)[0])} {f(pol(x, y, r - 3, a)[1])}" for a in (0, 90))
-        return f'<circle cx="{x}" cy="{y}" r="{r}" class="wash ink heavy"/><path class="ink thin" d="{sp}"/><circle cx="{x}" cy="{y}" r="4" class="tint ink thin"/>'
-    c('<path class="ink heavy" d="M80 292H172M218 292H294"/>')
-    for x in (84, 168, 222, 290):
-        c(wheel(x, 296))
-    c(horse(c, 124, 250, 1.05))
-    c(rope("M176 222C196 222 210 224 204 226", c.p, 4, 2.4, ".5 2", fill=c.p["T"]), '<path class="ink thin" d="M160 290H200"/>')
-    c('<circle cx="256" cy="228" r="52" class="mid ink heavy"/><circle cx="256" cy="228" r="44" class="ink thin"/>',
-      '<path class="ink hair" d="' + "".join(f"M{f(pol(254, 230, 30, a)[0])} {f(pol(254, 230, 30, a)[1])}a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" for a in range(0, 360, 30)) + '"/>',
-      '<circle cx="254" cy="230" r="14" class="ink thin"/><circle cx="254" cy="230" r="5" class="light ink hair"/>',
-      '<path fill="url(#hx)" d="M254 178A52 52 0 0 1 254 282A52 52 0 0 1 254 178Z" opacity=".5"/>')
-    c('<path class="ink heavy" d="M256 280V292"/>')
-    c(crescent(80, 132, 14, "light ink thin"))
+    c(stars(c, 14, y0=100, y1=200, avoid=lambda x, y: x > 200 and y > 140))
+    c(crescent(78, 134, 14, "light ink thin"))
+    c(hills(c, 306, [(60, 10), (320, 14)], shade=False))
+    c(ground(c, 306))
+    def wheel(x, y, r=13):
+        sp = f"M{x - r + 2} {y}H{x + r - 2}M{x} {y - r + 2}V{y + r - 2}"
+        return f'<circle cx="{x}" cy="{y}" r="{r}" class="wash ink heavy"/><circle cx="{x}" cy="{y}" r="{r - 3}" class="ink hair"/><path class="ink thin" d="{sp}"/><circle cx="{x}" cy="{y}" r="3.4" class="tint ink thin"/>'
+    c('<path class="ink heavy" d="M70 284H294"/><path class="ink thin" d="M78 284V292M160 284V292M236 284V292M286 284V292"/>')
+    for x in (78, 160, 236, 286):
+        c(wheel(x, 294))
+    c(horse(c, 118, 282, 1.12))
+    c('<path class="ink thin" d="M244 266V284M228 278H262"/>')
+    x0, y0, R = 260, 210, 58
+    c(f'<circle cx="{x0}" cy="{y0}" r="{R}" class="mid ink heavy"/><circle cx="{x0}" cy="{y0}" r="{R}" fill="url(#hx)" opacity=".55"/>',
+      f'<circle cx="{x0}" cy="{y0}" r="{R - 7}" class="ink thin"/><circle cx="{x0}" cy="{y0}" r="{R - 22}" class="ink thin"/><circle cx="{x0}" cy="{y0}" r="14" class="ink thin"/>')
+    zig = "".join(f"{'M' if k == 0 else 'L'}{f(pol(x0, y0, R - 11 if k % 2 else R - 18, k * 7.5)[0])} {f(pol(x0, y0, R - 11 if k % 2 else R - 18, k * 7.5)[1])}" for k in range(49))
+    c(f'<path fill="none" stroke="#f8f9fb" stroke-width="1.3" d="{zig}"/>')
+    for a in range(0, 360, 36):
+        sx, sy = pol(x0, y0, R - 29, a)
+        c(f'<path fill="none" stroke="#f8f9fb" stroke-width="1.2" d="M{f(sx)} {f(sy)}m-4 0a4 4 0 1 1 4 4a2.4 2.4 0 1 1 -2 -2.4"/>')
+    c(f'<circle cx="{x0}" cy="{y0}" r="6" fill="none" stroke="#f8f9fb" stroke-width="1.3"/>')
+    c(rope("M196 196C210 194 222 196 232 204", c.p, 4, 2.4, ".5 2", fill=c.p["T"]))
     c(crown(c, SIGNS[s], RULER[s]))
     return c
 
@@ -119,8 +132,10 @@ def tn04():
           glow=(190, 190, 220))
     c(sea(c, top=250, rows=6))
     c('<path class="wash ink heavy" d="M30 300C40 270 90 252 190 250C290 252 340 270 350 300Z"/><path class="hatchfill" d="M250 254C300 260 340 276 350 300H310C300 280 280 264 250 254Z"/>')
-    c('<path class="wash ink heavy" d="M286 280C280 240 290 196 312 184C330 178 342 196 344 230C346 254 342 272 338 280Z"/><path class="hatchfill" d="M326 182C340 190 346 214 344 240C342 260 340 272 338 280H326C332 248 332 210 326 182Z"/>',
-      '<path class="ink hair" d="M298 230L306 214M300 256L310 244M318 200L322 190"/>')
+    c('<path class="wash ink heavy" d="M282 282L280 246L292 214L304 196L322 188L340 198L350 222L352 254L346 282Z"/>',
+      '<path fill="url(#hd)" d="M322 188L340 198L350 222L352 254L346 282H326L330 246L326 214Z" opacity=".9"/>',
+      '<path class="ink thin" d="M292 214L312 222L326 214M312 222L310 252L330 246M280 246L310 252M310 252L304 282"/>',
+      '<path class="ink hair" d="M296 238l6 -4M318 236l6 -6M334 262l6 -4M300 268l6 -2"/>')
     c(wolf(c, 190, 272, 1.2, "lying", cls="light ink thin"))
     c('<path class="light ink thin" d="M84 240L80 206L84 198L88 206L90 240Z"/><path class="tint ink thin" d="M76 240H96V245H76Z"/><path class="wash ink thin" d="M83 245H89V256H83Z"/>')
     c(f'<path fill="none" stroke="{c.p["T"]}" stroke-width="2.4" d="M150 226C156 246 170 262 190 264C214 266 222 236 244 236C262 236 270 256 292 262"/>',
@@ -132,18 +147,21 @@ def tn04():
 
 def tn05():
     s = 5
-    c = T(s, 405, "The Hermit, engraved: Mimir's well beneath the root of the World Tree, and in its water the eye the Allfather pledged for one drink of wisdom, shining up out of the dark, under the seal of Mercury among the ears of wheat",
-          glow=(190, 250, 170))
-    c(root(c, [(-20, 120), (40, 126), (96, 152), (130, 196), (150, 250)], 46, 12))
-    c(root(c, [(400, 130), (340, 138), (290, 168), (256, 210), (240, 252)], 40, 10))
-    c(root(c, [(40, 126), (20, 160), (10, 200)], 16, 5, "wash ink thin"), root(c, [(340, 138), (366, 170), (372, 206)], 14, 5, "wash ink thin"))
-    c(ground(c, 262))
-    c('<path class="wash ink heavy" d="M110 262V320C110 334 150 344 190 344C230 344 270 334 270 320V262Z"/><path class="hatchfill" d="M240 262V334C256 330 270 326 270 320V262Z"/>',
-      '<path class="ink hair" d="M110 286C130 294 250 294 270 286M110 308C130 316 250 316 270 308M140 262V290M180 266V294M220 266V294M250 262V290M126 294V316M200 296V318M240 294V316"/>')
-    c('<ellipse cx="190" cy="262" rx="80" ry="20" class="light ink heavy"/><ellipse cx="190" cy="262" rx="66" ry="14" class="mid ink thin"/>',
-      '<ellipse cx="190" cy="262" rx="66" ry="14" fill="url(#hx)" opacity=".6"/>')
-    c(sun_rays(c, 190, 262, 14, 34, 190, 350, 20, 4))
-    c('<path class="light ink thin" d="M170 262C178 254 202 254 210 262C202 270 178 270 170 262Z"/><circle cx="190" cy="262" r="6" class="tint ink thin"/><circle cx="190" cy="262" r="2.4" class="fill-ink"/>')
+    c = T(s, 405, "The Hermit, engraved: the foot of the World Tree, one great root of it arching over Mimir's well with fine rootlets hanging toward the water, and in the water the eye the Allfather pledged for one drink of wisdom, shining up out of the dark, under the seal of Mercury among the ears of wheat",
+          glow=(210, 250, 170))
+    c(root_arch(c, [(112, 150), (96, 104), (80, 50), (72, -12)], 20, 30, cls="wash ink thin"), root_arch(c, [(250, 132), (282, 92), (310, 40), (320, -12)], 14, 22, cls="wash ink thin"))
+    c(root_arch(c, [(24, 262), (50, 204), (96, 152), (150, 128), (206, 122), (258, 136), (300, 172), (322, 222), (332, 278)], 48, 20,
+                rootlets=[(.3, 56), (.38, 82), (.46, 100), (.54, 94), (.62, 74), (.7, 50)]))
+    c(root_arch(c, [(300, 172), (340, 168), (372, 182), (396, 204)], 16, 8, cls="wash ink thin"))
+    c('<path class="wash ink heavy" d="M-10 360V214C14 206 40 214 58 232C74 250 84 268 92 290L96 360Z"/><path class="hatchfill" d="M40 216C60 228 76 250 86 276C90 290 92 300 94 320H70C70 280 60 244 40 216Z"/>',
+      '<path class="ink hair" d="M10 236l10 4M26 252l8 6M14 280l10 2M44 270l6 8"/>')
+    c(ground(c, 272))
+    c('<path class="wash ink heavy" d="M110 272V320C110 334 150 344 190 344C230 344 270 334 270 320V272Z"/><path class="hatchfill" d="M240 272V334C256 330 270 326 270 320V272Z"/>',
+      '<path class="ink hair" d="M110 294C130 302 250 302 270 294M110 316C130 324 250 324 270 316M140 272V298M180 276V302M220 276V302M250 272V298M126 302V324M200 304V326M240 302V324"/>')
+    c('<ellipse cx="190" cy="272" rx="80" ry="20" class="light ink heavy"/><ellipse cx="190" cy="272" rx="66" ry="14" class="mid ink thin"/>',
+      '<ellipse cx="190" cy="272" rx="66" ry="14" fill="url(#hx)" opacity=".6"/>')
+    c(sun_rays(c, 190, 272, 14, 34, 190, 350, 20, 4))
+    c('<path class="light ink thin" d="M170 272C178 264 202 264 210 272C202 280 178 280 170 272Z"/><circle cx="190" cy="272" r="6" class="tint ink thin"/><circle cx="190" cy="272" r="2.4" class="fill-ink"/>')
     c(crown(c, SIGNS[s], RULER[s]))
     return c
 
@@ -174,11 +192,17 @@ def tn06():
 
 def tn07():
     s = 7
-    c = T(s, 407, "Death, engraved: Gjallarbru, the bridge roofed with shining gold over the river Gjoll, leading on to the gate of Hel, under the seal of Mars between the scorpion's tails",
+    c = T(s, 407, "Death, engraved: Gjallarbru, the bridge roofed with shining gold over the river Gjoll, leading on to the barred gate of Hel set in the cliff, under the seal of Mars between the scorpion's tails",
           glow=(300, 190, 200))
-    c('<path class="mid ink heavy" d="M268 290V134H340V290Z"/><path fill="url(#hx)" d="M268 134H340V290H268Z" opacity=".5"/>',
-      '<path class="ink thin" d="M262 134H346V122H262Z"/><path class="ink thin" d="' + "".join(f"M{x} 140V290" for x in range(280, 340, 12)) + '"/>',
-      '<path class="ink thin" d="M274 196H334M274 250H334"/>')
+    c('<path class="wash ink heavy" d="M240 300L248 220L240 180L256 140L272 120L300 112L330 118L352 106L374 116L390 112V300Z"/>',
+      '<path fill="url(#hd)" d="M330 118L352 106L374 116L390 112V300H344C346 240 340 170 330 118Z" opacity=".85"/>',
+      '<path class="ink hair" d="M252 196L262 184M256 250L266 240M362 150L370 140M372 200L380 190M366 262L376 250"/>')
+    c('<path class="plate ink heavy" d="M270 300V196C270 170 284 152 306 152C328 152 342 170 342 196V300Z"/>',
+      '<path class="ink thin" d="M262 300V196C262 164 280 142 306 142C332 142 350 164 350 196V300"/>',
+      '<path class="ink hair" d="M266 192C268 166 284 148 306 148C328 148 344 166 346 192"/>')
+    c('<path class="light ink thin" d="' + "".join(f"M{x} 300V{f(196 - math.sqrt(max(0, 36 ** 2 - (x - 306) ** 2)) * .9 + 20)}" for x in range(278, 340, 10)) + '"/>',
+      '<path class="light ink thin" d="M270 214H342M270 254H342"/>',
+      "".join(f'<circle cx="{x}" cy="{y}" r="2" class="light ink hair"/>' for x in range(278, 340, 10) for y in (214, 254)))
     c(sea(c, top=262, rows=6))
     c('<path class="ink hair" d="M0 300C40 296 80 304 120 300M150 318C190 314 230 322 270 316"/>')
     c('<path class="wash ink heavy" d="M30 300C70 236 220 236 270 280V292C220 254 80 254 44 304Z"/>',
@@ -188,6 +212,7 @@ def tn07():
         c(f'<path class="ink thin" d="M{f(x)} {f(y)}V{f(y - 30)}"/>')
     c('<path class="tint ink thin" d="M30 268C70 202 220 200 274 248L270 236C220 186 70 188 22 258Z"/>',
       '<path class="ink hair" d="M40 252C80 204 210 200 262 236M50 244C90 202 200 198 254 230"/>')
+    c('<path class="ink hair" d="M232 290C244 284 256 288 266 282M220 300C236 294 252 298 268 292"/>')
     c(sparkle(120, 196, 5), sparkle(200, 194, 5))
     c(crown(c, SIGNS[s], RULER[s]))
     return c
@@ -207,8 +232,11 @@ def tn08():
         c(f'<path class="wash ink heavy" d="M{x - 30} 314C{x - 38} 290 {x - 36} 252 {x - 22} 238H{x + 22}C{x + 36} 252 {x + 38} 290 {x + 30} 314Z"/>',
           f'<ellipse cx="{x}" cy="238" rx="22" ry="5" class="light ink thin"/><path class="tint ink thin" d="M{x - 34} 268H{x + 34}V278H{x - 34}Z"/>',
           f'<path class="ink hair" d="M{x - 32} 290H{x + 32}"/>')
-    c('<path class="wash ink heavy" d="M60 208C56 188 70 172 92 168L118 162L120 172L96 180C80 184 72 196 76 210Z"/>',
-      f'<path fill="none" stroke="{c.p["T"]}" stroke-width="4" d="M118 168C136 172 150 196 156 238"/><path class="ink hair" d="M118 166C138 170 152 194 158 238"/>')
+    horn = "M54 150C50 138 54 128 62 124C80 140 102 160 128 166L124 182C96 178 70 166 54 150Z"
+    c(f'<path class="light ink heavy" d="{horn}"/>', f'<path fill="url(#hd)" d="M62 124C80 140 102 160 128 166L126 174C100 168 78 154 62 136Z" opacity=".6"/>',
+      '<path class="tint ink thin" d="M54 150C50 138 54 128 62 124L66 128C60 132 58 140 60 148Z"/><path class="tint ink thin" d="M118 166L128 166L124 182L114 180Z"/>',
+      '<path class="ink hair" d="M74 138C78 146 76 156 70 160M90 150C94 156 92 166 86 170M104 158C108 164 106 172 100 176"/>')
+    c(f'<path fill="none" stroke="{c.p["T"]}" stroke-width="4" d="M126 176C140 184 150 206 156 238"/>', '<path class="ink hair" d="M126 174C142 182 152 204 158 238"/>')
     c(sparkle(190, 200, 6), sparkle(272, 210, 4), sparkle(110, 140, 4))
     c(crown(c, SIGNS[s], RULER[s]))
     return c
@@ -216,19 +244,27 @@ def tn08():
 
 def tn09():
     s = 9
-    c = T(s, 409, "The Devil, engraved: the three stones set on edge in the cave where the bound one lies, the fetters across them, the serpent hung above dripping its venom into the bowl held beneath, under the seal of Saturn between the goat's horns",
-          glow=(190, 160, 220))
-    c('<path class="mid" d="M-10 100H390V360H-10Z" opacity=".25"/><path class="wash ink heavy" d="M-10 360V150C40 120 110 104 190 104C270 104 340 120 390 150V360H340C330 260 280 200 190 196C100 200 50 260 40 360Z"/>',
-      '<path class="ink hair" d="M20 170L40 220M50 150L60 190M330 150L346 200M360 170L370 230"/>')
+    c = T(s, 409, "The Devil, engraved: the three stones set on edge in the cave where the bound one lies, the iron fetters across them, the serpent hung from the roof above, its venom dripping into the bowl set beneath, under the seal of Saturn between the goat's horns",
+          glow=(190, 230, 170))
+    c('<path class="mid" d="M-10 96H390V330H-10Z" opacity=".3"/><rect x="-10" y="96" width="400" height="234" fill="url(#hx)" opacity=".35"/>')
+    c('<path class="wash ink heavy" d="M-10 96H390V132L370 138L362 164L350 142L330 150L318 176L306 148L280 140L262 152L250 138L226 140L214 158L204 136L176 138L166 162L156 140L130 146L118 170L106 144L80 140L66 160L56 138L30 142L18 166L8 140L-10 142Z"/>',
+      '<path fill="url(#hd)" d="M-10 120H390V132L370 138L362 164L350 142L330 150L318 176L306 148L280 140L262 152L250 138L226 140L214 158L204 136L176 138L166 162L156 140L130 146L118 170L106 144L80 140L66 160L56 138L30 142L18 166L8 140L-10 142Z" opacity=".8"/>')
+    c('<path class="wash ink heavy" d="M-10 330V140L18 150L30 190L22 240L36 290L40 330Z"/><path class="wash ink heavy" d="M390 330V140L364 152L356 196L366 246L350 290L346 330Z"/>',
+      '<path class="ink hair" d="M8 180L18 196M12 230L24 244M368 186L378 198M362 270L374 282"/>')
     c(ground(c, 314, wob=3))
-    for x in (110, 190, 270):
-        c(f'<path class="wash ink heavy" d="M{x - 26} 314L{x - 22} 262L{x - 6} 254H{x + 18}L{x + 26} 266L{x + 24} 314Z"/><path class="hatchfill" d="M{x + 10} 254H{x + 18}L{x + 26} 266L{x + 24} 314H{x + 8}Z"/>')
-    c(rope("M74 274C120 284 160 268 190 278C220 288 260 270 306 282M80 296C120 304 160 292 190 300C220 308 260 294 300 302", c.p, 6, 3.6, ".7 2.4", fill=c.p["M"]))
-    c(rope("M150 204C160 214 176 216 190 214C206 212 220 216 226 224", c.p, 11, 7, ".9 3", fill=c.p["T"]),
-      '<path class="tint ink thin" d="M226 224C232 232 232 242 224 246C218 248 214 244 216 238Z"/><circle cx="224" cy="236" r="1.6" class="fill-ink"/>',
-      '<path class="ink thin" d="M150 204C142 196 140 186 146 176"/>')
-    c('<path class="tint ink thin" d="M222 250C224 256 226 260 222 262C218 262 218 256 222 250Z"/><path class="tint ink thin" d="M222 268C224 272 225 276 222 278C219 278 219 272 222 268Z"/>')
-    c('<path class="light ink heavy" d="M200 290C202 304 242 304 244 290Z"/><ellipse cx="222" cy="290" rx="22" ry="4" class="tint"/><path class="ink thin" d="M244 292C252 292 258 296 260 302"/>')
+    for x, top in ((110, 262), (190, 254), (270, 262)):
+        c(f'<path class="wash ink heavy" d="M{x - 28} 314L{x - 26} {top + 6}L{x - 14} {top}H{x + 16}L{x + 28} {top + 8}L{x + 26} 314Z"/><path class="hatchfill" d="M{x + 10} {top}H{x + 16}L{x + 28} {top + 8}L{x + 26} 314H{x + 8}Z"/>'
+          f'<path class="ink hair" d="M{x - 18} {top + 30}l8 4M{x - 6} {top + 44}l10 2"/>')
+    for y in (282, 300):
+        c(f'<path class="mid ink thin" d="M74 {y - 4}C120 {y + 4} 160 {y - 6} 190 {y}C220 {y + 6} 260 {y - 4} 306 {y + 2}V{y + 9}C260 {y + 3} 220 {y + 13} 190 {y + 7}C160 {y + 1} 120 {y + 11} 74 {y + 3}Z"/>'
+          + "".join(f'<circle cx="{x}" cy="{y + 3}" r="1.6" class="light ink hair"/>' for x in (96, 134, 170, 210, 246, 284)))
+    body = [(214, 150), (206, 168), (222, 184), (208, 200), (198, 214)]
+    c(f'<path class="tint ink thin" d="{taper(body, 15, 9)}"/>', '<path class="ink hair" d="' + "".join(f"M{f(x - 5)} {f(y - 2)}q5 5 10 0" for x, y in densify(body, 3)[1:-1]) + '"/>')
+    c('<path class="tint ink thin" d="M192 212C188 220 190 230 198 236C206 230 208 220 204 212Z"/><circle cx="194" cy="222" r="1.6" class="fill-ink"/><circle cx="202" cy="222" r="1.6" class="fill-ink"/>',
+      '<path class="light ink hair" d="M195 234L196 240L197 234ZM199 234L200 240L201 234Z"/>')
+    for y in (246, 252):
+        c(f'<path class="light ink thin" d="M198 {y - 4}C200 {y} 201 {y + 2} 198 {y + 3}C195 {y + 2} 196 {y} 198 {y - 4}Z"/>')
+    c('<path class="light ink heavy" d="M174 254C176 268 220 268 222 254Z"/><ellipse cx="198" cy="254" rx="24" ry="4.4" class="tint"/>')
     c(crown(c, SIGNS[s], RULER[s]))
     return c
 
