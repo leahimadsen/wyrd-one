@@ -300,10 +300,7 @@ def tn09():
     for y in (282, 300):
         c(f'<path class="mid ink thin" d="M74 {y - 4}C120 {y + 4} 160 {y - 6} 190 {y}C220 {y + 6} 260 {y - 4} 306 {y + 2}V{y + 9}C260 {y + 3} 220 {y + 13} 190 {y + 7}C160 {y + 1} 120 {y + 11} 74 {y + 3}Z"/>'
           + "".join(f'<circle cx="{x}" cy="{y + 3}" r="1.6" class="light ink hair"/>' for x in (96, 134, 170, 210, 246, 284)))
-    body = [(214, 150), (206, 168), (222, 184), (208, 200), (198, 214)]
-    c(f'<path class="tint ink thin" d="{taper(body, 15, 9)}"/>', '<path class="ink hair" d="' + "".join(f"M{f(x - 5)} {f(y - 2)}q5 5 10 0" for x, y in densify(body, 3)[1:-1]) + '"/>')
-    c('<path class="tint ink thin" d="M192 212C188 220 190 230 198 236C206 230 208 220 204 212Z"/><circle cx="194" cy="222" r="1.6" class="fill-ink"/><circle cx="202" cy="222" r="1.6" class="fill-ink"/>',
-      '<path class="light ink hair" d="M195 234L196 240L197 234ZM199 234L200 240L201 234Z"/>')
+    c(serpent(c, [(198, 228), (204, 210), (220, 192), (206, 174), (214, 150), (220, 136)], 13, 6, tongue=False))
     for y in (246, 252):
         c(f'<path class="light ink thin" d="M198 {y - 4}C200 {y} 201 {y + 2} 198 {y + 3}C195 {y + 2} 196 {y} 198 {y - 4}Z"/>')
     c('<path class="light ink heavy" d="M174 254C176 268 220 268 222 254Z"/><ellipse cx="198" cy="254" rx="24" ry="4.4" class="tint"/>')
@@ -337,7 +334,7 @@ def tn11():
     c(stars(c, 14, y0=100, y1=230, avoid=lambda x, y: math.hypot(x - 286, y - 150) < 50 or (60 < x < 240 and 160 < y < 240)))
     c(full_moon(c, 290, 150, 30))
     c('<path class="ink hair" d="M246 150l-26 0M248 140l-20 -2M248 160l-20 2"/>')
-    c(wolf(c, 140, 214, 1.05, "running", cls="light ink thin"))
+    c(wolf(c, 150, 214, .94, "running", cls="light ink thin"))
     for k in range(12):
         x, y = pol(70, 128, 16, k * 30)
         c(sparkle(x, y, 3.6, "tint ink hair"))

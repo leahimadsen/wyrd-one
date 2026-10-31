@@ -21,16 +21,13 @@ def b27():
 
 
 def b28():
-    c = Plate("earth", 152, "3 of Jewels, engraved: a temple gate going up inside its scaffold, one jewel set in the lintel and two in the capitals, the plumb line hanging true, under the seal of Mars between the goat's horns",
+    c = Plate("earth", 152, "3 of Jewels, engraved: the carved gateway of a stupa going up inside its scaffold, its third beam still to be raised, one jewel set in the lintel and two in the capitals, the plumb line hanging true, under the seal of Mars between the goat's horns",
               glow=(190, 190, 220))
     emblems(c, "jewel")
     c(ground(c, 316))
     c('<path class="ink thin" d="M70 316V130M310 316V130M60 160H320M60 240H320M70 160L150 240M310 160L230 240"/>')
-    c('<path class="wash ink heavy" d="M110 316V180H148V316ZM232 316V180H270V316Z"/><path class="hatchfill" d="M136 180H148V316H136ZM258 180H270V316H258Z"/>',
-      '<path class="ink hair" d="M110 214H148M110 250H148M110 286H148M232 214H270M232 250H270M232 286H270"/>',
-      '<path class="wash ink heavy" d="M100 180V166H158V180ZM222 180V166H280V180Z"/>',
-      '<path class="wash ink heavy" d="M96 166V140C120 124 160 118 190 118C220 118 260 124 284 140V166Z"/><path class="ink thin" d="M104 154C130 140 160 134 190 134C220 134 250 140 276 154"/>')
-    c(use("jewel", 190, 140, .62), use("jewel", 129, 196, .5), use("jewel", 251, 196, .5))
+    c(torana(c, 190, 316, 160, 210, built=.67))
+    c(use("jewel", 190, 160, .62), use("jewel", 139, 196, .5), use("jewel", 241, 196, .5))
     c('<path class="ink hair" d="M300 160V262"/><path class="tint ink thin" d="M300 262L294 272L300 284L306 272Z"/>')
     c(hammer(166, 316, 70, .8))
     c(crown(c, S, "Mars"))
@@ -85,7 +82,7 @@ def n28():
 
 
 def n29():
-    c = Plate("earth", 156, "4 of Shields, engraved: four shields fixed fast to the shut gate of the steading, the tower on the crag behind struck by lightning for the Tower exalted, under the seal of the Sun between the goat's horns",
+    c = Plate("earth", 156, "4 of Shields, engraved: four shields fixed fast to the shut gate of the steading, the timber tower on the crag behind struck by lightning for the Tower exalted, under the seal of the Sun between the goat's horns",
               glow=(300, 160, 200))
     emblems(c, "shield")
     c('<path class="wash ink heavy" d="M240 260C250 230 262 216 278 214H330C346 220 356 240 362 260Z"/><path class="hatchfill" d="M330 214C346 220 356 240 362 260H340C336 240 334 226 330 214Z"/>')

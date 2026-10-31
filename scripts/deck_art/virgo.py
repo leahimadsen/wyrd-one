@@ -31,7 +31,7 @@ def b15():
 
 
 def b16():
-    c = Plate("earth", 112, "9 of Jewels, engraved: the wish-granting tree in a walled garden, nine jewels hanging ripe in its boughs, the star of Mercury exalted above, under the seal of Venus among the ears of wheat",
+    c = Plate("earth", 112, "9 of Jewels, engraved: the wish-granting tree in a walled garden behind its roofed gate, nine jewels hanging ripe in its boughs, the star of Mercury exalted above, under the seal of Venus among the ears of wheat",
               glow=(190, 190, 220))
     emblems(c, "jewel")
     c(tree(c, 190, 300, 170, 92))
@@ -40,7 +40,9 @@ def b16():
     c(star_mark(c, "Mercury", 322, 128, 15))
     c('<path class="wash ink heavy" d="M-10 268H390V306H-10Z"/><path class="hatchfill" d="M-10 292H390V306H-10Z" opacity=".7"/>',
       '<path class="ink hair" d="M-10 280H390M20 268V280M60 268V280M100 268V280M140 268V280M240 268V280M280 268V280M320 268V280M360 268V280M40 280V292M80 280V292M120 280V292M260 280V292M300 280V292M340 280V292"/>',
-      '<path class="light ink heavy" d="M160 306V262C160 246 174 236 190 236C206 236 220 246 220 262V306Z"/><path class="ink thin" d="M168 306V264C168 252 178 244 190 244C202 244 212 252 212 264V306"/>')
+      '<path class="light ink thin" d="M-10 262H390V268H-10Z"/><path class="ink hair" d="' + "".join(f"M{x} 262V268" for x in range(-6, 390, 6)) + '"/>',
+      '<path class="wash ink heavy" d="M160 306V266H170V306ZM210 306V266H220V306Z"/><path class="plate ink thin" d="M170 306V270H210V306Z"/><path class="tint ink thin" d="M172 306V272H189V306ZM191 306V272H208V306Z"/>')
+    c(pagoda_roof(c, 190, 266, 96, 26))
     c(ground(c, 306))
     for x in (40, 84, 296, 340):
         c(f'<path class="ink thin" d="M{x} 324V306"/><circle cx="{x}" cy="304" r="5" class="tint ink thin"/><path class="wash ink hair" d="M{x} 316c-6 -4 -10 -2 -10 2c4 2 8 2 10 -2ZM{x} 318c6 -4 10 -2 10 2c-4 2 -8 2 -10 -2Z"/>')
@@ -109,16 +111,13 @@ def n17():
     c = Plate("earth", 116, "10 of Shields, engraved: ten shields hung along the eaves of the great hall, the hound lying before its open door, under the seal of Mercury among the ears of wheat",
               glow=(190, 160, 220))
     emblems(c, "shield")
-    c('<path class="wash ink heavy" d="M40 300V196H340V300Z"/><path class="hatchfill" d="M300 196H340V300H300Z" opacity=".6"/>',
-      '<path class="tint ink heavy" d="M20 200L190 116L360 200Z"/><path class="ink hair" d="M60 190L190 126L320 190M100 180L190 136L280 180"/>',
-      '<path class="ink hair" d="' + "".join(f"M{x} 214V300" for x in range(60, 340, 20)) + '"/>')
-    c(dragon_head(162, 122, .5, flip=True, cls="wash ink thin"), dragon_head(218, 122, .5, cls="wash ink thin"))
-    c('<path class="plate ink heavy" d="M166 300V246C166 236 176 228 190 228C204 228 214 236 214 246V300Z"/><path class="ink hair" d="M172 300V248C172 240 180 234 190 234C200 234 208 240 208 248V300"/>')
+    c(longhouse(c, 190, 302, 272, 140))
     for k in range(10):
-        x = 58 + k * 29.3
-        c(use("shield", x, 214, .62))
+        x = 76 + k * 25.4
+        if abs(x - 190) < 20: continue
+        c(use("shield", x, 280, .52))
     c(ground(c, 300))
-    c(hound(104, 336, .8))
+    c(hound(110, 334, 1, c=c))
     c(crown(c, S, "Mercury"))
     return c
 
