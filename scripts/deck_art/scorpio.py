@@ -56,7 +56,7 @@ def b23():
         c(cloud(c, x, y + 26, 74, 16, "light ink thin", False), use("lotus", x, y + 18, .9))
     x, y = spots[0]; c(use("jewel", x, y - 10, .45))
     x, y = spots[1]; c(crown_shape(x, y + 2, 30, 18, "tint ink thin"))
-    x, y = spots[2]; c(f'<path class="wash ink thin" d="M{x - 14} {y + 4}V{y - 10}H{x + 14}V{y + 4}Z"/><path class="tint ink thin" d="M{x - 18} {y - 10}L{x} {y - 26}L{x + 18} {y - 10}Z"/><path class="ink hair" d="M{x - 4} {y + 4}V{y - 4}H{x + 4}V{y + 4}"/>')
+    x, y = spots[2]; c(pagoda(c, x, y + 6, 18, 2, finial=True, door=False))
     x, y = spots[3]; c(f'<path class="tint ink thin" d="M{x - 12} {y + 4}C{x - 16} {y - 8} {x + 8} {y - 8} {x + 4} {y - 14}C{x} {y - 20} {x - 10} {y - 18} {x - 8} {y - 24}"/><circle cx="{x - 8}" cy="{y - 25}" r="3" class="tint ink thin"/>')
     x, y = spots[4]; c(flame(c, x, y + 4, 26, 14))
     x, y = spots[5]; c(crescent(x, y - 8, 12, "light ink thin"))
@@ -72,7 +72,8 @@ def n21():
               glow=(190, 190, 200))
     emblems(c, "cup")
     c(hills(c, 214, [(40, 16), (300, 22)]))
-    c('<path class="wash ink heavy" d="M60 206V180L86 166L112 180V206Z"/><path class="tint ink thin" d="M54 182L86 158L118 182Z"/><path class="ink hair" d="M78 206V192H94V206"/>')
+    c(longhouse(c, 86, 208, 70, 30))
+    c('')
     c(sea(c, top=228, bottom=272, rows=3))
     c('<path class="wash ink heavy" d="M210 272C214 236 238 222 262 222C286 222 310 236 314 272H298C294 248 280 238 262 238C244 238 230 248 226 272Z"/><path class="ink hair" d="M212 252H312M216 240L226 248M236 228V238M262 222V238M288 228V238M308 240L298 248"/>')
     c(ground(c, 272))
@@ -89,11 +90,7 @@ def n22():
     emblems(c, "cup")
     c(sun_rays(c, 300, 150, 30, 120, 150, 330, 15))
     c('<circle cx="300" cy="150" r="26" class="light ink thin"/>')
-    c('<path class="wash ink heavy" d="M70 270V212H250V270Z"/><path class="ink hair" d="M70 226H250M70 240H250M70 254H250"/>',
-      '<path class="tint ink heavy" d="M54 214C80 170 130 156 160 156C190 156 240 170 266 214Z"/>',
-      '<path class="ink hair" d="' + "".join(f"M{x} {214 - (40 if 100 < x < 220 else 20)}l-3 -8M{x + 6} {212 - (40 if 100 < x < 220 else 20)}l2 -8" for x in range(70, 256, 14)) + '"/>',
-      '<path class="plate ink heavy" d="M146 270V236C146 228 152 224 160 224C168 224 174 228 174 236V270Z"/>')
-    c(smoke(c, 210, 160, 50, 2, 8))
+    c(longhouse(c, 150, 272, 200, 96, turf=True, smoke=True))
     c(ground(c, 270))
     for k, (x, y) in enumerate([(56, 300), (104, 312), (152, 318), (208, 318), (256, 312), (304, 300)]):
         c(use("cup", x, y, .74))
@@ -105,7 +102,7 @@ def n22():
 
 
 def n23():
-    c = Plate("water", 136, "7 of Cups, engraved: seven cups floating on clouds, each holding a vision, the serpent, the ring Draupnir, a dragon, a castle, a wreath, an apple and a veil, under the seal of Venus between the scorpion's tails",
+    c = Plate("water", 136, "7 of Cups, engraved: seven cups floating on clouds, each holding a vision, the serpent, the ring Draupnir, a dragon, a hall, a wreath, an apple and a veil, under the seal of Venus between the scorpion's tails",
               glow=(190, 200, 230))
     emblems(c, "cup")
     spots = [(76, 176), (152, 160), (228, 160), (304, 176), (112, 282), (190, 270), (268, 282)]
@@ -114,7 +111,7 @@ def n23():
     x, y = spots[0]; c(f'<path class="tint ink thin" d="M{x - 12} {y - 22}C{x - 16} {y - 34} {x + 8} {y - 34} {x + 4} {y - 40}C{x} {y - 46} {x - 10} {y - 44} {x - 8} {y - 50}"/><circle cx="{x - 8}" cy="{y - 51}" r="3" class="tint ink thin"/>')
     x, y = spots[1]; c(f'<circle cx="{x}" cy="{y - 34}" r="11" class="ink heavy"/><circle cx="{x}" cy="{y - 34}" r="11" fill="none" stroke="{c.p["T"]}" stroke-width="3"/><circle cx="{x}" cy="{y - 34}" r="6" class="ink hair"/>')
     x, y = spots[2]; c(dragon_head(x - 2, y - 30, .42, cls="tint ink thin"))
-    x, y = spots[3]; c(f'<path class="wash ink thin" d="M{x - 16} {y - 22}V{y - 40}H{x - 10}V{y - 36}H{x - 4}V{y - 44}H{x + 4}V{y - 36}H{x + 10}V{y - 40}H{x + 16}V{y - 22}Z"/><path class="ink hair" d="M{x - 3} {y - 22}V{y - 30}H{x + 3}V{y - 22}"/>')
+    x, y = spots[3]; c(longhouse(c, x, y - 22, 40, 22))
     x, y = spots[4]; c(wreath(c, x, y - 34, 10, 12))
     x, y = spots[5]; c(f'<circle cx="{x}" cy="{y - 30}" r="9" class="tint ink thin"/><path class="ink thin" d="M{x} {y - 39}l1 -5"/><path class="wash ink hair" d="M{x + 1} {y - 41}c4 -4 9 -3 10 0c-4 3 -8 3 -10 0Z"/>')
     x, y = spots[6]; c(f'<path class="wash ink thin" d="M{x - 14} {y - 20}C{x - 16} {y - 36} {x - 8} {y - 46} {x} {y - 48}C{x + 8} {y - 46} {x + 16} {y - 36} {x + 14} {y - 20}C{x + 6} {y - 24} {x - 6} {y - 24} {x - 14} {y - 20}Z"/><path class="ink hair" d="M{x - 6} {y - 22}C{x - 6} {y - 32} {x - 4} {y - 40} {x} {y - 46}M{x + 6} {y - 22}C{x + 6} {y - 32} {x + 4} {y - 40} {x} {y - 46}"/>')
@@ -167,15 +164,7 @@ def v072():
     c(stars(c, 10, y1=110))
     for x, h in [(40, 200), (80, 160), (330, 190), (360, 150)]:
         c(f'<path class="wash ink thin" d="M{x - 4} 304V{304 - h * .4}H{x + 4}V304Z"/><path class="wash ink thin" d="M{x} {304 - h}C{x - 30} {304 - h * .7} {x - 34} {304 - h * .44} {x} {304 - h * .4}C{x + 34} {304 - h * .44} {x + 30} {304 - h * .7} {x} {304 - h}Z"/><path class="ink hair" d="M{x} {304 - h * .9}V{304 - h * .45}M{x - 14} {304 - h * .6}L{x} {304 - h * .5}L{x + 14} {304 - h * .6}"/>')
-    deer = ('<path class="tint ink thin" d="M-40 0C-38 -14 -10 -20 14 -18C26 -16 34 -12 38 -4C40 6 30 12 14 12C-10 14 -36 12 -40 0Z"/>'
-            '<path class="tint ink thin" d="M24 -14C32 -26 38 -36 44 -44L54 -40C50 -30 44 -18 38 -4Z"/>'
-            '<path class="tint ink thin" d="M44 -44C48 -52 58 -54 66 -48L72 -40C66 -38 58 -36 52 -38Z"/>'
-            '<path class="tint ink thin" d="M48 -48L42 -60L52 -50Z"/><circle cx="58" cy="-45" r="1.6" class="fill-ink"/>'
-            '<path class="ink thin" d="M50 -50C48 -64 54 -74 50 -86M50 -64L60 -72M52 -76L44 -82M56 -48C60 -60 68 -66 68 -80M62 -62L72 -64"/>'
-            '<path class="ink heavy" d="M28 6L46 20L64 16M18 10L34 28L52 30M-30 4L-50 14L-72 10M-36 0L-58 4L-78 -4"/>'
-            '<path class="tint ink thin" d="M-38 -4L-48 -14L-40 -8Z"/>')
-    spots = "".join(f'<circle cx="{f(x)}" cy="{f(y)}" r="2" class="light ink hair"/>' for x, y in [(-24, -6), (-12, -10), (0, -6), (12, -10), (-18, 2), (-4, 2), (10, 0), (22, -4)])
-    c(f'<g transform="translate(200 210) scale(1.25) rotate(-8)">{deer}{spots}</g>')
+    c(deer(c, 196, 226, 1.15))
     c('<path class="ink thin" d="M10 268L96 252"/><path class="light ink thin" d="M96 252L84 246L88 253L86 260Z"/><path class="tint ink hair" d="M10 268L0 262L4 269L-2 274ZM18 266L8 260L12 267L6 272Z"/>',
       '<path class="ink hair" d="M50 266L30 272M70 260L54 266"/>')
     c(ground(c, 300, hatch=False))

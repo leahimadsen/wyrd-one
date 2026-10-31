@@ -127,18 +127,8 @@ def v022():
       '<path class="wash ink thin" d="M216 128C224 116 240 118 246 128C254 122 266 130 262 140C270 150 258 162 248 158C240 170 222 164 222 152C210 150 208 136 216 128Z"/>',
       '<path class="ink hair" d="M204 140H272M210 122C226 130 250 130 266 122M210 158C226 150 250 150 266 158"/>',
       '<path class="ink hair" d="M216 104C212 92 220 86 216 74M240 104C244 92 236 84 242 72M262 108C258 98 264 92 262 82"/>')
-    # the boar, rising in profile from the bottom of the sea, snout up
-    head = "M64 304C60 268 76 236 110 214C132 200 160 194 186 196L226 196C236 196 244 202 246 210C248 218 244 226 236 228L212 232C196 244 188 262 192 304Z"
-    c(f'<path class="wash ink heavy" d="{head}"/>', f'<path fill="url(#hd)" d="M192 304C188 262 196 244 212 232L236 228C222 250 214 276 216 304Z" opacity=".9"/>',
-      '<path class="ink hair" d="M84 276C104 260 128 250 156 246M80 292C102 278 128 270 160 268M100 236C120 226 144 222 170 222"/>')
-    for k in range(16):
-        t = k / 15; x = 64 + (148 - 64) * t + 6 * math.sin(t * 3); y = 300 - (300 - 204) * (t ** .8)
-        c(f'<path class="ink thin" d="M{f(x)} {f(y)}l{f(-10 + t * 4)} {f(-12 + t * 2)}"/>')
-    c('<path class="mid ink thin" d="M128 208L112 170L150 198Z"/><path class="ink hair" d="M120 190L134 202"/>',
-      '<path class="light ink thin" d="M168 212C174 206 184 206 188 212C182 216 174 216 168 212Z"/><circle cx="179" cy="211" r="2.2" class="fill-ink"/>',
-      '<ellipse cx="243" cy="212" rx="5" ry="10" transform="rotate(-14 243 212)" class="mid ink thin"/><circle cx="242" cy="208" r="1.4" class="fill-ink"/><circle cx="244" cy="216" r="1.4" class="fill-ink"/>',
-      '<path class="ink thin" d="M212 232C204 236 198 236 192 232"/>')
-    c('<path class="light ink heavy" d="M214 228C232 226 246 214 248 196C250 186 246 178 240 174C238 186 232 200 220 208C214 212 210 220 214 228Z"/><path class="ink hair" d="M220 220C232 214 240 202 242 188"/>')
+    # the boar, rising in profile from the bottom of the sea, snout up, the earth on his tusk
+    c(boar(c, 206, 236, 1.5, -40))
     c(river_beneath(c))
     return c
 

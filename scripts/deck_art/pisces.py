@@ -47,7 +47,7 @@ def b34():
 
 
 def b35():
-    c = Plate("water", 173, "10 of Lotuses, engraved: ten lotuses blooming along a rainbow arched over the home by the water, the star of Venus exalted, under the seal of Mars between the two fishes",
+    c = Plate("water", 173, "10 of Lotuses, engraved: ten lotuses blooming along a rainbow arched over the home by the water, its roof sweeping up at the eaves, the star of Venus exalted, under the seal of Mars between the two fishes",
               glow=(190, 200, 210))
     emblems(c, "lotus")
     c(rainbow(c, 190, 290, 160, w=8))
@@ -56,7 +56,7 @@ def b35():
         c(use("lotus", x, y + 6, .62))
     c(star_mark(c, "Venus", 190, 182, 15))
     c(ground(c, 290))
-    c(house(c, 190, 300, 72, 38))
+    c(hall(c, 190, 308, 70, 26), pagoda_roof(c, 190, 278, 118, 30))
     c(sea(c, top=318, rows=3))
     c(crown(c, S, "Mars"))
     return c
@@ -108,7 +108,7 @@ def n35():
         x, y = pol(190, 182, 20, k * 30)
         c(sparkle(x, y, 4.4, "tint ink hair"))
     c(ground(c, 290))
-    c('<path class="wash ink heavy" d="M126 304V270H254V304Z"/><path class="tint ink heavy" d="M118 272C140 250 240 250 262 272Z"/><path class="plate ink thin" d="M184 304V284H196V304Z"/><path class="ink hair" d="M140 280V304M160 280V304M220 280V304M240 280V304"/>')
+    c(longhouse(c, 190, 308, 150, 64, smoke=True))
     c(apple_tree(c, 60, 300, 90, 40, 4), apple_tree(c, 320, 300, 90, 40, 4))
     c('<path class="ink hair" d="M0 324C80 318 160 320 220 316M0 336C80 330 160 332 240 328M0 348C80 342 160 344 260 340"/>')
     c(crown(c, S, "Mars"))

@@ -80,15 +80,16 @@ def tb01():
 
 def tb02():
     s = 2
-    c = T(s, 302, "The Two Paths, engraved: the road forking at the old tree, one way to the palace gate and its banners, the other up into the forest and the mountains, under the seal of Mercury between the twin pillars",
+    c = T(s, 302, "The Two Paths, engraved: the road forking at the old tree, one way to the palace with its tiered roofs and banners, the other up into the forest and the mountains, under the seal of Mercury between the twin pillars",
           glow=(190, 180, 220))
     c(mountain(c, 200, 420, (318, 120), 236, snow=True))
     c(hills(c, 236, [(40, 12), (130, 8)]))
     for x, h in [(220, 70), (250, 84), (282, 66), (312, 90), (344, 74), (236, 54), (300, 60)]:
         c(f'<path class="wash ink thin" d="M{x} {246 - h}L{x - 14} {246 - h * .4}H{x - 6}L{x - 18} {246}H{x + 18}L{x + 6} {246 - h * .4}H{x + 14}Z"/><path class="ink hair" d="M{x} {246 - h}V246"/>')
-    c('<path class="wash ink heavy" d="M30 246V180H62V164H90V180H122V246Z"/><path class="tint ink thin" d="M56 166L76 140L96 166Z"/><path class="hatchfill" d="M104 180H122V246H104Z"/>',
-      '<path class="plate ink thin" d="M64 246V214C64 206 70 202 76 202C82 202 88 206 88 214V246Z"/><path class="ink hair" d="M30 194H122M30 208H62M90 208H122"/>',
-      '<path class="ink thin" d="M76 140V120"/><path class="tint ink thin" d="M76 120L98 126L76 132Z"/><path class="ink thin" d="M40 180V160M112 180V160"/><path class="tint ink hair" d="M40 160l12 4l-12 4ZM112 160l12 4l-12 4Z"/>')
+    c('<path class="wash ink heavy" d="M14 246V216H138V246Z"/><path class="ink hair" d="M14 226H138M14 236H138"/>', pagoda_roof(c, 76, 216, 140, 16, shade=False))
+    c(pagoda(c, 76, 246, 46, 3))
+    for bx in (22, 130):
+        c(f'<path class="ink thin" d="M{bx} 246V130"/><path class="tint ink thin" d="M{bx - 6} 136H{bx + 6}V180L{bx} 174L{bx - 6} 180Z"/><path class="ink hair" d="M{bx - 6} 146H{bx + 6}M{bx - 6} 160H{bx + 6}"/><circle cx="{bx}" cy="128" r="2.6" class="light ink thin"/>')
     c(ground(c, 246, wob=3))
     c('<path class="light ink thin" d="M150 360C164 330 176 306 186 288C170 276 130 262 96 248L104 246C138 256 176 268 192 282C204 270 236 256 270 242L276 246C246 260 212 278 198 290C206 310 218 334 232 360Z"/>',
       '<path class="ink hair" d="M172 340h10M180 316h8M188 298h6M130 262h8M150 270h7M232 258h8M216 266h7"/>')

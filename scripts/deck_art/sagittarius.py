@@ -107,12 +107,8 @@ def v076():
               glow=(190, 130, 220), sky=304)
     c(stars(c, 10, y1=90))
     c(waves(c, 150, amp=8, length=40, hatch=False), '<rect x="0" y="162" width="380" height="142" fill="url(#hx)" opacity=".45"/>')
-    fish = ("M120 210C140 170 190 140 240 140C262 140 280 146 292 156C284 168 270 176 254 178C230 184 196 190 170 204"
-            "C150 214 130 222 112 220C96 240 76 248 62 246C70 230 78 218 90 210C78 202 70 190 66 174C82 178 96 190 106 204C110 206 116 208 120 210Z")
-    c(f'<path class="tint ink heavy" d="{fish}"/>', '<path class="ink hair" d="' + "".join(f"M{x} {170 - (x - 150) * .1}q6 6 12 0" for x in range(150, 250, 14)) + '"/>',
-      '<circle cx="270" cy="156" r="4" class="light ink thin"/><circle cx="270" cy="156" r="1.6" class="fill-ink"/>',
-      '<path class="light ink thin" d="M278 146C282 128 290 116 300 106C296 122 292 136 288 150Z"/>',
-      '<path class="wash ink thin" d="M200 152C206 136 220 128 232 130C224 138 216 146 214 156Z"/>')
+    c(fish(c, 196, 186, 2.2, -16, cls="tint ink thin", fin="wash ink thin"))
+    c('<path class="light ink thin" d="M282 132C288 114 298 102 310 94C304 110 298 122 294 136Z"/><path class="ink hair" d="M288 128C292 116 298 108 304 102"/>')
     c(palm_books(206, 126, .9, -12), palm_books(260, 104, .7, 10))
     c('<path class="ink thin" d="M88 270C100 262 118 262 128 270C118 280 100 280 88 270Z"/><path class="ink thin" d="M108 262V248M108 278V292"/>',
       '<path class="light ink thin" d="M84 264H92V276H84ZM124 264H132V276H124Z"/>',
@@ -151,11 +147,7 @@ def v081():
       flame(c, 140, 290, 22, 12))
     c(ground(c, 290, hatch=False))
     c('<ellipse cx="250" cy="282" rx="110" ry="18" class="wash ink thin"/><ellipse cx="250" cy="282" rx="94" ry="12" class="ink hair"/>')
-    croc = ("M176 282C184 276 200 274 214 276L228 270C236 268 242 270 246 274C262 272 282 272 300 276C314 278 326 282 336 288"
-            "C320 290 306 288 296 286C276 290 250 292 230 290C212 292 192 290 176 282Z")
-    c(f'<path class="tint ink thin" d="{croc}"/>', '<circle cx="234" cy="270" r="3" class="light ink thin"/><circle cx="234" cy="270" r="1.2" class="fill-ink"/>',
-      '<path class="ink thin" d="M252 274l4 -7l4 7M266 274l4 -7l4 7M280 275l4 -6l4 6M294 277l3 -5l3 5M308 280l3 -5l3 5"/>',
-      '<path class="ink hair" d="M180 282C194 284 210 284 226 282M186 280l3 3M194 281l3 3M202 281l3 3M210 281l3 3"/>')
+    c(crocodile(c, 254, 284, .82))
     c(river_beneath(c))
     return c
 

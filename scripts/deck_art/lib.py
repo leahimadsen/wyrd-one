@@ -148,14 +148,18 @@ def device(c, sign):
                f'<path class="light ink thin" d="M122 14H150V22H122Z"/><path class="ink thin" d="M122 14C119 10 117 6 121 4M150 14C153 10 155 6 151 4"/>'
                f'<path class="tint ink thin" d="M124 72H148V80H124Z"/><path class="light ink thin" d="M120 80H152V85H120Z"/>')
         return mirror(col) + f'<path class="ink hair" d="M121 6C150 13 230 13 259 6M120 88C150 81 230 81 260 88"/>'
-    if sign == "Cancer":            # the crab's claws, reaching in
-        arm = rope("M100 88C100 68 110 56 126 52", p, 10, 7)
-        claw = (f'<path class="wash ink thin" d="M124 54C120 40 128 26 142 22C152 20 158 24 158 30C150 28 142 30 138 38C146 36 152 40 154 46C146 50 134 56 124 54Z"/>'
-                f'<path class="hatchfill" d="M124 54C120 40 128 26 142 22C134 30 130 40 132 50Z"/>'
-                f'<path class="ink hair" d="M136 26C132 32 130 40 130 48M146 24C141 28 138 34 137 40"/>'
-                f'<path class="tint ink hair" d="M154 30l4 -2l-1 4ZM154 46l4 1l-3 3Z"/>')
-        legs = '<path class="ink thin" d="M104 86C96 84 90 88 86 94M108 80C98 76 90 78 84 84M112 74C104 66 96 66 90 70"/>'
-        return mirror(arm + f'<g transform="translate(140 38) scale(1.28) translate(-140 -38)">{claw}</g>' + legs)
+    if sign == "Cancer":            # the crab's claws, reaching in, their pincers open about the seal
+        arm = taper([(104, 90), (98, 72), (100, 58), (110, 50)], 11, 9)
+        palm = "M106 54C100 42 104 30 116 26C126 22 136 26 138 34C140 42 134 50 126 54C120 58 110 58 106 54Z"
+        fixed = "M134 30C140 22 148 18 155 20C151 24 146 28 142 36Z"
+        moving = "M136 46C143 48 149 46 155 40C151 50 145 54 136 54Z"
+        claw = (f'<path class="wash ink thin" d="{arm}"/><path class="ink hair" d="M98 80l6 2M100 70l7 1M104 60l7 -1"/>'
+                f'<path class="wash ink thin" d="{palm}"/><path fill="url(#hd)" d="M106 54C110 58 120 58 126 54C134 50 138 44 138 38C130 46 116 50 106 50Z" opacity=".85"/>'
+                f'<path class="ink hair" d="M108 36C114 32 122 31 128 34M106 44C114 41 124 41 132 44"/>'
+                f'<path class="tint ink thin" d="{fixed}"/><path class="tint ink thin" d="{moving}"/>'
+                f'<path class="ink hair" d="M144 30l2 3M149 26l2 3M144 50l1 -3M149 48l1 -3"/>')
+        legs = '<path class="ink thin" d="M104 88C96 86 90 90 86 96M106 82C98 78 90 80 84 86M110 76C102 70 94 70 88 74"/>'
+        return mirror(legs + claw)
     if sign == "Leo":               # two lion's heads in profile, roaring toward the seal
         return lion_face(c, 124, 46, .95) + lion_face(c, 256, 46, .95)
     if sign == "Virgo":             # two ears of wheat
@@ -171,12 +175,19 @@ def device(c, sign):
                          f'<circle cx="{x}" cy="40" r="3" class="light ink thin"/>')
         return (rope("M114 40H266", p, 8, 5) + pan(122) + pan(258) +
                 '<path class="tint ink thin" d="M110 40l-6 -4v8ZM270 40l6 -4v8Z"/>')
-    if sign == "Scorpio":           # two tails, arched, their stings turned to the seal
-        segs = [(108, 86), (102, 72), (103, 58), (109, 44), (119, 32), (131, 23), (144, 19)]
-        spine = rope(smooth(segs), p, 9, 6, ".8 3.2")
-        tail = "".join(f'<ellipse cx="{x}" cy="{y}" rx="{8.4 - k * .6:.1f}" ry="{7 - k * .5:.1f}" class="{"wash" if k % 2 else "light"} ink thin"/><path class="ink hair" d="M{x - 5 + k * .3:.1f} {y}h{10 - k * .6:.1f}"/>' for k, (x, y) in enumerate(segs))
-        sting = f'<path class="tint ink thin" d="M150 12C161 12 166 20 163 28C160 23 155 22 150 24Z"/><path class="ink thin" d="M163 28L167 35"/>'
-        return mirror(spine + tail + sting)
+    if sign == "Scorpio":           # two tails, arched, each of five ringed segments, the stings turned to the seal
+        spine = [(106, 92), (100, 76), (101, 60), (108, 45), (120, 33), (134, 25)]
+        segs = []
+        for k in range(5):
+            (x0, y0), (x1, y1) = spine[k], spine[k + 1]
+            w0, w1 = 13 - k * 1.2, 12 - k * 1.2
+            segs.append(f'<path class="{"wash" if k % 2 else "light"} ink thin" d="{taper([(x0, y0), ((x0 + x1) / 2, (y0 + y1) / 2), (x1, y1)], w0, w1 * .8)}"/>')
+            mx, my = (x0 + x1) / 2, (y0 + y1) / 2
+            dx, dy = x1 - x0, y1 - y0; m = math.hypot(dx, dy)
+            segs.append(f'<path class="ink hair" d="M{f(mx - dy / m * w0 * .35)} {f(my + dx / m * w0 * .35)}l{f(dx / m * 4)} {f(dy / m * 4)}M{f(mx + dy / m * w0 * .35)} {f(my - dx / m * w0 * .35)}l{f(dx / m * 4)} {f(dy / m * 4)}"/>')
+        bulb = '<path class="tint ink thin" d="M132 20C142 14 154 18 156 28C152 34 144 36 136 32C132 30 130 24 132 20Z"/><path class="ink hair" d="M136 24C142 22 148 24 152 28"/>'
+        sting = '<path class="mid ink thin" d="M154 22C160 20 166 24 166 32C164 30 160 28 156 28Z"/>'
+        return mirror(f'<g transform="translate(106 92) scale(.88) translate(-106 -92)">{"".join(segs)}{bulb}{sting}</g>')
     if sign == "Sagittarius":       # the drawn bow, its arrow through the seal
         bow = rope("M108 74C110 46 140 24 190 22C240 24 270 46 272 74", p, 8, 5)
         string = '<path class="ink thin" d="M108 74L190 84L272 74"/>'
@@ -397,10 +408,10 @@ def flames(c, y=360, x0=-8, x1=388, n=10, hmin=40, hmax=100, wide=40):
     return "".join(out)
 
 
-def flame(c, x, y, h=40, w=22):
+def flame(c, x, y, h=40, w=22, outer="wash", core="tint"):
     """One flame, rising from x, y."""
-    return (f'<path class="wash ink thin" d="M{f(x - w / 2)} {f(y)}C{f(x - w / 2 - 4)} {f(y - h * .4)} {f(x - 2)} {f(y - h * .6)} {f(x)} {f(y - h)}C{f(x + 4)} {f(y - h * .6)} {f(x + w / 2 + 4)} {f(y - h * .4)} {f(x + w / 2)} {f(y)}Z"/>'
-            f'<path class="tint ink hair" d="M{f(x - w / 4)} {f(y)}C{f(x - w / 4 - 2)} {f(y - h * .3)} {f(x - 1)} {f(y - h * .4)} {f(x)} {f(y - h * .66)}C{f(x + 2)} {f(y - h * .4)} {f(x + w / 4 + 2)} {f(y - h * .3)} {f(x + w / 4)} {f(y)}Z"/>')
+    return (f'<path class="{outer} ink thin" d="M{f(x - w / 2)} {f(y)}C{f(x - w / 2 - 4)} {f(y - h * .4)} {f(x - 2)} {f(y - h * .6)} {f(x)} {f(y - h)}C{f(x + 4)} {f(y - h * .6)} {f(x + w / 2 + 4)} {f(y - h * .4)} {f(x + w / 2)} {f(y)}Z"/>'
+            f'<path class="{core} ink hair" d="M{f(x - w / 4)} {f(y)}C{f(x - w / 4 - 2)} {f(y - h * .3)} {f(x - 1)} {f(y - h * .4)} {f(x)} {f(y - h * .66)}C{f(x + 2)} {f(y - h * .4)} {f(x + w / 4 + 2)} {f(y - h * .3)} {f(x + w / 4)} {f(y)}Z"/>')
 
 
 def ground(c, y=300, wob=6, hatch=True, cls="wash ink thin"):
@@ -553,7 +564,7 @@ def clump(c, cx, cy, r, n=None, cls="wash ink thin"):
     """One mass of foliage, as an engraver cuts it: a scalloped edge, a hatched shadow on the side away
     from the light, and a few leaf-marks inside."""
     rng = c.rng
-    n = n or max(9, int(r / 3.2))
+    n = n or max(8, int(r / 3.4))
     pts = []
     for k in range(n):
         a = -90 + k * 360 / n + rng.uniform(-6, 6)
@@ -568,7 +579,7 @@ def clump(c, cx, cy, r, n=None, cls="wash ink thin"):
     sh = (f"M{f(sh_o[0][0])} {f(sh_o[0][1])}A{f(r * .9)} {f(r * .9)} 0 0 1 {f(sh_o[1][0])} {f(sh_o[1][1])}"
           f"A{f(r * .82)} {f(r * .82)} 0 0 0 {f(sh_o[0][0])} {f(sh_o[0][1])}Z")
     marks = "".join(f"M{f(cx + dx)} {f(cy + dy)}q{f(r * .09)} {f(r * .08)} {f(r * .18)} 0"
-                    for dx, dy in ((rng.uniform(-.6, .4) * r, rng.uniform(-.55, .3) * r) for _ in range(max(3, int(r / 6)))))
+                    for dx, dy in ((rng.uniform(-.6, .4) * r, rng.uniform(-.55, .3) * r) for _ in range(max(2, int(r / 8)))))
     return f'<path class="{cls}" d="{d}"/><path fill="url(#hd)" d="{sh}" opacity=".85"/><path class="ink hair" d="{marks}"/>'
 
 
@@ -592,7 +603,7 @@ def tree(c, x, y, h=150, spread=90, leaves=True, cls="wash ink heavy", lean=0):
     spots = [(-.66, .12, .4), (.66, .1, .4), (-.36, -.32, .46), (.38, -.34, .46), (0, -.56, .44), (-.26, .14, .38), (.28, .14, .38), (0, -.08, .42)]
     canopy = [(fx + dx * spread, cy0 + dy * h * .42, rr * spread * rng.uniform(.88, 1.06)) for dx, dy, rr in spots]
     boughs = []
-    for cx, cy, r in canopy[:5]:
+    for cx, cy, r in (canopy[:4] if leaves else canopy[:5]):
         mx, my = (fx + cx) / 2, (fy + cy) / 2 - 8
         boughs.append(taper([(fx, fy + 8), (mx, my), (cx * .75 + fx * .25, cy * .75 + fy * .25 + 8)], tw * 1.15, tw * .4))
     out.append("".join(f'<path class="{cls.replace("heavy", "thin")}" d="{d}"/>' for d in boughs))
@@ -809,31 +820,6 @@ def anvil(x, y, s=1):
     return f'<g transform="translate({f(x)} {f(y)}) scale({s})">{body}</g>'
 
 
-def falcon(x, y, s=1, flip=False):
-    """A falcon perched upright, facing left."""
-    body = ('<path class="wash ink thin" d="M0 0C-10 -6 -14 -22 -10 -36C-8 -46 -2 -52 6 -52C12 -52 16 -46 16 -40C22 -30 22 -14 16 -2L20 20H10L6 4Z"/>'
-            '<path class="mid ink thin" d="M6 -48C14 -44 20 -32 20 -18C20 -6 16 4 10 12L18 26H10L4 8C12 -6 14 -26 6 -48Z"/>'
-            '<path class="tint ink thin" d="M-6 -48C-2 -54 8 -54 12 -46C6 -46 0 -44 -6 -42Z"/>'
-            '<path class="fill-ink" d="M-6 -46L-14 -42L-8 -38Z"/><circle cx="2" cy="-46" r="1.6" class="fill-ink"/>'
-            '<path class="ink hair" d="M-6 -30l2 2M-2 -24l2 2M-6 -18l2 2M-2 -12l2 2M2 -30l2 2M2 -18l2 2"/>'
-            '<path class="ink thin" d="M-2 0L-6 8M4 2L2 10"/>')
-    sx = -s if flip else s
-    return f'<g transform="translate({f(x)} {f(y)}) scale({sx} {s})">{body}</g>'
-
-
-def hound(x, y, s=1, flip=False):
-    """A long hound lying watchful, its head raised, facing left."""
-    body = ('<path class="wash ink thin" d="M-40 0C-44 -8 -40 -16 -30 -18C-22 -30 -12 -36 -2 -34C4 -40 14 -40 20 -34L20 -24C30 -22 42 -18 54 -14C66 -12 76 -6 80 0Z"/>'
-            '<path class="wash ink thin" d="M-44 -22C-48 -30 -46 -42 -34 -46C-26 -50 -18 -46 -14 -40C-12 -34 -16 -28 -24 -26C-30 -24 -38 -22 -44 -22Z"/>'
-            '<path class="tint ink thin" d="M-26 -48C-22 -56 -14 -56 -12 -48C-14 -42 -18 -38 -22 -38Z"/>'
-            '<path class="fill-ink" d="M-48 -26L-52 -28L-50 -22Z"/><circle cx="-36" cy="-38" r="1.6" class="fill-ink"/>'
-            '<path class="ink thin" d="M-40 0H-12M-6 0H12M80 0C90 -4 98 -12 102 -22"/>'
-            '<path class="ink hair" d="M0 -26C10 -20 24 -16 40 -12M10 -32C16 -28 22 -26 30 -24M-30 -16C-20 -10 -6 -8 8 -8"/>'
-            '<path class="hatchfill" d="M20 -24C30 -22 42 -18 54 -14C66 -12 76 -6 80 0H26C24 -10 22 -18 20 -24Z" opacity=".8"/>')
-    sx = -s if flip else s
-    return f'<g transform="translate({f(x)} {f(y)}) scale({sx} {s})">{body}</g>'
-
-
 def lemniscate(c, x, y, w=40, h=14, cls="ink heavy"):
     """The Magician's sign: the figure of eight lying on its side."""
     return (f'<path fill="none" stroke="{c.p["T"]}" stroke-width="6" d="M{f(x)} {f(y)}C{f(x + w * .3)} {f(y - h)} {f(x + w * .6)} {f(y - h)} {f(x + w * .6)} {f(y)}S{f(x + w * .3)} {f(y + h)} {f(x)} {f(y)}S{f(x - w * .6)} {f(y + h)} {f(x - w * .6)} {f(y)}S{f(x - w * .3)} {f(y - h)} {f(x)} {f(y)}Z"/>'
@@ -892,16 +878,9 @@ def vel(x, y, h=200, r=0, cls="light ink thin"):
 
 
 def serpent_ring(c, x, y, r, w=12):
-    """The serpent that circles the world, biting its tail at the bottom."""
-    p = c.p
-    a0, a1 = 100, 430
-    pts = [pol(x, y, r, a) for a in range(a0, a1 + 1, 10)]
-    d = smooth(pts)
-    scales = "".join(f"M{f(pol(x, y, r - w * .3, a)[0])} {f(pol(x, y, r - w * .3, a)[1])}L{f(pol(x, y, r + w * .3, a + 4)[0])} {f(pol(x, y, r + w * .3, a + 4)[1])}" for a in range(a0 + 6, a1, 8))
-    hx, hy = pol(x, y, r, a1)
-    return (rope(d, p, w, w - 4, "1 3", fill=p["T"]) + f'<path class="ink hair" d="{scales}"/>'
-            f'<path class="wash ink thin" d="M{f(hx - 4)} {f(hy - 9)}C{f(hx - 18)} {f(hy - 12)} {f(hx - 28)} {f(hy - 6)} {f(hx - 30)} {f(hy + 2)}L{f(hx - 18)} {f(hy + 2)}C{f(hx - 12)} {f(hy + 8)} {f(hx - 2)} {f(hy + 10)} {f(hx + 4)} {f(hy + 6)}Z"/>'
-            f'<circle cx="{f(hx - 12)}" cy="{f(hy - 4)}" r="1.8" class="fill-ink"/>')
+    """The serpent that circles the world, its head at the bottom taking its own tail in its jaws."""
+    pts = [pol(x, y, r, a) for a in range(430, 96, -10)]
+    return serpent(c, pts, w, w * .35, tongue=False)
 
 
 def knot_heart(c, x, y, s=1):
@@ -963,15 +942,22 @@ def diya(x, y, s=1):
 
 
 def tower(c, x, y, w=44, h=130, struck=True):
-    """A stone tower on y, its top crowned; struck by lightning when struck."""
-    out = (f'<path class="wash ink heavy" d="M{f(x - w / 2)} {f(y)}L{f(x - w / 2 + 4)} {f(y - h)}H{f(x + w / 2 - 4)}L{f(x + w / 2)} {f(y)}Z"/>'
-           f'<path class="hatchfill" d="M{f(x + w / 6)} {f(y)}L{f(x + w / 6 + 2)} {f(y - h)}H{f(x + w / 2 - 4)}L{f(x + w / 2)} {f(y)}Z"/>'
-           + "".join(f'<path class="ink hair" d="M{f(x - w / 2 + 4)} {f(y - k * 14)}H{f(x + w / 2 - 4)}"/>' for k in range(1, int(h / 14)))
-           + f'<path class="plate ink thin" d="M{f(x - 6)} {f(y - h * .6)}V{f(y - h * .6 - 16)}C{f(x - 6)} {f(y - h * .6 - 22)} {f(x + 6)} {f(y - h * .6 - 22)} {f(x + 6)} {f(y - h * .6 - 16)}V{f(y - h * .6)}Z"/>'
-           f'<path class="wash ink heavy" d="M{f(x - w / 2 - 4)} {f(y - h)}V{f(y - h - 12)}H{f(x - w / 4)}V{f(y - h - 4)}H{f(x - 4)}V{f(y - h - 12)}H{f(x + 4)}V{f(y - h - 4)}H{f(x + w / 4)}V{f(y - h - 12)}H{f(x + w / 2 + 4)}V{f(y - h)}Z"/>')
+    """A Norse timber tower on y: walls of upright planks braced crosswise, a steep shingled roof with
+    dragon heads at its eaves, a lookout window; struck by lightning when struck, its roof catching fire."""
+    L, R, top = x - w / 2, x + w / 2, y - h
+    out = (f'<path class="wash ink heavy" d="M{f(L)} {f(y)}L{f(L + 3)} {f(top)}H{f(R - 3)}L{f(R)} {f(y)}Z"/>'
+           f'<path fill="url(#hd)" d="M{f(x + w / 6)} {f(y)}L{f(x + w / 6 + 1)} {f(top)}H{f(R - 3)}L{f(R)} {f(y)}Z" opacity=".8"/>'
+           '<path class="ink hair" d="' + "".join(f"M{f(L + 3 + k * (w - 6) / 6)} {f(y)}V{f(top)}" for k in range(1, 6)) + '"/>'
+           + "".join(f'<path class="ink thin" d="M{f(L + 2)} {f(y - k * h / 3)}L{f(R - 2)} {f(y - (k + 1) * h / 3 + 4)}M{f(R - 2)} {f(y - k * h / 3)}L{f(L + 2)} {f(y - (k + 1) * h / 3 + 4)}M{f(L + 1)} {f(y - k * h / 3)}H{f(R - 1)}"/>' for k in range(2))
+           + f'<path class="plate ink thin" d="M{f(x - 6)} {f(top + 30)}V{f(top + 16)}H{f(x + 6)}V{f(top + 30)}Z"/>'
+           f'<path class="wash ink heavy" d="M{f(L - 6)} {f(top + 2)}H{f(R + 6)}V{f(top - 6)}H{f(L - 6)}Z"/>'
+           f'<path class="tint ink heavy" d="M{f(L - 12)} {f(top - 4)}L{f(x)} {f(top - h * .48)}L{f(R + 12)} {f(top - 4)}Z"/>'
+           + '<path class="ink hair" d="' + "".join(f"M{f(L - 12 + k * (w + 24) / 9)} {f(top - 4)}L{f(x)} {f(top - h * .48)}" for k in range(1, 9)) + '"/>'
+           + f'<path class="ink thin" d="M{f(L - 6)} {f(top - 16)}H{f(R + 6)}M{f(L)} {f(top - 28)}H{f(R)}"/>'
+           + dragon_head(L - 16, top - 6, .22, flip=True, cls="tint ink thin") + dragon_head(R + 16, top - 6, .22, cls="tint ink thin"))
     if struck:
-        out += (f'<path class="tint ink thin" d="M{f(x + 60)} {f(y - h - 70)}L{f(x + 14)} {f(y - h - 20)}L{f(x + 28)} {f(y - h - 22)}L{f(x + 2)} {f(y - h + 6)}L{f(x + 34)} {f(y - h - 32)}L{f(x + 20)} {f(y - h - 30)}L{f(x + 70)} {f(y - h - 70)}Z"/>'
-                + flame(c, x - 2, y - h * .6 - 8, 26, 14) + flame(c, x + 6, y - h - 6, 30, 16))
+        out += (f'<path class="light ink thin" d="M{f(x + 60)} {f(top - h * .48 - 50)}L{f(x + 18)} {f(top - h * .48 - 10)}L{f(x + 30)} {f(top - h * .48 - 12)}L{f(x + 4)} {f(top - h * .48 + 12)}L{f(x + 36)} {f(top - h * .48 - 22)}L{f(x + 22)} {f(top - h * .48 - 20)}L{f(x + 70)} {f(top - h * .48 - 50)}Z"/>'
+                + flame(c, x - 6, top - 10, 28, 16, "light", "mid") + flame(c, x + 10, top - 14, 34, 18, "light", "mid") + flame(c, x + 2, top + 30, 18, 10, "light", "mid"))
     return out
 
 
@@ -1000,54 +986,15 @@ def conch(x, y, s=1, r=0, cls="light ink heavy"):
 
 
 def serpent_coil(c, x, y, s=1):
-    """A great serpent coiled on the ground, its head raised to the left."""
-    p = c.p
-    coils = "".join(f'<ellipse cx="{f(x)}" cy="{f(y - k * 12 * s)}" rx="{f((70 - k * 16) * s)}" ry="{f((14 - k * 2) * s)}" class="tint ink thin"/>'
-                    f'<path class="ink hair" d="M{f(x - (60 - k * 16) * s)} {f(y - k * 12 * s)}q{f(8 * s)} {f(6 * s)} {f(16 * s)} 0m{f(20 * s)} {f(4 * s)}q{f(8 * s)} {f(6 * s)} {f(16 * s)} 0m{f(20 * s)} {f(-2 * s)}q{f(8 * s)} {f(6 * s)} {f(16 * s)} 0"/>' for k in range(3))
-    neck = [(x - 10 * s, y - 34 * s), (x - 30 * s, y - 64 * s), (x - 20 * s, y - 100 * s), (x - 44 * s, y - 122 * s)]
-    head = (f'<path class="tint ink thin" d="M{f(x - 44 * s)} {f(y - 136 * s)}C{f(x - 60 * s)} {f(y - 138 * s)} {f(x - 78 * s)} {f(y - 130 * s)} {f(x - 82 * s)} {f(y - 124 * s)}'
-            f'C{f(x - 74 * s)} {f(y - 114 * s)} {f(x - 56 * s)} {f(y - 112 * s)} {f(x - 40 * s)} {f(y - 116 * s)}Z"/>'
-            f'<circle cx="{f(x - 58 * s)}" cy="{f(y - 128 * s)}" r="{f(2.2 * s)}" class="light ink hair"/>'
-            f'<path class="ink thin" d="M{f(x - 82 * s)} {f(y - 124 * s)}l{f(-10 * s)} {f(-2 * s)}m{f(10 * s)} {f(2 * s)}l{f(-10 * s)} {f(4 * s)}"/>')
-    return coils + rope(smooth(neck), p, 14 * s, 10 * s, "1 3.4", fill=p["T"]) + head
-
-
-def wolf(c, x, y, s=1, pose="lying", flip=False, cls="wash ink thin"):
-    """A wolf in profile, facing left: lying with its head up ("lying", its jaws held open) or at full
-    stretch ("running"). Grey-washed, its shadow side hatched, its fur cut in short strokes."""
-    if pose == "lying":
-        body = ("M-60 -46C-50 -54 -36 -54 -26 -46C-14 -42 6 -40 30 -36C46 -34 58 -28 62 -18C66 -8 62 2 54 4"
-                "L-36 4C-46 4 -50 -2 -52 -8C-56 -14 -60 -24 -62 -34Z")
-        head = ("M-60 -46C-66 -50 -74 -50 -82 -46L-100 -38C-104 -36 -104 -32 -100 -31L-82 -32L-98 -18C-100 -15 -97 -12 -94 -13"
-                "L-74 -22C-66 -24 -58 -26 -54 -32C-52 -38 -55 -44 -60 -46Z")
-        ear = "M-62 -48L-60 -66L-50 -50Z M-54 -48L-48 -64L-42 -48Z"
-        legs = [taper([(-44, -2), (-70, 2), (-94, 4)], 14, 9), taper([(-36, 0), (-62, 6), (-84, 8)], 12, 8)]
-        tail = taper([(60, -14), (76, 0), (62, 12), (30, 12)], 18, 6)
-        shade = "M-36 4C-20 -6 30 -8 54 4Z"
-        fur = "".join(f"M{x0} {y0}l-6 4" for x0, y0 in [(-40, -44), (-28, -42), (-14, -40), (0, -38), (14, -37), (28, -35), (42, -32), (54, -26)])
-        extra = ('<path class="mid ink hair" d="M-82 -32L-94 -18L-74 -24Z"/><circle cx="-70" cy="-40" r="2" class="fill-ink"/><path class="fill-ink" d="M-104 -36l-3 1l3 3Z"/>'
-                 '<path class="ink hair" d="M-76 -42C-72 -44 -66 -44 -62 -42M-56 -34C-50 -30 -46 -24 -44 -14"/>'
-                 '<path class="ink thin" d="M18 -4C22 -22 50 -28 58 -12C60 -2 52 4 42 4"/><path class="ink hair" d="M24 -8C30 -18 46 -20 52 -12"/>')
-    else:
-        body = ("M-50 -30C-40 -38 -10 -40 16 -36C32 -34 42 -38 52 -42C60 -36 62 -26 58 -18C52 -8 40 -4 26 -4"
-                "C10 -4 -8 -8 -24 -6C-38 -4 -48 -10 -52 -18C-54 -24 -54 -28 -50 -30Z")
-        head = ("M52 -42C60 -50 72 -52 80 -48L100 -42C104 -40 104 -36 100 -35L82 -32L96 -26C96 -22 92 -20 88 -22L72 -24C64 -24 58 -22 56 -18Z")
-        ear = "M58 -46L62 -62L68 -48Z M64 -48L72 -60L74 -46Z"
-        legs = [taper([(40, -8), (60, 6), (84, 10)], 12, 7), taper([(30, -6), (46, 12), (70, 20)], 11, 7),
-                taper([(-40, -14), (-62, 2), (-90, 4)], 16, 7), taper([(-32, -10), (-50, 10), (-78, 16)], 14, 7)]
-        tail = taper([(-50, -26), (-76, -28), (-104, -20)], 16, 6)
-        shade = "M-24 -6C-8 -12 20 -12 26 -4C10 -4 -8 -8 -24 -6Z"
-        fur = "".join(f"M{x0} {y0}l-7 3" for x0, y0 in [(-36, -34), (-22, -36), (-8, -37), (6, -36), (20, -35), (34, -37), (46, -40)])
-        extra = ('<circle cx="72" cy="-42" r="2" class="fill-ink"/><path class="fill-ink" d="M104 -40l3 1l-3 3Z"/>'
-                 '<path class="ink hair" d="M66 -46C70 -48 76 -48 80 -46M58 -26C54 -20 48 -14 40 -10"/>')
-    sx = -s if flip else s
-    parts = "".join(f'<path class="{cls}" d="{d}"/>' for d in legs[:len(legs) // 2])
-    tl = [(60, -14), (76, 0), (62, 12)] if pose == "lying" else [(-50, -26), (-76, -28), (-104, -20)]
-    parts += f'<path class="{cls}" d="{tail}"/><path class="ink hair" d="' + "".join(f"M{f(tx)} {f(ty)}l-6 -3" for tx, ty in densify(tl, 3)[1:-1]) + '"/>'
-    parts += f'<path class="{cls}" d="{body}"/><path fill="url(#hd)" d="{shade}" opacity=".9"/>'
-    parts += "".join(f'<path class="{cls}" d="{d}"/>' for d in legs[len(legs) // 2:])
-    parts += f'<path class="{cls}" d="{head}"/><path class="mid ink thin" d="{ear}"/><path class="ink hair" d="{fur}"/>{extra}'
-    return f'<g transform="translate({f(x)} {f(y)}) scale({sx} {s})">{parts}</g>'
+    """A great serpent coiled on the ground, three coils deep, its neck lifted and its head raised to the left."""
+    out = []
+    for k in range(3):
+        rx, ry, cy = (70 - k * 16) * s, (14 - k * 2) * s, y - k * 12 * s
+        ring = [(x + rx * math.cos(math.radians(a)), cy + ry * math.sin(math.radians(a))) for a in range(0, 361, 30)]
+        out.append(serpent(c, ring, (16 - k * 2) * s, (14 - k * 2) * s, head=False, scales=(k == 0)))
+    neck = [(x - 58 * s, y - 128 * s), (x - 40 * s, y - 118 * s), (x - 22 * s, y - 96 * s), (x - 26 * s, y - 66 * s), (x - 14 * s, y - 40 * s), (x + 10 * s, y - 30 * s)]
+    out.append(serpent(c, neck, 16 * s, 14 * s))
+    return "".join(out)
 
 
 def horse(c, x, y, s=1, cls="wash ink thin"):
@@ -1145,3 +1092,369 @@ def fish(c, x, y, s=1, angle=0, cls="wash ink thin", fin="tint ink thin"):
            f'<circle cx="38" cy="-5" r="4.4" class="light ink thin"/><circle cx="38.8" cy="-5" r="2" class="fill-ink"/>'
            f'<path class="ink thin" d="M50 0L42 3"/><path class="{fin}" d="{pect}"/><path class="ink hair" d="{rays}"/>')
     return f'<g transform="translate({f(x)} {f(y)}) rotate({f(angle)}) scale({s})">{out}</g>'
+
+
+# ------------------------------------------------------------------ buildings: the Nordic longhouse, the Buddhist roof
+def longhouse(c, x, y, w=160, h=70, turf=False, door=True, smoke=False, dragons=True):
+    """A Norse longhouse seen from the side, its foot at y: low bowed walls of upright planks, the outer
+    raking posts along them, the great hogbacked roof of shingles (or of turf) sweeping down close to the
+    ground, crossed gable-boards at each end ending in dragon heads, and the smoke-hole in the ridge."""
+    p = c.p
+    L, R = x - w / 2, x + w / 2
+    wall = h * .3
+    ridge_end, ridge_mid = y - h * .9, y - h
+    eave_y = y - wall
+    out = []
+    # the walls
+    out.append(f'<path class="wash ink heavy" d="M{f(L + 4)} {f(y)}L{f(L + 2)} {f(eave_y + 2)}C{f(x - w * .2)} {f(eave_y - 3)} {f(x + w * .2)} {f(eave_y - 3)} {f(R - 2)} {f(eave_y + 2)}L{f(R - 4)} {f(y)}Z"/>')
+    out.append('<path class="ink hair" d="' + "".join(f"M{f(xx)} {f(y)}V{f(eave_y + 2)}" for xx in [L + 8 + k * (w - 16) / int(w / 7) for k in range(int(w / 7) + 1)]) + '"/>')
+    if door:
+        out.append(f'<path class="plate ink heavy" d="M{f(x - 9)} {f(y)}V{f(eave_y + 7)}C{f(x - 9)} {f(eave_y + 1)} {f(x + 9)} {f(eave_y + 1)} {f(x + 9)} {f(eave_y + 7)}V{f(y)}Z"/>'
+                   f'<path class="ink thin" d="M{f(x - 13)} {f(y)}V{f(eave_y + 4)}M{f(x + 13)} {f(y)}V{f(eave_y + 4)}"/>')
+    # the roof
+    roof = (f"M{f(L - 8)} {f(eave_y + 4)}C{f(L - 4)} {f(ridge_end + 18)} {f(L + 6)} {f(ridge_end + 4)} {f(L + 12)} {f(ridge_end)}"
+            f"C{f(x - w * .25)} {f(ridge_mid)} {f(x + w * .25)} {f(ridge_mid)} {f(R - 12)} {f(ridge_end)}"
+            f"C{f(R - 6)} {f(ridge_end + 4)} {f(R + 4)} {f(ridge_end + 18)} {f(R + 8)} {f(eave_y + 4)}"
+            f"C{f(x + w * .25)} {f(eave_y - 2)} {f(x - w * .25)} {f(eave_y - 2)} {f(L - 8)} {f(eave_y + 4)}Z")
+    out.append(f'<path class="{"mid" if turf else "tint"} ink heavy" d="{roof}"/>')
+    rows = 5
+    for k in range(1, rows):
+        t = k / rows
+        ye, ym = eave_y + 4 + (ridge_end - eave_y - 4) * t, eave_y - 2 + (ridge_mid - eave_y + 2) * t
+        xl, xr = L - 8 + 18 * t, R + 8 - 18 * t
+        if turf:
+            out.append(f'<path class="ink hair" d="M{f(xl)} {f(ye)}C{f(x - w * .25)} {f(ym)} {f(x + w * .25)} {f(ym)} {f(xr)} {f(ye)}"/>')
+            out.append('<path class="light ink hair" d="' + "".join(f"M{f(xx)} {f(ym + 2 + abs(xx - x) / w * 6)}l-1 -4M{f(xx + 2)} {f(ym + 2 + abs(xx - x) / w * 6)}l1 -4" for xx in [xl + 10 + j * 16 for j in range(int((xr - xl - 16) / 16))]) + '"/>')
+        else:
+            out.append(f'<path class="ink thin" d="M{f(xl)} {f(ye)}C{f(x - w * .25)} {f(ym)} {f(x + w * .25)} {f(ym)} {f(xr)} {f(ye)}"/>')
+            sx0 = xl + 6 + (k % 2) * 4
+            sp = max(8, w / 16)
+            out.append('<path class="ink hair" d="' + "".join(f"M{f(xx)} {f(ym + 1 + abs(xx - x) / w * 4)}v{f(-(ridge_end - eave_y) / rows * -.9)}" for xx in [sx0 + j * sp for j in range(int((xr - sx0 - 4) / sp))]) + '"/>')
+    out.append(f'<path fill="url(#hd)" d="M{f(x + w * .1)} {f(ridge_mid + 2)}C{f(x + w * .25)} {f(ridge_mid + 1)} {f(R - 18)} {f(ridge_end)} {f(R - 12)} {f(ridge_end)}C{f(R - 6)} {f(ridge_end + 4)} {f(R + 4)} {f(ridge_end + 18)} {f(R + 8)} {f(eave_y + 4)}C{f(x + w * .3)} {f(eave_y - 1)} {f(x + w * .15)} {f(eave_y - 2)} {f(x + w * .1)} {f(eave_y - 2)}Z" opacity=".55"/>')
+    # the raking posts
+    out.append('<path class="ink thin" d="' + "".join(f"M{f(xx)} {f(eave_y + 3)}L{f(xx + (xx - x) * .05)} {f(y + 1)}" for xx in [L + 14 + k * (w - 28) / 5 for k in range(6)] if abs(xx - x) > 18) + '"/>')
+    # the gable-boards, crossed, and the dragon heads
+    ds = .26 * min(1.3, h / 70)
+    for side, gx in ((-1, L + 12), (1, R - 12)):
+        k = min(h / 70, 1.3)
+        out.append(f'<path class="ink heavy" d="M{f(gx - side * 10 * k)} {f(ridge_end + 14 * k)}L{f(gx + side * 9 * k)} {f(ridge_end - 12 * k)}M{f(gx + side * 4 * k)} {f(ridge_end + 12 * k)}L{f(gx - side * 7 * k)} {f(ridge_end - 12 * k)}"/>')
+        if dragons:
+            out.append(dragon_head(gx + side * 12 * k, ridge_end - 12 * k, ds, flip=(side < 0), cls="tint ink thin"))
+    if smoke:
+        out.append(f'<path class="plate ink thin" d="M{f(x - 6)} {f(ridge_mid + 1)}h12v-4h-12Z"/>' + "".join(f'<path class="ink hair" d="M{f(x - 3 + k * 4)} {f(ridge_mid - 4)}c-6 -8 6 -14 0 -22s6 -14 0 -22"/>' for k in range(2)))
+    return "".join(out)
+
+
+def pagoda_roof(c, x, y, w, h=None, cls="tint ink heavy", shade=True):
+    """One sweeping roof of a Buddhist hall or pagoda, its eaves at y: the eave line runs level and lifts
+    at both corners into upturned tips, the tiles fall in ribs from the ridge, and bells hang at the tips."""
+    h = h or w * .26
+    hw = w / 2
+    d = (f"M{f(x - hw)} {f(y - h * .38)}C{f(x - hw + 4)} {f(y - h * .06)} {f(x - hw + 10)} {f(y)} {f(x - hw + 22)} {f(y)}"
+         f"H{f(x + hw - 22)}C{f(x + hw - 10)} {f(y)} {f(x + hw - 4)} {f(y - h * .06)} {f(x + hw)} {f(y - h * .38)}"
+         f"C{f(x + hw - 14)} {f(y - h * .34)} {f(x + hw * .5)} {f(y - h * .6)} {f(x + hw * .32)} {f(y - h)}"
+         f"H{f(x - hw * .32)}C{f(x - hw * .5)} {f(y - h * .6)} {f(x - hw + 14)} {f(y - h * .34)} {f(x - hw)} {f(y - h * .38)}Z")
+    out = [f'<path class="{cls}" d="{d}"/>']
+    ribs = []
+    n = max(5, int(w / 9))
+    for k in range(1, n):
+        t = k / n
+        xb = x - hw + 20 + (w - 40) * t
+        xt = x - hw * .32 + hw * .64 * t
+        ribs.append(f"M{f(xt)} {f(y - h + 1)}C{f(xt + (xb - xt) * .2)} {f(y - h * .5)} {f(xb)} {f(y - h * .2)} {f(xb)} {f(y - 1)}")
+    out.append(f'<path class="ink hair" d="{"".join(ribs)}"/>')
+    out.append(f'<path class="ink thin" d="M{f(x - hw + 20)} {f(y - 3)}H{f(x + hw - 20)}"/>')
+    if shade:
+        out.append(f'<path fill="url(#hd)" d="M{f(x + hw * .32)} {f(y - h)}C{f(x + hw * .5)} {f(y - h * .6)} {f(x + hw - 14)} {f(y - h * .34)} {f(x + hw)} {f(y - h * .38)}C{f(x + hw - 4)} {f(y - h * .06)} {f(x + hw - 10)} {f(y)} {f(x + hw - 22)} {f(y)}H{f(x + hw * .2)}Z" opacity=".7"/>')
+    for side in (-1, 1):
+        tx = x + side * hw
+        out.append(f'<path class="ink hair" d="M{f(tx)} {f(y - h * .38)}V{f(y - h * .38 + 6)}"/><path class="light ink hair" d="M{f(tx - 2)} {f(y - h * .38 + 6)}h4l-1 4h-2Z"/>')
+    return "".join(out)
+
+
+def hall(c, x, y, w=80, h=40, door=True, cls="wash ink heavy"):
+    """The body of a Buddhist hall, its foot at y: a stepped plinth, red pillars between panelled walls."""
+    p = c.p
+    out = [f'<path class="{cls}" d="M{f(x - w / 2 - 8)} {f(y)}V{f(y - 6)}H{f(x + w / 2 + 8)}V{f(y)}Z"/><path class="ink hair" d="M{f(x - w / 2 - 8)} {f(y - 3)}H{f(x + w / 2 + 8)}"/>',
+           f'<path class="{cls}" d="M{f(x - w / 2)} {f(y - 6)}V{f(y - 6 - h)}H{f(x + w / 2)}V{f(y - 6)}Z"/>',
+           f'<path fill="url(#hd)" d="M{f(x + w / 4)} {f(y - 6)}V{f(y - 6 - h)}H{f(x + w / 2)}V{f(y - 6)}Z" opacity=".6"/>']
+    n = max(2, int(w / 22))
+    for k in range(n + 1):
+        px = x - w / 2 + k * w / n
+        out.append(f'<path class="tint ink thin" d="M{f(px - 2.6)} {f(y - 6)}V{f(y - 6 - h)}H{f(px + 2.6)}V{f(y - 6)}Z"/>')
+    out.append(f'<path class="ink hair" d="M{f(x - w / 2)} {f(y - 6 - h + 6)}H{f(x + w / 2)}"/>')
+    if door:
+        out.append(f'<path class="plate ink thin" d="M{f(x - 7)} {f(y - 6)}V{f(y - 6 - h * .66)}H{f(x + 7)}V{f(y - 6)}Z"/><path class="ink hair" d="M{f(x)} {f(y - 6)}V{f(y - 6 - h * .66)}"/>')
+    return "".join(out)
+
+
+def pagoda(c, x, y, w=60, tiers=3, storey=None, finial=True, door=True):
+    """A pagoda, its foot at y: a hall below, then storeys narrowing upward, each under its own sweeping
+    roof, crowned by the finial of stacked rings and the jewel."""
+    storey = storey or w * .34
+    out = [hall(c, x, y, w, storey * 1.1, door=door)]
+    top = y - 6 - storey * 1.1
+    rw = w * 1.5
+    for k in range(tiers):
+        out.append(pagoda_roof(c, x, top + 2, rw, rw * .2))
+        top -= rw * .2 - 2
+        if k < tiers - 1:
+            bw = w * (.78 - k * .14)
+            sh = storey * (.7 - k * .08)
+            out.append(f'<path class="wash ink thin" d="M{f(x - bw / 2)} {f(top + 2)}V{f(top - sh)}H{f(x + bw / 2)}V{f(top + 2)}Z"/>'
+                       + "".join(f'<path class="tint ink hair" d="M{f(x - bw / 2 + j * bw / 3 - 1.6)} {f(top + 2)}V{f(top - sh)}H{f(x - bw / 2 + j * bw / 3 + 1.6)}V{f(top + 2)}Z"/>' for j in range(4)))
+            top -= sh
+            rw = rw * .78
+    if finial:
+        out.append(f'<path class="ink thin" d="M{f(x)} {f(top + 2)}V{f(top - 28)}"/>' + "".join(f'<ellipse cx="{f(x)}" cy="{f(top - 4 - j * 4.4)}" rx="{f(5 - j * .6)}" ry="1.6" class="light ink thin"/>' for j in range(5))
+                   + f'<path class="tint ink thin" d="M{f(x)} {f(top - 34)}C{f(x + 4)} {f(top - 30)} {f(x + 3)} {f(top - 27)} {f(x)} {f(top - 26)}C{f(x - 3)} {f(top - 27)} {f(x - 4)} {f(top - 30)} {f(x)} {f(top - 34)}Z"/>')
+    return "".join(out)
+
+
+def torana(c, x, y, w=150, h=170, built=1.0):
+    """A gateway of the Sanchi stupa: two square posts, and across them three architraves bowed upward
+    whose ends curl into spirals beyond the posts, with small blocks set between the beams. `built`
+    leaves the topmost beams off while it is still going up."""
+    out = []
+    px = (x - w * .32, x + w * .32)
+    for X in px:
+        out.append(f'<path class="wash ink heavy" d="M{f(X - 8)} {f(y)}V{f(y - h * .62)}H{f(X + 8)}V{f(y)}Z"/><path fill="url(#hd)" d="M{f(X + 3)} {f(y)}V{f(y - h * .62)}H{f(X + 8)}V{f(y)}Z" opacity=".8"/>'
+                   + "".join(f'<path class="ink hair" d="M{f(X - 8)} {f(y - h * .62 + k * 16)}H{f(X + 8)}"/>' for k in range(1, int(h * .62 / 16)))
+                   + f'<path class="tint ink thin" d="M{f(X - 11)} {f(y - h * .62)}H{f(X + 11)}V{f(y - h * .62 + 8)}H{f(X - 11)}Z"/>')
+    beams = [y - h * .62 - 4, y - h * .62 - 4 - h * .16, y - h * .62 - 4 - h * .32]
+    for k, by in enumerate(beams):
+        if k >= round(3 * built): break
+        bw = w * .44 + 8
+        d = (f"M{f(x - bw)} {f(by)}C{f(x - bw * .5)} {f(by - 6)} {f(x + bw * .5)} {f(by - 6)} {f(x + bw)} {f(by)}V{f(by - 12)}"
+             f"C{f(x + bw * .5)} {f(by - 18)} {f(x - bw * .5)} {f(by - 18)} {f(x - bw)} {f(by - 12)}Z")
+        out.append(f'<path class="wash ink heavy" d="{d}"/><path class="ink hair" d="M{f(x - bw + 8)} {f(by - 6)}C{f(x - bw * .4)} {f(by - 11)} {f(x + bw * .4)} {f(by - 11)} {f(x + bw - 8)} {f(by - 6)}"/>')
+        for side in (-1, 1):
+            sx = x + side * (bw + 4)
+            out.append(f'<path class="tint ink thin" d="M{f(sx - side * 4)} {f(by)}C{f(sx + side * 6)} {f(by + 2)} {f(sx + side * 8)} {f(by - 10)} {f(sx)} {f(by - 12)}C{f(sx - side * 4)} {f(by - 12)} {f(sx - side * 4)} {f(by - 6)} {f(sx)} {f(by - 6)}"/>')
+        if k < 2 and k + 1 < round(3 * built):
+            for bx in (x - w * .32, x, x + w * .32):
+                out.append(f'<path class="wash ink thin" d="M{f(bx - 5)} {f(by - 12)}V{f(beams[k + 1])}H{f(bx + 5)}V{f(by - 12)}Z"/>')
+    return "".join(out)
+
+
+# ------------------------------------------------------------------ the animals, drawn from life in the engraver's manner
+def _clip(c, d):
+    """A clip path of the shape d, for shading inside a body; returns its id."""
+    c.nclip = getattr(c, "nclip", 0) + 1
+    key = f"bc{c.nclip}"
+    c.d(key, f'<clipPath id="{key}"><path d="{d}"/></clipPath>')
+    return key
+
+
+def body(c, d, shade, cls="wash ink thin", fur=""):
+    """A body part: its outline filled, its shadow side hatched inside it, its fur or scale strokes."""
+    k = _clip(c, d)
+    return (f'<path class="{cls}" d="{d}"/><g clip-path="url(#{k})"><path fill="url(#hd)" d="{shade}" opacity=".9"/>'
+            + (f'<path class="ink hair" d="{fur}"/>' if fur else "") + '</g><path class="ink thin" fill="none" d="{d}"/>'.replace("{d}", d))
+
+
+def leg(pts, w0, w1, paw=None):
+    """A leg as a tapering band through its joints; paw is (x, y, rx, ry) for the foot."""
+    out = f'<path class="wash ink thin" d="{taper(pts, w0, w1)}"/>'
+    if paw:
+        x, y, rx, ry = paw
+        out += f'<ellipse cx="{f(x)}" cy="{f(y)}" rx="{f(rx)}" ry="{f(ry)}" class="wash ink thin"/><path class="ink hair" d="M{f(x - rx * .3)} {f(y - ry)}v{f(ry * 1.4)}M{f(x + rx * .3)} {f(y - ry)}v{f(ry * 1.4)}"/>'
+    return out
+
+
+def ticks(pts, n, length=5, ang=-60):
+    """Short fur strokes along a contour."""
+    P = densify(pts, max(1, n // max(1, len(pts) - 1)))
+    a = math.radians(ang)
+    return "".join(f"M{f(x)} {f(y)}l{f(length * math.cos(a))} {f(length * math.sin(a))}" for x, y in P)
+
+
+def wolf(c, x, y, s=1, pose="lying", flip=False, cls="wash ink thin", jaw=True, ears="up"):
+    """A wolf (or hound) drawn from life. "running": at full stretch, head to the right. "lying": couched
+    with head raised, head to the left. Deep chest, tucked belly, a ruff at the neck, bushy tail, the eye
+    set in its mask, the nose-leather, and the fur cut in short strokes along every contour."""
+    out = []
+    if pose == "running":
+        torso = ("M-70 -38C-50 -50 -10 -46 20 -48C40 -50 58 -54 70 -50C84 -44 88 -24 80 -10C72 0 56 4 40 2"
+                 "C20 -2 0 -8 -16 -10C-34 -12 -56 -6 -70 -14C-80 -20 -80 -32 -70 -38Z")
+        head = ("M60 -50C70 -64 86 -72 100 -72C108 -72 114 -68 120 -64L146 -58C150 -57 151 -53 148 -51L132 -48"
+                + ("L142 -42L120 -40" if jaw else "L128 -44L118 -42") + "C108 -36 96 -32 86 -24C80 -18 78 -14 80 -10C78 -26 72 -40 60 -50Z")
+        out.append(leg([(50, -12), (64, 6), (88, 18), (104, 20)], 15, 7, (108, 20, 6, 3)).replace('class="wash', 'class="mid'))
+        out.append(leg([(-48, -18), (-62, 2), (-84, 12), (-104, 22)], 18, 7, (-108, 23, 6, 3)).replace('class="wash', 'class="mid'))
+        out.append(leg([(60, -16), (76, 2), (100, 8), (118, 6)], 17, 7, (122, 6, 7, 3.4)))
+        out.append(leg([(-56, -24), (-72, -2), (-98, 2), (-120, 12)], 22, 7, (-124, 13, 7, 3.4)))
+        tail = taper([(-62, -34), (-90, -40), (-116, -32), (-134, -18), (-140, -12)], 30, 1)
+        out.append(body(c, tail, "M-150 -26L-70 -26V0H-150Z", cls, ticks([(-74, -40), (-100, -44), (-124, -36), (-138, -22)], 16, 7, 120) + ticks([(-80, -26), (-106, -22), (-128, -12)], 10, 6, 60)))
+        out.append(body(c, torso, "M-90 -16C-40 -18 20 -14 90 -22V20H-90Z", cls,
+                        ticks([(-66, -38), (-30, -46), (10, -46), (40, -50), (66, -52)], 18, 5, -120) + ticks([(-60, -12), (-30, -12), (0, -8), (30, -2)], 10, 4, 100)
+                        + "M66 -48C72 -36 72 -22 66 -10M-44 -40C-36 -30 -36 -18 -42 -10"))
+        out.append(f'<path fill="none" class="ink hair" d="M-26 -46C-46 -54 -76 -42 -76 -24C-76 -10 -64 0 -52 2C-40 -6 -30 -22 -26 -46Z"/><path class="ink hair" d="M-40 -46C-56 -42 -66 -30 -64 -16M-50 -10C-44 -14 -38 -22 -34 -32"/>'
+                   f'<path fill="none" class="ink hair" d="M70 -52C56 -48 48 -32 52 -16C56 -6 62 0 70 2C80 -8 84 -28 78 -44Z"/><path class="ink hair" d="M66 -46C58 -38 56 -26 60 -14M72 -36C74 -26 72 -16 68 -8"/>')
+        out.append(body(c, head, "M60 -40C80 -36 110 -40 150 -48V-30H60Z", cls,
+                        ticks([(64, -50), (72, -40), (78, -26)], 8, 6, 160) + "M100 -70C104 -64 104 -58 100 -52"))
+        out.append('<path class="mid ink thin" d="M92 -70L90 -90L104 -74Z"/><path class="wash ink thin" d="M84 -68L78 -86L92 -72Z"/>'
+                   '<path class="light ink thin" d="M102 -63C106 -66 112 -66 115 -63C112 -60 106 -60 102 -63Z"/><circle cx="109" cy="-63" r="1.6" class="fill-ink"/>'
+                   '<path class="fill-ink" d="M144 -59C149 -59 152 -55 149 -51L144 -52Z"/><path class="ink hair" d="M124 -58l12 2M126 -54l10 1"/>'
+                   + ('<path class="light ink hair" d="M134 -48l2 4l2 -4ZM126 -47l2 4l2 -4ZM132 -42l2 -3l2 3Z"/><path class="tint ink hair" d="M122 -44C128 -45 134 -45 138 -44"/>' if jaw else ""))
+    else:
+        torso = ("M-40 -8C-44 -26 -30 -42 -6 -46C20 -50 50 -46 70 -38C90 -30 100 -16 96 0L-34 2C-40 2 -42 -2 -40 -8Z")
+        head = ("M-24 -40C-26 -58 -36 -72 -54 -76C-64 -78 -72 -74 -78 -68L-104 -60C-108 -59 -109 -54 -106 -52L-90 -50"
+                + ("L-100 -44L-80 -44" if jaw else "L-86 -46L-76 -44") + "C-66 -40 -56 -32 -46 -22C-40 -16 -36 -20 -30 -26Z")
+        tail = taper([(80, -10), (104, -8), (114, 2), (100, 10), (76, 10)], 22, 1)
+        out.append(body(c, tail, "M60 2H120V20H60Z", cls, ticks([(84, -14), (106, -10), (114, 2), (96, 10)], 10, 6, 60)))
+        out.append(leg([(-30, -6), (-60, -2), (-86, 0)], 13, 8, (-90, 0, 7, 3)).replace('class="wash', 'class="mid'))
+        out.append(leg([(60, -10), (40, -2), (22, 0)], 16, 9, (18, 0, 7, 3)))
+        out.append(leg([(-20, -12), (-56, -6), (-80, -2)], 15, 9, (-86, -1, 8, 3.4)))
+        out.append(body(c, torso, "M-50 -14C0 -16 50 -18 110 -16V10H-50Z", cls,
+                        ticks([(-36, -30), (-10, -44), (20, -48), (50, -44), (76, -34)], 18, 5, -120)
+                        + "M60 -36C82 -34 92 -18 86 -2M54 -30C70 -26 76 -14 72 -2M-24 -38C-14 -28 -12 -14 -18 -4"))
+        out.append(f'<path fill="none" class="ink hair" d="M44 -42C70 -46 90 -32 90 -14C90 -2 82 2 70 2C56 -2 44 -18 44 -42Z"/><path class="ink hair" d="M56 -38C74 -36 84 -24 82 -10M60 -22C66 -14 72 -8 80 -4"/>'
+                   f'<path fill="none" class="ink hair" d="M-20 -42C-34 -38 -40 -24 -36 -10C-34 -2 -26 2 -18 0C-12 -12 -12 -30 -20 -42Z"/><path class="ink hair" d="M-24 -34C-30 -26 -30 -16 -26 -8"/>')
+        out.append(body(c, head, "M-110 -48C-80 -46 -50 -40 -20 -30V0H-110Z", cls,
+                        ticks([(-28, -44), (-32, -34), (-38, -24)], 8, 6, 20) + "M-58 -74C-62 -66 -62 -58 -58 -52"))
+        if ears == "up":
+            out.append('<path class="mid ink thin" d="M-50 -74L-46 -94L-38 -76Z"/><path class="wash ink thin" d="M-42 -72L-34 -88L-30 -70Z"/>')
+        else:
+            out.append('<path class="mid ink thin" d="M-48 -74C-38 -78 -30 -72 -32 -60C-34 -52 -40 -50 -44 -54C-44 -62 -46 -68 -48 -74Z"/>')
+        out.append('<path class="light ink thin" d="M-68 -66C-72 -69 -78 -69 -81 -66C-78 -63 -72 -63 -68 -66Z"/><circle cx="-75" cy="-66" r="1.6" class="fill-ink"/>'
+                   '<path class="fill-ink" d="M-102 -61C-107 -61 -110 -57 -107 -53L-102 -54Z"/><path class="ink hair" d="M-84 -60l-12 2M-86 -56l-10 1"/>'
+                   + ('<path class="light ink hair" d="M-94 -50l-2 4l-2 -4ZM-86 -49l-2 4l-2 -4Z"/>' if jaw else ""))
+    sx = -s if flip else s
+    return f'<g transform="translate({f(x)} {f(y)}) scale({sx} {s})">{"".join(out)}</g>'
+
+
+def falcon(x, y, s=1, flip=False):
+    """A falcon perched upright, facing left, as from life: the dark hood and the moustache stripe under
+    the eye, the hooked beak, a barred breast, the long wings folded and crossing over the tail, and the
+    grip of its feet on the perch."""
+    body = ('<path class="wash ink thin" d="M4 10L2 40L9 42L14 12Z"/><path class="ink hair" d="M5 16L4 38M8 16L8 38M11 16L11 34"/>'
+            '<path class="light ink thin" d="M-2 -46C-12 -42 -16 -26 -14 -10C-12 2 -6 10 2 14L10 12C12 -6 10 -30 4 -44Z"/>'
+            '<path class="ink hair" d="' + "".join(f"M{f(-11 + (k % 2) * 4 + j * 6)} {f(-34 + k * 7)}q2.4 1.6 4.8 0" for k in range(7) for j in range(3) if -11 + (k % 2) * 4 + j * 6 < 6 - abs(k - 3)) + '"/>'
+            '<path class="mid ink thin" d="M0 -48C12 -46 20 -32 20 -12C20 6 16 24 12 36L6 36C10 18 10 -4 6 -22C4 -34 2 -42 0 -48Z"/>'
+            '<path class="light ink hair" d="M6 -38C12 -32 14 -22 14 -12M6 -24C10 -16 12 -6 12 4M8 -8C10 2 10 14 9 24"/>'
+            '<path class="light ink thin" d="M-12 -58C-12 -66 -4 -70 4 -68C10 -66 12 -60 10 -52C8 -46 2 -44 -4 -45C-10 -46 -12 -52 -12 -58Z"/>'
+            '<path class="mid ink thin" d="M-11 -61C-9 -68 0 -71 6 -67C11 -63 11 -56 9 -51C6 -54 4 -56 0 -57C-4 -58 -8 -60 -11 -61Z"/>'
+            '<path class="fill-ink" d="M-6 -57C-7 -53 -7 -49 -5 -45.6L-1.6 -46.4C-2.6 -50 -2.6 -54 -2.4 -57Z"/>'
+            '<circle cx="-5" cy="-59" r="2.6" class="light ink thin"/><circle cx="-5.4" cy="-59" r="1.5" class="fill-ink"/>'
+            '<path class="wash ink thin" d="M-11 -61C-14.6 -61 -16.4 -59 -16 -55.6C-15.6 -54.4 -14.6 -54.4 -14.4 -55.6C-14 -57 -12.8 -57.4 -11 -57.4Z"/>'
+            '<path class="ink hair" d="M-11 -61V-56"/>'
+            '<path class="ink thin" d="M-4 12L-5 20M3 13L3 20"/>'
+            '<path class="ink thin" d="M-9 21c1 -3 3 -3 4 0M-5 21c1 -3 3 -3 4 0M1 21c1 -3 3 -3 4 0M5 21c1 -3 3 -3 4 0"/>')
+    sx = -s if flip else s
+    return f'<g transform="translate({f(x)} {f(y)}) scale({sx} {s})">{body}</g>'
+
+
+def hound(x, y, s=1, flip=False, c=None):
+    """The hall's hound, lying watchful before the door: a wolf's build with its ears folded."""
+    return wolf(c, x, y, s * .62, "lying", flip=not flip, jaw=False, ears="fold")
+
+
+def boar(c, x, y, s=1, angle=0, cls="wash ink thin"):
+    """A wild boar's head and forequarters in profile, facing right, as from life: the high bristled
+    crest, the small deep eye, the long wedge of the snout ending in its flat disc, the upcurved tusks
+    and the pricked ears."""
+    head = ("M-70 40C-74 10 -64 -22 -40 -34C-24 -42 -6 -40 6 -32C20 -22 36 -14 52 -10L64 -8C69 -4 69 10 64 14L48 16"
+            "C38 20 26 26 16 34C6 44 -6 52 -16 56C-36 60 -58 54 -70 40Z")
+    shade = "M-70 40C-50 34 -20 30 10 26C30 22 50 18 70 12V70H-70Z"
+    fur = ("".join(f"M{f(-62 + k * 7)} {f(-14 - k * 3.2)}l{f(-3)} {f(-9 - (k % 3) * 2)}" for k in range(8))
+           + "M-40 -10C-30 -4 -22 6 -18 20M-52 6C-42 12 -32 22 -30 36M14 -24C28 -16 42 -10 58 -6M18 -12C30 -6 42 0 56 4")
+    out = [body(c, head, shade, cls, fur)]
+    out.append('<path class="mid ink thin" d="M-30 -36C-40 -52 -36 -66 -24 -72C-18 -62 -16 -48 -18 -36Z"/><path class="ink hair" d="M-26 -42C-28 -52 -26 -60 -24 -66"/>')
+    out.append('<ellipse cx="65" cy="3" rx="4.4" ry="11" class="mid ink thin"/><circle cx="65" cy="-1" r="1.4" class="fill-ink"/><circle cx="65" cy="8" r="1.4" class="fill-ink"/>')
+    out.append('<path class="light ink thin" d="M2 -22C6 -25 11 -25 14 -22C11 -19 6 -19 2 -22Z"/><circle cx="8.6" cy="-22" r="1.6" class="fill-ink"/><path class="ink thin" d="M-2 -27C4 -31 12 -30 18 -26"/>')
+    out.append('<path class="light ink thin" d="M36 18C44 8 46 -6 38 -20C48 -14 54 0 52 12C51 16 48 18 44 20Z"/><path class="ink hair" d="M42 14C46 4 46 -6 42 -14"/>')
+    out.append('<path class="ink thin" d="M48 16C40 18 30 22 22 28"/>')
+    return f'<g transform="translate({f(x)} {f(y)}) rotate({f(angle)}) scale({s})">{"".join(out)}</g>'
+
+
+def buffalo_face(c, x, y, s=1, cls="wash ink thin"):
+    """A water buffalo's head seen from the front: the great horns sweeping out and back in ridged
+    crescents from the boss of the brow, the long face, wide-set heavy-lidded eyes, the broad wet muzzle
+    with its nostrils, and the ears hanging below the horns."""
+    p = c.p
+    out = []
+    for side in (-1, 1):
+        horn = (f"M{f(side * 14)} -36C{f(side * 40)} -50 {f(side * 76)} -48 {f(side * 98)} -24C{f(side * 108)} -12 {f(side * 106)} 4 {f(side * 96)} 10"
+                f"C{f(side * 96)} -2 {f(side * 90)} -16 {f(side * 76)} -26C{f(side * 58)} -36 {f(side * 34)} -32 {f(side * 16)} -22Z")
+        out.append(f'<path class="light ink thin" d="{horn}"/>' + '<path class="ink hair" d="' + "".join(f"M{f(side * xx)} {f(-36 - (xx - 20) * .2 + (xx - 20) ** 2 * .004)}l{f(side * 3)} 9" for xx in range(24, 96, 8)) + '"/>')
+        out.append(f'<path class="{cls}" d="M{f(side * 22)} -16C{f(side * 40)} -14 {f(side * 50)} -6 {f(side * 52)} 2C{f(side * 42)} 6 {f(side * 30)} 4 {f(side * 22)} -2Z"/><path class="mid ink hair" d="M{f(side * 26)} -10C{f(side * 38)} -8 {f(side * 44)} -4 {f(side * 46)} 0"/>')
+    face = "M-22 -34C-10 -40 10 -40 22 -34C26 -10 24 20 20 40C16 56 10 64 0 64C-10 64 -16 56 -20 40C-24 20 -26 -10 -22 -34Z"
+    out.append(body(c, face, "M8 -40H30V70H8Z", cls, "M-6 -24C-2 -20 2 -20 6 -24M-10 -14C-4 -10 4 -10 10 -14M-14 0C-12 14 -12 26 -14 36M14 0C12 14 12 26 14 36"))
+    for side in (-1, 1):
+        out.append(f'<path class="light ink thin" d="M{f(side * 8)} -2C{f(side * 11)} -6 {f(side * 17)} -6 {f(side * 20)} -2C{f(side * 17)} 1 {f(side * 11)} 1 {f(side * 8)} -2Z"/><circle cx="{f(side * 14)}" cy="-2.4" r="1.7" class="fill-ink"/>'
+                   f'<path class="ink thin" d="M{f(side * 6)} -6C{f(side * 10)} -10 {f(side * 18)} -10 {f(side * 22)} -5"/>')
+    out.append('<path class="mid ink thin" d="M-18 42C-18 34 18 34 18 42C18 56 10 64 0 64C-10 64 -18 56 -18 42Z"/>'
+               '<path class="fill-ink" d="M-11 46C-11 42 -5 42 -5 47C-5 50 -10 51 -11 46ZM11 46C11 42 5 42 5 47C5 50 10 51 11 46Z"/>'
+               '<path class="ink hair" d="M0 50V60M-8 58C-4 61 4 61 8 58"/>')
+    out.append('<path class="mid ink thin" d="M-14 -36C-8 -46 8 -46 14 -36C8 -32 -8 -32 -14 -36Z"/><path class="ink hair" d="M-8 -40l-2 -4M0 -42v-4M8 -40l2 -4"/>')
+    return f'<g transform="translate({f(x)} {f(y)}) scale({s})">{"".join(out)}</g>'
+
+
+def deer(c, x, y, s=1, cls="tint ink thin", spots=True):
+    """A deer in full leap, facing right: slender legs folded and flung out, the deep chest, the neck
+    lifted, the fine head with its large eye and ear, branching antlers, the white scut raised."""
+    torso = "M-44 -6C-46 -20 -34 -30 -12 -30C10 -30 30 -32 44 -38C54 -42 60 -36 58 -24C56 -12 46 -2 30 0C10 4 -14 6 -30 4C-40 3 -44 0 -44 -6Z"
+    neck = "M40 -36C46 -50 54 -62 64 -72L76 -66C70 -54 62 -40 58 -26Z"
+    head = "M62 -74C66 -82 76 -84 82 -80L100 -70C104 -68 104 -64 100 -62L84 -60C78 -60 70 -62 64 -66Z"
+    out = []
+    out.append(leg([(40, -6), (56, 10), (70, 4), (82, 10)], 7, 3, (84, 11, 3, 2)).replace('class="wash', 'class="mid'))
+    out.append(leg([(-36, -4), (-54, 10), (-70, 12), (-90, 20)], 9, 3, (-92, 21, 3, 2)).replace('class="wash', 'class="mid'))
+    out.append(f'<path class="light ink thin" d="M-44 -18C-52 -26 -54 -34 -48 -38C-42 -32 -40 -26 -40 -18Z"/>')
+    out.append(body(c, torso, "M-50 -8C-20 -8 20 -10 60 -18V10H-50Z", cls, "M-30 -26C-36 -18 -36 -8 -30 0M34 -32C28 -22 28 -10 34 -2"))
+    out.append(leg([(32, -6), (52, 2), (66, -8), (82, -4)], 8, 3, (84, -4, 3, 2)))
+    out.append(leg([(-28, -2), (-50, 4), (-72, 0), (-92, 6)], 10, 3, (-94, 6, 3, 2)))
+    out.append(body(c, neck, "M58 -60H80V-20H58Z", cls))
+    out.append(body(c, head, "M64 -62H104V-56H64Z", cls))
+    out.append('<path class="light ink thin" d="M68 -78L60 -92L72 -82Z"/>'
+               '<path class="ink thin" d="M72 -80C70 -92 74 -104 82 -112M74 -94C80 -96 86 -98 90 -104M72 -88L64 -100M78 -82C80 -94 88 -102 98 -106M84 -92C90 -92 96 -94 100 -98"/>'
+               '<circle cx="80" cy="-72" r="2.2" class="light ink thin"/><circle cx="80.4" cy="-72" r="1.2" class="fill-ink"/><path class="fill-ink" d="M101 -68l3 2l-3 2Z"/>')
+    if spots:
+        out.append("".join(f'<ellipse cx="{f(sx)}" cy="{f(sy)}" rx="2.6" ry="1.8" class="light ink hair"/>' for sx, sy in [(-28, -20), (-16, -24), (-4, -26), (8, -26), (20, -28), (-22, -12), (-10, -14), (2, -16), (14, -18), (26, -20), (-4, -6), (10, -8)]))
+    return f'<g transform="translate({f(x)} {f(y)}) scale({s})">{"".join(out)}</g>'
+
+
+def crocodile(c, x, y, s=1, cls="tint ink thin"):
+    """A crocodile lying low in the water, facing left: the long armoured back of ridged scutes, the
+    eye and nostril knobs breaking the surface, the long jaw with its teeth showing along the lip, and
+    the heavy tail trailing away."""
+    bod = ("M-110 2C-108 -4 -96 -8 -80 -8L-64 -12C-56 -14 -50 -12 -44 -10C-20 -14 10 -14 40 -10C70 -6 100 -2 130 2"
+           "C100 6 70 8 40 8C10 10 -20 10 -44 8L-70 6C-90 6 -104 6 -110 2Z")
+    out = [body(c, bod, "M-120 3H140V20H-120Z", cls, "")]
+    out.append('<path class="ink hair" d="' + "".join(f"M{f(xx)} {f(-12 + abs(xx - 10) * .04)}l3 -5l3 5" for xx in range(-40, 120, 9)) + '"/>')
+    out.append('<path class="ink hair" d="' + "".join(f"M{f(xx)} {f(-8 + abs(xx - 10) * .04)}v12" for xx in range(-40, 120, 9)) + '"/>')
+    out.append('<path class="wash ink thin" d="M-62 -12C-60 -18 -52 -18 -50 -12Z"/><circle cx="-56" cy="-14" r="1.4" class="fill-ink"/><path class="wash ink thin" d="M-108 -4C-108 -8 -102 -8 -102 -4Z"/>')
+    out.append('<path class="ink thin" d="M-106 2H-60L-46 0"/><path class="light ink hair" d="' + "".join(f"M{f(xx)} 2l1.4 3l1.4 -3" for xx in range(-102, -62, 6)) + '"/>')
+    out.append('<path class="ink hair" d="M-118 10C-90 14 -40 16 0 14M20 16C60 16 100 12 140 8"/>')
+    return f'<g transform="translate({f(x)} {f(y)}) scale({s})">{"".join(out)}</g>'
+
+
+def serpent(c, pts, w0, w1, cls="tint ink thin", head=True, tongue=True, scales=True):
+    """A serpent's body along pts, w0 thick at the head end (pts[0]) narrowing to the tail: belly scutes
+    banded across it, a row of scales down its back, and at the head end a wedge-shaped head with its
+    eye under the brow-plate and a forked tongue."""
+    out = []
+    d = taper(pts, w0, w1)
+    P = densify(pts, 6)
+    sc = ""
+    if scales:
+        for i in range(1, len(P) - 1, 2):
+            (x0, y0), (x1, y1) = P[i - 1], P[i + 1]
+            dx, dy = x1 - x0, y1 - y0; m = math.hypot(dx, dy) or 1
+            w = (w0 + (w1 - w0) * i / (len(P) - 1)) / 2 * .8
+            x, y = P[i]
+            sc += f"M{f(x - dy / m * w)} {f(y + dx / m * w)}Q{f(x + dx / m * 3)} {f(y + dy / m * 3)} {f(x + dy / m * w)} {f(y - dx / m * w)}"
+    out.append(body(c, d, taper([(px + 1.5, py + 2) for px, py in pts], w0 * .55, w1 * .5), cls, sc))
+    if head:
+        (hx, hy), (nx, ny) = pts[0], pts[1]
+        a = math.degrees(math.atan2(hy - ny, hx - nx))
+        hw = w0 * .8
+        h = (f'<path class="{cls}" d="M{f(-hw * .3)} {f(-hw * 1.05)}C{f(hw * 1.2)} {f(-hw * 1.2)} {f(hw * 2.2)} {f(-hw * .6)} {f(hw * 2.4)} 0'
+             f'C{f(hw * 2.2)} {f(hw * .6)} {f(hw * 1.2)} {f(hw * 1.2)} {f(-hw * .3)} {f(hw * 1.05)}Z"/>'
+             f'<path class="ink hair" d="M{f(hw * .4)} {f(-hw * .9)}C{f(hw * 1)} {f(-hw * .6)} {f(hw * 1.6)} {f(-hw * .5)} {f(hw * 2)} {f(-hw * .3)}M{f(hw * .3)} {f(hw * .9)}C{f(hw)} {f(hw * .6)} {f(hw * 1.6)} {f(hw * .5)} {f(hw * 2.1)} {f(hw * .2)}"/>'
+             f'<path class="light ink thin" d="M{f(hw * 1.2)} {f(-hw * .55)}C{f(hw * 1.5)} {f(-hw * .8)} {f(hw * 1.9)} {f(-hw * .7)} {f(hw * 2)} {f(-hw * .45)}C{f(hw * 1.7)} {f(-hw * .3)} {f(hw * 1.4)} {f(-hw * .3)} {f(hw * 1.2)} {f(-hw * .55)}Z"/>'
+             f'<circle cx="{f(hw * 1.62)}" cy="{f(-hw * .52)}" r="{f(hw * .14)}" class="fill-ink"/>'
+             f'<path class="ink hair" d="M{f(hw * 2.4)} 0H{f(hw * 1.4)}"/>')
+        if tongue:
+            h += f'<path class="ink thin" d="M{f(hw * 2.4)} 0H{f(hw * 3.4)}L{f(hw * 3.9)} {f(-hw * .3)}M{f(hw * 3.4)} 0L{f(hw * 3.9)} {f(hw * .3)}" stroke="{c.p["T"]}"/>'
+        out.append(f'<g transform="translate({f(hx)} {f(hy)}) rotate({f(a)})">{h}</g>')
+    return "".join(out)
