@@ -132,7 +132,7 @@ function ready(){
   return readyP;
 }
 /* the engraved plates, one small file a card, fetched the first time a card is drawn */
-const PLATES_V = "3", plates = {}, platesP = {};
+const PLATES_V = "4", plates = {}, platesP = {};
 function need(ids){
   return ready().then(() => Promise.all([].concat(ids || []).filter(valid).map(id => platesP[id] || (platesP[id] =
     fetch(`/static/deck/plates/${id}.json?v=${PLATES_V}`).then(r => { if (r.ok === false) throw new Error(r.status); return r.json(); })

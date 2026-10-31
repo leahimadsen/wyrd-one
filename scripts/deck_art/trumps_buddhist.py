@@ -101,24 +101,28 @@ def tb02():
 
 def tb03():
     s = 3
-    c = T(s, 303, "The Chariot, engraved: Nagasena's chariot taken apart and laid out by the water, its wheels, axle, pole, yoke and box, so that none of them is the chariot, under the seal of the Moon within the crab's claws",
-          glow=(190, 180, 210))
-    c(crescent(310, 128, 16, "light ink thin"))
-    c(hills(c, 232, [(60, 14), (300, 10)], shade=False))
-    c(sea(c, top=232, bottom=262, rows=2))
-    c(ground(c, 262, wob=3))
-    def wheel(x, y, r):
-        sp = "".join(f"M{f(pol(x, y, 9, a)[0])} {f(pol(x, y, 9, a)[1])}L{f(pol(x, y, r - 5, a)[0])} {f(pol(x, y, r - 5, a)[1])}" for a in range(0, 360, 30))
-        return (rope(f"M{f(x - r)} {f(y)}a{r} {r} 0 1 0 {2 * r} 0a{r} {r} 0 1 0 {-2 * r} 0", c.p, 9, 6, ".8 3") + f'<path class="ink thin" d="{sp}"/>'
-                f'<circle cx="{x}" cy="{y}" r="10" class="tint ink thin"/><circle cx="{x}" cy="{y}" r="3.4" class="fill-ink"/>')
-    c(wheel(74, 222, 44), wheel(306, 222, 44))
-    c('<path class="wash ink heavy" d="M136 250V200H244V250Z"/><path class="hatchfill" d="M222 200H244V250H222Z"/><path class="tint ink thin" d="M130 192H250V200H130Z"/>',
-      '<path class="ink hair" d="M146 210H234M146 230H234M162 200V250M190 200V250M218 200V250"/>',
-      '<path class="light ink thin" d="M136 196C136 172 160 160 190 160C220 160 244 172 244 196"/><path class="ink hair" d="M150 192C152 178 168 170 190 170C212 170 228 178 230 192"/>')
-    c(rope("M70 300H310", c.p, 8, 5, ".8 3", fill=c.p["L"]), '<circle cx="70" cy="300" r="5" class="tint ink thin"/><circle cx="310" cy="300" r="5" class="tint ink thin"/>')
-    c(rope("M110 330L270 318", c.p, 7, 4.4, ".8 3", fill=c.p["W"]))
-    c('<path class="wash ink thin" d="M262 312C272 300 292 300 300 312C292 316 272 316 262 312Z"/><path class="wash ink thin" d="M296 312C306 300 326 300 334 312C326 316 306 316 296 312Z"/>')
-    c('<path class="ink hair" stroke-dasharray="3 4" d="M118 222H136M244 222H262M190 250V296M100 300V330M300 300V318"/>')
+    c = T(s, 303, "The Chariot, engraved: Nagasena's chariot taken apart and its parts laid out on the bank, wheel, wheel, axle, pole and yoke, box and reins, while above them hangs only the outline of a chariot, a name for the parts and nothing more, under the seal of the Moon within the crab's claws",
+          glow=(190, 170, 210))
+    c(crescent(320, 124, 14, "light ink thin"))
+    ghost = ('M120 186H260V150C260 136 248 126 230 126H150C132 126 120 136 120 150Z'
+             'M100 186a34 34 0 1 0 68 0a34 34 0 1 0 -68 0M212 186a34 34 0 1 0 68 0a34 34 0 1 0 -68 0M260 172H340L352 162')
+    c(f'<path class="ink thin" stroke-dasharray="5 5" d="{ghost}"/>')
+    c(hills(c, 236, [(50, 10), (330, 12)], shade=False))
+    c(sea(c, top=236, bottom=258, rows=1))
+    c(ground(c, 258, wob=3))
+    def wheel(x, y, r, rx=None):
+        rx = rx or r
+        sp = "".join(f"M{f(x + 8 * math.cos(math.radians(a)) * rx / r)} {f(y + 8 * math.sin(math.radians(a)))}L{f(x + (r - 5) * math.cos(math.radians(a)) * rx / r)} {f(y + (r - 5) * math.sin(math.radians(a)))}" for a in range(0, 360, 30))
+        return (f'<ellipse cx="{x}" cy="{y}" rx="{rx}" ry="{r}" class="wash ink heavy"/><ellipse cx="{x}" cy="{y}" rx="{f(rx - 6 * rx / r)}" ry="{r - 6}" class="light ink thin"/>'
+                f'<path class="ink thin" d="{sp}"/><ellipse cx="{x}" cy="{y}" rx="{f(9 * rx / r)}" ry="9" class="tint ink thin"/><circle cx="{x}" cy="{y}" r="3" class="fill-ink"/>')
+    c(wheel(66, 274, 40))
+    c(f'<g transform="rotate(-8 318 304)">{wheel(318, 304, 38, 14)}</g>')
+    c('<path class="wash ink heavy" d="M146 300V262H234V300Z"/><path class="hatchfill" d="M214 262H234V300H214Z"/><path class="tint ink thin" d="M140 256H240V264H140Z"/>',
+      '<path class="ink hair" d="M156 272H224M156 288H224M170 262V300M190 262V300M210 262V300"/>')
+    c(rope("M84 334H300", c.p, 8, 5, ".8 3", fill=c.p["L"]), '<circle cx="84" cy="334" r="5" class="tint ink thin"/><circle cx="300" cy="334" r="5" class="tint ink thin"/>')
+    c(rope("M120 352L262 318", c.p, 7, 4.4, ".8 3", fill=c.p["W"]))
+    c('<path class="wash ink thin" d="M252 316C262 302 284 300 292 314C284 318 262 320 252 316Z"/><path class="wash ink thin" d="M286 312C296 298 318 296 326 310C318 314 296 316 286 312Z"/>')
+    c('<path class="ink thin" d="M244 282C252 274 266 274 270 282C274 290 262 296 254 292C246 288 250 280 258 282C266 284 262 290 258 288"/>')
     c(crown(c, SIGNS[s], RULER[s]))
     return c
 
@@ -163,6 +167,12 @@ def tb04():
     for x, k in ((124, -1), (256, 1), (190, 0)):
         lx = x + k * 4
         c(f'<path class="wash ink thin" d="M{lx - 14} 228V200H{lx - 4}V228ZM{lx + 4} 228V200H{lx + 14}V228Z"/><path class="ink hair" d="M{lx - 12} 228v-5M{lx - 9} 228v-5M{lx - 6} 228v-5M{lx + 6} 228v-5M{lx + 9} 228v-5M{lx + 12} 228v-5"/>')
+    for x, y, k in ((126, 180, 1.05), (254, 180, 1.05), (190, 166, 1.25)):
+        c(f'<path class="wash ink thin" d="M{f(x - 22 * k)} 228C{f(x - 24 * k)} {f(y + 30 * k)} {f(x - 18 * k)} {f(y + 12 * k)} {x} {f(y + 12 * k)}C{f(x + 18 * k)} {f(y + 12 * k)} {f(x + 24 * k)} {f(y + 30 * k)} {f(x + 22 * k)} 228Z"/>',
+          f'<path fill="url(#hd)" d="M{f(x + 8 * k)} {f(y + 14 * k)}C{f(x + 18 * k)} {f(y + 16 * k)} {f(x + 24 * k)} {f(y + 30 * k)} {f(x + 22 * k)} 228H{f(x + 10 * k)}Z" opacity=".8"/>',
+          "".join(f'<path class="tint ink thin" d="M{f(x + dx * k)} {f(y + 18 * k)}Q{f(x + (dx - 4) * k)} {f(y + 30 * k)} {f(x + (dx + 1) * k)} {f(y + 40 * k)}Q{f(x + (dx + 5) * k)} {f(y + 28 * k)} {f(x + (dx + 6) * k)} {f(y + 18 * k)}Z"/>' for dx in (-16, -8, 0, 8)),
+          f'<path class="wash ink thin" d="M{f(x - 12 * k)} 228V{f(y + 40 * k)}H{f(x - 4 * k)}V228ZM{f(x + 4 * k)} 228V{f(y + 40 * k)}H{f(x + 12 * k)}V228Z"/>',
+          f'<path class="ink hair" d="M{f(x - 10 * k)} 228v-4M{f(x - 8 * k)} 228v-4M{f(x - 6 * k)} 228v-4M{f(x + 6 * k)} 228v-4M{f(x + 8 * k)} 228v-4M{f(x + 10 * k)} 228v-4"/>')
     c(lion_face(c, 126, 180, 1.05), lion_face(c, 254, 180, 1.05), lion_face(c, 190, 166, 1.25))
     c(crown(c, SIGNS[s], RULER[s]))
     return c
