@@ -115,6 +115,7 @@ body.paper .pg-foot::before{content:"";display:block;width:64px;height:64px;marg
 /* boxes: double rules and a hard 90s shadow */
 body.paper .plan,body.paper .rd-toc,body.paper .note-box,body.paper .offer,body.paper .cta{background:rgba(255,252,244,.55)!important;
   border:3px double var(--ink)!important;border-radius:0!important;box-shadow:6px 6px 0 rgba(29,23,18,.18)}
+body.paper .cta{padding:6px 22px 4px}
 body.paper .plan.lead{border-color:var(--violet)!important;box-shadow:6px 6px 0 rgba(75,29,158,.28)}
 body.paper .price{font-family:var(--black);color:var(--orange)}
 body.paper hr,body.paper .rd-sec{border-top:0!important}

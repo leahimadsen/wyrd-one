@@ -162,6 +162,7 @@ def learn_index(base):
 <ul class="terms">{signs}</ul>
 <h2 id="nakshatras">The 27 nakshatras (lunar mansions)</h2>
 <p>The oldest map of the sky in Jyotish: twenty-seven mansions of 13°20′ that the Moon passes through, one a day. Each has a ruling planet, a deity, a power of its own, and a part of the body. Each page reads one in full: what it's about, what it's good for, where it goes wrong, and its question.</p>
+<p><b>Which is yours?</b> <a href="/nakshatra-calculator">Find your nakshatra</a> from your birth date, time and place.</p>
 <ul class="terms">{naks}</ul>
 {essays}
 <h2 id="gates">The 64 gates</h2><ul class="terms">{gates}</ul>
@@ -228,6 +229,7 @@ def nakshatra(base, s):
 <h1>{e(n[0])}</h1>
 <p class="lede">{e(n[6])}</p>
 <p>{e(n[0])} is the {ORD27[i]} of the twenty-seven lunar mansions, running from {deg(start)} {e(sign_of(start))} to {deg(start + arc)} {e(sign_of(start + arc - 1e-6))} in the sidereal zodiac. Its stars are {e(d[1][0].lower() + d[1][1:])}. The Moon passes through it in about a day each month, so it colours a day, and it colours a whole life when it holds your Moon or your rising degree.</p>
+<p class="muted">Not sure which mansion holds your Moon? <a href="/nakshatra-calculator">Find your nakshatra</a>.</p>
 
 <h2>What it's about</h2>
 <p>{e(g[6])}</p>
@@ -287,7 +289,7 @@ def signs_index(base):
 
 
 def sitemap(base):
-    urls = ["/", "/reports", "/letmelightyourpath", "/contact", "/membership", "/today", "/mandala", "/sample", "/learn", "/learn/signs", "/learn/sukuyo", "/learn/mandala", "/masterclass", "/deck", "/privacy"]
+    urls = ["/", "/nakshatra-calculator", "/reports", "/letmelightyourpath", "/contact", "/membership", "/today", "/mandala", "/sample", "/learn", "/learn/signs", "/learn/sukuyo", "/learn/mandala", "/masterclass", "/deck", "/privacy"]
     urls += [f"/learn/gates/{g}" for g in GATES] + [f"/learn/nakshatras/{s}" for s, _ in NAKS] + [f"/learn/signs/{s}" for s, _ in SIGNS]
     urls += ["/learn/runes"] + [f"/learn/runes/{r[0]}" for r in RUNES] + ["/learn/numbers", "/learn/dharma"] + [f"/learn/dharma/gates/{g}" for g in GATES]
     rows = "".join(f"<url><loc>{e(base + u)}</loc></url>" for u in urls)
@@ -413,6 +415,7 @@ def home_explore():
     return f"""<section class="explore" aria-labelledby="exH">
   <h2 id="exH">Learn the building blocks</h2>
   <h3>The twenty-seven lunar mansions</h3><p class="ex-links">{naks}</p>
+  <p class="ex-more"><a href="/nakshatra-calculator">What is my nakshatra? Find yours</a></p>
   <h3>The twenty-four runes of the Elder Futhark</h3><p class="ex-links">{runes}</p>
   <p class="ex-more"><a href="/learn/signs">The twelve signs</a> <a href="/learn#gates">The sixty-four gates</a> <a href="/learn/dharma">The Dharma Design</a> <a href="/learn/numbers">The numbers</a> <a href="/deck">The Wyrd deck</a> <a href="/learn">Everything to learn</a></p>
 </section>"""

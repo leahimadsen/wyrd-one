@@ -915,6 +915,33 @@ def learn_sukuyo_find():
     title, body = r
     return page(title, "Your Sukuyō shuku, found from the old Japanese lunar calendar.", body, robots="noindex, follow")
 
+@app.route("/nakshatra-calculator", methods=["GET", "POST"])
+def nakshatra_calculator():
+    """What is my nakshatra? The page is for search; the answer is for one person, so it isn't indexed, and the
+    form posts so birth details stay out of the address (and the logs)."""
+    from wyrd import nakfind
+    if request.method == "GET":
+        title, desc, body, ld = nakfind.landing(config.BASE_URL)
+        return page(title, desc, body, ld, script=nakfind.FORM_SCRIPT)
+    if limited(20): return private("Wait a minute", "<h1>Wait a minute</h1><p>Too many tries. Try again shortly.</p>", status=429)
+    f = request.form
+    known = not f.get("unknown_time") and bool(f.get("time"))
+    d = {k: f.get(k) for k in ("date", "place_id", "lat", "lon", "tz", "place_label")}
+    d["time"] = f.get("time") if known else "12:00"
+    if not d.get("lat") or not d.get("tz"): d.pop("lat", None)
+    try:
+        if (d.get("place_id") or "").isdigit(): d["place_id"] = int(d["place_id"])
+        b = birth_from(d)
+        def local_to_jd(m):                       # a local minute of the birth date, as a Julian day
+            u = to_ut(b["y"], b["mo"], b["d"], m // 60, m % 60, b["place"]["tz"])
+            return engine.julian_day(u["y"], u["mo"], u["d"], u["h"])
+        body, script = nakfind.answer(EPH, b, known, local_to_jd)
+    except (BadInput, ValueError, KeyError) as x:
+        title, desc, body, ld = nakfind.landing(config.BASE_URL, str(x) if isinstance(x, BadInput) else "Check your birth details.")
+        return page(title, desc, body, ld, robots="noindex, follow", script=nakfind.FORM_SCRIPT, status=400)
+    return page("Your nakshatra · The Wyrd Console", "Your nakshatra, found from your birth chart.", body,
+                robots="noindex, nofollow", script=script)
+
 @app.get("/learn/signs")
 def learn_signs():
     return page(*pages.signs_index(config.BASE_URL))
