@@ -41,76 +41,72 @@ function placeSearch(input, list, onPick){
 }
 
 /* ---------- Old Style dates ----------
-   These places still kept the old Julian calendar within the site's years, so a birth record of the time runs
-   12 days behind today's calendar (13 from March 1900). When the birthplace and date fall before the change
-   there, the form asks which calendar the date is in; wyrd/oldstyle.py turns an Old Style date into the day the
-   chart is cast for. Each row: country codes (or time zones), the first Gregorian day there, a name, a note.
-   Dates from Wikipedia's "List of adoption dates of the Gregorian calendar by country". Places that changed
-   before 1850 (Britain 1752, Sweden and Finland 1753) only need rows if the site's years reach back that far. */
-const OLD_STYLE = [
-  { cc: ["RU"], until: "1918-02-14", where: "Russia" },
-  { cc: ["KZ", "UZ", "TM", "KG", "TJ"], until: "1918-02-14", where: "The Russian Empire" },
-  { cc: ["BY"], until: "1918-02-14", where: "Belarus", note: "The Grodno region changed earlier, in September 1915." },
-  { cc: ["UA"], until: "1918-03-01", where: "Ukraine", note: "The far west, then part of Austria-Hungary, already kept the Gregorian calendar." },
-  { cc: ["EE"], until: "1918-03-01", where: "Estonia" },
-  { cc: ["LV"], until: "1915-09-05", where: "Latvia", note: "Courland changed in May 1915, Livonia, with Riga, that September." },
-  { cc: ["LT"], until: "1915-05-25", where: "Lithuania" },
-  { cc: ["GE", "AM", "AZ"], until: "1918-05-01", where: "The Caucasus" },
-  { cc: ["MD"], until: "1919-04-14", where: "Bessarabia", note: "It was Russian until 1918, then Romanian; Romania changed in April 1919." },
-  { cc: ["RO"], until: "1919-04-14", where: "Romania", note: "Transylvania, the Banat and Bukovina, then part of Austria-Hungary, already kept the Gregorian calendar." },
-  { cc: ["BG"], until: "1916-04-14", where: "Bulgaria" },
-  { cc: ["RS"], until: "1919-01-28", where: "Serbia", note: "Vojvodina, then part of Hungary, already kept the Gregorian calendar." },
-  { cc: ["ME"], until: "1919-01-28", where: "Montenegro" },
-  { cc: ["MK", "XK"], until: "1919-01-28", where: "This region" },
-  { cc: ["AL"], until: "1912-11-28", where: "Albania", note: "Catholic records already used the Gregorian calendar." },
-  { cc: ["GR"], until: "1923-03-01", where: "Greece", note: "Mount Athos keeps the Julian calendar still." },
-  { cc: ["TR"], until: "1917-03-01", where: "Turkey", note: "A Rumi date has the Julian days and months but its own year: change the year to the common era first. Hijri dates aren't covered." },
-  { tz: ["America/Sitka", "America/Juneau", "America/Anchorage", "America/Yakutat", "America/Nome", "America/Metlakatla", "America/Adak"],
-    until: "1867-10-18", where: "Russian Alaska" },
-];
+   Some places kept the old Julian calendar into the site's years, so a birth record of the time there runs 12
+   days behind today's calendar (13 from March 1900). static/old-style.json lists those places and the first
+   Gregorian day in each; the server reads the same file (wyrd/oldstyle.py). The form offers the choice only for
+   a birthplace and date inside those years, and an Old Style date only applies to a day before the change: the
+   server sets aside any other. */
+let OLD_STYLE = null, oldStyleLoad = null;
+const loadOldStyle = () => oldStyleLoad || (oldStyleLoad = fetch("/static/old-style.json").then(r => r.json())
+  .then(j => { OLD_STYLE = j.PLACES; }).catch(() => { oldStyleLoad = null; }));
+/* old-style helpers: the tests run this part on its own */
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const longDate = s => { const [y, m, d] = s.split("-").map(Number); return `${d} ${MONTHS[m - 1]} ${y}`; };
+const DAY = 86400000, jdnOf = iso => Date.parse(iso) / DAY + 2440588, isoOf = jdn => new Date((jdn - 2440588) * DAY).toISOString().slice(0, 10);
 /* a Julian-calendar YYYY-MM-DD as the same day in today's calendar, through its Julian day number */
 function newStyle(date){
   const [y, m, d] = date.split("-").map(Number), a = Math.floor((14 - m) / 12), yy = y + 4800 - a, mm = m + 12 * a - 3;
-  const jdn = d + Math.floor((153 * mm + 2) / 5) + 365 * yy + Math.floor(yy / 4) - 32083;
-  return new Date((jdn - 2440588) * 86400000).toISOString().slice(0, 10);
+  return isoOf(d + Math.floor((153 * mm + 2) / 5) + 365 * yy + Math.floor(yy / 4) - 32083);
 }
-function oldStyleFor(place, date){
-  if (!place || !/^\d{4}-\d{2}-\d{2}$/.test(date || "")) return null;
-  return OLD_STYLE.find(r => ((r.cc || []).includes(place.cc) || (r.tz || []).includes(place.tz)) && date < r.until) || null;
+/* the Julian-calendar date of a Julian day number */
+function julianDate(jdn){
+  const c = jdn + 32082, d = Math.floor((4 * c + 3) / 1461), e = c - Math.floor(1461 * d / 4), m = Math.floor((5 * e + 2) / 153);
+  const p = n => String(n).padStart(2, "0");
+  return `${d - 4800 + Math.floor(m / 10)}-${p(m + 3 - 12 * Math.floor(m / 10))}-${p(e - Math.floor((153 * m + 2) / 5) + 1)}`;
 }
-/* The calendar choice under a date of birth. It shows itself when the place and date call for it, or when the
-   date is already marked Old Style (from the date input's data-cal="J", or set()). It sits below the place
-   field, since picking the place is what calls it up. A posted form sends it as `name`; the others read
-   value(). Tell it the place whenever the place changes. */
+/* the old-style.json row for a birthplace, or null where the Gregorian calendar was kept all along */
+const oldStyleRegion = place => (place && OLD_STYLE || []).find(r =>
+  ((r.cc || []).includes(place.cc) && !(r.notTz || []).includes(place.tz)) || (r.tz || []).includes(place.tz)) || null;
+/* whether the form should offer the choice: the date, read either way, falls before the change there */
+const oldStyleAsk = (place, date) => { const r = oldStyleRegion(place); return r && /^\d{4}-\d{2}-\d{2}$/.test(date || "") && date < r.until ? r : null; };
+/* whether an Old Style reading of the date is a real day there: its New Style day falls before the change */
+const oldStyleFits = (place, date) => { const r = oldStyleAsk(place, date); return !!r && newStyle(date) < r.until; };
+/* end of the old-style helpers */
+
+/* The calendar choice for a date of birth, below the place field (picking the place is what calls it up). It
+   shows only when the place and date fall in Julian-calendar years, and is off, sends nothing, otherwise. A
+   posted form sends it as `name`; the others read value(). Tell it the place whenever the place changes. An
+   Old Style date kept from before (the date input's data-cal="J", or set()) is offered again only where it fits. */
 function calendarChoice(dateInput, { name = "cal" } = {}){
   const label = document.createElement("label");
   label.className = "f-name f-cal"; label.hidden = true;
   label.innerHTML = `Calendar of this date <span class="cal-why"></span>
-    <select name="${esc(name)}"><option value="">New Style (Gregorian)</option><option value="J">Old Style (Julian)</option></select>
+    <select name="${esc(name)}" disabled><option value="">New Style (Gregorian)</option><option value="J">Old Style (Julian)</option></select>
     <small class="cal-cast" hidden></small>`;
   const form = dateInput.form || dateInput.closest(".cast") || document, at = [...form.querySelectorAll(".f-place")]
     .find(p => p.closest(".tg-person") === dateInput.closest(".tg-person")) || dateInput.closest("label");
   at.after(label);
   const sel = label.querySelector("select"), why = label.querySelector(".cal-why"), out = label.querySelector(".cal-cast");
-  let place = null;
+  let place = null, fits = false;
   sel.value = dateInput.dataset.cal === "J" ? "J" : "";
   function update(){
-    const date = dateInput.value, r = oldStyleFor(place, date), os = sel.value === "J";
-    label.hidden = !r && !os;
+    const date = dateInput.value, r = oldStyleAsk(place, date);
+    label.hidden = !r; sel.disabled = !r;                    // disabled: a posted form sends nothing for it
     why.textContent = r ? `${r.where} kept the old Julian calendar until ${longDate(r.until)}. A record of the time gives the Old Style date; most modern sources give New Style.${r.note ? " " + r.note : ""}` : "";
-    out.hidden = !(os && date);
-    if (os && date){
-      const ns = newStyle(date), days = Math.round((Date.parse(ns) - Date.parse(date)) / 86400000);
+    const os = !!r && sel.value === "J";
+    fits = os && oldStyleFits(place, date);
+    out.hidden = !os;
+    if (fits){
+      const ns = newStyle(date), days = Math.round((Date.parse(ns) - Date.parse(date)) / DAY);
       out.textContent = `Cast for ${longDate(ns)}, ${days} days on, the same day in today's calendar.`;
+    } else if (os){
+      out.textContent = `Old Style dates there end on ${longDate(julianDate(jdnOf(r.until) - 1))}, so this date can only be New Style.`;
     }
   }
   dateInput.addEventListener("input", update); dateInput.addEventListener("change", update); sel.addEventListener("change", update);
-  update();
-  return { value: () => sel.value || undefined, set(v){ sel.value = v === "J" ? "J" : ""; update(); }, place(p){ place = p; update(); } };
+  loadOldStyle().then(update); update();
+  return { value: () => fits ? "J" : undefined, set(v){ sel.value = v === "J" ? "J" : ""; update(); }, place(p){ place = p; update(); } };
 }
-/* a birth's date for a list: as given, marked when Old Style */
 const showDate = b => b.date + (b.cal === "J" ? " O.S." : "");
 
 /* ---------- casting ---------- */
@@ -134,7 +130,7 @@ function current(){
    never send to a server: they can't land in a log or be told to another site ---------- */
 const b64 = s => btoa(unescape(encodeURIComponent(s))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const unb64 = s => decodeURIComponent(escape(atob(s.replace(/-/g, "+").replace(/_/g, "/"))));
-const SHARE_KEYS = ["name", "date", "cal", "time", "place_id", "lat", "lon", "tz", "place_label", "unknown_time"];
+const SHARE_KEYS = ["name", "date", "cal", "cc", "time", "place_id", "lat", "lon", "tz", "place_label", "unknown_time"];
 function shareLink(birth){
   const o = {}; for (const k of SHARE_KEYS) if (birth[k] != null && birth[k] !== "" && birth[k] !== false) o[k] = birth[k];
   return `${location.origin}/chart#b=${b64(JSON.stringify(o))}`;

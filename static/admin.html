@@ -25,7 +25,7 @@
     <label class="f-place">Place of birth
       <input id="admPlace" placeholder="Start typing a town or city" required role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="placeList">
       <ul id="placeList" class="adm-list" role="listbox" hidden></ul></label>
-    <input type="hidden" name="place_id"><input type="hidden" name="lat"><input type="hidden" name="lon"><input type="hidden" name="tz"><input type="hidden" name="place_label">
+    <input type="hidden" name="place_id"><input type="hidden" name="lat"><input type="hidden" name="lon"><input type="hidden" name="tz"><input type="hidden" name="place_label"><input type="hidden" name="cc">
     <button type="submit" class="btn-cast">Generate the reading</button>
     <button type="submit" class="btn-cast" formaction="/admin/gift/reading">Make a gift link</button>
     <p class="err" id="admErr" role="alert"></p>
@@ -42,7 +42,7 @@
   const cal = WyrdCommon.calendarChoice(f.elements.date);
   WyrdCommon.placeSearch(document.getElementById("admPlace"), document.getElementById("placeList"), p => {
     place = p; cal.place(p);
-    for (const [k, v] of [["place_id", p && p.id], ["lat", p && p.lat], ["lon", p && p.lon], ["tz", p && p.tz], ["place_label", p && p.label]]) f.elements[k].value = v ?? "";
+    for (const [k, v] of [["place_id", p && p.id], ["lat", p && p.lat], ["lon", p && p.lon], ["tz", p && p.tz], ["place_label", p && p.label], ["cc", p && p.cc]]) f.elements[k].value = v ?? "";
   });
   const KEY = "wyrdAdminRecent";
   const recent = () => { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (_) { return []; } };
@@ -53,7 +53,7 @@
   }
   document.getElementById("recentList").addEventListener("click", e => {
     const o = e.target.closest("[data-i]"); if (!o) return; const b = recent()[+o.dataset.i];
-    for (const k of ["name", "date", "time", "place_id", "lat", "lon", "tz", "place_label"]) f.elements[k].value = b[k] ?? "";
+    for (const k of ["name", "date", "time", "place_id", "lat", "lon", "tz", "place_label", "cc"]) f.elements[k].value = b[k] ?? "";
     document.getElementById("admPlace").value = b.place_label || ""; place = { id: b.place_id, tz: b.tz, cc: b.cc }; cal.place(place); cal.set(b.cal);
   });
   f.addEventListener("submit", e => {

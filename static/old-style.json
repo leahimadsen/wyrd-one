@@ -1,0 +1,156 @@
+{
+ "_note": "Where and until when births were recorded in the old Julian calendar, within the site's years (1850 on). 'until' is the first Gregorian day there: an Old Style date applies only to a birth before it. A place is matched by its GeoNames country code ('cc', less any time zones in 'notTz': Kaliningrad was Prussian) or by its time zone ('tz'). Read by the forms (common.js) to offer the choice and by the server (wyrd/oldstyle.py) to honour it. Dates: Wikipedia, 'List of adoption dates of the Gregorian calendar by country'. Places that changed before 1850 (Britain 1752, Sweden and Finland 1753) need rows only if the site's years reach back that far.",
+ "PLACES": [
+  {
+   "cc": [
+    "RU"
+   ],
+   "notTz": [
+    "Europe/Kaliningrad"
+   ],
+   "until": "1918-02-14",
+   "where": "Russia"
+  },
+  {
+   "cc": [
+    "KZ",
+    "UZ",
+    "TM",
+    "KG",
+    "TJ"
+   ],
+   "until": "1918-02-14",
+   "where": "The Russian Empire"
+  },
+  {
+   "cc": [
+    "BY"
+   ],
+   "until": "1918-02-14",
+   "where": "Belarus",
+   "note": "The Grodno region changed earlier, in September 1915."
+  },
+  {
+   "cc": [
+    "UA"
+   ],
+   "until": "1918-03-01",
+   "where": "Ukraine",
+   "note": "The far west, then part of Austria-Hungary, already kept the Gregorian calendar."
+  },
+  {
+   "cc": [
+    "EE"
+   ],
+   "until": "1918-03-01",
+   "where": "Estonia"
+  },
+  {
+   "cc": [
+    "LV"
+   ],
+   "until": "1915-09-05",
+   "where": "Latvia",
+   "note": "Courland changed in May 1915, Livonia, with Riga, that September."
+  },
+  {
+   "cc": [
+    "LT"
+   ],
+   "until": "1915-05-25",
+   "where": "Lithuania"
+  },
+  {
+   "cc": [
+    "GE",
+    "AM",
+    "AZ"
+   ],
+   "until": "1918-05-01",
+   "where": "The Caucasus"
+  },
+  {
+   "cc": [
+    "MD"
+   ],
+   "until": "1919-04-14",
+   "where": "Bessarabia",
+   "note": "It was Russian until 1918, then Romanian; Romania changed in April 1919."
+  },
+  {
+   "cc": [
+    "RO"
+   ],
+   "until": "1919-04-14",
+   "where": "Romania",
+   "note": "Transylvania, the Banat and Bukovina, then part of Austria-Hungary, already kept the Gregorian calendar."
+  },
+  {
+   "cc": [
+    "BG"
+   ],
+   "until": "1916-04-14",
+   "where": "Bulgaria"
+  },
+  {
+   "cc": [
+    "RS"
+   ],
+   "until": "1919-01-28",
+   "where": "Serbia",
+   "note": "Vojvodina, then part of Hungary, already kept the Gregorian calendar."
+  },
+  {
+   "cc": [
+    "ME"
+   ],
+   "until": "1919-01-28",
+   "where": "Montenegro"
+  },
+  {
+   "cc": [
+    "MK",
+    "XK"
+   ],
+   "until": "1919-01-28",
+   "where": "This region"
+  },
+  {
+   "cc": [
+    "AL"
+   ],
+   "until": "1912-11-28",
+   "where": "Albania",
+   "note": "Catholic records already used the Gregorian calendar."
+  },
+  {
+   "cc": [
+    "GR"
+   ],
+   "until": "1923-03-01",
+   "where": "Greece",
+   "note": "Mount Athos keeps the Julian calendar still."
+  },
+  {
+   "cc": [
+    "TR"
+   ],
+   "until": "1917-03-01",
+   "where": "Turkey",
+   "note": "A Rumi date has the Julian days and months but its own year: change the year to the common era first. Hijri dates aren't covered."
+  },
+  {
+   "tz": [
+    "America/Sitka",
+    "America/Juneau",
+    "America/Anchorage",
+    "America/Yakutat",
+    "America/Nome",
+    "America/Metlakatla",
+    "America/Adak"
+   ],
+   "until": "1867-10-18",
+   "where": "Russian Alaska"
+  }
+ ]
+}

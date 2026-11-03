@@ -45,7 +45,7 @@ def form(err=""):
          role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="placeList">
   <ul id="placeList" role="listbox" hidden></ul></label>
 <input type="hidden" name="place_id"><input type="hidden" name="lat"><input type="hidden" name="lon">
-<input type="hidden" name="tz"><input type="hidden" name="place_label">
+<input type="hidden" name="tz"><input type="hidden" name="place_label"><input type="hidden" name="cc">
 <button class="btn-cast" type="submit">Find my nakshatra</button>
 <p class="err" id="nkErr" role="alert">{e(err)}</p></form>"""
 
@@ -65,7 +65,7 @@ FORM_SCRIPT = """<script src="/static/common.js"></script>
     if (!unk.checked && !t.value){ ev.preventDefault(); err.textContent = "Enter your time of birth, or tick that you don't know it."; return; }
     if (!place){ ev.preventDefault(); err.textContent = "Choose your birthplace from the list as you type."; document.getElementById("placeInput").focus(); return; }
     for (const k of ["lat", "lon", "tz"]) f[k].value = place[k];
-    f.place_id.value = place.id; f.place_label.value = place.label;
+    f.place_id.value = place.id; f.place_label.value = place.label; f.cc.value = place.cc || "";
   });
 })();
 </script>"""
@@ -195,7 +195,7 @@ def answer(eph, birth, known_time, local_to_jd):
     keep = {"date": f'{birth["y"]:04d}-{birth["mo"]:02d}-{birth["d"]:02d}', "time": f'{birth["hh"]:02d}:{birth["mi"]:02d}' if known_time else "12:00",
             "unknown_time": (not known_time) or None, "place_id": birth["place"].get("id"), "lat": birth["place"]["lat"], "lon": birth["place"]["lon"],
             "tz": birth["place"]["tz"], "place_label": birth["place"].get("label", "")}
-    if birth.get("os"): keep.update(date=birth["os"], cal="J")          # the full chart keeps the date as the record gives it
+    if birth.get("os"): keep.update(date=birth["os"], cal="J", cc=birth["place"].get("cc"))   # the full chart keeps the date as the record gives it
     body = f"""<p class="crumbs"><a href="/learn">Learn</a> › <a href="{PATH}">Find your nakshatra</a></p>
 <h1>Your nakshatra</h1>
 {note}{"".join(parts)}

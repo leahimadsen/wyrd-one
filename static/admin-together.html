@@ -45,7 +45,7 @@
   const f = document.getElementById("tgForm"), box = document.getElementById("people"), err = document.getElementById("tgErr");
   const { esc } = WyrdCommon;
   const recent = () => { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (_) { return []; } };
-  const fields = ["name", "full_name", "date", "time", "place_id", "lat", "lon", "tz", "place_label"];
+  const fields = ["name", "full_name", "date", "time", "place_id", "lat", "lon", "tz", "place_label", "cc"];
   const places = {};          // person number -> the place picked from the list
   const cals = {};            // person number -> its calendar choice (Old Style dates)
 
@@ -65,7 +65,7 @@
         <label class="f-place">Place of birth
           <input id="pl${i}" data-place="${i}" placeholder="Start typing a town or city" required role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="pll${i}">
           <ul id="pll${i}" class="adm-list" role="listbox" hidden></ul></label>
-        ${["place_id", "lat", "lon", "tz", "place_label"].map(k => `<input type="hidden" name="p${i}_${k}">`).join("")}
+        ${["place_id", "lat", "lon", "tz", "place_label", "cc"].map(k => `<input type="hidden" name="p${i}_${k}">`).join("")}
       </div>
       ${i > MIN ? `<div class="tg-row"><button type="button" class="link-btn" data-remove="${i}">Remove person ${i}</button></div>` : ""}
     </fieldset>`;
@@ -76,7 +76,7 @@
     cals[i] = WyrdCommon.calendarChoice(f.elements[`p${i}_date`], { name: `p${i}_cal` });
     WyrdCommon.placeSearch(sc.querySelector(`#pl${i}`), sc.querySelector(`#pll${i}`), p => {
       places[i] = p; cals[i].place(p);
-      for (const [k, v] of [["place_id", p && p.id], ["lat", p && p.lat], ["lon", p && p.lon], ["tz", p && p.tz], ["place_label", p && p.label]])
+      for (const [k, v] of [["place_id", p && p.id], ["lat", p && p.lat], ["lon", p && p.lon], ["tz", p && p.tz], ["place_label", p && p.label], ["cc", p && p.cc]])
         f.elements[`p${i}_${k}`].value = v ?? "";
     });
   }
@@ -117,7 +117,7 @@
       let list = recent();
       for (let i = 1; i <= box.children.length; i++){
         const b = Object.fromEntries(fields.map(k => [k, f.elements[`p${i}_${k}`].value]));
-        b.cal = cals[i].value(); b.cc = places[i] && places[i].cc;
+        b.cal = cals[i].value();
         list = [b, ...list.filter(x => !(x.date === b.date && (x.cal || "") === (b.cal || "") && x.time === b.time && x.name === b.name))];
       }
       localStorage.setItem(KEY, JSON.stringify(list.slice(0, 15)));

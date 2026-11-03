@@ -9,11 +9,28 @@ A birth whose `cal` is "J" is turned into its Gregorian (New Style) date before 
 the time zone, the ephemeris, the mansions, Sukuyo and the numbers all see the one true day. The date as the
 record gives it is kept for showing beside it.
 
-Which places kept the Julian calendar until when is the browser's business (common.js OLD_STYLE): it only
-decides when the form offers the choice. The choice itself is the person's, because modern sources often give
-the New Style date already.
+Old Style applies only where and while the Julian calendar was kept: static/old-style.json lists the places
+and the first Gregorian day in each. Outside that, a "J" is set aside and the date is read as New Style. Inside
+it the choice is the person's, because modern sources often give the New Style date already. The forms read
+the same table (common.js calendarChoice), so they only offer the choice where it can apply.
 """
+import json, os
 from datetime import date
+
+PLACES = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static", "old-style.json"),
+                        encoding="utf-8"))["PLACES"]
+
+def region(cc, tz):
+    """The row of old-style.json for a birthplace, or None where the Gregorian calendar was kept all along."""
+    for r in PLACES:
+        if (cc and cc in r.get("cc", ()) and tz not in r.get("notTz", ())) or (tz and tz in r.get("tz", ())):
+            return r
+    return None
+
+def applies(cc, tz, new_style_date):
+    """The row when a birth on this New Style day (YYYY-MM-DD) at this place fell in Julian-calendar years."""
+    r = region(cc, tz)
+    return r if r and new_style_date < r["until"] else None
 
 def is_julian(d):
     return str((d or {}).get("cal", "")).strip().upper() in ("J", "JULIAN", "OS")

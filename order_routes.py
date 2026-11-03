@@ -197,7 +197,7 @@ def hall_kin_add():
     if not st or not (st["member"] or st["pro"]): return jsonify(error="For the Order."), 403
     d = request.get_json(force=True, silent=True) or {}
     b = {k: str((d.get("birth") or {}).get(k, ""))[:80] for k in A.BIRTH_KEYS if (d.get("birth") or {}).get(k) not in (None, "")}
-    try: A.birth_from(b)
+    try: A.keep_cal(b, A.birth_from(b))
     except (A.BadInput, ValueError): return jsonify(error="Those birth details don't work."), 400
     try: store.add_kin(email, str(d.get("label") or b.get("name") or "A loved one").strip() or "A loved one", b)
     except ValueError as e: return jsonify(error=str(e)), 400
@@ -221,7 +221,7 @@ def _birth_from_form(f):
     meta = {k: f.get(k, "").strip() for k in A.BIRTH_KEYS}
     if not meta["lat"]: meta.pop("lat"); meta.pop("lon"); meta.pop("tz")
     meta = {k: v[:80] for k, v in meta.items() if v}
-    A.birth_from(meta)                               # raises when the details don't work
+    A.keep_cal(meta, A.birth_from(meta))             # raises when the details don't work; an Old Style marker stays only if it applied
     return meta
 
 
@@ -229,7 +229,8 @@ def _client_form(c=None, action="/pro/clients"):
     form = open(A.os.path.join(A.HERE, "static", "pro-form.html"), encoding="utf-8").read()
     b = (c or {}).get("birth") or {}
     vals = {"name": (c or {}).get("name") or b.get("name", ""), "full_name": b.get("full_name", ""), "date": b.get("date", ""), "time": b.get("time", ""),
-            "place_id": b.get("place_id", ""), "lat": b.get("lat", ""), "lon": b.get("lon", ""), "tz": b.get("tz", ""), "place_label": b.get("place_label", "")}
+            "place_id": b.get("place_id", ""), "lat": b.get("lat", ""), "lon": b.get("lon", ""), "tz": b.get("tz", ""), "place_label": b.get("place_label", ""),
+            "cc": b.get("cc", "")}
     for k, v in vals.items():
         form = form.replace(f'name="{k}"', f'name="{k}" value="{esc(v)}"', 1)
     form = form.replace('id="proPlace"', f'id="proPlace" value="{esc(vals["place_label"])}"', 1)
