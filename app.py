@@ -620,7 +620,7 @@ def render_together(meta, banner=""):
         try: shuku = sukuyo.birth_shuku(EPH, b["y"], b["mo"], b["d"])       # for the bond by the lunar mansions
         except Exception: shuku = None
         people.append({"name": m["name"] or f"Person {len(people) + 1}", "C": c, "dasha": engine.dasha_tree(c, jd_now()), "b": b, "shuku": shuku,
-                       "date": oldstyle.new_style(m), "full_name": m.get("full_name", ""), "marks": together_more.sky_marks(EPH, c, jd_now())})
+                       "date": m["date"], "full_name": m.get("full_name", ""), "marks": together_more.sky_marks(EPH, c, jd_now())})
     body = together.build(people)
     body = reading.contents(body) + body
     who = html.escape(together.names_line([p["name"] for p in people]))

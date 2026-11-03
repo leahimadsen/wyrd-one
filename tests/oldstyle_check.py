@@ -2,7 +2,7 @@
 
 The conversion matches births whose two dates history gives; an Old Style birth casts exactly the sky of its
 New Style day; Old Style applies only where and while the Julian calendar was kept; the marker survives every route a birth travels (checkout, readings together, stored births,
-share links); readings show both dates; the numbers count by the New Style day; and a day that exists only in
+share links); readings show both dates; the numbers count the date as given; and a day that exists only in
 the Julian calendar (29 February 1900) is accepted.
 
     WYRD_DEV_NODE_EPH=1 python tests/oldstyle_check.py      (no Skyfield needed)
@@ -96,8 +96,8 @@ check("an email's birth line shows both dates", "1899-04-10 Old Style (1899-04-2
 page = A.render_reading(d).get_data(as_text=True)
 check("the reading shows both dates", "1899-04-10 Old Style (1899-04-22 New Style)" in text(page))
 num = lambda h, label: (re.search(rf"<td>{label}</td><td><b>(\d+)</b>", h) or [None, None])[1]
-check("the reading's numbers count by the New Style day (life path 8, birthday 22, not 5 and 1)",
-      (num(page, "Life path"), num(page, "Birthday")) == ("8", "22") == tuple(str(NUM.of("1899-04-22")[k]) for k in ("life_path", "birthday")))
+check("the reading's numbers count the date as given (life path 5, birthday 1, not 8 and 22)",
+      (num(page, "Life path"), num(page, "Birthday")) == ("5", "1") == tuple(str(NUM.of("1899-04-10")[k]) for k in ("life_path", "birthday")))
 together = A.render_together({"kind": "together", "people": "2", "p1": A.pack_person(d, A.birth_from(d)),
                               "p2": A.pack_person({**SPB, "name": "Other", "date": "1901-06-01", "time": "12:00"}, new)}).get_data(as_text=True)
 check("a reading together shows the Old Style date", "(1899-04-10 Old Style)" in text(together))

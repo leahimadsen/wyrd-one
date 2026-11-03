@@ -6,8 +6,8 @@ a leap day the Gregorian dropped). A chart cast from that date as written lands 
 160 degrees off, the Sun 12 degrees, every gate and mansion moved.
 
 A birth whose `cal` is "J" is turned into its Gregorian (New Style) date before anything else touches it, so
-the time zone, the ephemeris, the mansions, Sukuyo and the numbers all see the one true day. The date as the
-record gives it is kept for showing beside it.
+the time zone, the ephemeris, the mansions and Sukuyo all see the one true day. The date as the record gives it
+is kept for showing beside it, and the Stavefall numbers count that date: the date given, not the converted one.
 
 Old Style applies only where and while the Julian calendar was kept: static/old-style.json lists the places
 and the first Gregorian day in each. Outside that, a "J" is set aside and the date is read as New Style. Inside
