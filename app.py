@@ -15,6 +15,7 @@ import config
 from wyrd import engine, reading
 from wyrd.places import Places
 from wyrd.timefix import to_ut
+from wyrd import oldstyle
 from wyrd import stripe_api
 from wyrd.transits import transits
 from wyrd.extras import extras
@@ -75,6 +76,10 @@ def birth_from(d):
     t = re.fullmatch(r"(\d{1,2}):(\d{2})", str(d.get("time", "")))
     if not m or not t: raise BadInput("Please give a date and a time.")
     y, mo, dd = map(int, m.groups()); hh, mi = map(int, t.groups())
+    julian = oldstyle.is_julian(d)
+    if julian:                                    # an Old Style date: cast for the same day in today's calendar
+        if not oldstyle.julian_valid(y, mo, dd): raise BadInput("That date doesn't exist in the Julian calendar.")
+        y, mo, dd = oldstyle.to_gregorian(y, mo, dd)
     if not (config.YEAR_MIN <= y <= config.YEAR_MAX): raise BadInput(f"Years {config.YEAR_MIN}–{config.YEAR_MAX} only.")
     try: datetime(y, mo, dd, hh, mi)
     except ValueError: raise BadInput("That date or time doesn't exist.")
@@ -85,7 +90,14 @@ def birth_from(d):
         place = PLACES.get(d.get("place_id") or 0)
         if not place: raise BadInput("Choose your birthplace from the list.")
     ut = to_ut(y, mo, dd, hh, mi, place["tz"])
-    return {"y": y, "mo": mo, "d": dd, "hh": hh, "mi": mi, "place": place, "ut": ut}
+    b = {"y": y, "mo": mo, "d": dd, "hh": hh, "mi": mi, "place": place, "ut": ut}
+    if julian: b["os"] = m.group(0)               # the date as the record gives it
+    return b
+
+def keep_cal(meta, d):
+    """Carry an Old Style marker from the submitted details into what's stored, so the reading recasts the same day."""
+    if oldstyle.is_julian(d): meta["cal"] = "J"
+    return meta
 
 def cast_for(b):
     u = b["ut"]
@@ -198,7 +210,7 @@ def birth_lines(meta):
     people = together_people(meta) if meta.get("kind") == "together" else [meta]
     out = []
     for p in people:
-        when = p.get("date", "") + (" · time unknown" if str(p.get("unknown_time", "")) in ("1", "true", "True", "on") else f" · {p.get('time', '')}")
+        when = oldstyle.show(p, long=True) + (" · time unknown" if str(p.get("unknown_time", "")) in ("1", "true", "True", "on") else f" · {p.get('time', '')}")
         out.append(", ".join(x for x in ((p.get("name") or "").strip(), when, p.get("place_label") or "") if x))
     return out
 
@@ -299,7 +311,7 @@ def consultation_reading():
         return jsonify(url=reading_url(sid))
     try:
         # Resolve location on the server rather than trusting coordinates from the browser.
-        clean = {k: data.get(k) for k in ("date", "time", "place_id")}
+        clean = {k: data.get(k) for k in ("date", "time", "place_id", "cal")}
         birth = birth_from(clean)
         name = data.get("name") or ""
         if not isinstance(name, str): raise BadInput("Please enter a name as text.")
@@ -311,6 +323,7 @@ def consultation_reading():
             "place_id": place["id"], "place_label": place["label"],
             "lat": place["lat"], "lon": place["lon"], "tz": place["tz"],
             "wyrd_report_ready": "1"}
+    keep_cal(meta, clean)
     if isinstance(data.get("full_name"), str) and data["full_name"].strip(): meta["full_name"] = data["full_name"].strip()[:80]
     try:
         stripe_api.save_birth_metadata(config.STRIPE_SECRET, sid, meta)
@@ -359,7 +372,8 @@ def chart():
     from wyrd import medical
     c["bodyMap"] = medical.free(c)                                                     # the stations on the body, without the detail
     c["v"] = CHART_V
-    return jsonify(chart=plain(c), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME)
+    born = {"date": f'{b["y"]:04d}-{b["mo"]:02d}-{b["d"]:02d}', "os": b.get("os")}
+    return jsonify(chart=plain(c), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME, born=born)
 
 CHART_V = 8      # bump when a cast changes meaning (2: sidereal Dharma Design, 3: the vargas words, 4: the story's opening, 5: the body figure, 6: the pale engraving, 7: the ladder of dignity, 8: compound friendship); common.js CHART_V must match
 
@@ -455,6 +469,7 @@ def checkout():
     meta = {"name": (d.get("name") or "").strip()[:80], "date": d["date"], "time": d["time"],
             "place_id": b["place"]["id"], "place_label": b["place"]["label"],
             "lat": b["place"]["lat"], "lon": b["place"]["lon"], "tz": b["place"]["tz"]}
+    keep_cal(meta, d)
     if d.get("unknown_time"): meta["unknown_time"] = "1"
     if isinstance(d.get("full_name"), str) and d["full_name"].strip(): meta["full_name"] = d["full_name"].strip()[:80]   # for the name's numbers
     if config.DEV_PREVIEW:
@@ -512,7 +527,9 @@ def render_reading(meta, banner="", sample=False, after=""):
     body = reading.build(c, engine.dasha_tree(c, jd_now()), meta)
     body = reading.contents(body) + body
     who = html.escape(meta.get("name") or "")
-    born = f"{b['y']:04d}-{b['mo']:02d}-{b['d']:02d} · {b['hh']:02d}:{b['mi']:02d} ({b['ut']['label']}) · {html.escape(b['place']['label'])}"
+    day = f"{b['y']:04d}-{b['mo']:02d}-{b['d']:02d}"
+    if b.get("os"): day = f"{b['os']} Old Style ({day} New Style)"
+    born = f"{day} · {b['hh']:02d}:{b['mi']:02d} ({b['ut']['label']}) · {html.escape(b['place']['label'])}"
     page = open(os.path.join(HERE, "static", "reading.html"), encoding="utf-8").read()
     return Response(page.replace("{{TITLE}}", config.SITE_TITLE).replace("{{WHO}}", who or "Your reading")
                         .replace("{{BORN}}", born).replace("{{OPENING}}", config.READING_OPENING)
@@ -532,6 +549,7 @@ def pack_person(d, b):
     p = {"n": (d.get("name") or "").strip()[:40], "d": d["date"], "t": d["time"], "la": round(b["place"]["lat"], 4),
          "lo": round(b["place"]["lon"], 4), "tz": b["place"]["tz"], "pl": (b["place"]["label"] or "")[:80]}
     if d.get("unknown_time"): p["u"] = 1
+    if oldstyle.is_julian(d): p["c"] = "J"                                                                    # an Old Style date
     if isinstance(d.get("full_name"), str) and d["full_name"].strip(): p["fn"] = d["full_name"].strip()[:80]   # for the numbers
     return json.dumps(p, ensure_ascii=False, separators=(",", ":"))
 
@@ -539,6 +557,7 @@ def unpack_person(v):
     p = json.loads(v)
     meta = {"name": p.get("n", ""), "date": p["d"], "time": p["t"], "lat": p["la"], "lon": p["lo"], "tz": p["tz"], "place_label": p.get("pl", "")}
     if p.get("u"): meta["unknown_time"] = "1"
+    if p.get("c") == "J": meta["cal"] = "J"
     if p.get("fn"): meta["full_name"] = p["fn"]
     return meta
 
@@ -587,11 +606,12 @@ def render_together(meta, banner=""):
         try: shuku = sukuyo.birth_shuku(EPH, b["y"], b["mo"], b["d"])       # for the bond by the lunar mansions
         except Exception: shuku = None
         people.append({"name": m["name"] or f"Person {len(people) + 1}", "C": c, "dasha": engine.dasha_tree(c, jd_now()), "b": b, "shuku": shuku,
-                       "date": m["date"], "full_name": m.get("full_name", ""), "marks": together_more.sky_marks(EPH, c, jd_now())})
+                       "date": oldstyle.new_style(m), "full_name": m.get("full_name", ""), "marks": together_more.sky_marks(EPH, c, jd_now())})
     body = together.build(people)
     body = reading.contents(body) + body
     who = html.escape(together.names_line([p["name"] for p in people]))
-    born = " · ".join(f"{html.escape(p['name'])}, {p['b']['y']:04d}-{p['b']['mo']:02d}-{p['b']['d']:02d}" for p in people)
+    born = " · ".join(f"{html.escape(p['name'])}, {p['b']['y']:04d}-{p['b']['mo']:02d}-{p['b']['d']:02d}"
+                      + (f" ({p['b']['os']} Old Style)" if p["b"].get("os") else "") for p in people)
     page = open(os.path.join(HERE, "static", "reading.html"), encoding="utf-8").read()
     return Response(page.replace("{{TITLE}}", config.SITE_TITLE).replace("{{WHO}}", who)
                         .replace("{{BORN}}", born).replace("{{OPENING}}", together.T["OPENING"])
@@ -926,7 +946,7 @@ def nakshatra_calculator():
     if limited(20): return private("Wait a minute", "<h1>Wait a minute</h1><p>Too many tries. Try again shortly.</p>", status=429)
     f = request.form
     known = not f.get("unknown_time") and bool(f.get("time"))
-    d = {k: f.get(k) for k in ("date", "place_id", "lat", "lon", "tz", "place_label")}
+    d = {k: f.get(k) for k in ("date", "place_id", "lat", "lon", "tz", "place_label", "cal")}
     d["time"] = f.get("time") if known else "12:00"
     if not d.get("lat") or not d.get("tz"): d.pop("lat", None)
     try:
@@ -1259,7 +1279,7 @@ def billing_portal():
     return redirect(p["url"], code=303)
 
 def chart_line(b):
-    return f'{esc(b.get("name") or "Your chart")} · {esc(b.get("date"))} {esc(b.get("time"))} · {esc((b.get("place_label") or "").split(",")[0])}'
+    return f'{esc(b.get("name") or "Your chart")} · {esc(oldstyle.show(b))} {esc(b.get("time"))} · {esc((b.get("place_label") or "").split(",")[0])}'
 
 def account_page():
     """The account page for those not in the Order; members are sent to the Hall (order_routes.py)."""
@@ -1307,7 +1327,7 @@ def account_page():
 <form method="post" action="/signout" style="margin-top:40px"><button class="alt" type="submit">Sign out</button></form>""", script=script)
 
 WEEK_LINK = '<h2>This week</h2><p><a href="/hall">Read this week&#39;s Body Weather →</a></p>'
-BIRTH_KEYS = ("name", "date", "time", "place_id", "lat", "lon", "tz", "place_label", "full_name")
+BIRTH_KEYS = ("name", "date", "time", "place_id", "lat", "lon", "tz", "place_label", "full_name", "cal")
 
 @app.post("/api/account/chart")
 def account_chart():

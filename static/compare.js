@@ -14,7 +14,7 @@
    ============================================================ */
 (() => {
 const { signOf, houseOf, GLYPH } = Wyrd.helpers;
-const { esc, placeSearch, cast, savedList } = WyrdCommon;
+const { esc, placeSearch, calendarChoice, showDate, cast, savedList } = WyrdCommon;
 const T = () => window.WyrdDynamics;
 const g = (k, l) => Wyrd.gloss(k, l);
 const ORDER = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Rahu", "Ketu"];
@@ -197,16 +197,16 @@ function mount(host, X){
 
   function drawPeople(){
     peopleEl.innerHTML = people.map((p, i) => `<span class="cp-chip${p.self ? " self" : ""}"><b>${esc(p.name)}</b>
-      <small>${esc(p.birth.date)}${p.C.extras && p.C.extras.sukuyo ? ` · ${p.C.extras.sukuyo.kanji}` : ""}</small>
+      <small>${esc(showDate(p.birth))}${p.C.extras && p.C.extras.sukuyo ? ` · ${p.C.extras.sukuyo.kanji}` : ""}</small>
       ${p.self ? "" : `<button type="button" class="cp-x" data-remove="${i}" aria-label="Remove ${esc(p.name)}">×</button>`}</span>`).join("")
       + (people.length < MAX && !adding ? `<button type="button" class="cp-addbtn">＋ ${people.length === 1 ? "Add a person" : `Add ${NTH[people.length + 1]} person`}</button>` : "");
   }
   function drawForm(){
-    const saved = savedList().filter(s => !(s.date === X.birth.date && s.time === X.birth.time && (s.name || "") === (X.birth.name || "")));
+    const saved = savedList().filter(s => !(s.date === X.birth.date && (s.cal || "") === (X.birth.cal || "") && s.time === X.birth.time && (s.name || "") === (X.birth.name || "")));
     addEl.hidden = !adding;
     if (!adding){ addEl.innerHTML = ""; return; }
     addEl.innerHTML = `<form class="cmp-form cast" autocomplete="off" novalidate>
-      ${saved.length ? `<label class="f-name">From your saved charts <select name="saved"><option value="">Choose…</option>${saved.map((s, i) => `<option value="${i}">${esc(s.name || "Unnamed")} · ${esc(s.date)}</option>`).join("")}</select></label>
+      ${saved.length ? `<label class="f-name">From your saved charts <select name="saved"><option value="">Choose…</option>${saved.map((s, i) => `<option value="${i}">${esc(s.name || "Unnamed")} · ${esc(showDate(s))}</option>`).join("")}</select></label>
         <p class="hint f-name">or enter someone new:</p>` : ""}
       <label class="f-name">Their name <span>optional</span><input name="name" maxlength="80"></label>
       <label class="f-name">Their full name at birth <span>optional, for the numbers in the reading together</span><input name="full_name" maxlength="80" autocomplete="off"></label>
@@ -220,7 +220,8 @@ function mount(host, X){
       <p class="err" role="alert"></p></form>`;
     const f = addEl.querySelector("form"), err = f.querySelector(".err");
     let place = null;
-    placeSearch(f.querySelector("#cmpPlace"), f.querySelector("#cmpList"), p => { place = p; });
+    const cal = calendarChoice(f.date);
+    placeSearch(f.querySelector("#cmpPlace"), f.querySelector("#cmpList"), p => { place = p; cal.place(p); });
     f.unknown.addEventListener("change", () => { f.time.disabled = f.unknown.checked; if (f.unknown.checked) f.time.value = "12:00"; });
     f.addEventListener("submit", async e => {
       e.preventDefault(); err.textContent = "";
@@ -231,8 +232,8 @@ function mount(host, X){
       } else {
         if (!f.date.value || (!f.unknown.checked && !f.time.value)){ err.textContent = "Enter their date of birth, and time if known."; return; }
         if (!place){ err.textContent = "Choose their birthplace from the list as you type."; return; }
-        b = { name: f.name.value.trim(), full_name: f.full_name.value.trim() || undefined, date: f.date.value, time: f.unknown.checked ? "12:00" : f.time.value, unknown_time: f.unknown.checked || undefined,
-              place_id: place.id, lat: place.lat, lon: place.lon, tz: place.tz, place_label: place.label };
+        b = { name: f.name.value.trim(), full_name: f.full_name.value.trim() || undefined, date: f.date.value, cal: cal.value(), time: f.unknown.checked ? "12:00" : f.time.value, unknown_time: f.unknown.checked || undefined,
+              place_id: place.id, lat: place.lat, lon: place.lon, tz: place.tz, place_label: place.label, cc: place.cc || undefined };
       }
       btn.disabled = true; btn.textContent = "Casting…";
       try {

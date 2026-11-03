@@ -56,7 +56,8 @@ FORM_SCRIPT = """<script src="/static/common.js"></script>
   const f = document.querySelector(".nk-find"); if (!f) return;
   const err = document.getElementById("nkErr"), unk = document.getElementById("nkUnknown"), t = document.getElementById("nkTime");
   let place = null;
-  WyrdCommon.placeSearch(document.getElementById("placeInput"), document.getElementById("placeList"), p => { place = p; });
+  const cal = WyrdCommon.calendarChoice(f.date);
+  WyrdCommon.placeSearch(document.getElementById("placeInput"), document.getElementById("placeList"), p => { place = p; cal.place(p); });
   unk.addEventListener("change", () => { t.disabled = unk.checked; });
   f.addEventListener("submit", ev => {
     err.textContent = "";
@@ -194,6 +195,7 @@ def answer(eph, birth, known_time, local_to_jd):
     keep = {"date": f'{birth["y"]:04d}-{birth["mo"]:02d}-{birth["d"]:02d}', "time": f'{birth["hh"]:02d}:{birth["mi"]:02d}' if known_time else "12:00",
             "unknown_time": (not known_time) or None, "place_id": birth["place"].get("id"), "lat": birth["place"]["lat"], "lon": birth["place"]["lon"],
             "tz": birth["place"]["tz"], "place_label": birth["place"].get("label", "")}
+    if birth.get("os"): keep.update(date=birth["os"], cal="J")          # the full chart keeps the date as the record gives it
     body = f"""<p class="crumbs"><a href="/learn">Learn</a> › <a href="{PATH}">Find your nakshatra</a></p>
 <h1>Your nakshatra</h1>
 {note}{"".join(parts)}

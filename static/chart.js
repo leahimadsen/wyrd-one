@@ -97,7 +97,8 @@ const ALIAS = { body: "design/harmonic", dharma: "design/weave", calendar: "sky/
 
 /* ---------- the header: who, the tools, the path ---------- */
 $("who").textContent = birth.name ? `${birth.name}'s chart` : "Your chart";
-$("chartMeta").textContent = `${birth.date}${unknown ? " · time unknown" : ` at ${birth.time} (${J.utc})`} · ${J.place.label}`;
+const castDay = (J.born && J.born.date) || (birth.cal === "J" ? WyrdCommon.newStyle(birth.date) : birth.date);   // an Old Style birth is cast, and counted, by its New Style day
+$("chartMeta").textContent = `${birth.cal === "J" ? `${birth.date} Old Style (${castDay})` : birth.date}${unknown ? " · time unknown" : ` at ${birth.time} (${J.utc})`} · ${J.place.label}`;
 if (J.offlineSince){
   const when = typeof J.offlineSince === "number" ? ` on ${new Date(J.offlineSince).toLocaleDateString()}` : "";
   $("unknownNote").hidden = false;
@@ -212,7 +213,7 @@ function mountTorus(){
 function chartLand(){
   const wx = $("chartWheel");
   const W = WyrdWheel.mount(wx, C, { level: "full", name: birth.name || "Your chart", place: J.place.label.split(",")[0],
-    when: unknown ? `${birth.date} · time unknown` : `${birth.date} ${birth.time}`, unknownTime: unknown });
+    when: unknown ? `${castDay} · time unknown` : `${castDay} ${birth.time}`, unknownTime: unknown });
   wx.querySelector(".wx-bar").insertAdjacentHTML("beforeend",
     `<span class="wx-dl"><button type="button" class="wx-lv" data-dl="png">Download image</button><button type="button" class="wx-lv" data-dl="svg">SVG</button></span>`);
   wx.addEventListener("click", e => { const d = e.target.closest("[data-dl]"); if (d && Wyrd.pulse) Wyrd.pulse("act", "download"); if (d) downloadWheel(wx.querySelector(".wx-stage svg"), d.dataset.dl); });
@@ -259,7 +260,7 @@ function chartLand(){
   /* the body map: the stations on the body, sized; which planets land where, and what it means, is in the reading */
   const BM = C.bodyMap;
   /* the numbers: what they are and which planets they sit on; what they mean is in the reading */
-  const NB = window.WyrdNumbers, nums = NB ? NB.of(birth.date, birth.full_name, new Date().getFullYear()) : null;
+  const NB = window.WyrdNumbers, nums = NB ? NB.of(castDay, birth.full_name, new Date().getFullYear()) : null;
   const numRows = nums ? NB.KINDS.filter(k => k in nums).map(k => { const n = nums[k], p = NB.planets(n);
     return `<tr><th>${g(NB.GLOSS[k], NB.LABEL[k])}</th><td><b>${n}</b>${n > 9 ? ` <small>(${g("masternum", p.root)})</small>` : ""}</td><td>${GLYPH[p.stavefall]} ${p.stavefall} <small>${p.station}</small></td><td>${GLYPH[p.vedic]} ${p.vedic}</td></tr>`; }).join("") : "";
   const asp = [];

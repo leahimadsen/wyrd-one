@@ -5,6 +5,7 @@ import json, os, time
 
 from . import engine as E
 from . import numbers as NUM
+from . import oldstyle
 from .reading_more import X as REG_EXT, ORD, E_year, the
 
 T = json.load(open(os.path.join(os.path.dirname(__file__), "..", "lib", "numbers.json"), encoding="utf-8"))
@@ -21,7 +22,7 @@ def fill(t, **kw):
 def body(C, dasha, who, asks, year=None):
     """The section's HTML. who is the birth details (date, and full_name if given)."""
     year = year or int(time.strftime("%Y", time.gmtime()))
-    nums = NUM.of(who["date"], who.get("full_name", ""), year)
+    nums = NUM.of(oldstyle.new_style(who), who.get("full_name", ""), year)     # an Old Style birth counts by its New Style day
     rows = []
     for kind in NUM.KINDS:
         if kind not in nums: continue

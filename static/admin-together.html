@@ -47,12 +47,13 @@
   const recent = () => { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (_) { return []; } };
   const fields = ["name", "full_name", "date", "time", "place_id", "lat", "lon", "tz", "place_label"];
   const places = {};          // person number -> the place picked from the list
+  const cals = {};            // person number -> its calendar choice (Old Style dates)
 
   function personHTML(i){
     const r = recent();
     const rec = r.length ? `<label class="f-name">Fill from a recent birth <span>made in this browser</span>
         <select class="tg-recent" data-recent="${i}"><option value="">Choose…</option>${r.map((b, j) =>
-          `<option value="${j}">${esc(b.name || "Unnamed")} · ${esc(b.date)} · ${esc((b.place_label || "").split(",")[0])}</option>`).join("")}</select></label>` : "";
+          `<option value="${j}">${esc(b.name || "Unnamed")} · ${esc(WyrdCommon.showDate(b))} · ${esc((b.place_label || "").split(",")[0])}</option>`).join("")}</select></label>` : "";
     return `<fieldset class="tg-person" data-i="${i}"><legend>Person ${i}</legend>
       <div class="cast">
         ${rec}
@@ -72,8 +73,9 @@
 
   function wire(i){
     const sc = box.querySelector(`[data-i="${i}"]`);
+    cals[i] = WyrdCommon.calendarChoice(f.elements[`p${i}_date`], { name: `p${i}_cal` });
     WyrdCommon.placeSearch(sc.querySelector(`#pl${i}`), sc.querySelector(`#pll${i}`), p => {
-      places[i] = p;
+      places[i] = p; cals[i].place(p);
       for (const [k, v] of [["place_id", p && p.id], ["lat", p && p.lat], ["lon", p && p.lon], ["tz", p && p.tz], ["place_label", p && p.label]])
         f.elements[`p${i}_${k}`].value = v ?? "";
     });
@@ -92,13 +94,14 @@
   box.addEventListener("click", e => {
     const rm = e.target.closest("[data-remove]"); if (!rm) return;
     // remove the last person only, so the numbering stays 1..n with no gaps
-    if (+rm.dataset.remove === box.children.length){ delete places[box.children.length]; box.lastElementChild.remove(); count(); }
+    if (+rm.dataset.remove === box.children.length){ delete places[box.children.length]; delete cals[box.children.length]; box.lastElementChild.remove(); count(); }
   });
   box.addEventListener("change", e => {
     const s = e.target.closest("[data-recent]"); if (!s || s.value === "") return;
     const i = +s.dataset.recent, b = recent()[+s.value], p = +s.closest("[data-i]").dataset.i;
     for (const k of fields) if (f.elements[`p${p}_${k}`]) f.elements[`p${p}_${k}`].value = b[k] ?? "";
-    document.getElementById(`pl${p}`).value = b.place_label || ""; places[p] = { id: b.place_id };
+    document.getElementById(`pl${p}`).value = b.place_label || ""; places[p] = { id: b.place_id, tz: b.tz, cc: b.cc };
+    cals[p].place(places[p]); cals[p].set(b.cal);
   });
   document.getElementById("addPerson").addEventListener("click", add);
 
@@ -114,7 +117,8 @@
       let list = recent();
       for (let i = 1; i <= box.children.length; i++){
         const b = Object.fromEntries(fields.map(k => [k, f.elements[`p${i}_${k}`].value]));
-        list = [b, ...list.filter(x => !(x.date === b.date && x.time === b.time && x.name === b.name))];
+        b.cal = cals[i].value(); b.cc = places[i] && places[i].cc;
+        list = [b, ...list.filter(x => !(x.date === b.date && (x.cal || "") === (b.cal || "") && x.time === b.time && x.name === b.name))];
       }
       localStorage.setItem(KEY, JSON.stringify(list.slice(0, 15)));
     } catch (_) {}

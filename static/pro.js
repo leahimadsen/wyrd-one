@@ -3,8 +3,9 @@
   const f = document.getElementById("proForm"), err = document.getElementById("proErr");
   if (!f) return;
   let place = null;
+  const cal = WyrdCommon.calendarChoice(f.elements.date);
   WyrdCommon.placeSearch(document.getElementById("proPlace"), document.getElementById("placeList"), p => {
-    place = p;
+    place = p; cal.place(p);
     for (const [k, v] of [["place_id", p && p.id], ["lat", p && p.lat], ["lon", p && p.lon], ["tz", p && p.tz], ["place_label", p && p.label]]) f.elements[k].value = v ?? "";
   });
   f.addEventListener("submit", e => {
