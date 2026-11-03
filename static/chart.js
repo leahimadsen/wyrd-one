@@ -97,7 +97,8 @@ const ALIAS = { body: "design/harmonic", dharma: "design/weave", calendar: "sky/
 
 /* ---------- the header: who, the tools, the path ---------- */
 $("who").textContent = birth.name ? `${birth.name}'s chart` : "Your chart";
-$("chartMeta").textContent = `${birth.date}${unknown ? " · time unknown" : ` at ${birth.time} (${J.utc})`} · ${J.place.label}`;
+const castDay = (J.born && J.born.date) || (birth.cal === "J" ? WyrdCommon.newStyle(birth.date) : birth.date);   // an Old Style birth is cast for its New Style day (the numbers count the date as given)
+$("chartMeta").textContent = `${birth.cal === "J" ? `${birth.date} Old Style (${castDay})` : birth.date}${unknown ? " · time unknown" : ` at ${birth.time} (${J.utc})`} · ${J.place.label}`;
 if (J.offlineSince){
   const when = typeof J.offlineSince === "number" ? ` on ${new Date(J.offlineSince).toLocaleDateString()}` : "";
   $("unknownNote").hidden = false;
@@ -212,7 +213,7 @@ function mountTorus(){
 function chartLand(){
   const wx = $("chartWheel");
   const W = WyrdWheel.mount(wx, C, { level: "full", name: birth.name || "Your chart", place: J.place.label.split(",")[0],
-    when: unknown ? `${birth.date} · time unknown` : `${birth.date} ${birth.time}`, unknownTime: unknown });
+    when: unknown ? `${castDay} · time unknown` : `${castDay} ${birth.time}`, unknownTime: unknown });
   wx.querySelector(".wx-bar").insertAdjacentHTML("beforeend",
     `<span class="wx-dl"><button type="button" class="wx-lv" data-dl="png">Download image</button><button type="button" class="wx-lv" data-dl="svg">SVG</button></span>`);
   wx.addEventListener("click", e => { const d = e.target.closest("[data-dl]"); if (d && Wyrd.pulse) Wyrd.pulse("act", "download"); if (d) downloadWheel(wx.querySelector(".wx-stage svg"), d.dataset.dl); });

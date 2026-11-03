@@ -2,7 +2,7 @@
 /* The landing page: the high seat, the birth form and the charts this browser has saved. */
 (() => {
 const $ = id => document.getElementById(id);
-const { esc, placeSearch, cast, keep, current, savedList, removeSaved, refreshSaved } = WyrdCommon;
+const { esc, placeSearch, calendarChoice, showDate, cast, keep, current, savedList, removeSaved, refreshSaved } = WyrdCommon;
 let place = null;
 /* /consultation is where a paid 1:1 client lands from Stripe: same form, but it unlocks their reading */
 const consultSid = location.pathname === "/consultation" ? new URLSearchParams(location.search).get("session_id") : null;
@@ -10,7 +10,8 @@ const params = new URLSearchParams(location.search);
 
 Wyrd.sky.start();
 const f = $("castForm"), err = $("castErr"), btn = f.querySelector("button[type=submit]"), label = btn.textContent;
-placeSearch($("placeInput"), $("placeList"), p => { place = p; });
+const cal = calendarChoice(f.date);
+placeSearch($("placeInput"), $("placeList"), p => { place = p; cal.place(p); });
 
 /* ---------- unknown birth time ---------- */
 const unk = $("unknownTime");
@@ -26,9 +27,10 @@ function fill(b){
   f.name.value = b.name || ""; f.full_name.value = b.full_name || ""; f.date.value = b.date || ""; f.time.value = b.time || "";
   unk.checked = !!b.unknown_time; syncUnknown();
   if (b.place_id != null){
-    place = { id: b.place_id, label: b.place_label, lat: b.lat, lon: b.lon, tz: b.tz };
+    place = { id: b.place_id, label: b.place_label, lat: b.lat, lon: b.lon, tz: b.tz, cc: b.cc };
     $("placeInput").value = b.place_label || "";
   }
+  cal.place(place); cal.set(b.cal);
 }
 if (params.get("edit")){ const s = current(); if (s && s.birth) fill(s.birth); }
 
@@ -43,9 +45,9 @@ if (consultSid){
 }
 
 function birthFromForm(){
-  return { name: f.name.value.trim(), full_name: f.full_name.value.trim() || undefined, date: f.date.value, time: unk.checked ? "12:00" : f.time.value,
+  return { name: f.name.value.trim(), full_name: f.full_name.value.trim() || undefined, date: f.date.value, cal: cal.value(), time: unk.checked ? "12:00" : f.time.value,
            unknown_time: unk.checked || undefined, place_id: place.id, lat: place.lat, lon: place.lon, tz: place.tz,
-           place_label: place.label };
+           place_label: place.label, cc: place.cc || undefined };
 }
 async function open(birth, button, savedResult){
   const was = button.innerHTML; button.disabled = true; button.textContent = "Casting…"; err.textContent = "";
@@ -87,7 +89,7 @@ function drawSaved(){
   box.hidden = consultSid || !list.length;
   $("savedList").innerHTML = list.map((b, i) => `<li>
     <button type="button" class="sv-open" data-i="${i}"><b>${esc(b.name || "Unnamed chart")}</b>
-      <span>${esc(b.date)}${b.unknown_time ? " · time unknown" : " · " + esc(b.time)} · ${esc((b.place_label || "").split(",")[0])}</span></button>
+      <span>${esc(showDate(b))}${b.unknown_time ? " · time unknown" : " · " + esc(b.time)} · ${esc((b.place_label || "").split(",")[0])}</span></button>
     <button type="button" class="sv-x" data-x="${i}" aria-label="Forget ${esc(b.name || "this chart")}">×</button></li>`).join("");
 }
 $("savedList").addEventListener("click", e => {

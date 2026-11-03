@@ -40,6 +40,75 @@ function placeSearch(input, list, onPick){
   input.addEventListener("blur", () => setTimeout(hide, 120));
 }
 
+/* ---------- Old Style dates ----------
+   Some places kept the old Julian calendar into the site's years, so a birth record of the time there runs 12
+   days behind today's calendar (13 from March 1900). static/old-style.json lists those places and the first
+   Gregorian day in each; the server reads the same file (wyrd/oldstyle.py). The form offers the choice only for
+   a birthplace and date inside those years, and an Old Style date only applies to a day before the change: the
+   server sets aside any other. */
+let OLD_STYLE = null, oldStyleLoad = null;
+const loadOldStyle = () => oldStyleLoad || (oldStyleLoad = fetch("/static/old-style.json").then(r => r.json())
+  .then(j => { OLD_STYLE = j.PLACES; }).catch(() => { oldStyleLoad = null; }));
+/* old-style helpers: the tests run this part on its own */
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const longDate = s => { const [y, m, d] = s.split("-").map(Number); return `${d} ${MONTHS[m - 1]} ${y}`; };
+const DAY = 86400000, jdnOf = iso => Date.parse(iso) / DAY + 2440588, isoOf = jdn => new Date((jdn - 2440588) * DAY).toISOString().slice(0, 10);
+/* a Julian-calendar YYYY-MM-DD as the same day in today's calendar, through its Julian day number */
+function newStyle(date){
+  const [y, m, d] = date.split("-").map(Number), a = Math.floor((14 - m) / 12), yy = y + 4800 - a, mm = m + 12 * a - 3;
+  return isoOf(d + Math.floor((153 * mm + 2) / 5) + 365 * yy + Math.floor(yy / 4) - 32083);
+}
+/* the Julian-calendar date of a Julian day number */
+function julianDate(jdn){
+  const c = jdn + 32082, d = Math.floor((4 * c + 3) / 1461), e = c - Math.floor(1461 * d / 4), m = Math.floor((5 * e + 2) / 153);
+  const p = n => String(n).padStart(2, "0");
+  return `${d - 4800 + Math.floor(m / 10)}-${p(m + 3 - 12 * Math.floor(m / 10))}-${p(e - Math.floor((153 * m + 2) / 5) + 1)}`;
+}
+/* the old-style.json row for a birthplace, or null where the Gregorian calendar was kept all along */
+const oldStyleRegion = place => (place && OLD_STYLE || []).find(r =>
+  ((r.cc || []).includes(place.cc) && !(r.notTz || []).includes(place.tz)) || (r.tz || []).includes(place.tz)) || null;
+/* whether the form should offer the choice: the date, read either way, falls before the change there */
+const oldStyleAsk = (place, date) => { const r = oldStyleRegion(place); return r && /^\d{4}-\d{2}-\d{2}$/.test(date || "") && date < r.until ? r : null; };
+/* whether an Old Style reading of the date is a real day there: its New Style day falls before the change */
+const oldStyleFits = (place, date) => { const r = oldStyleAsk(place, date); return !!r && newStyle(date) < r.until; };
+/* end of the old-style helpers */
+
+/* The calendar choice for a date of birth, below the place field (picking the place is what calls it up). It
+   shows only when the place and date fall in Julian-calendar years, and is off, sends nothing, otherwise. A
+   posted form sends it as `name`; the others read value(). Tell it the place whenever the place changes. An
+   Old Style date kept from before (the date input's data-cal="J", or set()) is offered again only where it fits. */
+function calendarChoice(dateInput, { name = "cal" } = {}){
+  const label = document.createElement("label");
+  label.className = "f-name f-cal"; label.hidden = true;
+  label.innerHTML = `Calendar of this date <span class="cal-why"></span>
+    <select name="${esc(name)}" disabled><option value="">New Style (Gregorian)</option><option value="J">Old Style (Julian)</option></select>
+    <small class="cal-cast" hidden></small>`;
+  const form = dateInput.form || dateInput.closest(".cast") || document, at = [...form.querySelectorAll(".f-place")]
+    .find(p => p.closest(".tg-person") === dateInput.closest(".tg-person")) || dateInput.closest("label");
+  at.after(label);
+  const sel = label.querySelector("select"), why = label.querySelector(".cal-why"), out = label.querySelector(".cal-cast");
+  let place = null, fits = false;
+  sel.value = dateInput.dataset.cal === "J" ? "J" : "";
+  function update(){
+    const date = dateInput.value, r = oldStyleAsk(place, date);
+    label.hidden = !r; sel.disabled = !r;                    // disabled: a posted form sends nothing for it
+    why.textContent = r ? `${r.where} kept the old Julian calendar until ${longDate(r.until)}. A record of the time gives the Old Style date; most modern sources give New Style.${r.note ? " " + r.note : ""}` : "";
+    const os = !!r && sel.value === "J";
+    fits = os && oldStyleFits(place, date);
+    out.hidden = !os;
+    if (fits){
+      const ns = newStyle(date), days = Math.round((Date.parse(ns) - Date.parse(date)) / DAY);
+      out.textContent = `Cast for ${longDate(ns)}, ${days} days on, the same day in today's calendar.`;
+    } else if (os){
+      out.textContent = `Old Style dates there end on ${longDate(julianDate(jdnOf(r.until) - 1))}, so this date can only be New Style.`;
+    }
+  }
+  dateInput.addEventListener("input", update); dateInput.addEventListener("change", update); sel.addEventListener("change", update);
+  loadOldStyle().then(update); update();
+  return { value: () => fits ? "J" : undefined, set(v){ sel.value = v === "J" ? "J" : ""; update(); }, place(p){ place = p; update(); } };
+}
+const showDate = b => b.date + (b.cal === "J" ? " O.S." : "");
+
 /* ---------- casting ---------- */
 async function cast(birth){
   const r = await fetch("/api/chart", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(birth) });
@@ -61,7 +130,7 @@ function current(){
    never send to a server: they can't land in a log or be told to another site ---------- */
 const b64 = s => btoa(unescape(encodeURIComponent(s))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const unb64 = s => decodeURIComponent(escape(atob(s.replace(/-/g, "+").replace(/_/g, "/"))));
-const SHARE_KEYS = ["name", "date", "time", "place_id", "lat", "lon", "tz", "place_label", "unknown_time"];
+const SHARE_KEYS = ["name", "date", "cal", "cc", "time", "place_id", "lat", "lon", "tz", "place_label", "unknown_time"];
 function shareLink(birth){
   const o = {}; for (const k of SHARE_KEYS) if (birth[k] != null && birth[k] !== "" && birth[k] !== false) o[k] = birth[k];
   return `${location.origin}/chart#b=${b64(JSON.stringify(o))}`;
@@ -72,7 +141,7 @@ function fromLink(param){
 
 /* ---------- charts saved in this browser ---------- */
 const SAVE_KEY = "wyrdSaved";
-const sameBirth = (a, b) => a.date === b.date && a.time === b.time && String(a.place_id) === String(b.place_id) && (a.name || "") === (b.name || "");
+const sameBirth = (a, b) => a.date === b.date && (a.cal || "") === (b.cal || "") && a.time === b.time && String(a.place_id) === String(b.place_id) && (a.name || "") === (b.name || "");
 function savedList(){ try { return JSON.parse(localStorage.getItem(SAVE_KEY) || "[]"); } catch (_) { return []; } }
 function writeSaved(list){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(list.slice(0, 40))); return true; } catch (_) { return false; } }
 const isSaved = birth => savedList().some(s => sameBirth(s, birth));
@@ -123,5 +192,5 @@ function iosHelp(){
 document.addEventListener("DOMContentLoaded", syncInstall);
 if (document.readyState !== "loading") syncInstall();
 
-window.WyrdCommon = { esc, placeSearch, cast, keep, current, fresh, shareLink, fromLink, savedList, isSaved, toggleSaved, refreshSaved, removeSaved, standalone, syncInstall };
+window.WyrdCommon = { esc, placeSearch, calendarChoice, newStyle, showDate, cast, keep, current, fresh, shareLink, fromLink, savedList, isSaved, toggleSaved, refreshSaved, removeSaved, standalone, syncInstall };
 })();

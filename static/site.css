@@ -178,3 +178,10 @@ main { width: min(980px, 100% - 32px); margin: 0 auto; padding: 40px 0 20px; }
 .body-fig .mf-name{font-family:var(--fellsc,monospace);font-size:30px}
 .body-fig .mf-name{filter:brightness(1.7)}
 .body-fig .mf-pl{fill:#eaf3ff;font-size:30px}
+
+/* the calendar of a date of birth: only shown for an Old Style place and time (common.js calendarChoice) */
+.cast select { font: inherit; font-size: 15px; color: var(--ivory); background: rgba(2,2,10,.7); color-scheme: dark;
+  border: 1px solid rgba(156,180,166,.25); border-radius: 2px; padding: 10px 12px; width: 100%; }
+.cast select:focus { outline: 1px solid var(--jade); border-color: var(--jade); }
+.cast .f-cal span { font-style: normal; line-height: 1.45; }
+.cast .f-cal .cal-cast { color: var(--jade); font-size: 13px; }

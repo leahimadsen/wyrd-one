@@ -21,7 +21,7 @@ def fill(t, **kw):
 def body(C, dasha, who, asks, year=None):
     """The section's HTML. who is the birth details (date, and full_name if given)."""
     year = year or int(time.strftime("%Y", time.gmtime()))
-    nums = NUM.of(who["date"], who.get("full_name", ""), year)
+    nums = NUM.of(who["date"], who.get("full_name", ""), year)     # by the date as given: an Old Style birth counts its Old Style date
     rows = []
     for kind in NUM.KINDS:
         if kind not in nums: continue

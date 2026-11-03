@@ -15,6 +15,7 @@ import config
 from wyrd import engine, reading
 from wyrd.places import Places
 from wyrd.timefix import to_ut
+from wyrd import oldstyle
 from wyrd import stripe_api
 from wyrd.transits import transits
 from wyrd.extras import extras
@@ -75,17 +76,41 @@ def birth_from(d):
     t = re.fullmatch(r"(\d{1,2}):(\d{2})", str(d.get("time", "")))
     if not m or not t: raise BadInput("Please give a date and a time.")
     y, mo, dd = map(int, m.groups()); hh, mi = map(int, t.groups())
-    if not (config.YEAR_MIN <= y <= config.YEAR_MAX): raise BadInput(f"Years {config.YEAR_MIN}–{config.YEAR_MAX} only.")
-    try: datetime(y, mo, dd, hh, mi)
-    except ValueError: raise BadInput("That date or time doesn't exist.")
     if d.get("lat") is not None and d.get("tz"):
         place = {"id": d.get("place_id"), "lat": float(d["lat"]), "lon": float(d["lon"]),
-                 "tz": d["tz"], "label": d.get("place_label", "")}
+                 "tz": d["tz"], "label": d.get("place_label", ""), "cc": d.get("cc") or place_cc(d.get("place_id"))}
     else:
         place = PLACES.get(d.get("place_id") or 0)
         if not place: raise BadInput("Choose your birthplace from the list.")
+    os_date = None
+    if oldstyle.is_julian(d) and oldstyle.region(place.get("cc"), place["tz"]):
+        # an Old Style date: cast for the same day in today's calendar, but only where and while the Julian
+        # calendar was kept there (static/old-style.json); anywhere else the date is read as it stands
+        if not oldstyle.julian_valid(y, mo, dd): raise BadInput("That date doesn't exist in the Julian calendar.")
+        g = oldstyle.to_gregorian(y, mo, dd)
+        if oldstyle.applies(place.get("cc"), place["tz"], "%04d-%02d-%02d" % g):
+            os_date, (y, mo, dd) = m.group(0), g
+    if not (config.YEAR_MIN <= y <= config.YEAR_MAX): raise BadInput(f"Years {config.YEAR_MIN}–{config.YEAR_MAX} only.")
+    try: datetime(y, mo, dd, hh, mi)
+    except ValueError: raise BadInput("That date or time doesn't exist.")
     ut = to_ut(y, mo, dd, hh, mi, place["tz"])
-    return {"y": y, "mo": mo, "d": dd, "hh": hh, "mi": mi, "place": place, "ut": ut}
+    b = {"y": y, "mo": mo, "d": dd, "hh": hh, "mi": mi, "place": place, "ut": ut}
+    if os_date: b["os"] = os_date                 # the date as the record gives it
+    return b
+
+def place_cc(pid):
+    """The country of a place in the index, for deciding whether an Old Style date can apply there."""
+    try: return (PLACES.get(pid) or {}).get("cc") if pid not in (None, "") else None
+    except (ValueError, TypeError): return None
+
+def keep_cal(meta, b):
+    """What's stored keeps an Old Style marker only when it applied (`b` is birth_from's result), with the
+    birthplace's country so a later recast can check it the same way; a marker that didn't apply is dropped."""
+    meta.pop("cal", None)
+    if b.get("os"):
+        meta["cal"] = "J"
+        if b["place"].get("cc"): meta["cc"] = b["place"]["cc"]
+    return meta
 
 def cast_for(b):
     u = b["ut"]
@@ -198,7 +223,7 @@ def birth_lines(meta):
     people = together_people(meta) if meta.get("kind") == "together" else [meta]
     out = []
     for p in people:
-        when = p.get("date", "") + (" · time unknown" if str(p.get("unknown_time", "")) in ("1", "true", "True", "on") else f" · {p.get('time', '')}")
+        when = oldstyle.show(p, long=True) + (" · time unknown" if str(p.get("unknown_time", "")) in ("1", "true", "True", "on") else f" · {p.get('time', '')}")
         out.append(", ".join(x for x in ((p.get("name") or "").strip(), when, p.get("place_label") or "") if x))
     return out
 
@@ -299,7 +324,7 @@ def consultation_reading():
         return jsonify(url=reading_url(sid))
     try:
         # Resolve location on the server rather than trusting coordinates from the browser.
-        clean = {k: data.get(k) for k in ("date", "time", "place_id")}
+        clean = {k: data.get(k) for k in ("date", "time", "place_id", "cal", "cc")}
         birth = birth_from(clean)
         name = data.get("name") or ""
         if not isinstance(name, str): raise BadInput("Please enter a name as text.")
@@ -311,6 +336,7 @@ def consultation_reading():
             "place_id": place["id"], "place_label": place["label"],
             "lat": place["lat"], "lon": place["lon"], "tz": place["tz"],
             "wyrd_report_ready": "1"}
+    keep_cal(meta, birth)
     if isinstance(data.get("full_name"), str) and data["full_name"].strip(): meta["full_name"] = data["full_name"].strip()[:80]
     try:
         stripe_api.save_birth_metadata(config.STRIPE_SECRET, sid, meta)
@@ -359,7 +385,8 @@ def chart():
     from wyrd import medical
     c["bodyMap"] = medical.free(c)                                                     # the stations on the body, without the detail
     c["v"] = CHART_V
-    return jsonify(chart=plain(c), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME)
+    born = {"date": f'{b["y"]:04d}-{b["mo"]:02d}-{b["d"]:02d}', "os": b.get("os")}
+    return jsonify(chart=plain(c), place=b["place"], utc=b["ut"]["label"], ephemeris=EPH_NAME, born=born)
 
 CHART_V = 8      # bump when a cast changes meaning (2: sidereal Dharma Design, 3: the vargas words, 4: the story's opening, 5: the body figure, 6: the pale engraving, 7: the ladder of dignity, 8: compound friendship); common.js CHART_V must match
 
@@ -455,6 +482,7 @@ def checkout():
     meta = {"name": (d.get("name") or "").strip()[:80], "date": d["date"], "time": d["time"],
             "place_id": b["place"]["id"], "place_label": b["place"]["label"],
             "lat": b["place"]["lat"], "lon": b["place"]["lon"], "tz": b["place"]["tz"]}
+    keep_cal(meta, b)
     if d.get("unknown_time"): meta["unknown_time"] = "1"
     if isinstance(d.get("full_name"), str) and d["full_name"].strip(): meta["full_name"] = d["full_name"].strip()[:80]   # for the name's numbers
     if config.DEV_PREVIEW:
@@ -506,13 +534,16 @@ def render_reading(meta, banner="", sample=False, after=""):
     """The full reading page for a set of birth details. Used by the paid flow,
     the sample and the private admin, so all three are always the same reading."""
     b = birth_from(meta)
+    meta = keep_cal(dict(meta), b)                # the numbers and the birth line follow the day that was cast
     c = cast_for(b)
     if str(meta.get("unknown_time", "")) in ("1", "true", "True", "on"):
         c = dict(c); c["sid"], c["trop"] = dict(c["sid"]), dict(c["trop"]); unknown_time(c)
     body = reading.build(c, engine.dasha_tree(c, jd_now()), meta)
     body = reading.contents(body) + body
     who = html.escape(meta.get("name") or "")
-    born = f"{b['y']:04d}-{b['mo']:02d}-{b['d']:02d} · {b['hh']:02d}:{b['mi']:02d} ({b['ut']['label']}) · {html.escape(b['place']['label'])}"
+    day = f"{b['y']:04d}-{b['mo']:02d}-{b['d']:02d}"
+    if b.get("os"): day = f"{b['os']} Old Style ({day} New Style)"
+    born = f"{day} · {b['hh']:02d}:{b['mi']:02d} ({b['ut']['label']}) · {html.escape(b['place']['label'])}"
     page = open(os.path.join(HERE, "static", "reading.html"), encoding="utf-8").read()
     return Response(page.replace("{{TITLE}}", config.SITE_TITLE).replace("{{WHO}}", who or "Your reading")
                         .replace("{{BORN}}", born).replace("{{OPENING}}", config.READING_OPENING)
@@ -532,6 +563,7 @@ def pack_person(d, b):
     p = {"n": (d.get("name") or "").strip()[:40], "d": d["date"], "t": d["time"], "la": round(b["place"]["lat"], 4),
          "lo": round(b["place"]["lon"], 4), "tz": b["place"]["tz"], "pl": (b["place"]["label"] or "")[:80]}
     if d.get("unknown_time"): p["u"] = 1
+    if b.get("os"): p["c"] = "J"; p["cc"] = b["place"].get("cc") or ""                                       # an Old Style date, and where
     if isinstance(d.get("full_name"), str) and d["full_name"].strip(): p["fn"] = d["full_name"].strip()[:80]   # for the numbers
     return json.dumps(p, ensure_ascii=False, separators=(",", ":"))
 
@@ -539,6 +571,7 @@ def unpack_person(v):
     p = json.loads(v)
     meta = {"name": p.get("n", ""), "date": p["d"], "time": p["t"], "lat": p["la"], "lon": p["lo"], "tz": p["tz"], "place_label": p.get("pl", "")}
     if p.get("u"): meta["unknown_time"] = "1"
+    if p.get("c") == "J": meta["cal"] = "J"; meta["cc"] = p.get("cc", "")
     if p.get("fn"): meta["full_name"] = p["fn"]
     return meta
 
@@ -582,7 +615,7 @@ def checkout_together():
 def render_together(meta, banner=""):
     people = []
     for m in together_people(meta):
-        b = birth_from(m); c = cast_for(b)
+        b = birth_from(m); c = cast_for(b); m = keep_cal(dict(m), b)
         if m.get("unknown_time"): c = dict(c); c["sid"], c["trop"] = dict(c["sid"]), dict(c["trop"]); unknown_time(c)
         try: shuku = sukuyo.birth_shuku(EPH, b["y"], b["mo"], b["d"])       # for the bond by the lunar mansions
         except Exception: shuku = None
@@ -591,7 +624,8 @@ def render_together(meta, banner=""):
     body = together.build(people)
     body = reading.contents(body) + body
     who = html.escape(together.names_line([p["name"] for p in people]))
-    born = " · ".join(f"{html.escape(p['name'])}, {p['b']['y']:04d}-{p['b']['mo']:02d}-{p['b']['d']:02d}" for p in people)
+    born = " · ".join(f"{html.escape(p['name'])}, {p['b']['y']:04d}-{p['b']['mo']:02d}-{p['b']['d']:02d}"
+                      + (f" ({p['b']['os']} Old Style)" if p["b"].get("os") else "") for p in people)
     page = open(os.path.join(HERE, "static", "reading.html"), encoding="utf-8").read()
     return Response(page.replace("{{TITLE}}", config.SITE_TITLE).replace("{{WHO}}", who)
                         .replace("{{BORN}}", born).replace("{{OPENING}}", together.T["OPENING"])
@@ -657,7 +691,7 @@ def admin_reading():
     meta = {k: request.form.get(k, "") for k in BIRTH_KEYS}
     if not meta["lat"]: meta.pop("lat"); meta.pop("lon"); meta.pop("tz")
     try:
-        birth_from(meta)
+        keep_cal(meta, birth_from(meta))
     except (BadInput, ValueError) as e:
         return admin_page("admin.html").get_data(as_text=True).replace(
             '<p class="err" id="admErr" role="alert"></p>', f'<p class="err" id="admErr" role="alert">{html.escape(str(e) or "Check the details.")}</p>'), 400
@@ -926,7 +960,7 @@ def nakshatra_calculator():
     if limited(20): return private("Wait a minute", "<h1>Wait a minute</h1><p>Too many tries. Try again shortly.</p>", status=429)
     f = request.form
     known = not f.get("unknown_time") and bool(f.get("time"))
-    d = {k: f.get(k) for k in ("date", "place_id", "lat", "lon", "tz", "place_label")}
+    d = {k: f.get(k) for k in ("date", "place_id", "lat", "lon", "tz", "place_label", "cal", "cc")}
     d["time"] = f.get("time") if known else "12:00"
     if not d.get("lat") or not d.get("tz"): d.pop("lat", None)
     try:
@@ -1259,7 +1293,7 @@ def billing_portal():
     return redirect(p["url"], code=303)
 
 def chart_line(b):
-    return f'{esc(b.get("name") or "Your chart")} · {esc(b.get("date"))} {esc(b.get("time"))} · {esc((b.get("place_label") or "").split(",")[0])}'
+    return f'{esc(b.get("name") or "Your chart")} · {esc(oldstyle.show(b))} {esc(b.get("time"))} · {esc((b.get("place_label") or "").split(",")[0])}'
 
 def account_page():
     """The account page for those not in the Order; members are sent to the Hall (order_routes.py)."""
@@ -1307,7 +1341,7 @@ def account_page():
 <form method="post" action="/signout" style="margin-top:40px"><button class="alt" type="submit">Sign out</button></form>""", script=script)
 
 WEEK_LINK = '<h2>This week</h2><p><a href="/hall">Read this week&#39;s Body Weather →</a></p>'
-BIRTH_KEYS = ("name", "date", "time", "place_id", "lat", "lon", "tz", "place_label", "full_name")
+BIRTH_KEYS = ("name", "date", "time", "place_id", "lat", "lon", "tz", "place_label", "full_name", "cal", "cc")
 
 @app.post("/api/account/chart")
 def account_chart():
@@ -1317,7 +1351,7 @@ def account_chart():
     if not st or not (st["member"] or st["pro"]): return jsonify(error="For the Order."), 403
     d = request.get_json(force=True, silent=True) or {}
     b = {k: str(d.get(k, ""))[:80] for k in BIRTH_KEYS if d.get(k) not in (None, "")}
-    try: birth_from(b)
+    try: keep_cal(b, birth_from(b))
     except (BadInput, ValueError): return jsonify(error="Those birth details don't work."), 400
     try: billing.save_birth(config.STRIPE_SECRET, email, b)
     except stripe_api.StripeError: return jsonify(error="Couldn't save just now."), 502
@@ -1416,7 +1450,7 @@ def pro_reading():
     if not meta["lat"]: meta.pop("lat"); meta.pop("lon"); meta.pop("tz")
     kind = request.form.get("kind", "reading")
     try:
-        birth_from(meta)
+        keep_cal(meta, birth_from(meta))
         if kind == "weather":
             return private("Body Weather", f'<div class="weather">{weather_for(meta)}</div>')
         if st["proUse"] >= config.PRO_READINGS_A_MONTH:
@@ -1536,7 +1570,7 @@ def admin_gift_reading():
     admin_only()
     meta = {k: request.form.get(k, "") for k in BIRTH_KEYS}
     if not meta["lat"]: meta.pop("lat"); meta.pop("lon"); meta.pop("tz")
-    try: birth_from(meta)
+    try: keep_cal(meta, birth_from(meta))
     except (BadInput, ValueError) as e:
         return private("Gift link", f'<h1>Check the details</h1><p>{esc(str(e) or BAD_BIRTH)} <a href="/admin">Back</a></p>', status=400)
     link = f"{config.BASE_URL}/gift/{gift_signer().dumps(meta)}"

@@ -14,7 +14,7 @@ from flask import request, redirect, jsonify, abort
 
 A = sys.modules.get("app") or sys.modules["__main__"]
 app, config, billing, mailer, weather, esc = A.app, A.config, A.billing, A.mailer, A.weather, A.esc
-from wyrd import store, stripe_api
+from wyrd import store, stripe_api, oldstyle
 
 FIRST = lambda b, email: ((b or {}).get("name") or "").split(" ")[0] or email.split("@")[0]
 
@@ -144,7 +144,7 @@ def hall():
     letters = f"""<section class="hall-sec"><h2>Past letters</h2>{f'<ul class="hall-list">{archive}</ul>' if archive else '<p class="muted">Each week\'s letter is kept here once it\'s written, so you can go back to it.</p>'}</section>"""
 
     kin = (_safe(store.kin, email, default=[]) or []) if db else []
-    kin_rows = "".join(f"""<li><b>{esc(k["label"])}</b> <span class="muted">· {esc(k["birth"].get("date", ""))}</span>
+    kin_rows = "".join(f"""<li><b>{esc(k["label"])}</b> <span class="muted">· {esc(oldstyle.show(k["birth"]))}</span>
   <a href="/hall/kin/{k["id"]}">This week's Body Weather</a> · <a href="{_chart_link(k["birth"])}">Open chart</a>
   <form method="post" action="/hall/kin/{k["id"]}/remove" class="inline"><button class="linkish" type="submit">Remove</button></form></li>""" for k in kin)
     loved = f"""<section class="hall-sec"><h2>Charts for loved ones</h2>
@@ -197,7 +197,7 @@ def hall_kin_add():
     if not st or not (st["member"] or st["pro"]): return jsonify(error="For the Order."), 403
     d = request.get_json(force=True, silent=True) or {}
     b = {k: str((d.get("birth") or {}).get(k, ""))[:80] for k in A.BIRTH_KEYS if (d.get("birth") or {}).get(k) not in (None, "")}
-    try: A.birth_from(b)
+    try: A.keep_cal(b, A.birth_from(b))
     except (A.BadInput, ValueError): return jsonify(error="Those birth details don't work."), 400
     try: store.add_kin(email, str(d.get("label") or b.get("name") or "A loved one").strip() or "A loved one", b)
     except ValueError as e: return jsonify(error=str(e)), 400
@@ -221,7 +221,7 @@ def _birth_from_form(f):
     meta = {k: f.get(k, "").strip() for k in A.BIRTH_KEYS}
     if not meta["lat"]: meta.pop("lat"); meta.pop("lon"); meta.pop("tz")
     meta = {k: v[:80] for k, v in meta.items() if v}
-    A.birth_from(meta)                               # raises when the details don't work
+    A.keep_cal(meta, A.birth_from(meta))             # raises when the details don't work; an Old Style marker stays only if it applied
     return meta
 
 
@@ -229,10 +229,12 @@ def _client_form(c=None, action="/pro/clients"):
     form = open(A.os.path.join(A.HERE, "static", "pro-form.html"), encoding="utf-8").read()
     b = (c or {}).get("birth") or {}
     vals = {"name": (c or {}).get("name") or b.get("name", ""), "full_name": b.get("full_name", ""), "date": b.get("date", ""), "time": b.get("time", ""),
-            "place_id": b.get("place_id", ""), "lat": b.get("lat", ""), "lon": b.get("lon", ""), "tz": b.get("tz", ""), "place_label": b.get("place_label", "")}
+            "place_id": b.get("place_id", ""), "lat": b.get("lat", ""), "lon": b.get("lon", ""), "tz": b.get("tz", ""), "place_label": b.get("place_label", ""),
+            "cc": b.get("cc", "")}
     for k, v in vals.items():
         form = form.replace(f'name="{k}"', f'name="{k}" value="{esc(v)}"', 1)
     form = form.replace('id="proPlace"', f'id="proPlace" value="{esc(vals["place_label"])}"', 1)
+    if oldstyle.is_julian(b): form = form.replace('name="date"', 'name="date" data-cal="J"', 1)     # an Old Style date stays one
     form = form.replace('action="/pro/reading" target="_blank"', f'action="{action}"', 1)
     extra = f"""<label>Client's email <span>optional, to send them their reading</span><input name="email" type="email" maxlength="120" value="{esc((c or {}).get("email") or "")}"></label>
   <label class="f-wide">Notes <span>private to you</span><textarea name="notes" rows="3" maxlength="4000">{esc((c or {}).get("notes") or "")}</textarea></label>
@@ -258,7 +260,7 @@ def pro_desk_home():
                          script='<script src="/static/common.js"></script><script src="/static/pro.js"></script>')
     name = store.practice_name(email)
     cl = store.clients(email)
-    rows = "".join(f"""<tr><td><a href="/pro/clients/{c["id"]}"><b>{esc(c["name"])}</b></a><br><small class="muted">{esc(c["birth"].get("date", ""))} · {esc((c["birth"].get("place_label") or "").split(",")[0])}</small></td>
+    rows = "".join(f"""<tr><td><a href="/pro/clients/{c["id"]}"><b>{esc(c["name"])}</b></a><br><small class="muted">{esc(oldstyle.show(c["birth"]))} · {esc((c["birth"].get("place_label") or "").split(",")[0])}</small></td>
 <td><form method="post" action="/pro/clients/{c["id"]}/reading" target="_blank" class="inline"><button class="btn-cast" type="submit">Reading</button></form>
 <form method="post" action="/pro/clients/{c["id"]}/weather" target="_blank" class="inline"><button class="alt" type="submit">Body Weather</button></form></td></tr>""" for c in cl)
     recent = store.readings(email)[:5]
