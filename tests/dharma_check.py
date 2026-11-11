@@ -1,4 +1,5 @@
-"""The Dharma Gates: every gate the Dharma Design holds, read one by one, and how to wake it.
+"""The Two Designs and The Walk: how the Birth Design and the Dharma Design work together, and the walk
+from one into the other, by practice, over a life and over a year.
 
     python tests/dharma_check.py
 
@@ -21,7 +22,16 @@ check("a practice and a sign for every gate", set(T["GATES"]) == {str(g) for g i
 check("every channel named, with what it does and how to live it",
       set(T["CHANNELS"]) == {DH.key(a, b) for a, b in RV.CHANNELS} and all(v["name"] and v["what"] and v["live"] for v in T["CHANNELS"].values()))
 check("every centre, grown into and released", set(T["CENTRES"]) == {v[0] for v in RV.CENTRES.values()} and all(v["grow"] and v["release"] for v in T["CENTRES"].values()))
-check("all six lines", set(T["LINE"]) == set(T["LINE_SHORT"]) == {str(i) for i in range(1, 7)})
+check("all six lines, and how each learns", set(T["LINE"]) == set(T["LINE_SHORT"]) == set(T["LINE_HOW"]) == {str(i) for i in range(1, 7)})
+check("every authority has its words", set(T["AUTH"]) == {"Emotional", "Sacral", "Splenic", "Ego manifested", "Ego projected", "Self-projected", "Outer", "Lunar"})
+check("the band in words, for the seam, the echo and the magenta point", set(T["BAND"]) == {"Seam", "Echo", "magenta"})
+check("no ascent: the dharma is walked further, not climbed to", not re.search(r"\b(higher self|ascen\w*|climb to)\b", json.dumps(T, ensure_ascii=False), re.I))
+meds = {g: DH.medicines(r["r"]) for g, r in DH.REG.items()}
+check("every gate in the register gives its medicines, flood and freeze (the three told otherwise are read whole)",
+      all({k for k, _ in m} == {"Flood", "Freeze"} for g, m in meds.items() if g not in ("14", "25", "53")) and not any(meds[g] for g in ("14", "25", "53")))
+check("a medicine read out whole: gate 2", meds["2"] == [("Flood", "Medicine is the dark gift: institute the drought."),
+      ("Freeze", "Medicine is the light gift: ask what form the life is already proposing, then water only that.")])
+check("a medicine inside its sentence: gate 31's flood", ("Flood", "Medicine is the dark gift in miniature — vacate one claimed seat.") in meds["31"])
 check("the Sun's yearly days: gate 41 opens the wheel near 22 January", DH.sun_week(41).endswith("January") and DH.sun_week(41).startswith(("21", "22", "23")))
 check("every gate gets five or six of the Sun's days", all(5 <= _n <= 7 for _n in [
       len([d for d in range(365) if E.gate_of(DH._sun_lon(date.fromordinal(date(2027, 1, 1).toordinal() + d)))["gate"] == g]) for g in range(1, 65)]))
@@ -33,21 +43,52 @@ for i in range(6):
     lat, lon = random.uniform(-50, 60), random.uniform(-170, 170)
     C = E.cast(eph, y, mo, d, h, lat, lon)
     dasha = E.dasha_tree(C, C["jd"] + 365.25 * 30)
-    MORE.reset()
-    html = DH.body(C, dasha, reading.activation, reading.repair)
-    have_n, have_d = RV.gates(C["natal"]), RV.gates(C["dharma"])
-    shown = [int(g) for g in re.findall(r'<div class="rd-entry dh-gate"><h3>Gate (\d+)\.', html)]
-    check(f"chart {i + 1}: every dharma gate read once", sorted(shown) == sorted(have_d))
-    check(f"chart {i + 1}: gates in body order, from the Head down",
-          [list(RV.CENTRES).index(RV.CENTRE_OF[g]) for g in shown] == sorted(list(RV.CENTRES).index(RV.CENTRE_OF[g]) for g in shown))
-    live_d, _ = RV.defines(C["dharma"]); live_n, _ = RV.defines(C["natal"])
+    N, Dh = C["natal"], C["dharma"]
+    have_n, have_d = RV.gates(N), RV.gates(Dh)
+    live_n, _ = RV.defines(N); live_d, _ = RV.defines(Dh)
+    M = DH.meet(N, Dh)
     bridges = {(a, b) for a, b in RV.CHANNELS if (a, b) not in live_n and (a, b) not in live_d and {a, b} <= have_n | have_d
                and (a in have_d or b in have_d) and (a in have_n or b in have_n)}
-    found = {tuple(map(int, m)) for m in re.findall(r'<div class="rd-entry dh-ch"><h3>Channel (\d+)–(\d+)', html)}
-    check(f"chart {i + 1}: channels are the dharma's own and the bridges", found == set(live_d) | bridges)
-    txt = re.sub(r"<[^>]+>", "", html)
+    check(f"chart {i + 1}: the bridges are the channels neither design completes and both reach", {c for c, _, _ in M["bridges"]} == bridges)
+    check(f"chart {i + 1}: each bridge has one end only at birth and one only in the dharma",
+          all(b in have_n and b not in have_d and d in have_d and d not in have_n for _, b, d in M["bridges"]))
+    check(f"chart {i + 1}: keel, bridge halves and reach share out the dharma gates, once each",
+          sorted(M["keel"] + M["halves"] + M["reach"]) == sorted(have_d))
+    MORE.reset()
+    two = DH.two_designs(C)
+    found = {tuple(map(int, m)) for m in re.findall(r'<div class="rd-entry tw-ch"><h4>Channel (\d+)–(\d+)', two)}
+    check(f"chart {i + 1}: the bridges and what the dharma builds are read", found == bridges | {c for c in live_d if c not in live_n})
+    check(f"chart {i + 1}: both designs drawn on one body", two.count('class="bg-fig bg-k"') == 1 and two.count("k-bridge k-under") == len(bridges))
+    check(f"chart {i + 1}: the Pentagram Cross holds", "72.000000° ✓" in two)
+    asks = []
+    walk = DH.walk(C, dasha, reading.activation, asks)
+    cards = [int(g) for g in re.findall(r'<div class="rd-entry wk-gate"><h4>Gate (\d+)\.', walk)]
+    cross = {Dh[s][b]["gate"] for s, b, _ in DH.CROSS}
+    check(f"chart {i + 1}: every dharma gate the walk asks for has its card once (the keel is trusted, not practised)",
+          len(cards) == len(set(cards)) and set(cards) == (have_d - have_n) | cross)
+    check(f"chart {i + 1}: the four cross gates carry their gifts and medicines", walk.count('<p class="rd-med">') >= 2 * len(cross) - 2)
+    life = re.search(r'<table class="wk-life">(.*?)</table>', walk, re.S).group(1)
+    in_life = [int(g) for g in re.findall(r"<b>(\d+)</b>", life)]
+    check(f"chart {i + 1}: over a life, every dharma gate under the period that opens it, once", sorted(in_life) == sorted(have_d))
+    yr = re.search(r'<table class="wk-year">(.*?)</table>', walk, re.S).group(1)
+    in_year = [int(g) for g in re.findall(r"<b>(\d+)</b>", yr)]
+    starts = [DH.sun_days(g)[0].timetuple().tm_yday for g in in_year]
+    check(f"chart {i + 1}: over a year, every dharma gate on the calendar, in order", sorted(in_year) == sorted(have_d) and starts == sorted(starts))
+    check(f"chart {i + 1}: the dharma cross's questions are gathered", sum(1 for lab, _, _ in asks if lab.startswith("Dharma ")) == len(cross))
+    txt = re.sub(r"<[^>]+>", "", two + walk)
     check(f"chart {i + 1}: nothing left unfilled", not re.search(r"\{(?!SEC:)", txt) and not re.search(r"\bNone\b(?! of them)", txt))
     check(f"chart {i + 1}: no period past a long life", not any(int(a) > 90 for a in re.findall(r"Opens at (\d+)", txt)))
+
+# the whole reading: the two designs, then the walk, then the path, each step at birth and as it matures
+C = E.cast(eph, 1988, 9, 23, 6.6667, 64.1466, -21.9426)
+body = reading.build(C, E.dasha_tree(C, C["jd"] + 365.25 * 38), {"name": "", "date": "1988-09-23"})
+heads = re.findall(r'<section class="rd-sec[^"]*" id="[^"]+">\s*<div class="rd-num">[^<]*</div>\s*<h2>(.*?)</h2>', body)
+check("the reading reads the Two Designs, then the Walk, then the Path of Dharma",
+      heads.index("The Two Designs") + 1 == heads.index("The Walk") == heads.index("The Path of Dharma") - 1)
+check("the old gate-by-gate sections are gone", "The Dharma Gates" not in heads and "The Dharma Weave" not in heads)
+path = body[body.index("<h2>The Path of Dharma</h2>"):body.index("<h2>The Numbers")]
+check("every step of the path is read at birth and as it matures", path.count('class="rd-gate ripe"') == path.count('class="rd-step"') == 11)
+check("sections that name each other are numbered", not re.search(r"\{\{?SEC:", re.sub(r"<script.*?</script>", "", body, flags=re.S)))
 
 # the free chart shows the Dharma Design's facts and picture; what it means is the reading's, and the Order's
 src = lambda f: open(os.path.join(ROOT, "static", f), encoding="utf-8").read()

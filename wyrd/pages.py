@@ -93,6 +93,7 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=9900, 
     <li>Every planet in both zodiacs, and how they feed each other; your Soul-Planet and its cabinet</li>
     <li>Your whole life by Vimshottari era, and your runes and the years each one wakes</li>
     <li>Your Birth Design and Dharma Design, drawn and read, and every old map of the body on one figure</li>
+    <li>How your two designs work together, and your walk from one into the other, practice by practice, over a life and over a year</li>
     <li>The Path of Dharma step by step, your numbers, and every question your chart asks</li></ul>
     <a class="btn-buy" href="/">Cast your chart, then get the reading</a>
     <a class="alt" href="/sample">Read a sample reading first</a></section>
@@ -100,6 +101,7 @@ def reports(base, price_cents, member_cents, month_cents=1100, year_cents=9900, 
     <p class="muted">and {m(together_extra)} for each person you add, up to nine</p>
     <ul><li>A story about how you ended up together, and what your bond is for, how it lifts you and where it can struggle</li>
     <li>What each of you wakes in the other, the old eight-fold match, how your bodies meet, and your numbers side by side</li>
+    <li>The current between you: your Birth and Dharma Designs four to four, and what each of you feeds in the other's dharma</li>
     <li>The next thirty years, chapter by chapter and year by year, with the years to watch</li></ul>
     <a class="btn-cast" href="/chart#compare">Add people in Compare, then get it</a></section>
   <section class="plan" data-arcanum="order" data-line="Your weather, every week."><h2>The Order</h2><div class="price">{m(month_cents)}<small> a month</small></div>

@@ -16,9 +16,11 @@ which passages a chart calls for and lays them out.
   IX   The Body            centres, channels, the mansions and padas that feed them, and the Harmonic Body
   X    The Body's Old Map  medical astrology: every map of the body on the ladder's seven stations (wyrd/medical.py)
   XI   Where You Thrive    culture, places and work
-  XII  The Dharma Weave    the Pentagram Cross, the band, the dharma Suns
-  XIII The Dharma Gates   every gate the Dharma Design holds, and how to wake it (wyrd/dharma.py, lib/dharma.json)
-  XIV  The Path of Dharma  Mission, Illuminations, the Diamond
+  XII  The Two Designs    how the Birth Design and Dharma Design work together: the Pentagram Cross, the profiles,
+                           the keel, the bridges, what the dharma builds and loosens, the two crosses (wyrd/dharma.py)
+  XIII The Walk           how a person walks from one into the other, by practice: step by step, over a life,
+                           over a year (wyrd/dharma.py, lib/dharma.json)
+  XIV  The Path of Dharma  Mission, Illuminations, the Diamond, each step at birth and as it matures
   XV   The Numbers         life path, birthday, personal year, and the name's numbers, each on two planets
   XVI  The Questions       every question the chart asked, gathered
   XVII For the Record      the reference table: positions, mansions, runes, cards and gates
@@ -158,39 +160,6 @@ def register_entry(gate, line, side, label, asks):
         <div class="dark"><h5>Dark gift</h5><p>{R['d']}</p></div></div>
       <div class="rd-repair"><h5>Distortion &amp; repair</h5>{repair(R['r'])}</div>
       {held}</div>"""
-
-def dharma_defines(N, Dh):
-    """What the dharma rave completes, beside the birth rave: channels and centres, named from the register."""
-    live_d, cen_d = RV.defines(Dh)
-    live_n, cen_n = RV.defines(N)
-    title = lambda g: REG.get(str(g), {}).get("t", GATE_NAME.get(str(g), ""))
-    rows = "".join(f"<tr{' class=hi' if c in live_n else ''}><td>{c[0]}–{c[1]}</td><td>{title(c[0])} · {title(c[1])}</td>"
-                   f"<td>{'also at birth' if c in live_n else 'dharma only'}</td></tr>" for c in live_d)
-    newly = [c for c in cen_d if c not in cen_n]
-    lost = [c for c in cen_n if c not in cen_d]
-    return f"""<h3 class="rd-tier">What the dharma defines</h3>
-      {pair("Dharma centres", ", ".join(cen_d) or "none — every centre open")}
-      {pair("Birth centres", ", ".join(cen_n) or "none — every centre open")}
-      {pair("Opened by the dharma", ", ".join(newly) or "nothing the Birth Design leaves open")}
-      {pair("Released by the dharma", ", ".join(lost) or "nothing the Birth Design defines")}
-      {f'<div class="rd-tw"><table><tr><th>Channel</th><th>Its two gates</th><th></th></tr>{rows}</table></div>' if rows else
-       '<p>The Dharma Design completes no channel: it works through single gates, each one open-ended.</p>'}"""
-
-def dharma_table(N, Dh):
-    """Every body, birth beside dharma, with the register's name for each dharma gate."""
-    order = ["Sun", "Earth", "Moon", "Rahu", "Ketu", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]
-    title = lambda g: REG.get(str(g), {}).get("t", GATE_NAME.get(str(g), ""))
-    rows = []
-    for b in order:
-        for side, lab in (("personality", ""), ("design", "design ")):
-            a, d = N[side].get(b), Dh[side].get(b)
-            if not (a and d): continue
-            same = a["gate"] == d["gate"]
-            rows.append(f"<tr{' class=hi' if same else ''}><td>{GLYPH.get(b, '')} {lab}{b}</td><td>{a['gate']}.{a['line']}</td>"
-                        f"<td>{d['gate']}.{d['line']} {title(d['gate'])}</td><td>{'repeats' if same else ''}</td></tr>")
-    return f"""<h3 class="rd-tier">The whole weave</h3>
-      <p>Every body at birth and in the dharma. Where a gate repeats, the repetition is load-bearing.</p>
-      <div class="rd-tw"><table><tr><th>Body</th><th>Birth</th><th>Dharma</th><th></th></tr>{''.join(rows)}</table></div>"""
 
 def chart_data(C):
     """The chart as the page's drawings read it (static/reading-figs.js): the same fields the console's
@@ -345,43 +314,17 @@ def build(chart, dasha, who):
     out.append(section(0, MEDICAL.T["TITLE"], MEDICAL.T["SUB"], MEDICAL.body(C, dasha, asks)))
     out.append(section(0, "Where You Thrive", "culture, places and work", MORE.thrive(C)))
 
-    # ---------- V · the dharma weave ----------
-    Dh = C["dharma"]
-    band = ("6/1 — the magenta point, the Mauve Zone's exact centre" if Dh["mauve"] else
-            "inside the Mauve Zone — a pairing impossible at birth" if Dh["band"] == "Seam" else
-            "an echo — a shape others are born holding, earned here")
-    dps, dds = Dh["personality"]["Sun"], Dh["design"]["Sun"]
-    repeats = [lab for lab, a, b in [("the Sun", dps, N["personality"]["Sun"]), ("the design Sun", dds, N["design"]["Sun"])]
-               if a["gate"] == b["gate"]]
-    out.append(section(4, "The Dharma Weave", f"dharma profile {Dh['profile']} · {Dh['band']}", f"""
-      <p class="rd-kenning">Both Suns pass through the multiply-by-nine of the navamsa, so the 88° between them
-      multiplies too: 792, less two full circles, leaves exactly 72. Every dharma chart ever cast carries its two
-      Suns one fifth of the wheel apart. That is the Pentagram Cross.</p>
-      {pair("Dharma profile", f"{Dh['profile']} · {Dh['band']}")}{pair("Band", band)}
-      {pair("Birth Design profile", f"{N['profile']} · the equipment as issued")}
-      {pair("The law", f"{Dh['suns']['gap']:.6f}° {'✓' if Dh['suns']['holds'] else '✗'}")}
-      <p class="rd-kenning">The body is written under the messenger's number, the dharma under the lover's.</p>
-      {f'<p class="rd-kenning">The dharma repeats {" and ".join(repeats)} of the birth chart. The repetition is load-bearing — that is a thing the life does not get to outgrow.</p>' if repeats else ''}
-      <h3 class="rd-tier">The dharma cross</h3>
-      <p>The four positions that carry the Dharma Design, as the four Suns and Earths carry the Birth Design: the dharma Sun and its Earth,
-      and the dharma design Sun and its Earth. Read them as you read section {{SEC:The Work}}, conscious side first.</p>
-      {register_entry(dps['gate'], dps['line'], 'personality', 'Dharma Sun', asks)}
-      {register_entry(Dh['personality']['Earth']['gate'], Dh['personality']['Earth']['line'], 'personality', 'Dharma Earth', asks)}
-      {register_entry(dds['gate'], dds['line'], 'design', 'Dharma design Sun', asks)}
-      {register_entry(Dh['design']['Earth']['gate'], Dh['design']['Earth']['line'], 'design', 'Dharma design Earth', asks)}
-      {dharma_defines(N, Dh)}
-      {dharma_table(N, Dh)}
-      {VG.thread(C)}"""))
+    # ---------- the two designs, and the walk from one into the other ----------
+    N, Dh = C["natal"], C["dharma"]
+    out.append(section(4, DHARMA.T["TWO_TITLE"], f"{DHARMA.T['TWO_SUB']} · dharma profile {Dh['profile']}", DHARMA.two_designs(C) + VG.thread(C)))
     asks.append(("From Rashi to Dharma", VG.W["ASK"], False))
-    already = {g: "The Dharma Weave" for g in (dps["gate"], dds["gate"], Dh["personality"]["Earth"]["gate"], Dh["design"]["Earth"]["gate"])}
-    for side in ("personality", "design"):
-        for b in ("Sun", "Earth"): already.setdefault(N[side][b]["gate"], "The Work")
-    out.append(section(0, DHARMA.T["TITLE"], DHARMA.T["SUB"], DHARMA.body(C, dasha, activation, repair, already)))
+    out.append(section(0, DHARMA.T["WALK_TITLE"], DHARMA.T["WALK_SUB"], DHARMA.walk(C, dasha, activation, asks)))
 
     # ---------- VI · the Path of Dharma ----------
-    def steps(rave):
-        """The incarnate path as a walk: one step per sphere, in order."""
+    def steps(rave, ripe):
+        """The path as a walk: one step per sphere, in order, each at birth and as it matures in the Dharma Design."""
         out, k = [], 0
+        held = {lab.split(" · ")[1] for lab, _, d in asks if " · gate " in lab}
         for seq, names in SEQ.items():
             out.append(f'<div class="rd-seq"><h3>{seq[0].upper() + seq[1:]}</h3>')
             for n in names:
@@ -392,45 +335,36 @@ def build(chart, dasha, who):
                 w = WALK.get(n, {}); R = REG.get(str(g["gate"]), {})
                 t = R.get("t", GATE_NAME.get(str(g["gate"]), ""))
                 act = activation(g["gate"], g["line"], C, dasha, n)
+                m = ripe[col].get(body)
+                mt = REG.get(str(m["gate"]), {}).get("t", GATE_NAME.get(str(m["gate"]), "")) if m else ""
+                grows = (f'<div class="rd-gate ripe">matures in the dharma to gate {m["gate"]}.{m["line"]}, {mt}</div>' if m and m["gate"] != g["gate"] else
+                         '<div class="rd-gate ripe">holds in the dharma: the same gate, load-bearing</div>' if m else "")
                 if col == "design":
-                    q = MORE.once(("step-held",), '<p class="rd-step-q held">This is design-side. Read the gate\'s engine in section {{SEC:The Work}} or {{SEC:The Dharma Weave}} first; its question waits in section {{SEC:The Questions}}.</p>', '<p class="rd-step-q held">Design-side: its question waits at the end.</p>')
+                    q = MORE.once(("step-held",), '<p class="rd-step-q held">Design-side: it runs unnamed until spoken, so live with the gate a while; its question waits in section {{SEC:The Questions}}.</p>', '<p class="rd-step-q held">Design-side: its question waits at the end.</p>')
+                    if R.get("a") and f"gate {g['gate']}.{g['line']}" not in held:
+                        asks.append((f"{n} · gate {g['gate']}.{g['line']}", R["a"], True))
                 else:
                     q = f'<p class="rd-step-q">The question to carry: <em>{R.get("a", "")}</em></p>' if R.get("a") else ""
                 out.append(f"""<div class="rd-step"><div class="rd-sn">Step {k}</div>
                   <div><h4>{n} <small>{col} {body}</small></h4>
-                  <div class="rd-gate">gate {g['gate']}.{g['line']}, {t}</div>
+                  <div class="rd-gate">gate {g['gate']}.{g['line']}, {t}</div>{grows}
                   {f'<div class="rd-opens {act["state"].split()[0]}">{GLYPH.get(act["lord"], "⊕")} {act["text"]}</div>' if act else ''}
                   <p>{w.get('what', gloss)}</p><p class="rd-how">{w.get('how', '')}</p>{q}</div></div>""")
             out.append("</div>")
         return "".join(out)
-    def mature(rave_n, rave_d):
-        rows = []
-        for s_ in SPHERES:
-            n, col, body = s_[0], s_[1], s_[2]
-            a, b = rave_n[col].get(body), rave_d[col].get(body)
-            if not (a and b): continue
-            same = a["gate"] == b["gate"]
-            t = REG.get(str(b["gate"]), {}).get("t", GATE_NAME.get(str(b["gate"]), ""))
-            rows.append(f"<tr{' class=hi' if same else ''}><td>{n}</td><td>{a['gate']}.{a['line']}</td>"
-                        f"<td>{b['gate']}.{b['line']} {t}</td><td>{'holds' if same else 'matures'}</td></tr>")
-        return f'<div class="rd-tw"><table><tr><th>Sphere</th><th>Incarnate</th><th>Mature</th><th></th></tr>{"".join(rows)}</table></div>'
     shared = [s[0] for s in SPHERES if N[s[1]].get(s[2]) and Dh[s[1]].get(s[2])
               and N[s[1]][s[2]]["gate"] == Dh[s[1]][s[2]]["gate"]]
     out.append(section(5, "The Path of Dharma", "Mission · Illuminations · the Diamond", f"""
-      <p>Eleven spheres, in order, and the order is the instruction. The first two are a pair and so are the third
-      and fourth — each is drawn from a Sun or Earth, and Earth is always the exact opposite of its Sun, so you are
-      reading a thing and its ground together.</p>
-      <p>Work down the list in order. The Diamond Self comes last because it is a by-product; read first, it turns the
-      whole path into a fortune. Design-side spheres are marked — those run unnamed until spoken, so read the engine
-      before you ask the question.</p>
-      <h3 class="rd-tier">Walking the path</h3>
-      <p>Each step names when it opens in your life. A sphere's gate sits in one of the twenty-seven mansions, and
-      that mansion's lord rules the sphere; the step opens when that lord's mahadasha arrives. Work the steps in
-      order whatever their ages. A step that opened before you started is still waiting to be walked.</p>{steps(N)}
-      <h3 class="rd-tier">The Path of Dharma · mature</h3>
-      <p>The same eleven positions read on the Dharma Design. Where a sphere repeats a gate across both paths the
-      repetition is load-bearing. Where they differ, the difference is the maturation: the same spectrum, walked further.</p>{mature(N, Dh)}
-      {pair("Load-bearing", " · ".join(shared) + " repeat across both paths" if shared else "no sphere repeats — every one matures")}"""))
+      <p>Eleven spheres in three sequences, and the order is the instruction. The first two are a pair and so are the
+      third and fourth: each is drawn from a Sun or an Earth, and an Earth is always the exact opposite of its Sun, so you
+      read a thing and its ground together. The Diamond Self comes last because it is a by-product; read first, it turns
+      the whole path into a fortune.</p>
+      <p>Each step is read where you were born and shown as it matures in your Dharma Design: where the gate holds, it is
+      load-bearing; where it changes, the change is the maturing, the same spectrum walked further. Each step also names
+      when it opens in your life: its gate sits in one of the twenty-seven mansions, and the step opens in that mansion's
+      lord's period on your clock. Work the steps in order whatever their ages; a step that opened before you started is
+      still waiting to be walked.</p>{steps(N, Dh)}
+      {pair("Load-bearing", " · ".join(shared) + " hold across both designs" if shared else "no sphere holds: every one matures")}"""))
 
     # ---------- the numbers ----------
     out.append(section(0, NUMBERS.T["TITLE"], NUMBERS.T["SUB"], NUMBERS.body(C, dasha, who, asks)))

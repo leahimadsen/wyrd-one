@@ -7,6 +7,8 @@
   III What You Wake in Each Other   where each one's soul-planet and guest land in the others' houses
   IV  The Old Match           Ashtakoota, the eight measures in words (wyrd/together_more.py)
   V   How Your Bodies Meet    two bodygraphs: the channels between you, who conditions whom (couples)
+      The Current Between You  four designs to four: whose body feeds whose dharma, the currents
+                              between your dharmas, what each already is for the other (wyrd/circuit.py)
   VI  Your Numbers Together   life paths and name numbers side by side, and how their planets get on
   VII The Seasons You Share   the next thirty years chapter by chapter, the sky's appointments, year by year
   VIII The Questions
@@ -19,6 +21,7 @@ import html, json, math, os
 from . import engine as E
 from . import bond as BOND
 from . import together_more as MORE
+from . import circuit as CIRCUIT
 from .reading import ENG
 from .reading import section, pair, ROMAN, GLYPH
 from .reading_more import X as REG_EXT, ORD, E_year, the
@@ -106,6 +109,11 @@ def build(people):
     if two:
         out.append(section(0, T["HD_TITLE"], T["HD_SUB"], MORE.bodies(P[0], P[1])[0]))
 
+    # ---------- the current between you: both designs of each, four to four ----------
+    if all(p["C"].get("dharma") for p in P):
+        out.append(section(0, T["CIRCUIT_TITLE"], T["CIRCUIT_SUB"], CIRCUIT.body(P)))
+        bond_asks.append(T["CIRCUIT_ASK"])
+
     # ---------- VI · your numbers together ----------
     if all(p.get("date") for p in P):
         out.append(section(0, T["NUM_TITLE"], T["NUM_SUB"], MORE.numbers(P, season, now)))
@@ -125,6 +133,9 @@ def build(people):
 
     for i in range(len(out)):
         out[i] = out[i].replace("{{N}}", ROMAN[i], 1)
+    import re                                              # sections name each other as {SEC:title}
+    num = {re.search(r"<h2>(.*?)</h2>", s).group(1): ROMAN[i] for i, s in enumerate(out)}
+    out = [re.sub(r"\{\{?SEC:(.*?)\}\}?", lambda m: num.get(m.group(1), m.group(1)), s) for s in out]
 
     # ---------- the prologue: the table (told last, so it can point at what the book holds) ----------
     guests = [fill(T["GUEST_NOW"], lord=the(g), name=p["name"]) for p, g in zip(P, guest)]

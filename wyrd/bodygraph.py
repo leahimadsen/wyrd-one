@@ -58,6 +58,47 @@ def _shape(k):
     return f"M{x-h},{y-h} L{x+h},{y-h} L{x+h},{y+h} L{x-h},{y+h} Z"
 
 
+def _lines():
+    """Every channel's line on the drawing: (channel, centre1, centre2, start, end), several channels between the
+    same two centres fanned out side by side."""
+    bundles, out = {}, []
+    for ch in RV.CHANNELS:
+        k = tuple(sorted((RV.CENTRE_OF[ch[0]], RV.CENTRE_OF[ch[1]])))
+        bundles.setdefault(k, []).append(ch)
+    for (c1, c2), chs in bundles.items():
+        (x1, y1), (x2, y2) = POS[c1], POS[c2]
+        L = math.hypot(x2 - x1, y2 - y1); nx, ny = -(y2 - y1) / L, (x2 - x1) / L
+        for i, ch in enumerate(chs):
+            o = (i - (len(chs) - 1) / 2) * 7
+            out.append((tuple(ch), c1, c2, (x1 + nx * o, y1 + ny * o), (x2 + nx * o, y2 + ny * o)))
+    return out
+
+
+def plate(chs, cens, label, caption=""):
+    """A bodygraph that colours each channel and centre by kind, for drawings that lay more than one design on
+    one body: chs {(a, b): kind}, cens {centre key: kind}. Channels not named are drawn faint. A kind ending in
+    'bridge' or 'feed' is a current from what is given into what is growing: gold under violet dashes."""
+    idle, lit = [], []
+    for ch, c1, c2, a, b in _lines():
+        k = chs.get(ch)
+        xy = f'x1="{a[0]:.1f}" y1="{a[1]:.1f}" x2="{b[0]:.1f}" y2="{b[1]:.1f}"'
+        if not k:
+            idle.append(f'<line class="bg-ch" {xy}/>')
+        elif k.endswith(("bridge", "feed")):
+            lit.append(f'<line class="bg-ch on k-{k} k-under" {xy}/><line class="bg-ch on k-{k} k-over" {xy}><title>Channel {ch[0]}–{ch[1]}</title></line>')
+        else:
+            lit.append(f'<line class="bg-ch on k-{k}" {xy}><title>Channel {ch[0]}–{ch[1]}</title></line>')
+    centres = []
+    for k in POS:
+        x, y = POS[k]
+        kind = cens.get(k)
+        centres.append(f'<g class="bg-c{" on k-" + kind if kind else ""}"><path d="{_shape(k)}"/>'
+                       f'<text x="{x}" y="{y + (4 if k == "heart" else 5)}">{RV.CENTRES[k][0]}</text></g>')
+    return (f'<figure class="bg-fig bg-k"><svg viewBox="0 0 400 560" role="img" aria-label="{label}">'
+            f'<g>{"".join(idle)}</g><g>{"".join(lit)}</g><g>{"".join(centres)}</g></svg>'
+            f'<figcaption><b>{label}</b>{"<br>" + caption if caption else ""}</figcaption></figure>')
+
+
 def svg(A, tone, label):
     """One bodygraph. tone: 'birth' (gold) or 'dharma' (violet)."""
     live = {tuple(c) for c in A["live"]}

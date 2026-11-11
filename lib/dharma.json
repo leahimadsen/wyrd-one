@@ -1,62 +1,169 @@
 {
- "_note": "DRAFT for The Völva to rewrite in her own words. The Dharma Gates section of the reading (wyrd/dharma.py): how to wake each gate (the gates' own passages come from the register in corpus.json), channel and centre the Dharma Design holds. To hide a gate's practice, set its \"ok\" to false; to change one, edit its text.",
- "TITLE": "The Dharma Gates",
- "SUB": "every gate your Dharma Design holds, and how to wake it",
- "INTRO": [
-  "Your Birth Design is the equipment you were issued. Your Dharma Design is what that equipment is for: a second set of gates, the shape your life grows into. None of them arrives switched on. A dharma gate is a direction, and it wakes when you walk in it.",
-  "Below is every gate your Dharma Design holds, read one by one, gathered under the centre it belongs to. Each one says which of your planets carries it, whether it repeats your Birth Design, and how to wake it."
+ "_note": "DRAFT for The Völva to rewrite in her own words. Two sections of the reading, built by wyrd/dharma.py: The Two Designs (how the Birth Design and the Dharma Design work together) and The Walk (how a person walks from one into the other, by practice, over a life and over a year). The gates' own names, gifts and medicines come from the register in corpus.json; here are the words around them, and each gate's practice, each channel, each centre and each line. Placeholders in curly braces are filled in by the site; keep them. To hide a gate's practice, set its \"ok\" to false; to change one, edit its text.",
+ "TWO_TITLE": "The Two Designs",
+ "TWO_SUB": "how your Birth Design and your Dharma Design work together",
+ "TWO_INTRO": [
+  "You have two designs and one body. Your Birth Design is cast from the planets as they stood at your birth and about three months before it: the equipment as issued, the vehicle you were handed. Your Dharma Design is cast from the same two moments with every planet multiplied by nine, the navamsha, and laid on the same wheel of sixty-four gates. It is what the vehicle is for.",
+  "The Dharma Design is not a better self waiting above you, and you never climb out of one design into the other. You live in your Birth Design all your life, and the dharma is lived through it: the same spectrum, walked further. The two designs meet in four ways, and the way yours meet is the shape of your walk."
  ],
- "WAYS_TITLE": "Four ways a gate wakes",
- "WAYS": [
+ "UNKNOWN": "Your birth time is unknown. The Sun's dharma position moves about nine degrees a day, so your dharma gates, and especially your dharma Sun and Moon, may not be exactly these. Read this section as the likeliest shape.",
+ "CROSS_LAW": "Both Suns pass through the multiply-by-nine of the navamsha, so the 88° between them multiplies too: 792, less two full circles, leaves exactly 72. Every dharma chart ever cast carries its two Suns one fifth of the wheel apart. That is the Pentagram Cross.",
+ "NUMBERS": "The body is written under the messenger's number, the dharma under the lover's.",
+ "BAND": {
+  "magenta": "6/1, the magenta point, the Mauve Zone's exact centre: a shape no one is born holding",
+  "Seam": "inside the Mauve Zone: a pairing impossible at birth, which no one is handed and anyone who holds it has grown into",
+  "Echo": "an echo: a shape others are born holding, which you earn here"
+ },
+ "PROFILE": "A profile's two lines say how a life learns. Your dharma is learned, consciously, {l1}, and underneath, {l2}.",
+ "LINE_HOW": {
+  "1": "by study",
+  "2": "by being called out",
+  "3": "by trial and error",
+  "4": "through the people you know",
+  "5": "by solving real problems for others",
+  "6": "by living it over years"
+ },
+ "GLANCE": "Your Dharma Design holds {n} gates. {keel}, {bridge}, and {reach}. {grown} {made}",
+ "GLANCE_KEEL": [
+  "none of them is a gate you were born with",
+  "one is a gate you were born with",
+  "{k} are gates you were born with"
+ ],
+ "GLANCE_BRIDGE": [
+  "none reaches back to complete a channel with your Birth Design",
+  "one reaches back to complete a channel with your Birth Design",
+  "{k} reach back to complete channels with your Birth Design"
+ ],
+ "GLANCE_REACH": [
+  "none is wholly new",
+  "one is wholly new",
+  "{k} are wholly new"
+ ],
+ "GLANCE_GROWN": [
+  "On its own it completes no channel your Birth Design lacks.",
+  "On its own it completes one channel your Birth Design lacks.",
+  "On its own it completes {k} channels your Birth Design lacks."
+ ],
+ "GLANCE_MADE": [
+  "",
+  "Together, your two designs make one more.",
+  "Together, your two designs make {k} more."
+ ],
+ "FIG": "Both designs on one body. Gold is what only your Birth Design holds, violet what only your Dharma Design holds, and white what both hold: the keel. The gold-and-violet lines are the bridges, channels neither design completes alone.",
+ "FIG_LABEL": "Both designs together",
+ "FIG_KEY": {
+  "birth": "Birth Design only",
+  "dharma": "Dharma Design only",
+  "keel": "both: the keel",
+  "bridge": "a bridge"
+ },
+ "KEEL_H": "The keel: what both designs hold",
+ "KEEL": "What you were given is also what you are for. These don't need waking so much as trusting: the life keeps coming back to them, and will not outgrow them.",
+ "KEEL_NONE": "No gate repeats between your two designs. Every gate of your dharma is reached for rather than handed over, so the walk asks more of you, and the arrival feels less like coming home than like a country you chose.",
+ "KEEL_GATES": "Gates in both designs",
+ "KEEL_CHANNELS": "Channels in both",
+ "KEEL_CENTRES": "Centres defined in both",
+ "BRIDGE_H": "The bridges: where each design completes the other",
+ "BRIDGE": "Here your Birth Design holds one end of a channel and your Dharma Design holds the other. Neither completes it alone. The current comes on only when you live both at once: the birth half on purpose, while you practise the dharma half. Bridges are the quickest crossings on the walk.",
+ "BRIDGE_NONE": "No channel is completed by your two designs together. Your dharma gates find their other halves in other people and in the sky, so the company you keep matters more than most.",
+ "BRIDGE_ROW": "You were born with gate {gb}, {tb}; your dharma brings gate {gd}, {td}.",
+ "GROW_H": "What the dharma builds",
+ "GROW": "Channels your Dharma Design completes on its own, and centres it defines that your Birth Design leaves open: steady currents your life matures into. They won't feel like yours at first. They become yours by use.",
+ "GROW_NONE": "Your Dharma Design completes no channel your Birth Design lacks. It works through single gates, each reaching for its other half, which is what makes the bridges, and the people around you, so important.",
+ "RELEASE_H": "What the dharma loosens",
+ "RELEASE": "Centres your Birth Design defines and your Dharma Design leaves open. You keep them all your life; what changes is the grip. Something you were born certain of becomes something you can hold lightly, and lend.",
+ "RELEASE_NONE": "Your Dharma Design keeps every centre your Birth Design defines. Nothing you were born with is asked to loosen: the walk only adds.",
+ "CROSS_H": "The two crosses",
+ "CROSS": "Four positions carry each design: the Sun and its Earth, and the design Sun and its Earth. Your birth cross is read in section {SEC:The Work}; here it stands beside the cross your life ripens into. Each dharma gate is worked in section {SEC:The Walk}.",
+ "CROSS_HOLDS": "holds",
+ "CROSS_RIPENS": "ripens",
+ "TABLE_H": "The whole weave",
+ "TABLE": "Every body at birth and in the dharma. Where a gate repeats, the repetition is load-bearing.",
+ "WALK_TITLE": "The Walk",
+ "WALK_SUB": "how you walk from your Birth Design into your Dharma Design, by practice",
+ "WALK_INTRO": "Nobody arrives in their dharma by understanding it. A dharma gate is a direction, and it wakes when you walk in it: on purpose, often, for a season, in the body you were born with. First how the walk works, then your own walk, step by step, over a life and over a year.",
+ "HOW_H": "How the walk works",
+ "HOW": [
   [
-   "Practice",
-   "Each gate has a small, concrete practice. Do it on purpose, often, for a season."
+   "Decide in the body you were born with",
+   "Your Birth Design does the deciding, by its own authority, all your life. Your Dharma Design is what those decisions are walking toward, and the way of knowing you are ripening into; it grows beside the first, and never replaces it."
   ],
   [
-   "Its line",
-   "The line a gate sits on says how you learn it: by study, by being called out, by trial and error, through friends, by solving a problem, or by living it over years."
+   "Start from the keel",
+   "Begin with what both designs hold. You don't have to grow into it, only stop apologising for it."
   ],
   [
-   "Its other half",
-   "Every gate is half of a channel. Where your Birth Design already holds the other half, you have a bridge: live the two together and a steady current comes on."
+   "Cross the bridges first",
+   "Live a birth gate on purpose while you practise its dharma partner. When the channel comes on it comes on steadily, and it carries you into the rest."
   ],
   [
-   "Its time",
-   "Each gate opens in a period of your own clock, and the Sun lights it for a few days every year. Those are the windows when it wakes most easily."
+   "Wake one gate at a time",
+   "Each gate has a small, concrete practice. Its line says how you learn it, its period on your clock says when in your life it wakes most easily, and the Sun lights it for a few days every year."
+  ],
+  [
+   "Hold the gifts; don't grip them",
+   "Every gate has a light gift and a dark gift, and neither is the lesser. Held by choice, both are medicine. Gripped by compulsion, either becomes the trouble: the light gift gripped is spiritual bypass, the dark gift gripped is a wall. When a gate floods, its medicine is usually its dark gift; when it freezes, usually its light gift. The walk is the move from gripping to holding, gate by gate."
+  ],
+  [
+   "Let the design side be seen first",
+   "Gates carried on the design side run below awareness, and other people see them in you before you do. Wake them through the body and the practice, then ask what's been noticed."
   ]
  ],
- "CH_DHARMA_TITLE": "Channels the Dharma completes",
- "CH_DHARMA_INTRO": "These channels are whole in your Dharma Design: both of their gates are there. They're the steady currents your life matures into.",
- "CH_DHARMA_NONE": "Your Dharma Design completes no channel on its own. It works through single gates, each one reaching for its other half. That's what makes the bridges below so important.",
- "CH_BRIDGE_TITLE": "Channels your two designs make together",
- "CH_BRIDGE_INTRO": "Neither design completes these alone. One gate is in your Birth Design and the other in your Dharma Design. They're the bridges between who you were issued as and who you're becoming: live the birth half on purpose while you practise the dharma half, and the channel comes on.",
- "CH_BRIDGE_NONE": "No channel is completed by your two designs together. Your Dharma gates find their other halves in other people and in the sky, so the company you keep matters more than most.",
- "GATES_TITLE": "Gate by gate",
- "GATES_INTRO": "Read these in body order, from the Head down. Start with the gates that repeat your Birth Design: they're load-bearing, the ones your life won't outgrow. Each gate's engine is the work, its light gift is what ripens, and its distortion is what the maturing has to clear.",
- "LIVE": "How to live it",
- "DO": "How to wake it",
- "SIGN": "You'll know it's waking when {sign}",
+ "LOOKS_H": "What it looks like",
+ "LOOKS": "A new gate feels unlike you at first, even awkward: that is what growing into something feels like from inside. A gate that repeats feels like coming home. A bridge, when it comes on, feels like ease where there used to be effort. A loosened centre feels at first like losing a certainty, then like having room. And the dharma most often shows first in what other people start asking of you.",
+ "STEPS_H": "Your walk, step by step",
+ "GROUND_H": "First · Stand in your Birth Design",
+ "GROUND": "You are a {type} with {authority} authority. {auth} Every step below is taken on that authority: practise a gate, and let your own way of knowing say yes or no to what it brings.",
+ "GROUND_DHARMA": "Your Dharma Design is a {dtype} with {dauth} authority: the kind of current your life is maturing into, and the way of knowing that grows up beside your own.",
+ "GROUND_DHARMA_SAME": "Your Dharma Design is a {dtype} with {dauth} authority too: your life matures in the shape it already has.",
+ "GROUND_KEEL": "Already yours, in both designs: {gates}. Trust these first.",
+ "AUTH": {
+  "Emotional": "Clarity forms in waves. Your solar plexus rises and falls, and what you know becomes clear only as the wave settles over time.",
+  "Sacral": "Clarity arrives in the gut as a sound or a pull, in the moment, before the mind has its say.",
+  "Splenic": "Clarity is a quiet, single instinct in the body, here once and then gone. It speaks in the now, for your survival and wellbeing.",
+  "Ego manifested": "Clarity comes through the heart's will spoken aloud: you hear what you want as you say it.",
+  "Ego projected": "Clarity comes from the heart's will, what you truly want for yourself, recognised in conversation with others.",
+  "Self-projected": "Clarity comes from your identity speaking: you hear your direction in your own voice as you talk it through.",
+  "Outer": "Clarity does not come from inside the body. It forms by talking through and sensing the right places and people, and you see best for others.",
+  "Lunar": "Clarity forms over a full lunar cycle, as the Moon passes through every gate and you sample your life from each."
+ },
+ "BRIDGE_STEP_H": "Second · Cross your bridges",
+ "BRIDGE_STEP": "Live the birth half on purpose while you practise the dharma half.",
+ "BRIDGE_LIVE": "Live gate {gb} on purpose: it's already yours.",
+ "BRIDGE_IN_CROSS": "Its dharma half, gate {gd}, is one of the four gates of your dharma cross, worked in the next step.",
+ "CROSS_STEP_H": "Third · Wake your dharma cross",
+ "CROSS_STEP": "The four gates that carry your Dharma Design. They are the walk's centre of gravity: everything else gathers around them.",
+ "CROSS_SAME": "The same gate as your birth {pos}: already lived, and asked for again. Read it in section {SEC:The Work}; here is how to keep walking it.",
+ "REACH_H": "Fourth · Reach",
+ "REACH": "The rest of your dharma gates, in the order your clock opens them: what is waking now first, then what is already open, then what lies ahead.",
+ "REACH_NONE": "Every one of your dharma gates is already in the steps above.",
+ "LOOSEN_H": "All the way · Loosen your grip",
+ "LOOSEN_NONE": "Your Dharma Design keeps every centre you were born with defined. Nothing needs loosening: the walk only adds.",
  "REPEATS": "repeats your Birth Design",
- "NEW": "new in the Dharma",
- "CARRIED": "Carried by your {who}.",
- "IN_CROSS": "Part of your dharma cross: read in full in section {SEC:The Dharma Weave}.",
+ "NEW": "new in the dharma",
+ "CARRIED": "Carried by your {who}",
+ "PRACTICE": "Practice",
+ "SIGN": "You'll know it's waking when {sign}",
+ "LIGHT": "Light gift",
+ "DARK": "Dark gift",
+ "FLOOD": "Flooding?",
+ "FREEZE": "Frozen?",
+ "REPAIR": "When it floods or freezes",
+ "HALF_DHARMA": "It completes {name} ({a}–{b}) inside your Dharma Design.",
+ "HALF_OPEN": "Its other half, gate {g} ({t}), comes from other people and the sky.",
+ "LATE": "Its period, your {lord} mahadasha, falls beyond a usual lifespan, so it wakes by practice alone.",
  "DESIGN_ONLY": [
-  "It's carried only on the design side, so it runs below awareness. Wake it through the body and the practice, not by thinking about it.",
+  "Design side only: it runs below awareness. Wake it through the body and the practice, not by thinking about it.",
   "Design side only: wake it through the body."
  ],
- "PARTNER_DHARMA": "It completes the channel {a}–{b}, {name}, inside your Dharma Design.",
- "PARTNER_BIRTH": "Your Birth Design already holds its other half, gate {g} ({t}): a bridge. Live the two together and {name} comes on.",
- "PARTNER_OPEN": [
-  "Its other half is gate {g} ({t}). It comes alive with people who carry that gate, and when the sky lights it.",
-  "Its other half, gate {g} ({t}), comes from other people and the sky."
- ],
- "SUN_WEEK": [
-  "The Sun lights this gate each year {when}: a good few days to practise it.",
-  "The Sun lights it {when}."
- ],
+ "LIFE_H": "Your walk over a life",
+ "LIFE": "Each dharma gate sits in one of the twenty-seven mansions, and that mansion's lord opens it: the gate wakes most easily in that planet's period on your clock. Read down the table and you can see the walk your life is laid out to take. A period that has passed hasn't closed its gates; they wait, open, for you to walk in.",
+ "LIFE_NOW": "now",
+ "LIFE_LATE": "beyond a usual lifespan: these wake by practice alone",
+ "YEAR_H": "Your walk over a year",
+ "YEAR": "The Sun stands in each gate for five or six days a year: the easiest days to practise it. A year of practice, already on the calendar.",
  "BW": "Members of the Order see in their weekly Body Weather which of these gates the sky is lighting.",
- "CENTRE_SAME_DEF": "Defined in both designs.",
- "CENTRE_SAME_OPEN": "Open in both designs.",
+ "ASK": "Which of your dharma gates is already asking for you, and what would one week of walking in it look like?",
  "LINE": {
   "1": "Line 1, the foundation: you wake this gate by study. Learn how it works before you live it, and it holds.",
   "2": "Line 2, the natural: you wake this gate by being called out. Do it for its own sake, and let others notice and ask.",
@@ -650,15 +757,5 @@
    "sign": "confusion turns into clarity on its own schedule, and you stop panicking.",
    "ok": true
   }
- },
- "LATE": "Its period, your {lord} mahadasha, falls beyond a usual lifespan, so it wakes by practice alone.",
- "SHADOW": "When it goes wrong",
- "WORK": "The work it asks",
- "RIPENS": "What ripens",
- "MATURES": "The shadow it matures through",
- "CLEARS": "What the maturing clears",
- "ASK": "A question to carry",
- "READ_FULL": "Its full passage is in section {sec}; here is how it grows in your Dharma.",
- "REPEAT_LEAD": "You were born with this gate, and the Dharma asks for it again. It is a thread your life will not outgrow: what you were given here is also what you are for.",
- "NEW_LEAD": "Your Birth Design doesn't hold this gate. It isn't equipment you were handed but a direction you grow into, which is why it can feel unfamiliar, even unlike you, until you walk in it."
+ }
 }
