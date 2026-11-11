@@ -231,5 +231,56 @@
   "HD_COND_TITLE": "Who conditions whom",
   "HD_COND": "{a}'s defined {centre} ({does}) is amplified in {b}, whose {centre} is open. For {b}: {open}",
   "HD_COND_NONE": "You're defined and open in the same centres, so not much passes between you here.",
-  "HD_OPEN_BOTH": "Open in both of you: {centres}. Here you take in the world together, and other people and places will colour these centres for you both."
+  "HD_OPEN_BOTH": "Open in both of you: {centres}. Here you take in the world together, and other people and places will colour these centres for you both.",
+  "CIRCUIT_TITLE": "The Current Between You",
+  "CIRCUIT_SUB": "your Birth and Dharma Designs together: what each of you feeds in the other",
+  "CIRCUIT_INTRO": "Each of you carries two designs: your Birth Design, the body as issued, and your Dharma Design, what that body is for. So when you meet, four designs meet. A current runs along any channel whose two ends you hold between you, and where it runs from what one of you was born with into what the other is growing toward, one of you is feeding the other's dharma. This is the bond's electricity: what lights when you're together, and goes quiet when you're apart.",
+  "CIRCUIT_FIG": "Your four designs as one circuit. Each line is a kind of current, thicker for more channels, and its number is how many it lights. Arrows run from what is given toward what is growing. A dotted line carries nothing.",
+  "CIRCUIT_NODE": {
+    "birth": "Birth Design",
+    "dharma": "Dharma Design"
+  },
+  "CIRCUIT_KEY": {
+    "body": "between your bodies",
+    "feed": "from one body into the other's dharma",
+    "dd": "between your dharmas",
+    "kin": "the same current, in both dharmas",
+    "own": "within one of you: a bridge from birth into dharma"
+  },
+  "CIRCUIT_BODY_LABEL": "Where the currents run in the body",
+  "CIRCUIT_SHAPE": {
+    "loop": "The current runs both ways. Each of you was born holding something the other is growing into, so the circuit closes on itself, and a closed circuit keeps itself lit. Neither of you is only the teacher here, or only the student.",
+    "one": "The current runs mostly one way: {a}'s body feeds {b}'s dharma. {a} gives it just by being near, and it costs nothing; {b} grows by it. Look for what {b} gives back in another coin, so the bond stays even.",
+    "dharma": "Most of your current runs between your two dharmas. It isn't lit at the start: you'll feel it more the further each of you walks, which makes this a bond built to grow.",
+    "body": "Your current runs between your bodies as they are. Your dharmas walk their own lines: you can cheer each other's walk, but you won't carry it for each other, and that is its own kind of freedom.",
+    "none": "No channel completes between your designs. You meet through the houses and the timing rather than through the body's current: a quieter bond, and a freer one."
+  },
+  "CIRCUIT_BODY": "Between your bodies, {n}: the spark you felt from the start, read in section {SEC:How Your Bodies Meet}.",
+  "CIRCUIT_BODY_NONE": "Between your bodies as they are, no channel lights on its own: what passes between you runs through your dharmas.",
+  "CIRCUIT_FEED_H": "{a} feeds {b}'s dharma",
+  "CIRCUIT_FEED": "{b}'s Dharma Design reaches for a gate {b} doesn't carry at all, and {a} was born with it. Around {a}, that part of {b}'s dharma has a live current, so {b} can practise it in company instead of alone.",
+  "CIRCUIT_FEED_ITEM": "{a}'s gate {ga} ({ta}) completes {b}'s dharma gate {gb} ({tb}).",
+  "CIRCUIT_FEED_DO": "{b}'s practice: {do}",
+  "CIRCUIT_DD_H": "Between your dharmas",
+  "CIRCUIT_DD": "Each of you holds one end, and only in your Dharma Design. This current isn't lit at the start; it comes on as you both walk, and it is the part of the bond that grows.",
+  "CIRCUIT_DD_ITEM": "{a}'s dharma gate {ga} ({ta}) meets {b}'s dharma gate {gb} ({tb}).",
+  "CIRCUIT_KIN_H": "Growing into the same current",
+  "CIRCUIT_KIN": "Both your Dharma Designs complete these channels, each on its own. You're maturing toward the same current: here you'll understand each other more and more without having to explain.",
+  "CIRCUIT_EXAMPLE_H": "What each of you already is, for the other",
+  "CIRCUIT_EXAMPLE": [
+    "{b} was born with {gates}, which {a}'s Dharma Design reaches for. In this, {b} is a living example of where {a} is going: not a teacher to copy, but proof that the gate can be lived.",
+    "{b} was born with {gates}, all of which {a}'s Dharma Design reaches for. In these, {b} is a living example of where {a} is going: not a teacher to copy, but proof that the gates can be lived."
+  ],
+  "CIRCUIT_EXAMPLE_CROSS": "Gate {g} is in {a}'s dharma cross, so this matters more than most.",
+  "CIRCUIT_EXAMPLE_NONE": "Neither of you was born with a gate the other's dharma reaches for: you show each other the way by walking, not by being.",
+  "CIRCUIT_GROUP": "Each pair at the table, four designs to four: how many channels run from one person's body into the other's dharma, and how many between your two dharmas.",
+  "CIRCUIT_GROUP_PAIR": "<b>{a} and {b}</b>: {fa} from {a} into {b}'s dharma, {fb} from {b} into {a}'s, and {dd} between your dharmas. {shape}",
+  "CIRCUIT_SHAPE_SHORT": {
+    "loop": "A closed loop: each feeds the other.",
+    "one": "One way: {a} feeds {b}.",
+    "dharma": "A bond built to grow.",
+    "body": "Body to body: your dharmas walk their own lines.",
+    "none": "Quiet between you, and free."
+  },
+  "CIRCUIT_ASK": "Which part of each other's dharma do you already feed without trying, and what happens to it when you're apart?"
 }
